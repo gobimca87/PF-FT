@@ -1,54 +1,20 @@
 # FA-PFF / PFF AI — Master Development Guide
 
-> **Purpose of this file:** This is the single entry point for building this project with Claude Code (or any engineer). It synthesizes all 29 specification documents in `MD files/` into one buildable plan: what the system is, the exact repository structure to create, the order to build it in, and which source document governs each piece. Read this file first; it tells you which spec doc to open next for any given part of the system.
+> **Purpose of this file:** This is the phase-by-phase build plan for this project. It synthesizes all 29 specification documents in `MD files/` into one buildable plan: the exact repository structure to create, the order to build it in, and which source document governs each piece. Read this file when starting work on a specific phase.
 >
-> This guide does not replace `MD files/` — it is the index and build sequence over them. When a phase below says "see doc X," open that file for full detail (schemas, YAML examples, contracts, acceptance criteria) before implementing.
+> Universal rules that apply regardless of phase — the Golden Rule, confirmed tech stack, coding conventions — live in `CLAUDE.md` (auto-loaded every session). This guide does not repeat them, and does not replace `MD files/` — it is the index and build sequence over them. When a phase below says "see doc X," open that file for full detail (schemas, YAML examples, contracts, acceptance criteria) before implementing.
 
 ---
 
 ## 1. What This Project Is
 
-**FA-PFF** is the FA's ("The FA" — England's Football Association) county/club administration platform, referred to as **PFF**. It manages club affiliation, team registration, insurance, discipline, officials/safeguarding, county cups, and payments, and integrates with **WGS** (Whole Game System — the FA's national football database).
-
-**PFF AI** (doc prefix `FA-PFF-AI-*`) is a new **Enterprise Agentic AI Platform** being built as a conversational orchestration layer on top of the existing PFF enterprise system. It does not replace PFF's business logic, databases, or authority — it interprets user requests, gathers enterprise context, reasons, calls controlled tools, and communicates results.
-
-This repository (`FA-PFF/`) is where **PFF AI** gets built. The business process it will demonstrate end-to-end first is **Club Affiliation** (see `MD files/0 Workflow/pff_affiliation_e2e_flow.md`).
-
-### The Golden Rule (repeated in every spec doc — never violate it)
-
-> **Enterprise systems decide and execute; the AI platform interprets, orchestrates, contextualizes, explains and communicates.**
-
-Concretely, this means:
-
-- **Authoritative-truth precedence, always:** `Enterprise API / Enterprise Event > ERC > Cache > RAG > SLM output`. If two sources conflict, the one higher in this list wins — no exceptions.
-- The AI platform **never**: authenticates or authorizes a request itself (APIM/enterprise auth does that — AI only consumes validated claims), re-implements business/compliance rules, writes directly to the enterprise database, invents portal URLs, silently guesses at failed/ambiguous transaction outcomes, or lets a model output become an authorization decision.
-- **Agents are logical capabilities inside one AI runtime**, not one microservice per agent. Do not create a separate deployable per agent unless there's a clear, justified operational/scaling reason.
-- Four state concepts are kept **strictly separate** and must never be conflated in code: **Conversation State** (what was discussed), **Session State** (interaction/runtime lifecycle), **Workflow/Agent State** (what the AI is currently doing), **Enterprise Business State** (system-of-record truth, owned entirely by PFF).
-- Prompts, models, agents, workflows, RAG indexes, and guardrails are **versioned software artifacts** — never mutate them in place in production; release as an immutable, compatible bundle (see Phase 1 / Release Manifest).
+This repository (`FA-PFF/`) is where **PFF AI** gets built — see `CLAUDE.md` for what FA-PFF/PFF AI is and the Golden Rule governing the whole platform. The business process it will demonstrate end-to-end first is **Club Affiliation** (see `MD files/0 Workflow/pff_affiliation_e2e_flow.md`, built out in Phase 23 below).
 
 ---
 
-## 2. Confirmed Tech Stack
+## 2. Tech Stack Decisions
 
-| Layer | Choice | Status |
-|---|---|---|
-| Language / API framework | Python + **FastAPI** | Confirmed |
-| Agent orchestration | **LangGraph** | Confirmed |
-| SLM (initial) | **Hugging Face Inference API** | Confirmed |
-| SLM (target/future) | Internal self-hosted SLM (candidate serving: vLLM or Hugging Face TGI, GPU-backed on AKS) | Confirmed direction, tech pending ADR |
-| Embedding model (initial) | Hugging Face API | Confirmed |
-| Cloud | **Microsoft Azure** | Confirmed |
-| Compute | **AKS** (Azure Kubernetes Service) | Confirmed |
-| API gateway / authZ boundary | **APIM** (Azure API Management) | Confirmed |
-| Secrets | **Azure Key Vault** | Confirmed |
-| Async eventing | **Azure Service Bus** | Confirmed |
-| Container registry | **ACR** | Confirmed |
-| Observability (platform) | Azure Monitor, Application Insights, Log Analytics | Confirmed |
-| Observability (AI-specific: traces, prompts, tokens, cost) | **Langfuse** | Confirmed |
-| Lint/format | **Ruff** | Confirmed (recommended baseline) |
-| Type checking | **mypy or pyright** — pick ONE as project primary | Decide at Phase 0 |
-| Schema/validation | **Pydantic** (all API/tool/config/event boundary models), **TypedDict** (LangGraph internal state) | Confirmed |
-| Dependency mgmt | `pyproject.toml` + lock file, pinned versions | Confirmed |
+> Confirmed stack (Python/FastAPI, LangGraph, Azure/AKS, Langfuse, etc.) lives in `CLAUDE.md`. Below are the still-open decisions and doc-reconciliation notes relevant to planning phases.
 
 ### Explicitly deferred choices — resolve via ADR, do not silently pick
 
@@ -387,16 +353,9 @@ This is the integration proof — wire every layer built above around one real b
 
 ---
 
-## 5. Coding Conventions Quick-Reference
+## 5. Coding Conventions
 
-- **Naming:** Python `snake_case`; classes `PascalCase`; constants `UPPER_SNAKE_CASE`. Files: `snake_case.py`. Avoid `utils.py` / `helpers.py` / `misc.py`. Class names must be domain-meaningful (`ERCContextBuilder`, `PromptResolver`, `GuardrailValidator`) — avoid vague `Manager`/`Processor`/`Handler`/`Helper` suffixes without real meaning.
-- **Async:** all external I/O is async; never a blocking call inside an async path; use a shared HTTP client with pooling/timeout/retry/tracing.
-- **Exception hierarchy root:** `PlatformError`, subclassed as `ValidationError`, `ConfigurationError`, `IntegrationError`, `ToolError`, `ModelError`, `RAGError`, `GuardrailError`, `WorkflowError`.
-- **Boundary models:** Pydantic everywhere data crosses a boundary (FastAPI req/res, tool req/res, config, event contracts, ERC schema, SLM req/res). **LangGraph internal state:** `TypedDict`.
-- **API versioning:** explicit in the path, e.g. `/api/v1/chat`.
-- **Layering (enforced, not just conventional):** API → Application → Orchestration → Domain → Infrastructure/Integrations. Domain code must never import FastAPI, Langfuse, Azure SDK, a provider SDK, or a DB driver directly.
-- **Constants example:** `MAX_ERC_BATCH_SIZE = 20`.
-- **Commits:** Conventional Commits — `feat(agent): add affiliation workflow routing`, `fix(erc): handle failed official batch`, `test(rag): add ACL retrieval tests`.
+See `CLAUDE.md` for naming, async, exception hierarchy, Pydantic/TypedDict boundary rules, enforced layering, and commit style — these apply project-wide, not just to a specific phase.
 
 ---
 
