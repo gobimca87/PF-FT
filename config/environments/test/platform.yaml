@@ -1,0 +1,4 @@
+environment:
+  name: test
+  region: uksouth
+  platform_version: 0.1.0

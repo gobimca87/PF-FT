@@ -1,0 +1,18 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class ErrorCategory(StrEnum):
+    VALIDATION = "VALIDATION"
+    AUTHORIZATION = "AUTHORIZATION"
+    BUSINESS_RESULT = "BUSINESS_RESULT"
+    TECHNICAL = "TECHNICAL"
+    DEPENDENCY = "DEPENDENCY"
+    AI = "AI"
+    GUARDRAIL = "GUARDRAIL"
+    SECURITY = "SECURITY"
+    TIMEOUT = "TIMEOUT"
+    CONCURRENCY = "CONCURRENCY"
+    DATA = "DATA"
+    EVENT = "EVENT"

@@ -1,0 +1,13 @@
+memory:
+  default_ttl_seconds: 2592000 # 30 days (doc 9 §32 "Conversation | Configured retention")
+  category_ttl_seconds:
+    CONVERSATION: 2592000
+    SESSION: 86400
+    WORKING: 3600
+    WORKFLOW: 7776000 # 90 days — until completion + retention (doc 9 §32)
+    AGENT_RUN: 604800
+    USER_PREFERENCE: 31536000 # long-lived if explicitly allowed (doc 9 §32)
+    ORGANIZATIONAL_CONTEXT: 7776000
+    ERC_REFERENCE: 7776000
+    DECISION: 7776000
+    SUMMARY: 2592000

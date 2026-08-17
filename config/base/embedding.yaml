@@ -1,0 +1,10 @@
+# Doc 14 §13: model selection must be evaluation-driven, not picked ahead of an evaluation
+# exercise. `mock` keeps ingestion/retrieval genuinely working end-to-end without pretending
+# a specific Hugging Face model has been evaluated and approved yet (see docs/adr/0003).
+embedding:
+  provider: mock
+  model_id: mock-embedding-v1
+  model_version: "1.0.0"
+  dimension: 32
+  max_input_tokens: 512
+  batch_size: 32

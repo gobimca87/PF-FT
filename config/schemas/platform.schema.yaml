@@ -1,0 +1,15 @@
+schema:
+  id: platform-config
+  version: 1.0.0
+  enforced_by: src/pf_ft_ai/configuration/models.py (Pydantic — authoritative at runtime)
+
+fields:
+  configuration.configuration_id: { type: string, required: true }
+  configuration.version: { type: string, required: true, format: semver }
+  configuration.owner: { type: string, required: true }
+  configuration.effective_date: { type: date, required: true }
+  environment.name: { type: string, required: true, allowed: [dev, test, uat, staging, prod] }
+  environment.region: { type: string, required: true }
+  environment.platform_version: { type: string, required: true, format: semver }
+  runtime.request_timeout_seconds: { type: integer, required: true, minimum: 1 }
+  runtime.max_retries: { type: integer, required: true, minimum: 0 }

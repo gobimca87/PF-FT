@@ -1,0 +1,28 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class CacheStatus(StrEnum):
+    MISS = "MISS"
+    HIT = "HIT"
+    STALE = "STALE"
+    INVALIDATED = "INVALIDATED"
+    REFRESHING = "REFRESHING"
+    REFRESHED = "REFRESHED"
+    ERROR = "ERROR"
+
+
+class CacheCategory(StrEnum):
+    """Doc 9 §33 — the 10 recognized cache categories."""
+
+    ENTERPRISE_API_RESPONSE = "ENTERPRISE_API_RESPONSE"
+    REFERENCE_DATA = "REFERENCE_DATA"
+    CONFIGURATION = "CONFIGURATION"
+    PROMPT = "PROMPT"
+    MODEL_METADATA = "MODEL_METADATA"
+    RAG_RETRIEVAL = "RAG_RETRIEVAL"
+    EMBEDDING = "EMBEDDING"
+    SESSION = "SESSION"
+    CONTEXT_PROJECTION = "CONTEXT_PROJECTION"
+    PORTAL_LINK = "PORTAL_LINK"

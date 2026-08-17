@@ -1,0 +1,14 @@
+# DEVELOPMENT-GUIDE Phase 8 defaults (doc 13 §41-42, §63, §67, §109) — tune via evaluation.
+chunking:
+  target_tokens: 400
+  overlap_tokens: 50
+
+retrieval:
+  vector_top_k: 20
+  keyword_top_k: 20
+
+reranking:
+  top_n: 8
+
+agentic_rag:
+  max_iterations: 2

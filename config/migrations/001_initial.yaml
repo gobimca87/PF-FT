@@ -1,0 +1,8 @@
+migration:
+  id: "001_initial"
+  schema_version: 1.0.0
+  description: >
+    Initial platform configuration schema: configuration metadata
+    (configuration_id/version/owner/effective_date), environment identity
+    (name/region/platform_version), and runtime settings
+    (request_timeout_seconds/max_retries).

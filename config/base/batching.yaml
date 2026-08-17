@@ -1,0 +1,4 @@
+batching:
+  batch_size: 20
+  max_parallel_batches: 5
+  max_retry_attempts: 2

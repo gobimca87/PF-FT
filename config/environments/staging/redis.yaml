@@ -1,0 +1,11 @@
+# Azure Managed Redis connection for this environment (docs/adr/0004).
+# host/port: replace with the actual Azure Managed Redis endpoint (Azure Portal ->
+# Resource -> "Access keys"/"Overview"; confirm the TLS port for your tier, commonly
+# 10000 for Azure Managed Redis).
+# password_secret_ref: the name of the Key Vault-backed secret holding the access key —
+# the AI platform never sees the raw key here, only this reference name.
+redis:
+  host: CHANGE_ME_AZURE_MANAGED_REDIS_HOST
+  port: 10000
+  ssl: true
+  password_secret_ref: AZURE_REDIS_PASSWORD

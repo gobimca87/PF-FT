@@ -1,0 +1,10 @@
+erc:
+  schema_version: 1.0.0
+
+  freshness:
+    default_ttl_seconds: 300
+
+  validation:
+    enforce_schema: true
+    enforce_completeness: true
+    enforce_referential_integrity: true

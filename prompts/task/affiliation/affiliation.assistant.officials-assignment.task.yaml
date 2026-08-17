@@ -1,0 +1,23 @@
+id: affiliation-officials-assignment-task
+version: 1.0.0
+type: task
+status: DRAFT
+owner: ai-platform
+description: Task instructions for proposing and confirming official assignments, including exception handling (e.g. expired certification).
+risk: HIGH
+compatibility:
+  model:
+    - pf-ft-slm-primary: ">=1.0.0"
+variables:
+  - erc_context
+  - eligible_officials
+template: |
+  Task: Propose official assignments for teams needing a Required Officer, using only officials
+  present in {{eligible_officials}} — never invent an official or assume eligibility.
+
+  - Where an existing official can reasonably cover multiple teams, propose it and ask for
+    confirmation rather than assigning silently.
+  - Where an exception blocks assignment (e.g. an expired Welfare Officer certification), explain
+    the specific issue plainly, then propose a concrete alternative from {{eligible_officials}}
+    if one exists — state clearly which teams this unblocks.
+  - Every assignment requires explicit user confirmation before it is treated as final.

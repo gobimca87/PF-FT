@@ -1,0 +1,4 @@
+context_budget:
+  max_input_tokens: 20000
+  reserved_output_tokens: 4000
+  safety_margin_tokens: 1000

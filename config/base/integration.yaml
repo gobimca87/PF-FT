@@ -1,0 +1,23 @@
+retry:
+  max_attempts: 3
+  backoff: exponential
+  initial_ms: 250
+  max_ms: 5000
+  jitter: true
+
+circuit_breaker:
+  failure_threshold: 5
+  cooldown_seconds: 30
+  half_open_max_calls: 1
+
+concurrency:
+  global_max: 20
+  enterprise:
+    max_parallel: 10
+  mcp:
+    max_parallel: 5
+
+timeout:
+  connect_ms: 1000
+  read_ms: 10000
+  total_ms: 12000

@@ -1,0 +1,22 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class ToolCallStatus(StrEnum):
+    """doc 10 §34 (authoritative for Phase 6 — supersedes the simplified doc 5 §30 sketch)."""
+
+    TOOL_REQUESTED = "TOOL_REQUESTED"
+    TOOL_RESOLVED = "TOOL_RESOLVED"
+    INPUT_VALIDATED = "INPUT_VALIDATED"
+    AUTHORIZATION_CHECKED = "AUTHORIZATION_CHECKED"
+    EXECUTING = "EXECUTING"
+    RESPONSE_RECEIVED = "RESPONSE_RECEIVED"
+    RESPONSE_VALIDATED = "RESPONSE_VALIDATED"
+    RESPONSE_TRANSFORMED = "RESPONSE_TRANSFORMED"
+    TOOL_COMPLETED = "TOOL_COMPLETED"
+    REJECTED = "REJECTED"
+    TIMEOUT = "TIMEOUT"
+    RETRYING = "RETRYING"
+    FAILED = "FAILED"
+    UNKNOWN = "UNKNOWN"

@@ -1,0 +1,16 @@
+conversation:
+  max_history_messages: 50
+  max_history_tokens: 12000
+  summary_threshold_tokens: 10000
+  max_message_size: 10000
+
+session:
+  idle_timeout_minutes: 30
+  absolute_timeout_hours: 8
+
+security:
+  enforce_ownership: true
+  enforce_tenant_isolation: true
+
+workflow:
+  resume_enabled: true

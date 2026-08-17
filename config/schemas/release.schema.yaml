@@ -1,0 +1,13 @@
+schema:
+  id: release-manifest
+  version: 1.0.0
+  enforced_by: src/pf_ft_ai/configuration/models.py (Pydantic — authoritative at runtime)
+
+fields:
+  release.release_id: { type: string, required: true }
+  release.version: { type: string, required: true, format: semver }
+  release.environment: { type: string, required: true, allowed: [dev, test, uat, staging, prod] }
+  release.application_version: { type: string, required: true, format: semver }
+  release.git_commit: { type: string, required: false }
+  release.configuration_hash: { type: string, required: false }
+  release.components: { type: map[string, string], required: false, description: "component_id -> version, populated as later phases register versioned artifacts (agents, prompts, models, ...)" }

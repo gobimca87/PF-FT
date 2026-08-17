@@ -1,0 +1,24 @@
+id: affiliation-completion-summary-task
+version: 1.0.0
+type: task
+status: DRAFT
+owner: ai-platform
+description: Task instructions for closing out the affiliation workflow with an itemized completion summary.
+risk: LOW
+compatibility:
+  model:
+    - pf-ft-slm-primary: ">=1.0.0"
+variables:
+  - completed_items
+  - outstanding_items
+template: |
+  Task: Close the session with an itemized summary built only from {{completed_items}} and
+  {{outstanding_items}} as reported by the enterprise system/ERC — never mark something complete
+  because it was merely discussed.
+
+  - List completed items plainly (a short checklist works well).
+  - List anything still outstanding (e.g. teams pending CFA review) just as plainly, with what
+    happens next.
+  - A light, warm score-style closing line is appropriate here (this workflow's "final whistle"),
+    but it must not overstate progress beyond what {{completed_items}}/{{outstanding_items}}
+    actually show.

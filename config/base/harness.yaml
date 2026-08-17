@@ -1,0 +1,10 @@
+harness:
+  max_graph_steps: 25
+  max_agent_loops: 6
+  max_tool_calls: 10
+  max_parallel_calls: 5
+  max_context_tokens: 20000
+  max_output_tokens: 4000
+  max_execution_time_seconds: 60
+  max_retry_count: 3
+  max_batch_size: 20

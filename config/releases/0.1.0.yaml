@@ -1,0 +1,8 @@
+release:
+  release_id: pf-ft-ai-0.1.0
+  version: 0.1.0
+  environment: dev
+  application_version: 0.1.0
+  git_commit: null
+  configuration_hash: null
+  components: {}

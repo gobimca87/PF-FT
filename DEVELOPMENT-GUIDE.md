@@ -18,15 +18,15 @@ This repository (`FA-PFF/`) is where **PFF AI** gets built — see `CLAUDE.md` f
 
 ### Explicitly deferred choices — resolve via ADR, do not silently pick
 
-The source docs deliberately leave these open and list candidates. **Before Phase 8 (RAG/Vector) and Phase 7 (Memory/Cache), stop and ask the user to decide** (or record an ADR) rather than guessing:
+The source docs deliberately leave these open and list candidates. **Before Phase 8 (RAG/Vector), stop and ask the user to decide** (or record an ADR) rather than guessing:
 
-| Decision | Candidates listed in the docs |
-|---|---|
-| Vector store | Azure AI Search, Pinecone, Qdrant, Weaviate, Milvus, pgvector, OpenSearch, Elasticsearch, Redis Vector Search, Chroma |
-| Memory / session / cache store | Redis, PostgreSQL, CosmosDB, SQL — abstracted behind `MemoryStore` / `CacheStore` interfaces regardless |
-| IaC tool | Terraform **or** Bicep |
-| Kubernetes manifest tool | Kustomize **or** Helm |
-| Deployment strategy | Rolling / Blue-Green / Canary — standardize one |
+| Decision | Candidates listed in the docs | Status |
+|---|---|---|
+| Vector store | Azure AI Search, Pinecone, Qdrant, Weaviate, Milvus, pgvector, OpenSearch, Elasticsearch, Redis Vector Search, Chroma | Open |
+| Memory / session / cache store | Redis, PostgreSQL, CosmosDB, SQL — abstracted behind `MemoryStore` / `CacheStore` interfaces regardless | **Resolved: Azure Managed Redis** — see `docs/adr/0004-memory-cache-store-azure-managed-redis.md` |
+| IaC tool | Terraform **or** Bicep | Open |
+| Kubernetes manifest tool | Kustomize **or** Helm | Open |
+| Deployment strategy | Rolling / Blue-Green / Canary — standardize one | Open |
 
 ### Reconciliation items (docs disagree slightly — pick one and note it in `README.md`)
 
@@ -234,7 +234,7 @@ Build strictly in this order — each phase depends on interfaces/contracts esta
 - Cache categories (10): Enterprise API Response, Reference Data, Configuration, Prompt, Model Metadata, RAG Retrieval, Embedding, Session, Context Projection, Portal Link.
 - **Never cache POST/PUT/PATCH/DELETE or transaction-sensitive status blindly.** Cache-aside is the default pattern.
 - Cache key must include tenant + organization + resource + operation + parameters + version.
-- Storage tech is an open decision (§2) — build behind `MemoryStore`/`CacheStore` interfaces so the backing store (Redis/PostgreSQL/CosmosDB) is swappable.
+- Storage tech is **resolved: Azure Managed Redis** (§2, `docs/adr/0004-memory-cache-store-azure-managed-redis.md`) — still build behind `MemoryStore`/`CacheStore` interfaces (doc 9 §137-138 "Provider Independence" applies regardless of the choice being made).
 - **Doc:** 9 (Memory & Cache).
 
 ### Phase 8 — RAG + Embedding/Vector

@@ -1,0 +1,25 @@
+id: affiliation-document-check-task
+version: 1.0.0
+type: task
+status: DRAFT
+owner: ai-platform
+description: Task instructions for checking club document readiness (e.g. Safeguarding Policy) at the start of the affiliation workflow.
+risk: MEDIUM
+compatibility:
+  model:
+    - pf-ft-slm-primary: ">=1.0.0"
+variables:
+  - erc_context
+  - required_documents
+template: |
+  Task: Determine document readiness for this club's affiliation from ERC data — never assume a
+  document exists or is valid without it being present in {{erc_context}}.
+
+  For each required document in {{required_documents}}:
+  - If present and valid: note it briefly, move on — don't dwell on things already in order.
+  - If missing or invalid: explain what's missing/expired in plain terms, then offer the
+    available resolution options exactly as registered (e.g. Adopt & Continue, Show Me, Update
+    Myself) — never invent an option not present in the workflow configuration.
+
+  Always end this step with an explicit statement of what (if anything) is still outstanding
+  before the user can proceed, and wait for the user's choice before continuing.

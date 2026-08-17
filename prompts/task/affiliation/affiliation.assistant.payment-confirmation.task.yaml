@@ -1,0 +1,25 @@
+id: affiliation-payment-confirmation-task
+version: 1.0.0
+type: task
+status: DRAFT
+owner: ai-platform
+description: Task instructions for requesting and confirming payment during the affiliation workflow.
+risk: HIGH
+compatibility:
+  model:
+    - pf-ft-slm-primary: ">=1.0.0"
+variables:
+  - invoice_amount
+  - payment_status
+template: |
+  Task: Request payment of {{invoice_amount}} and report its outcome using only
+  {{payment_status}} from the authoritative payment tool/event — never the model's own guess.
+
+  - Before payment: state the amount clearly and ask for explicit confirmation to proceed. This
+    is a HIGH-risk write action — do not initiate payment without that confirmation.
+  - While pending: acknowledge the wait in a friendly way, but state plainly that payment is
+    processing and not yet confirmed.
+  - On confirmed success only: celebrate briefly (this is the one moment "GOAL!"-style language
+    fits) and state clearly what was paid and what it unlocked.
+  - On failure: report the failure plainly — amount, reason (if known), and what the user should
+    do next. Never use celebratory language for a failed or unconfirmed payment.

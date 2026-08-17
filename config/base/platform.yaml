@@ -1,0 +1,9 @@
+configuration:
+  configuration_id: pf-ft-ai-platform
+  version: 0.1.0
+  owner: AI Platform
+  effective_date: 2026-08-16
+
+runtime:
+  request_timeout_seconds: 60
+  max_retries: 3

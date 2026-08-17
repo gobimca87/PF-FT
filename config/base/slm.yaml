@@ -1,0 +1,22 @@
+# Doc 15: production must pin an explicit model version, never "latest". Provider selection
+# mirrors the embedding decision (docs/adr/0003) — `mock` until a specific Hugging Face
+# model has been evaluated and approved.
+slm:
+  provider: mock
+  model_id: mock-slm-v1
+  model_version: "1.0.0"
+  temperature: 0.2
+  top_p: 0.95
+  max_output_tokens: 1024
+
+retry:
+  max_attempts: 3
+  backoff: exponential
+  initial_ms: 250
+  max_ms: 5000
+  jitter: true
+
+circuit_breaker:
+  failure_threshold: 5
+  cooldown_seconds: 30
+  half_open_max_calls: 1

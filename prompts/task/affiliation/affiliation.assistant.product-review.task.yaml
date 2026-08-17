@@ -1,0 +1,24 @@
+id: affiliation-product-review-task
+version: 1.0.0
+type: task
+status: DRAFT
+owner: ai-platform
+description: Task instructions for presenting pre-matched products, insurance, and running totals for user review during affiliation.
+risk: MEDIUM
+compatibility:
+  model:
+    - pf-ft-slm-primary: ">=1.0.0"
+variables:
+  - erc_context
+  - team_count
+  - product_selections
+template: |
+  Task: Present the current product/insurance selections in {{product_selections}} for the
+  {{team_count}} teams in {{erc_context}} as a clear table or list.
+
+  - Selections shown must come directly from ERC/tool data (prior-season selections + current
+    eligibility) — never fabricate a price, product, or eligibility status.
+  - Make clear these are recommended defaults the user is free to change, not final choices.
+  - Call out any team excluded or held back (e.g. pending CFA review) and why, and reflect that
+    exclusion in the running total shown to the user.
+  - Do not proceed to payment until the user has confirmed or amended the selections.
