@@ -341,3 +341,103 @@ class SlmConfiguration(BaseModel):
     retry: RetrySettings
     circuit_breaker: CircuitBreakerSettings
     configuration_hash: str
+
+
+class GuardrailSettings(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    approved_model_ids: tuple[str, ...] = Field(default_factory=tuple)
+    fail_open_boundaries: tuple[str, ...] = Field(default_factory=tuple)
+
+
+class GuardrailConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    guardrail: GuardrailSettings
+    configuration_hash: str
+
+
+class ServiceBusConnectionSettings(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    connection_string: str = Field(repr=False)
+
+
+class TopicSettings(BaseModel):
+    """doc 11 §28-31, §128 — one topic per environment, filtered to a dedicated AI
+    subscription so the platform never consumes unrelated enterprise events."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    name: str
+    description: str
+    subscription_name: str
+    subscription_description: str
+    event_type_filters: tuple[str, ...] = Field(default_factory=tuple)
+
+
+class ServiceBusConsumerSettings(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    max_concurrent_messages: int = Field(gt=0)
+    processing_timeout_seconds: int = Field(gt=0)
+
+
+class EventRetrySettings(BaseModel):
+    """doc 11 §75 — note the seconds-based fields, distinct from integration's
+    millisecond-based `RetrySettings`."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    max_attempts: int = Field(gt=0)
+    initial_seconds: int = Field(gt=0)
+    max_seconds: int = Field(gt=0)
+    jitter: bool
+
+
+class ServiceBusConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    connection: ServiceBusConnectionSettings
+    topic: TopicSettings
+    consumer: ServiceBusConsumerSettings
+    retry: EventRetrySettings
+    configuration_hash: str
+
+
+class PortalLinkPolicySettings(BaseModel):
+    """doc 12 §32/§128 — `allowed_domains` starts empty: no real portal hostname is
+    approved yet, so every link resolution fails closed until one is configured."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    max_links_per_response: int = Field(gt=0)
+    allowed_domains: tuple[str, ...] = Field(default_factory=tuple)
+
+
+class PortalLinkConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    link_policy: PortalLinkPolicySettings
+    configuration_hash: str
+
+
+class LangfuseSettings(BaseModel):
+    """doc 24 §44-45: host/public_key/secret_key always come from `*_secret_ref` —
+    never inlined. All three are optional because `enabled: false` (the default until a
+    real Langfuse project exists) never needs them (doc 24 §48)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    enabled: bool = False
+    host: str | None = Field(default=None)
+    public_key: str | None = Field(default=None)
+    secret_key: str | None = Field(default=None, repr=False)
+
+
+class ObservabilityConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    langfuse: LangfuseSettings
+    circuit_breaker: CircuitBreakerSettings
+    configuration_hash: str

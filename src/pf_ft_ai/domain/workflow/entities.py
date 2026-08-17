@@ -24,6 +24,9 @@ class WorkflowInstance(Versioned):
     workflow_version: str
     status: WorkflowStatus
     current_state: str
+    # doc 11 §56/§148: event-driven resume must verify the workflow belongs to the
+    # event's organization before resuming — added in Phase 12 for that check.
+    organization_id: str
     started_at: datetime
     updated_at: datetime
     enterprise_workflow_id: str | None = None

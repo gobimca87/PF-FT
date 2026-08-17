@@ -1,0 +1,9 @@
+# doc 18 §72-75, §137: approved model registry — a model ID not listed here is BLOCKed
+# by ModelAllowlistPolicy, never silently routed elsewhere. Matches the current mock
+# providers (docs/adr/0003) in config/base/slm.yaml.
+guardrail:
+  approved_model_ids:
+    - mock-slm-v1
+  # doc 18 §99: fail-open is opt-in per boundary and only for explicitly approved,
+  # documented low-risk cases — empty by default (everything fails closed).
+  fail_open_boundaries: []

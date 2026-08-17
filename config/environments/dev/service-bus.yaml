@@ -1,0 +1,22 @@
+# doc 11 §11-24, §128: event_type_filters are doc 11's own illustrative examples
+# (§128), not a confirmed PFF enterprise event catalog — validate/extend against real
+# enterprise event contracts before this subscription is used against real traffic.
+topic:
+  name: pf-ft-enterprise-events-dev
+  description: >
+    Development enterprise event stream. Carries affiliation/application changes,
+    HIL task outcomes, and entity-change notifications published by the PFF enterprise
+    application's dev environment. Non-production data only.
+  subscription_name: pf-ft-ai-runtime-dev
+  subscription_description: >
+    Dedicated AI-runtime subscription on the dev topic, filtered to AI-relevant event
+    types only (doc 11 §29-30) so the platform never consumes unrelated enterprise
+    events.
+  event_type_filters:
+    - HIL_TASK_COMPLETED
+    - HIL_TASK_REJECTED
+    - HIL_TASK_RETURNED
+    - APPLICATION_UPDATED
+    - AFFILIATION_UPDATED
+    - TEAM_UPDATED
+    - OFFICIAL_UPDATED

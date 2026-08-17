@@ -1,0 +1,51 @@
+name: Security Gates
+
+# Phase 15 (docs/security/0001-phase-15-security-hardening-pass.md) — standalone security
+# checks only. This is deliberately independent of the full build/test/deploy pipeline
+# DEVELOPMENT-GUIDE.md assigns to Phase 19; it can be merged into that pipeline unchanged
+# once Phase 19 is reached. Container/IaC/config/prompt scans are not included — no
+# container build or IaC tool exists yet (docs/adr/0003-deferred-decisions-log.md).
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  sast:
+    name: SAST (ruff bandit rules)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - run: ruff check . --select S
+
+  secret-scan:
+    name: Secret scan (detect-secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - run: detect-secrets scan --exclude-files '^MD files/' --baseline .secrets.baseline
+      # Fails if scanning finds anything not already accounted for in the committed
+      # baseline — new findings must be triaged locally (`detect-secrets audit`) and the
+      # updated baseline committed, not silently approved in CI.
+      - run: git diff --exit-code .secrets.baseline
+
+  dependency-scan:
+    name: Dependency scan (pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]" pip-audit
+      - run: pip-audit --strict

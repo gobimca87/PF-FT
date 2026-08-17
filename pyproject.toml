@@ -16,6 +16,8 @@ dependencies = [
     "python-dotenv>=1.0,<2.0",
     "structlog>=24.4,<25.0",
     "redis>=5.0,<6.0",
+    "azure-servicebus>=7.12,<8.0",
+    "langfuse>=2.50,<3.0",
 ]
 
 [project.optional-dependencies]
@@ -90,6 +92,10 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = "tests.*"
 disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = "langfuse.*"
+ignore_missing_imports = true
 
 [tool.pydantic-mypy]
 init_forbid_extra = true

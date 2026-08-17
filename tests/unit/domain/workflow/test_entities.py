@@ -13,6 +13,7 @@ def test_should_create_a_new_workflow_instance_at_version_one() -> None:
         workflow_version="1.0.0",
         status=WorkflowStatus.CREATED,
         current_state="CREATED",
+        organization_id="club-123",
         started_at=now,
         updated_at=now,
     )
@@ -38,6 +39,7 @@ def test_should_carry_waiting_information_distinct_from_workflow_id() -> None:
         workflow_version="1.0.0",
         status=WorkflowStatus.WAITING_FOR_EXTERNAL_EVENT,
         current_state="WAITING_FOR_EXTERNAL_EVENT",
+        organization_id="club-123",
         started_at=now,
         updated_at=now,
         enterprise_workflow_id="ent-wf-789",

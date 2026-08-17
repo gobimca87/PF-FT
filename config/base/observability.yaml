@@ -1,0 +1,19 @@
+# doc 24 §44-45, §48: Langfuse is disabled by default — no real Langfuse project exists
+# yet (same "mock until evaluated/approved" pattern as SLM/embedding, docs/adr/0003),
+# and a disabled/unconfigured Langfuse must never break core execution either way. To
+# enable in a specific environment, override this file with:
+#   langfuse:
+#     enabled: true
+#     host_secret_ref: LANGFUSE_HOST
+#     public_key_secret_ref: LANGFUSE_PUBLIC_KEY
+#     secret_key_secret_ref: LANGFUSE_SECRET_KEY
+# — never inline the actual host/keys.
+langfuse:
+  enabled: false
+
+# doc 24 §61-62/§126: one independent circuit breaker per dependency
+# (Enterprise API, SLM, RAG, Vector, MCP, Service Bus, Cache, Memory, Langfuse).
+circuit_breaker:
+  failure_threshold: 5
+  cooldown_seconds: 30
+  half_open_max_calls: 1

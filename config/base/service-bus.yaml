@@ -1,0 +1,17 @@
+# doc 11 §27/§123-124: Service Bus connection is Key Vault-backed, never a literal
+# connection string in Git. The secret_ref name stays the same across environments —
+# each environment's own Key Vault instance supplies a different actual value.
+connection:
+  connection_string_secret_ref: AZURE_SERVICE_BUS_CONNECTION_STRING
+
+# doc 11 §89, §129
+consumer:
+  max_concurrent_messages: 10
+  processing_timeout_seconds: 60
+
+# doc 11 §75/§130 — DEVELOPMENT-GUIDE Phase 12 explicit defaults.
+retry:
+  max_attempts: 5
+  initial_seconds: 2
+  max_seconds: 60
+  jitter: true

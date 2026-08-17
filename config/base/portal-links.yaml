@@ -1,0 +1,7 @@
+# doc 12 §32/§76/§128: allowed_domains starts empty — no real PFF portal hostname has
+# been approved yet (config/portals/ is likewise empty, see its README), so every link
+# resolution fails closed (DOMAIN_NOT_ALLOWLISTED) until real hostnames are configured
+# here per environment.
+link_policy:
+  max_links_per_response: 10
+  allowed_domains: []

@@ -12,8 +12,11 @@ model & domain layer), Phase 3 (FastAPI runtime + conversation/session layer), P
 (Supervisor, Agent contract, Harness, LangGraph skeleton), Phase 5 (ERC — Enterprise
 Runtime Context), Phase 6 (Enterprise Integration — API catalog, Tool Registry, Tool
 Executor), Phase 7 (Memory & Cache — Azure Managed Redis), Phase 8 (RAG + Embedding/Vector),
-and Phase 9 (SLM Abstraction) complete. Build proceeds phase by phase per
-`DEVELOPMENT-GUIDE.md` — later phases assume earlier interfaces exist.
+Phase 9 (SLM Abstraction), Phase 10 (Prompt Engineering & Registry), Phase 11 (Guardrails
+Pipeline), Phase 12 (Service Bus / Event-Driven Resume), Phase 13 (Portal Links), Phase 14
+(Observability & Resilience — Langfuse wiring), and Phase 15 (Security Hardening Pass)
+complete. Build proceeds phase by phase per `DEVELOPMENT-GUIDE.md` — later phases assume
+earlier interfaces exist.
 
 ## Enterprise Integration
 
@@ -193,6 +196,245 @@ temperature, top_p, max_output_tokens, stream, response_format` /
 - `assert_pinned_model_version()` rejects `model_version: "latest"` in `prod` — production
   must pin an explicit version (doc 15).
 - No agent code should ever import a concrete provider directly — only `SLMProvider`.
+
+## Prompt Engineering & Registry
+
+`src/pf_ft_ai/prompt_engineering/` implements Phase 10 (doc 16), built directly against
+the real prompt artifacts already committed under `prompts/` (system, persona, task,
+few-shot — see that directory's own `README.md` for the composition-order/trust-tier
+summary and the folder→phase map):
+
+- **`registry.py`** — `PromptArtifact` (matches the on-disk YAML shape exactly, including
+  the `few-shot` type's `examples:` payload vs. every other type's `template:` payload) and
+  `load_prompt_registry()`, which loads and validates every artifact under `prompts/` — a
+  regression test asserts all 8 real committed artifacts still load cleanly.
+  `PromptRegistry.get_active()`/`get_version()` per doc 16 §87.
+- **`lifecycle.py`** — the doc 16 §34 state machine (`DRAFT → TESTING → APPROVED → ACTIVE →
+  DEPRECATED → RETIRED`, `BLOCKED` reachable from any non-terminal state and remediable back
+  to `DRAFT`); every real artifact is still `DRAFT`, so nothing is production-active yet.
+- **`placeholders.py`** — `render_template()` (required placeholders must be present;
+  substituted values are inert text, never re-scanned for `{{tokens}}`) plus two doc-16
+  §113 lint checks, `find_undeclared_placeholders()`/`find_unused_variables()`, run against
+  the real artifacts as a living regression test — today's two known findings
+  (`platform-system` and `affiliation-officials-assignment-task` both declare a variable
+  they don't reference in their template) are pre-existing content issues, not fixed here,
+  but a *new* one would fail the test.
+- **`composer.py`** — `PromptComposer` enforces the doc 16 §5 fixed composition order
+  (Platform/System → Security/Guardrail → Persona → Task → Tool/API → Data/Context → User
+  Request → Output Requirements) and doc 16 §6's trust hierarchy as an **exact match per
+  role**, not just a ceiling: a section must carry exactly the trust level its role
+  requires, because a mismatch in *either* direction means mislabeling — content one trust
+  level short of what a privileged role requires would otherwise still occupy that
+  privileged position in the composed prompt (doc 16 §201).
+- **`trust.py`** — `classify_trust_level()` reconciles this phase's coarse
+  TRUSTED/CONTROLLED/UNTRUSTED classification (doc 16 §6) with the finer six-tier
+  `PromptTrustTier` role hierarchy already built in `guardrails/trust.py` (doc 27 §66) —
+  the coarse levels group the fine tiers rather than replacing them.
+- Not yet wired into the SLM call path — that's Agent Harness/Context Builder integration
+  for a later phase, once real agents exist to drive it (Phase 23).
+
+## Guardrails Pipeline
+
+`src/pf_ft_ai/guardrails/` implements Phase 11 (doc 18 — the densest, most
+cross-referential spec doc, deliberately read in full for this phase). This is the phase
+DEVELOPMENT-GUIDE.md calls out as where earlier primitives get "actually enforced
+end-to-end," so most of it wires already-built components into real, testable
+`GuardrailPolicy`/`GuardrailResult` decisions rather than adding new isolated pieces:
+
+- **`pipeline.py`** — `GuardrailPipeline`, the fixed 9-boundary chain (doc 18 §97,
+  DEVELOPMENT-GUIDE Phase 11): Input → Injection → Authorization Context → Data → Prompt →
+  Tool → Model → Output → Response. The 7-decision vocabulary
+  (`ALLOW`/`ALLOW_WITH_TRANSFORMATION`/`WARN`/`BLOCK`/`ESCALATE`/`RETRY`/`FALLBACK`) and
+  fail-closed semantics are real: a policy that raises BLOCKs its boundary by default; only
+  an explicitly-opted-in, non-mandatory boundary WARNs instead. `AUTHORIZATION_CONTEXT`,
+  `TOOL`, `MODEL`, and `DATA` (doc 18 §145) can never be opted into fail-open at all —
+  `allow_fail_open()` raises `ConfigurationError` if you try.
+- **`trust.py`** — wires the `PromptTrustTier` six-tier role hierarchy (doc 27 §66,
+  originally built in an earlier phase with a comment literally saying "enforced
+  end-to-end starting Phase 11") into `assert_no_privilege_escalation()`: content can
+  never be accepted into the prompt labeled as more trusted than its actual verified
+  source.
+- **`erc_integrity.py`** — `validate_erc_batch_integrity()` wires Phase 5's
+  `aggregate_records()`/`AggregationResult` (doc 8 §55-58) into an enforced guardrail
+  decision (doc 18 §78-79): cross-organization contamination BLOCKs (`CRITICAL`), missing
+  entities BLOCK (`HIGH`), resolved duplicates WARN (`LOW`) — the first genuinely
+  cross-phase enforcement this codebase has, not just a new standalone check.
+- **`content.py`** — per-channel injection handling (doc 18 §26-29, DEVELOPMENT-GUIDE
+  Phase 11): `wrap_rag_evidence()`, `wrap_enterprise_api_result()`, `wrap_tool_result()`
+  each produce delimited, explicitly-labeled `WrappedContent` — RAG evidence is reference
+  data, enterprise API/tool results are authoritative data, neither is ever an
+  instruction. Deliberately returns a plain `WrappedContent`, not a
+  `prompt_engineering.PromptSection` directly — importing `prompt_engineering` here would
+  create a circular dependency, since Phase 10's `prompt_engineering.trust` already
+  imports `guardrails.trust`. Converting `WrappedContent` into a `PromptSection` is Context
+  Builder work for a later phase.
+- **`authorization.py`** — `AuthorizationContextPolicy` (doc 18 §33-37): the same
+  claims-subject/required-permission checks `ToolExecutor` already enforces (Phase 6),
+  now available as a standalone, independently testable guardrail decision.
+- **`model_policy.py`** — `ModelAllowlistPolicy` (doc 18 §72-75): a `model_id` not in the
+  configured `approved_model_ids` (`config/base/guardrails.yaml`) BLOCKs — never silently
+  routed elsewhere.
+- **`pii.py`** / **`secrets.py`** — real regex-based detectors (email/phone; AWS keys,
+  private-key headers, generic API-key assignments, bearer tokens — the same category of
+  heuristic `detect-secrets` already runs over the repo, applied here to runtime content).
+  Detected PII WARNs (the actual mask/redact/block decision needs enterprise
+  data-classification policy this platform doesn't own); a detected secret always BLOCKs
+  (doc 18 §65-66 — no ambiguity to defer there).
+- Not yet wired into `ToolExecutor`/`AgentHarness`/the SLM call path — those already
+  enforce equivalent checks ad hoc from Phase 4/6, and rewiring them through the formal
+  pipeline is Context Builder/Agent Harness integration work for a later phase, consistent
+  with every other Phase 7-10 capability's "not yet wired in" status.
+
+## Service Bus / Event-Driven Resume
+
+`src/pf_ft_ai/messaging/` implements Phase 12 (doc 11), including a **real** Azure
+Service Bus client — not just interfaces behind an in-memory fake, since the connection
+is genuinely Key Vault-configurable today:
+
+- **Connection** — `config/base/service-bus.yaml` declares
+  `connection.connection_string_secret_ref: AZURE_SERVICE_BUS_CONNECTION_STRING` (doc 11
+  §27, §123-124), resolved the same way Redis's password is (Phase 7): env var locally,
+  Key Vault in Azure. The secret_ref name is identical across environments — each
+  environment's own Key Vault instance supplies a different actual value. Nothing
+  hardcodes a connection string.
+- **Topics** — `config/environments/<env>/service-bus.yaml` holds the topic name,
+  description, subscription name, subscription description, and `event_type_filters`
+  **per environment**, e.g. `pf-ft-enterprise-events-dev` / `pf-ft-ai-runtime-dev` for
+  dev, through to `pf-ft-enterprise-events-prod` / `pf-ft-ai-runtime-prod` for
+  production — a dedicated AI subscription per doc 11 §29 so the platform never consumes
+  unrelated enterprise events. The filter list itself is doc 11 §128's own illustrative
+  event types, not a confirmed PFF event catalog — flagged in each file for validation
+  against real enterprise event contracts before production use.
+- **`messaging/service_bus/client.py`** — `AzureServiceBusReceiver`, a real adapter
+  around `azure.servicebus.aio.ServiceBusReceiver`, behind a `ServiceBusReceiverPort`
+  protocol (same "provider independence" discipline as every other infra boundary), so
+  `EventConsumer` never depends on the Azure SDK type directly.
+- **`messaging/events/`** — `EventEnvelope` (DEVELOPMENT-GUIDE's exact canonical field
+  list, doc 11 §13), `validate_envelope()` (source allowlist + timestamp sanity),
+  `EventRoute`/`EventRouteRegistry` (doc 11 §65-67 — routing is deterministic
+  configuration; the SLM never decides which handler processes a production event).
+- **`messaging/reliability/`** — `InMemoryEventIdempotencyStore` with a genuinely atomic
+  `try_claim()` (doc 11 §44 — the tool-idempotency store from Phase 6 has a
+  check-then-write race that would violate this, so a fresh atomic implementation was
+  built rather than reused), `InMemoryDeadLetterStore` (doc 11 §80-81, preserves the
+  original payload), and `execute_event_handler_with_retry()` — a thin seconds-based
+  adapter over Phase 6's `execute_with_retry()`/`IntegrationErrorCode.is_retryable()`
+  (doc 11 §74-75's defaults: `max_attempts: 5`, `initial_seconds: 2`, `max_seconds: 60`,
+  `jitter: true`).
+- **`messaging/handlers/`** — `WorkflowResumeService` enforces doc 11 §56's full
+  validation chain (workflow exists → belongs to the event's organization → is actually
+  waiting → event matches the pending task) before ever calling
+  `WorkflowRepository.transition()`; extending `WorkflowInstance` (Phase 2) with
+  `organization_id` was necessary to make the "belongs to org" check possible.
+  `ErcRefreshService` performs a genuine **partial** refresh (doc 11 §51-52): only the
+  targeted section's data/version changes, every other section is untouched, and the
+  top-level ERC version increments with optimistic concurrency
+  (`domain/versioning.assert_expected_version`). `ExternalEventHandler` is an honest
+  acknowledgement-only placeholder — no approved external event source is registered yet.
+- **`messaging/service_bus/processing.py`** — `EventProcessingService`, the doc 11 §133
+  orchestrator: validate → idempotency claim → route → execute → record outcome. A
+  handler exception is dead-lettered with full `DeadLetterRecord` metadata; an
+  unsuccessful-but-clean outcome stays `FAILED` (retryable via Service Bus redelivery,
+  doc 11 §74); an unrouted event type is `PROCESSED` without retry (doc 11 §39).
+- **`messaging/service_bus/consumer.py`** — `EventConsumer` owns only the Service Bus
+  message lifecycle (complete/abandon/dead-letter) against the outcome
+  `EventProcessingService` returns — it never loops or retries internally beyond that;
+  redelivery is the broker's job via the subscription's own `max_delivery_count`.
+- Not built: a `producer.py` (this platform is a Service Bus **consumer** in doc 11's
+  architecture — no bullet calls for the AI platform publishing events), and
+  `ErcRefreshEventHandler`/real enterprise-API-backed ERC refresh (needs Tool Executor +
+  ERC persistence wiring that doesn't exist as a callable pipeline yet — the refresh
+  *mechanics* are fully built and tested, just not wired to a live handler).
+- Once you provide the real `AZURE_SERVICE_BUS_CONNECTION_STRING` (Key Vault in
+  staging/prod, `.env` locally), the whole pipeline — `build_service_bus_client()` →
+  `build_subscription_receiver()` → `EventConsumer` → `EventProcessingService` — is ready
+  to run against a real Azure Service Bus namespace with no further code changes.
+
+## Portal Links
+
+`src/pf_ft_ai/portal_links/` implements Phase 13 (doc 12):
+
+- **`resolver.py`** — `PortalLinkResolver.resolve()` builds `URL = Portal Base URL +
+  Registered Route + Validated Parameters` (doc 12 §25) and nothing else can produce a
+  link: `LinkRequest` (the SLM's only input) has no `url` field, only `portal_id` +
+  `route_id` + path parameters — there is no path for the model to supply a URL even if
+  it tried. The full doc 12 §54 validation chain runs in order (portal exists → active →
+  route exists → active → entity scope present when required → environment configured →
+  parameters resolved and URL-encoded → HTTPS + domain-allowlist + no-embedded-credentials
+  check) and a failure at any step returns `UNAVAILABLE` with a reason code — it never
+  raises, never fabricates a fallback link, and never fails the whole chat response (doc
+  12 §55/§104).
+- **`security.py`** — `assert_safe_url()`: HTTPS-only, credentials-in-URL rejected,
+  domain allowlist enforced from `config/base/portal-links.yaml`.
+- **`link_budget.py`** — `apply_link_budget()`: dedupes identical portal+route+URL links
+  and caps at `max_links_per_response` (default `10`, doc 12 §76) — 100+ teams/officials
+  can never turn into 100+ UI links.
+- **`catalog.py`** — `PortalRegistry` + `load_portal_catalog()`, same loader pattern as
+  the API catalog and prompt registry. `config/portals/` is intentionally **empty** (see
+  its README) — no real PFF portal base URL or route path is available yet, and
+  `config/base/portal-links.yaml`'s `allowed_domains` is correspondingly empty, so link
+  resolution fails closed (`DOMAIN_NOT_ALLOWLISTED`) until both are populated with real
+  values. `AffiliationAgent` (Phase 23) is where that happens.
+- Not built: signed/temporary links (doc 12 §46-51 — no enterprise portal has confirmed
+  it supports them yet) and the `portal.link.create` agent tool (doc 12 §141-144 — no
+  agent exists yet to expose it to).
+
+## Observability & Resilience
+
+`src/pf_ft_ai/observability/` implements Phase 14 (doc 24), scoped to what's genuinely
+buildable without an IaC/dashboard tool decision (still open — see
+`docs/adr/0003-deferred-decisions-log.md`):
+
+- **`common/correlation.py`** — `CorrelationContext` (built in an earlier phase) now
+  carries the full doc 24 §7 chain: `request_id → correlation_id →
+  conversation_id/session_id/workflow_instance_id`, plus `langgraph_run_id`,
+  `agent_run_id`, `tool_call_id`, `api_call_id`, `service_bus_message_id`,
+  `evaluation_id` — all optional, populated as each stage actually runs.
+- **`observability/errors.py`** — `ErrorCategory` (doc 24 §51's 21-value taxonomy) and
+  `classify_platform_error()`, which maps directly onto the existing `PlatformError`
+  hierarchy (CLAUDE.md's fixed exception tree) rather than introducing new exception
+  types — `IntegrationError → DEPENDENCY_ERROR`, `GuardrailError → GUARDRAIL_ERROR`, etc.
+- **`observability/resilience.py`** — `ResilienceRegistry`: one independent
+  `CircuitBreaker` per doc 24 §126 resilience-matrix dependency (Enterprise API, SLM,
+  RAG, Vector, MCP, Service Bus, Cache, Memory, Langfuse) so one unstable dependency can
+  never trip another's breaker — reuses Phase 6's `CircuitBreaker`, not a reimplementation.
+- **`observability/langfuse_client.py`** — a real `LangfuseObservabilityClient` wrapping
+  the `langfuse` SDK behind an `ObservabilityClient` port, and `NullObservabilityClient`
+  for when it's disabled/unconfigured. Every SDK call is caught and logged, never
+  propagated (doc 24 §48: "Langfuse must not silently break core execution"), verified
+  with a stub client that always raises. `config/base/observability.yaml` defaults
+  `langfuse.enabled: false` — no real Langfuse project has been provisioned yet (same
+  "mock until approved" posture as the SLM/embedding provider defaults); `host`,
+  `public_key`, `secret_key` are always `*_secret_ref` (doc 24 §44-45), never inlined,
+  documented in the config file's own comments for when it's enabled.
+- **Not built**: the 15 recommended dashboards "as code" (doc 24 explicitly calls for
+  IaC where possible, but no IaC/dashboard tool has been chosen — see the deferred
+  decisions log) and Langfuse trace/span/generation hierarchy beyond a single
+  `record_event()` call — deeper Langfuse instrumentation (per-agent spans, per-tool-call
+  generations) is Agent Harness integration work for when real agents exist to
+  instrument (Phase 23).
+
+## Security Hardening Pass (Phase 15)
+
+Phase 15 is a review/audit deliverable (doc 19), not new application code — full
+findings in [`docs/security/0001-phase-15-security-hardening-pass.md`](docs/security/0001-phase-15-security-hardening-pass.md):
+
+- Walked all 9 trust zones and the zero-trust principle against real file:line evidence.
+- Confirmed authorization context (`ClaimsContext`) is frozen, header-only-sourced, and
+  has no code path by which a user message, tool result, or model output could set or
+  alter `subject`/`roles`/`permissions`/`organization`.
+- Mapped all 10 AI threat categories (Prompt Injection, Jailbreak, Sensitive Info
+  Disclosure, Excessive Agency, System Prompt Leakage, Vector/RAG Weakness, Tool/MCP
+  Abuse, Model Supply Chain, Model DoS, Data Poisoning) against what's actually built.
+  **Two genuine gaps found and documented, deliberately left unfixed for now** to avoid
+  churn ahead of Phase 23's real integration work: `rag/pipeline.py`'s
+  `IngestionPipeline` doesn't check `SourceAuthorityLevel` before ingesting, and no
+  `ConcurrencyLimiter` bulkhead exists for SLM calls specifically.
+- Added `.github/workflows/security.yml`: SAST (`ruff --select S`), dependency scan
+  (`pip-audit`), and secret scan (`detect-secrets`) — deliberately independent of the
+  full CI/CD pipeline DEVELOPMENT-GUIDE.md assigns to Phase 19, mergeable into it
+  unchanged when that phase is reached. Container/IaC/config/prompt scans are not
+  included — no container build or IaC tool exists yet.
 
 ## Running the API
 

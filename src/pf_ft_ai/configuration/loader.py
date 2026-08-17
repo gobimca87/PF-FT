@@ -32,12 +32,19 @@ from pf_ft_ai.configuration.models import (
     EnvironmentIdentity,
     ErcConfiguration,
     ErcSettings,
+    EventRetrySettings,
+    GuardrailConfiguration,
+    GuardrailSettings,
     HarnessConfiguration,
     HarnessLimits,
     IntegrationConfiguration,
+    LangfuseSettings,
     MemoryConfiguration,
     MemorySettings,
+    ObservabilityConfiguration,
     PlatformConfiguration,
+    PortalLinkConfiguration,
+    PortalLinkPolicySettings,
     RagConfiguration,
     RedisConfiguration,
     RedisConnectionSettings,
@@ -45,10 +52,14 @@ from pf_ft_ai.configuration.models import (
     RetrievalSettings,
     RetrySettings,
     RuntimeConfig,
+    ServiceBusConfiguration,
+    ServiceBusConnectionSettings,
+    ServiceBusConsumerSettings,
     SessionSettings,
     SlmConfiguration,
     SlmSettings,
     TimeoutSettings,
+    TopicSettings,
     WorkflowSettings,
 )
 from pf_ft_ai.configuration.secrets import EnvVarSecretResolver, SecretResolver
@@ -461,6 +472,116 @@ def load_slm_configuration(
     return SlmConfiguration(
         slm=slm,
         retry=retry,
+        circuit_breaker=circuit_breaker,
+        configuration_hash=compute_configuration_hash(merged),
+    )
+
+
+def load_guardrail_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> GuardrailConfiguration:
+    merged = _load_merged_config(
+        filename="guardrails.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        guardrail = GuardrailSettings.model_validate(resolved["guardrail"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid guardrail configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return GuardrailConfiguration(
+        guardrail=guardrail, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_service_bus_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> ServiceBusConfiguration:
+    merged = _load_merged_config(
+        filename="service-bus.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        connection = ServiceBusConnectionSettings.model_validate(resolved["connection"])
+        topic = TopicSettings.model_validate(resolved["topic"])
+        consumer = ServiceBusConsumerSettings.model_validate(resolved["consumer"])
+        retry = EventRetrySettings.model_validate(resolved["retry"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid service bus configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return ServiceBusConfiguration(
+        connection=connection,
+        topic=topic,
+        consumer=consumer,
+        retry=retry,
+        configuration_hash=compute_configuration_hash(merged),
+    )
+
+
+def load_portal_link_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> PortalLinkConfiguration:
+    merged = _load_merged_config(
+        filename="portal-links.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        link_policy = PortalLinkPolicySettings.model_validate(resolved["link_policy"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid portal link configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return PortalLinkConfiguration(
+        link_policy=link_policy, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_observability_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> ObservabilityConfiguration:
+    merged = _load_merged_config(
+        filename="observability.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        langfuse = LangfuseSettings.model_validate(resolved["langfuse"])
+        circuit_breaker = CircuitBreakerSettings.model_validate(resolved["circuit_breaker"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid observability configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return ObservabilityConfiguration(
+        langfuse=langfuse,
         circuit_breaker=circuit_breaker,
         configuration_hash=compute_configuration_hash(merged),
     )

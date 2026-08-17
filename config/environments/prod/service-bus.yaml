@@ -1,0 +1,22 @@
+# doc 11 §11-24, §128: event_type_filters are doc 11's own illustrative examples
+# (§128), not a confirmed PFF enterprise event catalog — validate/extend against real
+# enterprise event contracts before this subscription is used against real traffic.
+topic:
+  name: pf-ft-enterprise-events-prod
+  description: >
+    Production enterprise event stream. Approved shared infrastructure, strict
+    retention and monitoring (doc 9 §136) — the authoritative source of workflow
+    continuation and ERC-refresh signals for live PFF traffic.
+  subscription_name: pf-ft-ai-runtime-prod
+  subscription_description: >
+    Dedicated AI-runtime subscription on the production topic, filtered to
+    AI-relevant event types only (doc 11 §29-30) so the platform never consumes
+    unrelated enterprise events.
+  event_type_filters:
+    - HIL_TASK_COMPLETED
+    - HIL_TASK_REJECTED
+    - HIL_TASK_RETURNED
+    - APPLICATION_UPDATED
+    - AFFILIATION_UPDATED
+    - TEAM_UPDATED
+    - OFFICIAL_UPDATED
