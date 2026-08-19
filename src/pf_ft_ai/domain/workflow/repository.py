@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from pf_ft_ai.domain.workflow.entities import WorkflowInstance
+from pf_ft_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
 from pf_ft_ai.domain.workflow.states import WorkflowStatus
 
 
@@ -18,4 +18,5 @@ class WorkflowRepository(Protocol):
         status: WorkflowStatus,
         current_state: str,
         expected_version: int,
+        waiting: WaitingInfo | None = None,
     ) -> WorkflowInstance: ...

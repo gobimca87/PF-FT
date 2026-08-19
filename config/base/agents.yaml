@@ -1,0 +1,15 @@
+# doc 4 §72 / DEVELOPMENT-GUIDE Phase 23 — AffiliationAgent, the first (and currently
+# only) registered business agent (docs/adr/0003-deferred-decisions-log.md: the rest
+# of the agent catalog stays deferred to a real product decision).
+#
+# `enterprise_base_url` is a placeholder — TODO: replace with the real PFF enterprise
+# API host once Enterprise Integration provides it (Phase 23's own scope allowance:
+# "implement or stub with clear TODOs against real PFF APIs"). The 7 tools this agent
+# calls (config/enterprise/api-catalog/affiliation.yaml) resolve their paths against
+# this base URL.
+affiliation:
+  enterprise_base_url: "https://enterprise.pff.example"
+  supported_intents:
+    - affiliation_status
+    - affiliation_payment
+  team_official_batch_size: 20

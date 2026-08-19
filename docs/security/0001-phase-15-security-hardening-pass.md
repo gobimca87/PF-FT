@@ -115,6 +115,11 @@ feasible today:
   DEVELOPMENT-GUIDE assigns to Phase 19 — it can be merged into that pipeline unchanged
   when Phase 19 is reached ("feeds into Phase 19 CI/CD" per the guide).
 
+**Update, Phase 19:** `security.yml` has been superseded. Its three jobs (SAST,
+dependency scan, secret scan) now run unchanged as steps inside
+`.github/workflows/ci.yml`'s full pipeline, exactly as anticipated above — the
+standalone file was removed rather than left running redundantly alongside it.
+
 ## 5. Summary of new findings from this pass
 
 1. **Gap** — `rag/pipeline.py IngestionPipeline` doesn't check `SourceRegistration.

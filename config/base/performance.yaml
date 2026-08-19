@@ -1,0 +1,26 @@
+# doc 26 §136 / DEVELOPMENT-GUIDE Phase 20. ERC batch size itself lives in
+# config/base/batching.yaml (batching.batch_size: 20) — not duplicated here.
+concurrency:
+  max_workflows: 50
+  max_api_calls: 100
+  max_tool_calls: 100
+  max_model_calls: 50
+
+# doc 26 §8/§133 — the platform-wide default a workflow inherits until it defines its
+# own. No real workflow beyond the affiliation reference (Phase 23) exists yet to need
+# a dedicated one.
+default_budget:
+  latency_budget_ms:
+    apim: 200
+    fastapi: 100
+    supervisor: 100
+    enterprise_apis: 2000
+    rag: 1500
+    tools: 2000
+    erc_processing: 3000
+    slm: 5000
+    output_validation: 200
+  token_budget: 8000
+  model_call_budget: 5
+  tool_call_budget: 10
+  cost_budget: 1.0

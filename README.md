@@ -14,9 +14,13 @@ Runtime Context), Phase 6 (Enterprise Integration — API catalog, Tool Registry
 Executor), Phase 7 (Memory & Cache — Azure Managed Redis), Phase 8 (RAG + Embedding/Vector),
 Phase 9 (SLM Abstraction), Phase 10 (Prompt Engineering & Registry), Phase 11 (Guardrails
 Pipeline), Phase 12 (Service Bus / Event-Driven Resume), Phase 13 (Portal Links), Phase 14
-(Observability & Resilience — Langfuse wiring), and Phase 15 (Security Hardening Pass)
-complete. Build proceeds phase by phase per `DEVELOPMENT-GUIDE.md` — later phases assume
-earlier interfaces exist.
+(Observability & Resilience — Langfuse wiring), Phase 15 (Security Hardening Pass),
+Phase 16 (AI Evaluation Framework), Phase 17 (Testing Framework), Phase 18
+(Engineering / Dev-Time Agents), Phase 19 (CI/CD pipeline — infra/manifest
+provisioning deferred, see below), Phase 20 (Performance & Cost Tuning), Phase 21
+(Governance Artifacts), Phase 22 (Operations Runbook Wiring), and Phase 23
+(`AffiliationAgent` — First Reference Workflow) complete. That is all 24 phases (0-23)
+in `DEVELOPMENT-GUIDE.md`'s build plan.
 
 ## Enterprise Integration
 
@@ -434,7 +438,359 @@ findings in [`docs/security/0001-phase-15-security-hardening-pass.md`](docs/secu
   (`pip-audit`), and secret scan (`detect-secrets`) — deliberately independent of the
   full CI/CD pipeline DEVELOPMENT-GUIDE.md assigns to Phase 19, mergeable into it
   unchanged when that phase is reached. Container/IaC/config/prompt scans are not
-  included — no container build or IaC tool exists yet.
+  included — no container build or IaC tool exists yet. **Superseded in Phase 19** —
+  these same jobs now live inside `.github/workflows/ci.yml`.
+
+## AI Evaluation Framework
+
+`src/pf_ft_ai/evaluation/` implements Phase 16 (doc 21) — golden-dataset regression
+testing, retrieval metrics, LLM-as-judge scoring, and release gating, built as a
+standalone package so it never needs to import `rag`, `slm`, or `prompt_engineering`:
+
+- **`states.py`** — `EvaluationStatus` (doc 21 §66), the 16-category `DatasetCategory`
+  taxonomy DEVELOPMENT-GUIDE.md's Phase 16 bullet names explicitly, `ScoreDimension`
+  (doc 21 §67 — evaluation is never collapsed into one aggregate score), and the
+  `JudgeDimension` / `NonJudgeableDimension` split doc 21 §61 draws between what an LLM
+  judge may and may never solely evaluate.
+- **`models.py`** — `GoldenCase` / `ExpectedOutcome` (doc 21 §10-11's minimum field
+  list) and `EvaluationResult` (doc 21 §65), all versioned with `model_version` /
+  `prompt_version` / `agent_version` / `guardrail_version` so a result is always
+  reproducible.
+- **`dataset.py`** — `GoldenDatasetRegistry` (rejects duplicate `case_id`s — dataset
+  changes must stay traceable) and `load_golden_dataset()`, which loads `*.yaml` files
+  from `config/evaluation/golden/`. That directory ships empty with a README explaining
+  why (same "empty catalog, README-documented" pattern as `config/portals/` and
+  `config/enterprise/api-catalog/`) — Phase 23's `AffiliationAgent` is where the first
+  real golden cases arrive.
+- **`retrieval_metrics.py`** — standard IR formulas doc 21 §38 names but doesn't
+  define: Recall@K, Precision@K, Hit Rate@K, Reciprocal Rank/MRR, and binary-relevance
+  NDCG@K. Deliberately decoupled from `rag`'s types (`retrieved`/`relevant` are plain
+  ID sequences/sets) to keep `evaluation` from depending on it.
+- **`judge.py`** — `assert_judge_not_sole_evaluator()` enforces doc 21 §61: an LLM
+  judge must never be the sole evaluator for Authorization, Security, Exact API
+  Behavior, Financial Calculations, or Deterministic Business Rules. `MockJudge` is the
+  same "honest placeholder" posture as the mock SLM/embedding providers — no judge
+  model has been evaluation-selected yet (doc 21 §13: "model selection must be
+  evaluation-driven"). `calibrate_judge()` compares judge verdicts against human scores
+  and classifies agreement/false-acceptance/false-rejection (doc 21 §63).
+- **`thresholds.py`** — `evaluate_release_gate()` (doc 21 §68-69): blocks a release when
+  any configured `ScoreDimension` minimum isn't met, or when FAILed cases in a
+  security/injection/jailbreak category exceed `max_critical_security_failures`
+  (default zero-tolerance).
+- **`runner.py`** — `check_expected_outcome()` runs the deterministic assertions doc 21
+  §64 prefers over judge scoring (workflow match, required context present, expected
+  tools invoked); `EvaluationRunner.evaluate()` combines that with an optional judge
+  score into a stamped `EvaluationResult`.
+- **Configuration** — `configuration/models.py` adds `JudgeSettings` /
+  `EvaluationThresholdSettings` / `EvaluationConfiguration`; `load_evaluation_configuration()`
+  follows the standard merge → resolve secrets → validate → hash pattern.
+  `config/base/evaluation.yaml` defaults `judge.model_id: mock-slm-v1` and thresholds of
+  0.8/0.8/0.9 for Quality/Groundedness/Safety with zero tolerance for critical security
+  failures; all 5 environment overrides currently inherit the base unchanged.
+
+## Testing Framework (Phase 17)
+
+Phase 17 (doc 22) organizes `tests/` around the 12-layer test pyramid — full layout and
+rationale in [`tests/README.md`](tests/README.md). It deliberately does **not** move the
+~860 tests already living under `tests/unit/**`; it adds the layers that were genuinely
+missing:
+
+- **`tests/erc/`** — the explicit batching scale-point checklist DEVELOPMENT-GUIDE Phase
+  17 names: 1, 20, 21, 40, 100, and 100+ entities.
+- **`tests/contract/`** — the enterprise API boundary (`HttpxEnterpriseHttpClient`)
+  verified across the full status/error space (200/201/400/401/403/404/409/429/500/502/503,
+  timeout, malformed/empty/partial/large-100+ response bodies) — doc 22 §20-21's mock
+  requirements, previously only spot-checked at 200/404.
+- **`tests/component/`** — ERC batching + collection + aggregation exercised together as
+  one pipeline, including a dropped-batch and a duplicate-delivery scenario.
+- **`tests/security/`** — claims immutability, and the real `GuardrailPipeline` +
+  `AuthorizationContextPolicy` + `SecretDetectionPolicy` exercised end-to-end (missing
+  subject, missing permission, leaked bearer token).
+- **`tests/adversarial/`** — real prompt-injection payload text (not placeholder
+  strings) run through `wrap_rag_evidence()` / `wrap_tool_result()` and `PromptComposer`,
+  confirming structural containment holds and mislabeled-trust smuggling is still blocked.
+- **`tests/resilience/`** — `SlmService` and `ToolExecutor` run side by side to prove one
+  failed dependency never affects the other, on real service instances rather than just
+  the `ResilienceRegistry`'s isolated breakers.
+- **`tests/performance/`** — wall-clock regression baselines for batching/aggregation at
+  5,000 entities (a regression guard, not a calibrated SLA — no production benchmark
+  exists yet).
+- **`tests/regression/`** — the golden-dataset regression harness wired to the real
+  (currently empty) `config/evaluation/golden/`, so the first real case dropped in there
+  is picked up automatically.
+- **`tests/e2e/`** — a full conversation journey (create → chat → resume → list → close)
+  plus chained failure scenarios, through the real FastAPI app. The Club Affiliation E2E
+  scenario itself is deferred to Phase 23 — see `tests/e2e/README.md`.
+- **`tests/fixtures/`, `tests/mocks/`, `tests/stubs/`** — reusable claims/record
+  factories, `httpx.MockTransport` builders, and large/malformed payload stubs shared
+  across the new layers.
+- **`tests/datasets/`, `tests/reports/`** — documented, intentionally empty: golden
+  datasets stay canonical under `config/evaluation/golden/`; `tests/reports/` is
+  CI-generated output and already gitignored.
+
+The `rag/`, `embeddings/`, `vector/`, `slm/`, `prompts/`, `tools/`, `mcp/`,
+`service_bus/`, `memory/`, `cache/`, `session/`, `guardrails/`, `agents/`, `supervisor/`,
+`harness/`, and `workflows/` directories doc 22 §8 illustrates were deliberately **not**
+recreated as empty top-level shells — each already has deep coverage under the matching
+`tests/unit/<module>/`, and duplicating that structure would be padding, not testing.
+
+## Engineering (Dev-Time) Agents (Phase 18)
+
+`src/pf_ft_ai/engineering_agents/` implements Phase 18 (doc 23) — CI-time SDLC tooling,
+explicitly separate from the production business agents (`agents/`, Phase 23). It's
+marked "optional" in `DEVELOPMENT-GUIDE.md`, so scope was bounded to what's honestly
+buildable without a model decision:
+
+- **`states.py` / `models.py`** — the doc's result contract (`EngineeringAgentResult`,
+  `Finding`), registry entry (`EngineeringAgentDefinition`), and run state
+  (`EngineeringRun`). `AgentResultStatus` and `FindingSeverity` are direct reuses of
+  `evaluation.EvaluationStatus` and `guardrails.GuardrailSeverity` — doc 23's status/
+  severity vocabularies are identical in membership and meaning to those two, so they
+  aren't duplicated a third time; `EngineeringAgentRisk` similarly reuses
+  `prompt_engineering.PromptRiskLevel` (doc 23 §130: "governed like a production AI
+  capability").
+- **`registry.py`** — `build_default_registry()` registers 5 agents as `ACTIVE` (real,
+  deterministic, no model required) and the remaining 12 doc-listed agents (Code
+  Review, Prompt Review, AI Evaluation, Test Generation, RAG/Model/Guardrail
+  Validation, etc.) as `PROPOSED` with `model_id: None` — the same "mock provider until
+  approved" posture as the SLM/embedding/judge defaults, applied to engineering-agent
+  models instead. The catalog is complete and auditable; the supervisor just never
+  selects a non-`ACTIVE` agent to run.
+- **The 5 real agents** (`agents/`):
+  - `ConfigurationValidationAgent` — YAML syntax + hardcoded-secret scan across
+    `config/` (reuses `guardrails.secrets.detect_secrets`). Caught and fixed a real bug
+    while being built: `config/schemas/release.schema.yaml`'s `map[string, string]`
+    type annotation wasn't valid YAML flow-mapping syntax.
+  - `ArchitectureComplianceAgent` — AST-based enforcement of CLAUDE.md's domain-layer
+    import boundary ("Domain code must never import FastAPI, Langfuse, Azure SDK, a
+    provider SDK, or a DB driver directly").
+  - `SecurityScanAgent` / `DependencyVulnerabilityAgent` — parse the real JSON output
+    shapes of `ruff --select S --output-format=json` and `pip-audit --format=json` (the
+    same tools `.github/workflows/ci.yml` already runs) into the standard
+    Finding contract. Neither agent shells out itself (doc 23 §74: avoid command
+    execution where it isn't strictly required) — a caller captures the tool output and
+    passes it in, keeping the agent's own surface pure parsing logic with zero
+    subprocess risk.
+  - `UnitTestAgent` — reports an `ExecutionSummary` (pass/fail/coverage) a caller
+    already produced; deliberately does not re-invoke pytest from inside pytest, and
+    never weakens a result to force a PASS (doc 23 §16, §21).
+- **`gate.py`** — `evaluate_quality_gate()`: a required agent's FAIL/ERROR always
+  blocks (doc 23 §116); an optional agent's FAIL/ERROR only warns (§117); any finding
+  at or above the configured `severity_block` always blocks, regardless of which agent
+  raised it (§59).
+- **`supervisor.py`** — `select_agents_for_changes()` implements doc 23 §9's worked
+  impact-selection examples (prompt/RAG/tool changes) plus direct mappings for the rest
+  of doc 23 §8's 21 change categories; `EngineeringAgentSupervisor.run()` executes the
+  selected active agents in parallel via `asyncio.gather` (doc 23 §53). The fuller
+  dependency-graph sequencing doc 23 §54/§112-114 describes (e.g. Test Generation →
+  Unit Tests → Coverage) isn't built — no generation agent exists yet to produce that
+  first stage.
+- **`guardrails/content.py`** gained `wrap_repository_content()` — doc 23 §76-78
+  requires treating repository content (README, PR descriptions, code comments) as
+  untrusted input to engineering agents, for exactly the reason RAG content is
+  untrusted to business agents. It reuses the same structural containment pattern as
+  `wrap_rag_evidence()`/`wrap_tool_result()` rather than inventing a parallel mechanism.
+- **Not built**: PR/CI integration (Phase 19's job), the 12 `PROPOSED` LLM-dependent
+  agents, and the automated-remediation modes beyond `REPORT_ONLY` (doc 23 §61-62) —
+  none of these can be honestly implemented without a model or CI decision this phase
+  doesn't make.
+
+## CI/CD Pipeline (Phase 19)
+
+Phase 19 (doc 25) is scoped by an explicit user decision: the IaC tool (Terraform vs
+Bicep) and Kubernetes manifest tool (Kustomize vs Helm) are deliberately **not**
+resolved yet ("will decide later" — recorded in
+[`docs/adr/0003-deferred-decisions-log.md`](docs/adr/0003-deferred-decisions-log.md)).
+Deployment strategy **was** decided: **Rolling** (Kubernetes/AKS's default). So `infra/`
+and `deploy/` — both explicitly annotated "ADR pending" in `DEVELOPMENT-GUIDE.md`'s own
+repo tree — are not scaffolded; everything else genuinely buildable without that
+decision is:
+
+- **`Dockerfile`** — multi-stage build (builder installs the package; runtime copies
+  only `site-packages`/`bin`), runs as a non-root user (doc 22 §117), and exposes a
+  container-level healthcheck against `/api/v1/health`. Tool-agnostic — every
+  deployment path needs this image regardless of how the surrounding infra ends up
+  provisioned.
+- **`src/pf_ft_ai/api/main.py`** — the container entrypoint (`app` built from a
+  `PFFT_ENVIRONMENT` env var, defaulting to `dev`). `create_app()` itself (Phase 3)
+  stays a pure factory that never reads process environment directly; only this thin
+  wiring layer, used by the ASGI server, does.
+- **`.github/workflows/ci.yml`** — the full pipeline in DEVELOPMENT-GUIDE's exact stage
+  order: Checkout → Dependency Install → Lint → Type Check → Unit Tests → Security Scan
+  → Dependency Scan → Engineering Agents → AI Evaluation → Integration Tests → Build →
+  Container Scan (Trivy) → Package → Deploy. **Supersedes** Phase 15's standalone
+  `security.yml` — its SAST/dependency-scan/secret-scan jobs now run unchanged as steps
+  inside this pipeline, exactly as that file's own header anticipated, so it was removed
+  rather than left running redundantly alongside this one.
+  - The **Engineering Agents** stage runs `scripts/run_engineering_agents.py`
+    (`ConfigurationValidationAgent`, `ArchitectureComplianceAgent`, `SecurityScanAgent`,
+    `DependencyVulnerabilityAgent` — the real Phase 18 agents), fed the same ruff/
+    pip-audit JSON artifacts the Security/Dependency Scan stages already produced.
+  - **Build/Package**: the image is tagged `FA-PFF-ai-runtime:<version>-<short-sha>`
+    (DEVELOPMENT-GUIDE Phase 19: "Immutable image tags only ... never `latest` in
+    production") and kept as a workflow artifact — no container registry exists yet
+    (ACR provisioning is itself blocked on the IaC ADR), so it's honestly not pushed
+    anywhere rather than pushed somewhere that doesn't really exist.
+  - **Deploy** is an explicit, non-deceptive placeholder job: it prints exactly what
+    it's blocked on (the two open ADR decisions) and the target namespace pattern
+    (`FA-PFF-ai-{dev,test,uat,stage,prod}`) and promotion order once they're resolved.
+    It does not claim a deployment happened.
+- **Not built**: `infra/` (Terraform/Bicep modules), `deploy/` (Kustomize/Helm
+  manifests), any real container registry push, and the DEV→TEST→UAT→STAGE→PROD
+  promotion gate itself — all genuinely blocked on the deferred IaC/manifest decision,
+  not skipped for convenience.
+
+## Performance & Cost Tuning (Phase 20)
+
+`src/pf_ft_ai/performance/` implements Phase 20 (doc 26), scoped to what's honestly
+measurable without a deployed environment or real business agent (`AffiliationAgent`
+is Phase 23):
+
+- **`latency.py`** — `LatencyRecorder` (percentile summary: p50/p75/p90/p95/p99, never
+  just an average — doc 26 §7) and `LatencyBreakdown` (time-to-first-token tracked
+  separately from total completion time — doc 26 §10-11).
+- **`states.py`** — `CostOptimizationCategory`, the doc 26 §142 eight-step priority
+  order encoded as an enum that structurally has **no** "degrade model quality"
+  member — that path is absent, not merely discouraged, so nothing can log a cost
+  change under it.
+- **`cost.py`** — `estimate_token_cost()`, `WorkflowCostSummary` (cost/workflow, doc 26
+  §77, is more meaningful than cost/request for multi-call agentic workloads),
+  `CostOptimizationRecord` (the six fields doc 26 §143 requires every optimization to
+  document), and `assert_priority_order_respected()` — raises if a proposed
+  optimization reaches for a later-priority step (e.g. model routing) while an
+  earlier, cheaper one hasn't been tried yet.
+- **`budget.py`** — `PerformanceBudget` / `check_performance_budget()`: per-stage
+  latency budgets plus token/model-call/tool-call/cost budgets (doc 26 §8/§133),
+  mirroring the `evaluation.thresholds` release-gate pattern.
+- **`benchmark.py`** — real benchmarks against doc 26 §145's scale targets:
+  `run_erc_batching_benchmark()` (100+ teams/officials, reusing Phase 5's batching +
+  aggregation), `run_slm_heavy_benchmark()` (against any `SLMProvider`, including the
+  mock), `run_tool_heavy_benchmark()` (against any caller-supplied async tool call,
+  typically wrapping a real `ToolExecutor.execute()`). **RAG-heavy and multi-agent
+  scenarios are not benchmarked** — no real RAG corpus or business agent exists yet to
+  generate representative load.
+- **Configuration** — `PerformanceConfiguration` (concurrency budget +
+  platform-wide default performance budget) and `PricingConfiguration` (versioned,
+  per-model token pricing — doc 26 §138 "pricing should not be hard-coded"; the only
+  entry is `mock-slm-v1` at zero cost, since no real SLM provider contract exists yet).
+
+## Governance Artifacts (Phase 21)
+
+`src/pf_ft_ai/governance/` implements Phase 21 (doc 20), scoped exactly to
+DEVELOPMENT-GUIDE's two bullets:
+
+- **`states.py` / `lifecycle.py`** — `AiLifecycleState`, doc 20 §11's 11-state
+  governance-level lifecycle (IDEA → ASSESS → DESIGN → BUILD → VALIDATE → APPROVE →
+  DEPLOY → MONITOR → REVIEW → {CHANGE, RETIRE}), with `assert_valid_lifecycle_transition()`
+  enforcing the flow so an artifact can't jump straight from IDEA to DEPLOY. This is
+  deliberately distinct from any one artifact type's own technical status — e.g.
+  `prompt_engineering.PromptStatus`'s DRAFT/REVIEW/TEST/.../RETIRED governs a prompt's
+  own release process; `AiLifecycleState` governs the AI *capability* as a
+  business/risk artifact, which is a different axis entirely.
+- **`registry.py`** — `GovernedArtifactRegistry`, applied to exactly the scope the
+  phase bullet names: "the platform and for each governed artifact (prompts, models,
+  MCP servers)" (`GovernedArtifactType.{PLATFORM,PROMPT,MODEL,MCP_SERVER}`).
+  `.transition()` only allows a registered artifact to move through valid lifecycle
+  states.
+- **`models.py` / `risk_register.py`** — `RiskRegisterEntry` with the exact field list
+  DEVELOPMENT-GUIDE names (Risk ID, Capability, Cause, Impact, Likelihood, Severity,
+  Owner, Controls, Residual Risk, Mitigation, Status, Review Date), and `RiskRegister`
+  (add/update-status/`overdue_for_review()`).
+- **Not built**: an actual populated inventory or risk register (no real governed
+  artifacts beyond the mock/placeholder ones exist yet to register — that's Phase 23's
+  job once `AffiliationAgent` and its prompts are real), the governance dashboard, and
+  compliance-framework mapping (doc 20 §98-100) — these need real organizational
+  decisions (who the AI Governance Board is, which regulatory frameworks apply) this
+  phase can't make.
+
+## Operations Runbook Wiring (Phase 22)
+
+Phase 22 (doc 28), scoped to DEVELOPMENT-GUIDE's two bullets:
+
+- **`docs/runbooks/`** — component-specific troubleshooting runbooks (SLM, Enterprise
+  API, RAG, Vector, MCP, Service Bus/DLQ, ERC batch recovery, Guardrail, Prompt
+  Injection incident), each following doc 28's Symptoms → Diagnostic steps → Recovery
+  → Escalation structure and referencing this codebase's actual files/functions rather
+  than staying abstract. No environment is deployed yet (Phase 19), so these serve as
+  the on-call documentation directly rather than linking to a live alerting system —
+  `docs/runbooks/README.md` explains the distinction and indexes all nine.
+- **`src/pf_ft_ai/operations/`** — "Implement the daily/weekly/monthly operational
+  checklists as scheduled checks where feasible," done as real code reusing Phase 18's
+  `EngineeringAgentResult`/`Finding` contract: `configuration_check()`,
+  `architecture_check()`, `dependency_check()` re-run Phase 18's engineering agents on
+  a schedule instead of a PR trigger; `platform_health_check()` calls a real deployed
+  `/api/v1/health` when a URL is configured, and honestly reports `SKIPPED` (not a
+  fabricated pass) when none is — no environment exists yet.
+  `build_default_checklist()` assigns each check to DAILY/WEEKLY/MONTHLY following doc
+  28 §135-137's own checklist-item placement.
+- **`.github/workflows/operational-checks.yml`** — cron-scheduled (daily/weekly/monthly)
+  CI workflow running `scripts/run_operational_checklist.py`, plus a `workflow_dispatch`
+  path to run any cadence on demand.
+- **Not built**: wiring into a real alerting/on-call/paging system (PagerDuty,
+  OpsGenie, Azure Monitor alerts) — genuinely blocked on Phase 19's deferred IaC
+  decision, since there's no deployed environment to alert on yet.
+
+## AffiliationAgent — First Reference Workflow (Phase 23)
+
+`src/pf_ft_ai/agents/affiliation/` implements Phase 23 (docs 4 §72, 7 §133-135, 5 §92-93,
+and `MD files/0 Workflow/pff_affiliation_e2e_flow.md`) — the first real business agent,
+proving every earlier-phase capability (Supervisor/Harness, ERC, Tool Registry, Guardrails,
+Portal Links, event-driven resume) working together end-to-end for one real workflow rather
+than in isolation.
+
+**What's real:**
+
+- An 8-step LangGraph pipeline (`steps.py`, dispatched through the single reentrant node
+  from Phase 4's `build_skeleton_graph()`): classify intent → identify club → collect
+  application context → collect team/official/insurance/product context (real concurrent
+  batching via `asyncio.gather`, handles 100+ teams/officials without data loss) → build
+  and validate a real ERC (`erc.py`, walks the full lifecycle to `READY`) → skip RAG
+  honestly (corpus is still empty, Phase 8's own documented state) → reason about
+  application status → finalize a persona-toned response.
+- Real event-driven resume without relying on LangGraph's own checkpointer: the
+  Phase 2/12 `WorkflowInstance` (`current_state` / `waiting` / `status`) is the durable
+  checkpoint; a new `AffiliationResumeContextStore` carries the claims/conversation_id a
+  resume needs. Resume always re-enters the graph at `refresh_application`, refetching
+  both `get_club` and `get_application` fresh rather than trusting cached entities — this
+  is what makes the Golden Rule's authority precedence (Enterprise API > ERC > cache)
+  concrete rather than aspirational; there's a dedicated test proving a stale cached
+  status never wins over a fresh enterprise response.
+- `WorkflowRepository.transition()` gained an optional `waiting` parameter so a resume can
+  re-enter a wait state (e.g. CFA approves → still waiting, now for payment) instead of
+  only ever completing or failing.
+- Real guardrail check and real portal-link resolution on every response (never a
+  fabricated URL — an un-allowlisted domain is simply omitted, per doc 12 §55/§104).
+- Adam persona responses (`persona.py`) as deterministic Python templates, not
+  SLM-generated (Phase 9/10's SLM only has a mock provider, which would produce
+  unconvincing echo-output) — football-commentary tone applied only at real milestones,
+  never celebrating an unconfirmed transaction.
+- Scenario coverage from the e2e flow doc: Scenario 5 (auto-approve, zero-fee and
+  fee-bearing), the full Scenario 6→9 chain (CFA approval → invoice → payment
+  confirmation → `COMPLETE`) via real `AffiliationWorkflowResumeHandler` +
+  `WorkflowResumeService`, plus rejected/cancelled/still-waiting/failure paths. 100%
+  coverage on the whole `agents/affiliation/` package (12 files).
+- New config: `config/base/agents.yaml`, `config/enterprise/api-catalog/affiliation.yaml`
+  (7 READ-only tools — no invented write/submit tool; the actual submission transaction
+  stays in the Club Portal per the functional spec), `config/enterprise/tool-registry/
+  affiliation/tools.yaml`, `config/portals/affiliation.yaml`.
+
+**What's TODO-stubbed** (per Phase 23's own DEVELOPMENT-GUIDE allowance to "implement or
+stub with clear TODOs against real PFF APIs"): `agents.yaml`'s
+`enterprise_base_url` (`https://enterprise.pff.example`), the portal hostnames
+(`https://portal-{env}.pff.example`), and the 7 tool endpoint paths — all placeholders
+pending real PFF enterprise API contracts, never fabricated production values.
+
+**Not built / explicitly deferred:**
+
+- The other ~27 scenarios in the flow doc beyond 1/5/6-9 (e.g. mid-application edits,
+  multi-official rejection flows) — out of scope for a first reference workflow.
+- A live Service Bus consumer loop — `AffiliationWorkflowResumeHandler` is real, tested,
+  and ready to wire in, but no `EventProcessingService` is constructed outside tests
+  anywhere in the codebase yet (confirmed via grep), consistent with Phase 12's own
+  precedent of shipping the handler ahead of the consumer.
+- Graceful `httpx` client shutdown/cleanup wiring at the API layer.
+- RAG retrieval actually returning results — `maybe_retrieve_rag` is fully wired but
+  always skips, since the corpus is still empty (Phase 8's state, unchanged here).
 
 ## Running the API
 
@@ -449,11 +805,13 @@ uvicorn pf_ft_ai.api:create_app --factory --reload
 below). `POST /api/v1/chat` now runs the full request lifecycle for real: it
 resolves/creates the conversation and session, persists the user message, and calls
 `SupervisorWorkflowOrchestrator` — which routes through `Supervisor` → `AgentRegistry` →
-`AgentHarness`. The `AgentRegistry` is genuinely empty today (no business agents exist
-until `AffiliationAgent` lands in Phase 23), and the default `UnknownIntentClassifier`
-honestly reports zero-confidence "unknown" intent (no SLM-based NLU until Phase 9/10) — so
-`/chat` returns a normal `200` with `status: "FAILED"` and a message explaining no
-capability is registered yet, rather than fabricating a response or an internal error.
+`AgentHarness`. As of Phase 23, `AgentRegistry` has one real capability —
+`AffiliationAgent`, routed via the deterministic keyword-based
+`AffiliationIntentClassifier` (`affiliation`/`pay`/`invoice` substrings standing in for a
+real SLM-based classifier — Phase 9/10's SLM remains interface-only, no model approved
+yet). Any other request still honestly falls through to zero-confidence "unknown" intent,
+so `/chat` returns a normal `200` with `status: "FAILED"` and a message explaining no
+capability matched, rather than fabricating a response or an internal error.
 
 Claims are read from `x-subject` / `x-organization` / `x-roles` headers (the trust
 boundary is APIM in production — these are pre-validated claims forwarded as headers, per

@@ -1,0 +1,11 @@
+# doc 26 §138: "Pricing should not be hard-coded into application logic. Use versioned
+# configuration/data." Values below are placeholders (zero-cost) for the mock SLM
+# provider only — no real SLM provider contract has been signed yet
+# (docs/adr/0003-deferred-decisions-log.md), so there is no real per-token rate to
+# record. Replace with the actual provider's published rates once one is approved.
+version: "1.0.0"
+
+models:
+  mock-slm-v1:
+    input_cost_per_1k: 0.0
+    output_cost_per_1k: 0.0

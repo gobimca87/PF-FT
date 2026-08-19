@@ -1,0 +1,172 @@
+name: CI/CD
+
+# doc 25 (Infrastructure & Operations) / DEVELOPMENT-GUIDE Phase 19 — the full pipeline
+# in the exact stage order the guide specifies: Checkout → Dependency Install → Lint →
+# Type Check → Unit Tests → Security Scan → Dependency Scan → Engineering Agents → AI
+# Evaluation → Integration Tests → Build → Container Scan → Package → Deploy.
+#
+# Supersedes `security.yml` (Phase 15) — that workflow's own header said its jobs "can
+# be merged into [this] pipeline unchanged once Phase 19 is reached"; the sast/
+# secret-scan/dependency-scan steps below are that exact merge, not a re-implementation.
+#
+# The Deploy stage is an explicit, non-deceptive placeholder: the IaC tool
+# (Terraform/Bicep) and Kubernetes manifest tool (Kustomize/Helm) are still open ADR
+# decisions (docs/adr/0003-deferred-decisions-log.md) — by explicit user direction, this
+# phase does not force that choice. Nothing below claims a deployment happened.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  validate:
+    name: Lint, Type Check, Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: mypy src tests scripts
+      - run: pytest tests/unit -q
+
+  security:
+    name: Security Scan (SAST + secret scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check . --select S
+      - run: ruff check . --select S --output-format=json --output-file=ruff-security.json
+        if: always()
+      - run: detect-secrets scan --exclude-files '^MD files/' --baseline .secrets.baseline
+      # Fails if scanning finds anything not already accounted for in the committed
+      # baseline — new findings must be triaged locally (`detect-secrets audit`) and the
+      # updated baseline committed, not silently approved in CI.
+      - run: git diff --exit-code .secrets.baseline
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ruff-security-report
+          path: ruff-security.json
+
+  dependency-scan:
+    name: Dependency Scan (pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]" pip-audit
+      - run: pip-audit --strict
+      - run: pip-audit --format=json --output=pip-audit.json
+        if: always()
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pip-audit-report
+          path: pip-audit.json
+
+  engineering-agents:
+    name: Engineering Agents
+    needs: [security, dependency-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - uses: actions/download-artifact@v4
+        with:
+          name: ruff-security-report
+      - uses: actions/download-artifact@v4
+        with:
+          name: pip-audit-report
+      - run: >
+          python scripts/run_engineering_agents.py
+          --ruff-json ruff-security.json
+          --pip-audit-json pip-audit.json
+
+  ai-evaluation:
+    name: AI Evaluation (golden dataset regression)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      # config/evaluation/golden/ currently ships empty (Phase 16) — this stage passes
+      # trivially until Phase 23 adds real golden cases, at which point it starts
+      # actually gating regressions.
+      - run: pytest tests/regression -q --no-cov
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]"
+      - run: >
+          pytest tests/contract tests/component tests/resilience tests/e2e tests/erc
+          tests/performance tests/security tests/adversarial -q --no-cov
+
+  build:
+    name: Build, Container Scan, Package
+    needs: [validate, engineering-agents, ai-evaluation, integration-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute immutable image tag
+        # DEVELOPMENT-GUIDE Phase 19: "Immutable image tags only ... never `latest` in
+        # production" — tag is <app version>-<short commit sha>, never a moving tag.
+        run: |
+          VERSION=$(python -c "import yaml; print(yaml.safe_load(open('VERSION.yaml'))['version'])")
+          echo "IMAGE_TAG=FA-PFF-ai-runtime:${VERSION}-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+      - run: docker build -t "${IMAGE_TAG}" .
+      - name: Container scan (Trivy)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ env.IMAGE_TAG }}
+          severity: "CRITICAL,HIGH"
+          exit-code: "1"
+      - name: Package (save image artifact)
+        # No container registry exists yet (ACR provisioning is blocked on the IaC
+        # ADR) — the built, scanned image is kept as a workflow artifact rather than
+        # pushed anywhere, so this step is honest about what actually happened.
+        run: docker save "${IMAGE_TAG}" -o image.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: container-image
+          path: image.tar
+
+  deploy:
+    name: Deploy (placeholder — blocked on IaC/manifest ADR)
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain why this is a no-op
+        run: |
+          echo "Deploy is intentionally not implemented."
+          echo "Blocked on two open ADR decisions (docs/adr/0003-deferred-decisions-log.md):"
+          echo "  - IaC tool: Terraform or Bicep (provisions AKS/ACR/APIM/Key Vault/Service Bus)"
+          echo "  - Kubernetes manifest tool: Kustomize or Helm"
+          echo "Target namespace pattern once resolved: FA-PFF-ai-{dev,test,uat,stage,prod}"
+          echo "Target promotion order: DEV -> TEST -> UAT -> STAGE -> PROD, with a production approval gate."
+          echo "Rollout strategy is decided: Rolling (recommended default, accepted 2026-08-19)."

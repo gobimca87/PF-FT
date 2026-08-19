@@ -13,11 +13,20 @@ _LIMIT_NODE_ID = "_limit_exceeded"
 
 
 def build_skeleton_graph(
-    registry: NodeRegistry, *, entry_node: str, max_graph_steps: int
+    registry: NodeRegistry,
+    *,
+    entry_node: str,
+    max_graph_steps: int,
+    terminal_statuses: frozenset[str] | None = None,
 ) -> CompiledStateGraph:
+    """`terminal_statuses` lets a caller stop the loop on outcomes other than plain
+    completion (e.g. `AffiliationAgent`'s graph also stops on a `WAITING_FOR_*` status
+    — doc 7 §134-135's async/HIL paths end the graph run there, not at COMPLETED).
+    Defaults to `{COMPLETED_STATUS}` for backward compatibility."""
     node = registry.get(entry_node)
     if node is None:
         raise ConfigurationError(f"Entry node not registered: {entry_node}")
+    stop_statuses = terminal_statuses or frozenset({COMPLETED_STATUS})
 
     builder = StateGraph(GraphState)
 
@@ -27,7 +36,7 @@ def build_skeleton_graph(
         return result
 
     def should_continue(state: GraphState) -> str:
-        if state["execution_status"] == COMPLETED_STATUS:
+        if state["execution_status"] in stop_statuses:
             return "end"
         if state["step_count"] >= max_graph_steps:
             return "limit_exceeded"

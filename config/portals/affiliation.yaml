@@ -1,0 +1,47 @@
+# doc 12 §6/§64/§124 / DEVELOPMENT-GUIDE Phase 23. TODO(enterprise-integration):
+# `urls` below are placeholders — replace with the real Club Portal hostname per
+# environment once confirmed. `config/base/portal-links.yaml`'s
+# `link_policy.allowed_domains` must list the same hostname(s) or every resolution
+# against this portal fails closed (DOMAIN_NOT_ALLOWLISTED, doc 12 §32/§76).
+portal_id: club-portal
+name: Club Portal
+domain: affiliation
+owner: enterprise-integration
+status: ACTIVE
+
+urls:
+  dev: "https://portal-dev.pff.example"
+  test: "https://portal-test.pff.example"
+  uat: "https://portal-uat.pff.example"
+  staging: "https://portal-staging.pff.example"
+  prod: "https://portal.pff.example"
+
+routes:
+  affiliation_application_status:
+    route_id: affiliation_application_status
+    version: "1.0.0"
+    path: "/clubs/{clubId}/affiliation/application"
+    label: "View affiliation application"
+    parameters:
+      clubId:
+        source: claims.organization
+        required: true
+    security_classification: AUTHORIZED
+    require_entity_scope: true
+    status: ACTIVE
+
+  affiliation_payment:
+    route_id: affiliation_payment
+    version: "1.0.0"
+    path: "/clubs/{clubId}/payments/{applicationId}"
+    label: "Pay affiliation invoice"
+    parameters:
+      clubId:
+        source: claims.organization
+        required: true
+      applicationId:
+        source: erc.application.application_id
+        required: true
+    security_classification: SENSITIVE
+    require_entity_scope: true
+    status: ACTIVE

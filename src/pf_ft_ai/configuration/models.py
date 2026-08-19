@@ -441,3 +441,104 @@ class ObservabilityConfiguration(BaseModel):
     langfuse: LangfuseSettings
     circuit_breaker: CircuitBreakerSettings
     configuration_hash: str
+
+
+class JudgeSettings(BaseModel):
+    """doc 21 §62 judge model governance — no real judge model has been evaluated and
+    approved yet (docs/adr/0003), same posture as the SLM/embedding defaults."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    model_id: str
+    model_version: str
+    rubric_id: str
+
+
+class EvaluationThresholdSettings(BaseModel):
+    """doc 21 §68 — keyed by `ScoreDimension` value string; thresholds are
+    workflow/risk-dependent and never a single aggregate score (doc 21 §67)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    minimum_scores: dict[str, float] = Field(default_factory=dict)
+    max_critical_security_failures: int = Field(default=0, ge=0)
+
+
+class EvaluationConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    judge: JudgeSettings
+    thresholds: EvaluationThresholdSettings
+    configuration_hash: str
+
+
+class ConcurrencyBudgetSettings(BaseModel):
+    """doc 26 §21/§136 — bounded concurrency per dependency class."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    max_workflows: int = Field(gt=0)
+    max_api_calls: int = Field(gt=0)
+    max_tool_calls: int = Field(gt=0)
+    max_model_calls: int = Field(gt=0)
+
+
+class DefaultPerformanceBudgetSettings(BaseModel):
+    """doc 26 §8/§133 — the platform-wide default budget a workflow inherits unless it
+    defines its own (workflow-specific budgets aren't configured centrally yet — no
+    real workflow beyond the affiliation reference exists to need one)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    latency_budget_ms: dict[str, int] = Field(default_factory=dict)
+    token_budget: int = Field(gt=0)
+    model_call_budget: int = Field(gt=0)
+    tool_call_budget: int = Field(gt=0)
+    cost_budget: float = Field(gt=0)
+
+
+class PerformanceConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    concurrency: ConcurrencyBudgetSettings
+    default_budget: DefaultPerformanceBudgetSettings
+    configuration_hash: str
+
+
+class ModelPricingSettings(BaseModel):
+    """doc 26 §138 — per-model pricing, versioned configuration rather than
+    hard-coded. Values are placeholders (mock model only) until a real SLM provider
+    contract exists (docs/adr/0003) — same "mock until approved" posture as elsewhere."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    input_cost_per_1k: float = Field(ge=0)
+    output_cost_per_1k: float = Field(ge=0)
+
+
+class PricingConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    version: str
+    models: dict[str, ModelPricingSettings] = Field(default_factory=dict)
+    configuration_hash: str
+
+
+class AffiliationAgentSettings(BaseModel):
+    """doc 4 §72 / DEVELOPMENT-GUIDE Phase 23. `enterprise_base_url` is a placeholder
+    pending a real PFF enterprise API host (Phase 23's own scope allowance: "implement
+    or stub with clear TODOs against real PFF APIs") — never a fabricated production
+    URL, always overridable per environment."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    enterprise_base_url: str
+    supported_intents: tuple[str, ...] = Field(default_factory=tuple)
+    team_official_batch_size: int = Field(gt=0)
+
+
+class AgentsConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    affiliation: AffiliationAgentSettings
+    configuration_hash: str

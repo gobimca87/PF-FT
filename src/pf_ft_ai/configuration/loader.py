@@ -12,13 +12,16 @@ from pf_ft_ai.common.validation import format_validation_error
 from pf_ft_ai.configuration.hashing import compute_configuration_hash
 from pf_ft_ai.configuration.models import (
     ALLOWED_ENVIRONMENTS,
+    AffiliationAgentSettings,
     AgenticRagSettings,
+    AgentsConfiguration,
     BatchingConfiguration,
     BatchingSettings,
     CacheConfiguration,
     CacheSettings,
     ChunkingSettings,
     CircuitBreakerSettings,
+    ConcurrencyBudgetSettings,
     ConcurrencySettings,
     ConfigurationMetadata,
     ContextBudgetConfiguration,
@@ -26,25 +29,32 @@ from pf_ft_ai.configuration.models import (
     ConversationConfiguration,
     ConversationSecuritySettings,
     ConversationSettings,
+    DefaultPerformanceBudgetSettings,
     EmbeddingConfiguration,
     EmbeddingSettings,
     Environment,
     EnvironmentIdentity,
     ErcConfiguration,
     ErcSettings,
+    EvaluationConfiguration,
+    EvaluationThresholdSettings,
     EventRetrySettings,
     GuardrailConfiguration,
     GuardrailSettings,
     HarnessConfiguration,
     HarnessLimits,
     IntegrationConfiguration,
+    JudgeSettings,
     LangfuseSettings,
     MemoryConfiguration,
     MemorySettings,
+    ModelPricingSettings,
     ObservabilityConfiguration,
+    PerformanceConfiguration,
     PlatformConfiguration,
     PortalLinkConfiguration,
     PortalLinkPolicySettings,
+    PricingConfiguration,
     RagConfiguration,
     RedisConfiguration,
     RedisConnectionSettings,
@@ -584,4 +594,112 @@ def load_observability_configuration(
         langfuse=langfuse,
         circuit_breaker=circuit_breaker,
         configuration_hash=compute_configuration_hash(merged),
+    )
+
+
+def load_evaluation_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> EvaluationConfiguration:
+    merged = _load_merged_config(
+        filename="evaluation.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        judge = JudgeSettings.model_validate(resolved["judge"])
+        thresholds = EvaluationThresholdSettings.model_validate(resolved["thresholds"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid evaluation configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return EvaluationConfiguration(
+        judge=judge, thresholds=thresholds, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_performance_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> PerformanceConfiguration:
+    merged = _load_merged_config(
+        filename="performance.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        concurrency = ConcurrencyBudgetSettings.model_validate(resolved["concurrency"])
+        default_budget = DefaultPerformanceBudgetSettings.model_validate(resolved["default_budget"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid performance configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return PerformanceConfiguration(
+        concurrency=concurrency,
+        default_budget=default_budget,
+        configuration_hash=compute_configuration_hash(merged),
+    )
+
+
+def load_pricing_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> PricingConfiguration:
+    merged = _load_merged_config(
+        filename="pricing.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        version = resolved["version"]
+        models = {
+            model_id: ModelPricingSettings.model_validate(settings)
+            for model_id, settings in resolved.get("models", {}).items()
+        }
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid pricing configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return PricingConfiguration(
+        version=version, models=models, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_agents_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> AgentsConfiguration:
+    merged = _load_merged_config(
+        filename="agents.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        affiliation = AffiliationAgentSettings.model_validate(resolved["affiliation"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid agents configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return AgentsConfiguration(
+        affiliation=affiliation, configuration_hash=compute_configuration_hash(merged)
     )

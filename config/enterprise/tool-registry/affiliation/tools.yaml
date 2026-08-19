@@ -1,0 +1,102 @@
+# doc 10 §28 tool-registry/<domain>/<name>.yaml — one file for all 7 read-only
+# affiliation tools (doc 10 §123's flexibility already supports a YAML list per file).
+# Every `source.api_id` here must exist in config/enterprise/api-catalog/affiliation.yaml
+# (doc 10 §128, enforced by `ToolRegistry.register()`).
+
+- tool_id: affiliation.get_club
+  version: "1.0.0"
+  description: Look up a club's basic details (name, county/CFA, status).
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_club
+  input_schema_ref: AffiliationGetClubRequest
+  output_schema_ref: ClubSummary
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]
+
+- tool_id: affiliation.get_application
+  version: "1.0.0"
+  description: Look up a club's current affiliation application and its status.
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_application
+  input_schema_ref: AffiliationGetApplicationRequest
+  output_schema_ref: ApplicationSummary
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]
+
+- tool_id: affiliation.get_teams
+  version: "1.0.0"
+  description: List a club's teams eligible for affiliation.
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_teams
+  input_schema_ref: AffiliationGetTeamsRequest
+  output_schema_ref: TeamSummaryList
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]
+
+- tool_id: affiliation.get_officials
+  version: "1.0.0"
+  description: List a club's officials and their safeguarding/DBS status.
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_officials
+  input_schema_ref: AffiliationGetOfficialsRequest
+  output_schema_ref: OfficialSummaryList
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]
+
+- tool_id: affiliation.get_insurance
+  version: "1.0.0"
+  description: Look up a club's Public Liability and Personal Accident insurance status.
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_insurance
+  input_schema_ref: AffiliationGetInsuranceRequest
+  output_schema_ref: InsuranceSummary
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]
+
+- tool_id: affiliation.get_products
+  version: "1.0.0"
+  description: List the products (team fees, insurance, other products) attached to an application.
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_products
+  input_schema_ref: AffiliationGetProductsRequest
+  output_schema_ref: ProductSummaryList
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]
+
+- tool_id: affiliation.get_payment_status
+  version: "1.0.0"
+  description: Look up the invoice/payment status for an affiliation application.
+  source:
+    type: enterprise_api
+    api_id: enterprise.affiliation.get_payment_status
+  input_schema_ref: AffiliationGetPaymentStatusRequest
+  output_schema_ref: PaymentStatusSummary
+  execution_policy:
+    timeout_ms: 10000
+    idempotent: true
+  risk_class: READ
+  allowed_agents: [affiliation_agent]

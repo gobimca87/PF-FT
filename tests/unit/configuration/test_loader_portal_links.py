@@ -11,7 +11,9 @@ def test_should_load_portal_link_configuration_from_the_real_config_repository()
     config = load_portal_link_configuration("dev")
 
     assert config.link_policy.max_links_per_response == 10
-    assert config.link_policy.allowed_domains == ()
+    # Phase 23 populated the placeholder Club Portal hostnames — see
+    # config/portals/affiliation.yaml and its README for why they're TODO placeholders.
+    assert "portal-dev.pff.example" in config.link_policy.allowed_domains
 
 
 @pytest.mark.parametrize("environment", ALLOWED_ENVIRONMENTS)

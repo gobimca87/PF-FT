@@ -4,6 +4,12 @@ from dataclasses import dataclass, field
 
 from fastapi import Depends, Header, Request
 
+from pf_ft_ai.agents.affiliation import (
+    AffiliationAgent,
+    AffiliationDependencies,
+    build_affiliation_dependencies,
+)
+from pf_ft_ai.agents.affiliation.classifier import AffiliationIntentClassifier
 from pf_ft_ai.application.conversation.service import ConversationService
 from pf_ft_ai.application.session.service import SessionService
 from pf_ft_ai.application.workflows.orchestrator import WorkflowOrchestrator
@@ -23,10 +29,16 @@ from pf_ft_ai.infrastructure.persistence import (
     InMemoryConversationRepository,
     InMemoryMessageRepository,
     InMemorySessionRepository,
+    InMemoryWorkflowRepository,
 )
 from pf_ft_ai.orchestration.harness import AgentHarness
-from pf_ft_ai.orchestration.supervisor import AgentRegistry, Supervisor, UnknownIntentClassifier
+from pf_ft_ai.orchestration.supervisor import AgentRegistry, Supervisor
+from pf_ft_ai.orchestration.supervisor.classifier import IntentClassifier
+from pf_ft_ai.orchestration.supervisor.models import AgentCapability
 from pf_ft_ai.orchestration.workflow_orchestrator import SupervisorWorkflowOrchestrator
+
+AFFILIATION_AGENT_ID = "affiliation_agent"
+AFFILIATION_AGENT_VERSION = "1.0.0"
 
 
 @dataclass
@@ -35,16 +47,31 @@ class AppState:
     platform_configuration: PlatformConfiguration
     conversation_configuration: ConversationConfiguration
     harness_limits: HarnessLimits
+    affiliation_dependencies: AffiliationDependencies
     conversation_repository: InMemoryConversationRepository = field(
         default_factory=InMemoryConversationRepository
     )
     message_repository: InMemoryMessageRepository = field(default_factory=InMemoryMessageRepository)
     session_repository: InMemorySessionRepository = field(default_factory=InMemorySessionRepository)
     agent_registry: AgentRegistry = field(default_factory=AgentRegistry)
+    intent_classifier: IntentClassifier = field(default_factory=AffiliationIntentClassifier)
     workflow_orchestrator: WorkflowOrchestrator = field(init=False)
 
     def __post_init__(self) -> None:
-        supervisor = Supervisor(self.agent_registry, UnknownIntentClassifier())
+        # doc 4 §72 / DEVELOPMENT-GUIDE Phase 23: `AffiliationAgent` is the platform's
+        # first (and currently only) registered business agent — the rest of the
+        # catalog stays deferred to a real product decision
+        # (docs/adr/0003-deferred-decisions-log.md).
+        self.agent_registry.register(
+            AgentCapability(
+                agent_id=AFFILIATION_AGENT_ID,
+                agent_version=AFFILIATION_AGENT_VERSION,
+                workflow="club-affiliation",
+                supported_intents=self.affiliation_dependencies.settings.supported_intents,
+            ),
+            executor=AffiliationAgent(self.affiliation_dependencies),
+        )
+        supervisor = Supervisor(self.agent_registry, self.intent_classifier)
         harness = AgentHarness(self.harness_limits)
         self.workflow_orchestrator = SupervisorWorkflowOrchestrator(
             supervisor, harness, self.agent_registry
@@ -52,11 +79,15 @@ class AppState:
 
 
 def build_app_state(*, environment: Environment = "dev") -> AppState:
+    affiliation_dependencies = build_affiliation_dependencies(
+        environment=environment, workflow_repository=InMemoryWorkflowRepository()
+    )
     return AppState(
         environment=environment,
         platform_configuration=load_platform_configuration(environment),
         conversation_configuration=load_conversation_configuration(environment),
         harness_limits=load_harness_configuration(environment).harness,
+        affiliation_dependencies=affiliation_dependencies,
     )
 
 

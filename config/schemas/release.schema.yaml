@@ -10,4 +10,4 @@ fields:
   release.application_version: { type: string, required: true, format: semver }
   release.git_commit: { type: string, required: false }
   release.configuration_hash: { type: string, required: false }
-  release.components: { type: map[string, string], required: false, description: "component_id -> version, populated as later phases register versioned artifacts (agents, prompts, models, ...)" }
+  release.components: { type: "map[string, string]", required: false, description: "component_id -> version, populated as later phases register versioned artifacts (agents, prompts, models, ...)" }

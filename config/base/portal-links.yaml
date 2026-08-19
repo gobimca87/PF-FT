@@ -1,7 +1,13 @@
-# doc 12 §32/§76/§128: allowed_domains starts empty — no real PFF portal hostname has
-# been approved yet (config/portals/ is likewise empty, see its README), so every link
-# resolution fails closed (DOMAIN_NOT_ALLOWLISTED) until real hostnames are configured
-# here per environment.
+# doc 12 §32/§76/§128. Phase 23 populated config/portals/affiliation.yaml with
+# placeholder Club Portal hostnames (TODO: replace with the real hostname once
+# Enterprise Integration confirms it) — listed here so link resolution can actually
+# succeed against them; every other portal/domain still fails closed
+# (DOMAIN_NOT_ALLOWLISTED) until it's likewise approved and added.
 link_policy:
   max_links_per_response: 10
-  allowed_domains: []
+  allowed_domains:
+    - portal-dev.pff.example
+    - portal-test.pff.example
+    - portal-uat.pff.example
+    - portal-staging.pff.example
+    - portal.pff.example

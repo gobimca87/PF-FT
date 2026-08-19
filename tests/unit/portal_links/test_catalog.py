@@ -105,8 +105,9 @@ def test_load_portal_catalog_should_raise_a_sanitized_error_for_invalid_content(
         load_portal_catalog(tmp_path)
 
 
-def test_the_real_portals_directory_should_currently_be_empty() -> None:
-    """docs/config/portals/README.md explains why: no real PFF portal exists yet."""
+def test_the_real_portals_directory_should_contain_the_phase_23_club_portal() -> None:
+    """Phase 23 populated config/portals/affiliation.yaml — see its README for why
+    the hostnames inside it are still TODO placeholders pending a real PFF hostname."""
     registry = load_portal_catalog()
 
-    assert registry.all_portals() == ()
+    assert {portal.portal_id for portal in registry.all_portals()} == {"club-portal"}

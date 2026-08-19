@@ -1,0 +1,130 @@
+# doc 10 / DEVELOPMENT-GUIDE Phase 23 — the 7 example tools the guide names for
+# AffiliationAgent: get_club, get_application, get_teams, get_officials, get_insurance,
+# get_products, get_payment_status. All read-only (doc 4 §72's checklist has the agent
+# retrieve and explain, never submit the application itself — that stays a Club Portal
+# action per `MD files/0 Workflow/pff_affiliation_e2e_flow.md` Phases 0-6).
+#
+# TODO(enterprise-integration): every `endpoint.path` below is a placeholder shape,
+# not a confirmed PFF contract — replace once Enterprise Integration provides the real
+# API spec (Phase 23's own scope allowance: "implement or stub with clear TODOs
+# against real PFF APIs"). `authorization.claims` similarly assumes a single
+# `affiliation.read` scope pending the real claims model.
+
+- api_id: enterprise.affiliation.get_club
+  name: Get Club
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/clubs/{clubId}
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true
+
+- api_id: enterprise.affiliation.get_application
+  name: Get Current Affiliation Application
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/clubs/{clubId}/affiliation-application
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true
+
+- api_id: enterprise.affiliation.get_teams
+  name: Get Club Teams
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/clubs/{clubId}/teams
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true
+
+- api_id: enterprise.affiliation.get_officials
+  name: Get Club Officials
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/clubs/{clubId}/officials
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true
+
+- api_id: enterprise.affiliation.get_insurance
+  name: Get Club Insurance
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/clubs/{clubId}/insurance
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true
+
+- api_id: enterprise.affiliation.get_products
+  name: Get Affiliation Application Products
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/affiliation-applications/{applicationId}/products
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true
+
+- api_id: enterprise.affiliation.get_payment_status
+  name: Get Affiliation Application Payment Status
+  version: v1
+  owner: enterprise-integration
+  domain: affiliation
+  operation: READ
+  endpoint:
+    method: GET
+    path: /api/v1/affiliation-applications/{applicationId}/payment-status
+  authorization:
+    required: true
+    claims: [affiliation.read]
+  execution:
+    idempotent: true
+    retryable: true
+    parallelizable: true

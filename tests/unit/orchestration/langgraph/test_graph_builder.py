@@ -53,6 +53,27 @@ async def test_should_terminate_normally_when_node_marks_completed() -> None:
     assert result["step_count"] == 3
 
 
+async def test_should_terminate_on_a_custom_terminal_status() -> None:
+    async def waits_after_one_step(state: GraphState) -> GraphState:
+        if state["step_count"] >= 1:
+            return {**state, "execution_status": "WAITING_FOR_EVENT"}
+        return state
+
+    registry = NodeRegistry()
+    registry.register("reason", waits_after_one_step)
+    graph = build_skeleton_graph(
+        registry,
+        entry_node="reason",
+        max_graph_steps=10,
+        terminal_statuses=frozenset({COMPLETED_STATUS, "WAITING_FOR_EVENT"}),
+    )
+
+    result = await graph.ainvoke(_initial_state())
+
+    assert result["execution_status"] == "WAITING_FOR_EVENT"
+    assert result["step_count"] == 2
+
+
 async def test_should_terminate_via_step_limit_when_node_never_completes() -> None:
     async def never_completes(state: GraphState) -> GraphState:
         return state

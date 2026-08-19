@@ -1,0 +1,62 @@
+name: Operational Checklists
+
+# doc 28 §135-137 / DEVELOPMENT-GUIDE Phase 22: the daily/weekly/monthly operational
+# checklists, implemented as scheduled checks rather than PR gates (see
+# scripts/run_engineering_agents.py + .github/workflows/ci.yml for the PR-triggered
+# equivalent this reuses agents from). No environment is deployed yet (Phase 19's IaC/
+# manifest decision is still deferred), so the platform-health check runs without a
+# `--health-url` and reports SKIPPED rather than a fabricated result — wire a real URL
+# in once an environment exists.
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # daily 06:00 UTC
+    - cron: "0 6 * * 1"   # weekly, Monday 06:00 UTC
+    - cron: "0 6 1 * *"   # monthly, 1st of month 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      frequency:
+        description: "Run a specific cadence on demand"
+        required: true
+        type: choice
+        options: [DAILY, WEEKLY, MONTHLY]
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  determine-frequency:
+    name: Determine which cadence fired
+    runs-on: ubuntu-latest
+    outputs:
+      frequency: ${{ steps.resolve.outputs.frequency }}
+    steps:
+      - id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "frequency=${{ inputs.frequency }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 6 1 * *" ]; then
+            echo "frequency=MONTHLY" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 6 * * 1" ]; then
+            echo "frequency=WEEKLY" >> "$GITHUB_OUTPUT"
+          else
+            echo "frequency=DAILY" >> "$GITHUB_OUTPUT"
+          fi
+
+  run-checklist:
+    name: Run ${{ needs.determine-frequency.outputs.frequency }} checklist
+    needs: [determine-frequency]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -e ".[dev]" pip-audit
+      - run: pip-audit --format=json --output=pip-audit.json || true
+        # non-fatal here: the weekly dependency check still runs and reports findings;
+        # this step only produces the input artifact.
+      - run: >
+          python scripts/run_operational_checklist.py
+          --frequency ${{ needs.determine-frequency.outputs.frequency }}
+          --pip-audit-json pip-audit.json
