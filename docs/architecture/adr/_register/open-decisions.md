@@ -1,25 +1,39 @@
-# Open Decisions — Awaiting Sign-Off
+# PFF AI — Open Decisions Register
 
-Decisions in this library that carry `status: Proposed`. Each has a complete evaluation —
-criteria, alternatives, weighted matrix — and a stated recommendation, but has **not** been
-ratified. Nothing downstream may treat a `Proposed` decision as settled.
+> The ADRs below carry `status: Proposed`: each presents a complete CMMI-DAR evaluation
+> and a **stated recommendation**, but is **not yet Accepted** — it awaits the sign-off
+> named in its row. This register is governed by
+> [ADR-D0-04](../00-decision-programme/ADR-D0-04-open-decision-register-and-escalation.md)
+> and listed as a verification target by
+> [ADR-D8-07](../08-business-value/ADR-D8-07-decision-register-and-traceability.md).
+> Generated 2026-08-22.
 
-`CLAUDE.md` §Confirmed Tech Stack is explicit that several of these must be *resolved via
-ADR, not silently picked*. That is why they are recorded here with full analysis and a
-recommendation rather than either guessed at or left undocumented.
+Four of these were flagged open from the outset in `CLAUDE.md` / `DEVELOPMENT-GUIDE.md`
+§2 (vector store, SLM serving stack, IaC tool, K8s manifest tool). The fifth
+(**ADR-D3-23 embedding model**) is Proposed because doc 14 §13 mandates that the
+embedding model be chosen by a PF-FT-specific retrieval evaluation, not by reputation —
+so its recommendation is explicitly provisional on that evaluation.
 
-Escalation path and the deferral rules are in
-[ADR-D0-04](../00-decision-programme/ADR-D0-04-open-decision-register-and-escalation.md).
+| ADR | Decision | Recommendation | Awaiting | Gated at phase |
+|---|---|---|---|---|
+| [ADR-D3-23](../03-ai-architecture/ADR-D3-23-embedding-model-selection-and-re-embedding.md) | Embedding model selection | HF-hosted general-purpose **768-dim (`bge-base-en-v1.5` class)**; fallback 1024-dim | PF-FT retrieval evaluation (Recall@5 ≥ 0.90) then ARB sign-off | 8 |
+| [ADR-D3-24](../03-ai-architecture/ADR-D3-24-vector-store-selection.md) | Vector store selection | **Azure AI Search** (vector + hybrid); fallback pgvector on Azure Postgres | ARB sign-off | 8 |
+| [ADR-D5-10](../05-technology-architecture/ADR-D5-10-self-hosted-slm-serving-stack.md) | Self-hosted SLM serving stack | **vLLM** on AKS GPU; fallbacks Azure ML / TGI / Triton | Throughput/latency/quality benchmark on chosen model + SKU, then ARB | 20 |
+| [ADR-D5-12](../05-technology-architecture/ADR-D5-12-iac-tool.md) | Infrastructure-as-Code tool | **Terraform** (OpenTofu-compatible); fallback Azure Bicep | Platform-team house-standard confirmation | 1 |
+| [ADR-D5-13](../05-technology-architecture/ADR-D5-13-kubernetes-manifest-tool.md) | Kubernetes manifest tool | **Kustomize** for first-party; Helm hybrid for third-party charts | Platform-team confirmation | 1 |
 
-## Open decisions
+## How an open decision is closed
 
-| ID | Decision | Recommendation | Needed by | Blocking | Decision owner |
-|---|---|---|---|---|---|
+1. The awaited evidence is produced (evaluation, benchmark) or the named approver signs off.
+2. The ADR's `status` changes `Proposed → Accepted` (a new version per
+   [ADR-D0-02](../00-decision-programme/ADR-D0-02-adr-identification-lifecycle-supersession.md)),
+   with the confirming evidence recorded in its Change Log and §7 Status rationale.
+3. If the evaluation selects a different option than the recommendation, the ADR is
+   updated to record the selected option and why — the recommendation was always
+   provisional on the evidence.
+4. This register and the decision register are regenerated; the row moves out of "open".
 
-*Rows are added as each `Proposed` ADR lands.*
-
-## Relationship to `docs/adr/0003-deferred-decisions-log.md`
-
-The earlier deferred-decisions log in `docs/adr/` is superseded by this file together with
-[ADR-D0-04](../00-decision-programme/ADR-D0-04-open-decision-register-and-escalation.md).
-It remains in place unmodified as the historical record.
+**Note on count:** the programme plan anticipated exactly four open decisions; a fifth
+(ADR-D3-23) is Proposed as a deliberate, documented consequence of doc 14 §13's
+evaluation-first requirement — recording it as Proposed is more faithful than marking it
+Accepted before the mandated retrieval evaluation has run.

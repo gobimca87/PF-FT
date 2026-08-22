@@ -148,7 +148,7 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D3-20 | RAG scope — knowledge and FAQ only, never business truth | WS-17 |
 | D3-21 | Document ingestion and chunking strategy | WS-17 |
 | D3-22 | Retrieval, reranking and mandatory-citation policy | WS-17 |
-| D3-23 | Embedding model selection, versioning and re-embedding strategy | WS-17 |
+| D3-23 | **Embedding model selection**, versioning and re-embedding strategy — awaiting retrieval-eval sign-off | WS-17 |
 | D3-24 | **Vector store selection** — awaiting sign-off | WS-17 |
 | D3-25 | Context engineering — assembly order, precedence and token budget allocation | WS-18 |
 
@@ -255,6 +255,19 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 
 ---
 
-*Links in the domain index are added as each ADR lands. See
-[`_register/decision-register.md`](_register/decision-register.md) for authoritative
-status.*
+## Library status
+
+All **136 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
+Every ADR follows the CMMI-DAR template with a weighted decision matrix over (wherever the
+option space admits) at least five genuine alternatives, a stated decision and rationale,
+Golden-Rule/precedence conformance, quantitative targets and revisit triggers.
+
+**Five decisions are open (`status: Proposed`)** — each with a full evaluation and a stated
+recommendation awaiting the sign-off named in
+[`_register/open-decisions.md`](_register/open-decisions.md): D3-23 (embedding model),
+D3-24 (vector store), D5-10 (SLM serving stack), D5-12 (IaC tool), D5-13 (K8s manifest
+tool). All other ADRs are `Accepted`.
+
+The authoritative, fully-linked list of every ADR with its live status is in
+[`_register/decision-register.md`](_register/decision-register.md); sheet/spec/phase/code
+traceability is in [`_register/traceability-matrix.md`](_register/traceability-matrix.md).
