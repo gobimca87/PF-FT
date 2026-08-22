@@ -85,9 +85,14 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ## 5. Alternatives Considered
 
-<CMMI DAR SP 1.2 — at least two genuine alternatives. Where a driver or constraint
-truly forces the outcome, record the postures that were rejected and why, rather than
-inventing candidates that were never viable. Never present a straw man.>
+<CMMI DAR SP 1.2 — **at least five genuine alternatives** wherever the decision space
+admits them, which is the case for any technology selection, strategy choice or design
+pattern. Fewer than five is permitted only where the option space is genuinely narrower
+(a binary policy question, or a constraint that eliminates candidates before evaluation);
+where that applies, state why in one line. Where a driver or constraint truly forces the
+outcome, record the postures that were rejected and why, rather than inventing candidates
+that were never viable. Never present a straw man: every option must be one a competent
+architect could reasonably advocate.>
 
 ### 5.1 Option A — <name>
 
@@ -107,7 +112,25 @@ inventing candidates that were never viable. Never present a straw man.>
 
 ### 5.3 Option C — <name>
 
-<same structure, as many as were genuinely on the table>
+<same structure>
+
+### 5.4 Option D — <name>
+
+<same structure>
+
+### 5.5 Option E — <name>
+
+<same structure, and further options where they were genuinely on the table>
+
+### 5.6 Options considered and eliminated before scoring
+
+<Where candidates were ruled out by a constraint rather than by evaluation, list them
+with the constraint that eliminated each. This keeps §6's matrix readable while showing
+the full option space was surveyed.>
+
+| Option | Eliminated by |
+|---|---|
+| <name> | <DR-C-nn, in one line> |
 
 ## 6. Evaluation Method and Decision Matrix
 
