@@ -5,7 +5,7 @@
 > Generated 2026-08-23.
 
 
-**Total ADRs:** 140 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
+**Total ADRs:** 142 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
 
 
 ## Domain 0 — Decision Programme & Governance
@@ -108,6 +108,7 @@
 | [ADR-D4-10](../04-information-architecture/ADR-D4-10-session-conversation-state-store.md) | Session / conversation / memory / cache state store — Azure Managed Redis | Accepted | Principal Architect | [WS-22] | 2026-08-22 |
 | [ADR-D4-11](../04-information-architecture/ADR-D4-11-memory-architecture.md) | Memory architecture — short/long-term, ranking, summarisation, retention | Accepted | AI Architecture Lead | [WS-22] | 2026-08-22 |
 | [ADR-D4-12](../04-information-architecture/ADR-D4-12-cache-architecture.md) | Cache architecture — namespaces, TTL, invalidation, stampede protection | Accepted | AI Architecture Lead | [WS-22] | 2026-08-22 |
+| [ADR-D4-13](../04-information-architecture/ADR-D4-13-cache-and-memory-scope-for-platform-global-entries.md) | Cache and memory key scoping for platform-global (non-tenant) entries | Accepted | AI Architecture Lead | [WS-22] | 2026-08-23 |
 
 ## Domain 5 — Technology Architecture
 
@@ -131,6 +132,7 @@
 | [ADR-D5-16](../05-technology-architecture/ADR-D5-16-shared-http-client-standard.md) | Shared HTTP client standard — pooling, timeout, retry, tracing | Accepted | Backend Lead | [WS-25] | 2026-08-22 |
 | [ADR-D5-17](../05-technology-architecture/ADR-D5-17-scalability-and-autoscaling.md) | Scalability and autoscaling model | Accepted | SRE | [WS-26] | 2026-08-22 |
 | [ADR-D5-18](../05-technology-architecture/ADR-D5-18-latency-budget-decomposition.md) | Latency budget decomposition and per-hop SLO allocation | Accepted | AI Architecture Lead | [WS-26] | 2026-08-22 |
+| [ADR-D5-19](../05-technology-architecture/ADR-D5-19-inference-kv-cache-and-vram-capacity-planning.md) | Inference KV-cache and VRAM capacity planning for the self-hosted SLM | Accepted | AI Architecture Lead | [WS-24] | 2026-08-23 |
 
 ## Domain 6 — Security & Governance
 

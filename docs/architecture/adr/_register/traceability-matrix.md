@@ -82,6 +82,7 @@
 | [ADR-D4-10](../04-information-architecture/ADR-D4-10-session-conversation-state-store.md) | [WS-22] | 9 PF-FT-AI-MEMORY-CACHE.md §21, §22, §37, §54, §55, §77, §78; 6 PF-FT-AI-CONVERSATION-S… | [7] | src/pf_ft_ai/memory/, src/pf_ft_ai/cache/, config… |
 | [ADR-D4-11](../04-information-architecture/ADR-D4-11-memory-architecture.md) | [WS-22] | 9 PF-FT-AI-MEMORY-CACHE.md §5, §6, §10, §11, §12, §16, §17, §20, §22, §24, §25, §26, §2… | [7] | src/pf_ft_ai/memory/ |
 | [ADR-D4-12](../04-information-architecture/ADR-D4-12-cache-architecture.md) | [WS-22] | 9 PF-FT-AI-MEMORY-CACHE.md §33, §34, §35, §36, §37, §38, §39, §40, §41, §42, §43, §44, … | [7] | src/pf_ft_ai/cache/ |
+| [ADR-D4-13](../04-information-architecture/ADR-D4-13-cache-and-memory-scope-for-platform-global-entries.md) | [WS-22] | 9 PF-FT-AI-MEMORY-CACHE.md §5, §15, §33, §34, §36, §37, §38, §39 | [7] | src/pf_ft_ai/cache/, src/pf_ft_ai/memory/ |
 | [ADR-D5-01](../05-technology-architecture/ADR-D5-01-language-and-api-framework.md) | [WS-23] | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9, §27, §28, §29; 25.PF-FT-AI-INFRASTRUCTURE-OPER… | [1] | src/pf_ft_ai/ |
 | [ADR-D5-02](../05-technology-architecture/ADR-D5-02-python-version-and-type-checker.md) | [WS-23] | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9, §13, §14, §16 | [0, 1] | pyproject.toml |
 | [ADR-D5-03](../05-technology-architecture/ADR-D5-03-boundary-validation-pydantic.md) | [WS-23] | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16, §17, §36 | [1] | src/pf_ft_ai/ |
@@ -100,6 +101,7 @@
 | [ADR-D5-16](../05-technology-architecture/ADR-D5-16-shared-http-client-standard.md) | [WS-25] | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §63; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §24,… | [2] | src/pf_ft_ai/infrastructure/http/ |
 | [ADR-D5-17](../05-technology-architecture/ADR-D5-17-scalability-and-autoscaling.md) | [WS-26] | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51, §52, §53; 26.PF-FT-AI-PERFORMANCE-COST.md… | [7, 20] | deploy/ |
 | [ADR-D5-18](../05-technology-architecture/ADR-D5-18-latency-budget-decomposition.md) | [WS-26] | 26.PF-FT-AI-PERFORMANCE-COST.md §5, §6, §7, §8, §9, §10, §11, §16, §39, §52 | [2, 8] | src/pf_ft_ai/ |
+| [ADR-D5-19](../05-technology-architecture/ADR-D5-19-inference-kv-cache-and-vram-capacity-planning.md) | [WS-24] | 15.PF-FT-AI-SLM.md §70, §71, §72, §73, §74, §77, §78, §79 | [20] | src/pf_ft_ai/slm/, infra/ |
 | [ADR-D6-01](../06-security-governance/ADR-D6-01-zero-trust-and-trust-zones.md) | [WS-27] | 19.PF-FT-AI-SECURITY.md §5, §6, §7, §8, §16, §17 | [2] | infra/ |
 | [ADR-D6-02](../06-security-governance/ADR-D6-02-authn-authz-boundary.md) | [WS-27] | 19.PF-FT-AI-SECURITY.md §10, §11, §12, §16, §17; 18.PF-FT-AI-GUARDRAILS.md §33, §34, §3… | [2] | src/pf_ft_ai/api/ |
 | [ADR-D6-03](../06-security-governance/ADR-D6-03-authorization-context-integrity-and-propagation.md) | [WS-27] | 19.PF-FT-AI-SECURITY.md §12, §13, §14, §15; 18.PF-FT-AI-GUARDRAILS.md §34, §35, §36, §3… | [3] | src/pf_ft_ai/orchestration/ |

@@ -172,6 +172,7 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D4-10 | Session and conversation state store — Azure Managed Redis | WS-22 |
 | D4-11 | Memory architecture — retention, ranking and summarisation | WS-22 |
 | D4-12 | Cache architecture — namespaces, TTL, invalidation, stampede protection | WS-22 |
+| D4-13 | Cache and memory key scoping for platform-global (non-tenant) entries | WS-22 |
 
 ### Domain 5 — Technology Architecture
 
@@ -195,6 +196,7 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D5-16 | Shared HTTP client standard | WS-25/26 |
 | D5-17 | Scalability and autoscaling model | WS-26 |
 | D5-18 | Latency budget decomposition and per-hop SLO allocation | WS-26 |
+| D5-19 | Inference KV-cache and VRAM capacity planning for the self-hosted SLM | WS-24 |
 
 ### Domain 6 — Security and Governance
 
@@ -261,8 +263,8 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 
 ## Library status
 
-**140 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
-The original programme scoped 136; four more were added after post-completion reviews
+**142 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
+The original programme scoped 136; six more were added after post-completion reviews
 found gaps in how the specification's mechanisms had been translated into decisions:
 
 - **ADR-D3-26** (RAG retrieval invocation: tool contract, execution model, bounded
@@ -276,6 +278,16 @@ found gaps in how the specification's mechanisms had been translated into decisi
   specified in the source documents but never generalised into a decision; ADR-D2-15
   already covered the response side (enterprise payload → ERC) but had no request-side
   or endpoint-location counterpart.
+- **ADR-D4-13** (cache and memory key scoping for platform-global entries) — doc 9
+  §37's cache-key scheme and its ten memory categories are both written as tenant-scoped
+  by default, but ADR-D4-12's own example (stable reference data such as leagues) is
+  genuinely tenant-invariant; no ADR reconciled the two or gave the cross-tenant
+  isolation tests a way to tell a legitimate global entry from a violation.
+- **ADR-D5-19** (inference KV-cache and VRAM capacity planning) — doc 15 §70/§72/§77
+  name KV-cache and VRAM capacity planning as necessary three times over, and ADR-D5-10
+  cited §77 once with no elaboration, but no ADR connected ADR-D3-25's token-budget
+  decision to a concrete GPU capacity target — leaving a path by which infrastructure
+  limits could silently override ADR-D3-25's protected-context decision.
 
 Every ADR follows the CMMI-DAR template with a weighted decision matrix over (wherever the
 option space admits) at least five genuine alternatives, a stated decision and rationale,
