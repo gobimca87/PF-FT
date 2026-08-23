@@ -121,6 +121,8 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D2-17 | Event envelope, schema registry and event contract versioning | WS-11 |
 | D2-18 | Message reliability — deduplication, idempotency, DLQ, reconciliation | WS-11 |
 | D2-19 | Portal link registry and no-invented-URL enforcement | WS-10 |
+| D2-20 | Enterprise API endpoint declaration and per-environment resolution | WS-10 |
+| D2-21 | Request payload parameter sourcing and binding | WS-10 |
 
 ### Domain 3 — AI Architecture
 
@@ -259,13 +261,22 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 
 ## Library status
 
-**138 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
-The original programme scoped 136; two more — **ADR-D3-26** (RAG retrieval invocation:
-tool contract, execution model, bounded agentic loop) and **ADR-D3-27** (document
-ingestion trigger mechanism: Service Bus events for enterprise sources, CI-on-merge for
-platform-authored content) — were added after a post-completion review found that the
-original RAG ADRs (D3-21 chunking, D3-22 retrieval pipeline) fixed *what happens once
-retrieval/ingestion runs* but not *how retrieval is invoked* or *what starts an ingest*.
+**140 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
+The original programme scoped 136; four more were added after post-completion reviews
+found gaps in how the specification's mechanisms had been translated into decisions:
+
+- **ADR-D3-26** (RAG retrieval invocation: tool contract, execution model, bounded
+  agentic loop) and **ADR-D3-27** (document ingestion trigger mechanism: Service Bus
+  events for enterprise sources, CI-on-merge for platform-authored content) — the
+  original RAG ADRs (D3-21 chunking, D3-22 retrieval pipeline) fixed *what happens once
+  retrieval/ingestion runs* but not *how retrieval is invoked* or *what starts an ingest*.
+- **ADR-D2-20** (enterprise API endpoint declaration and per-environment resolution) and
+  **ADR-D2-21** (request payload parameter sourcing and binding) — doc 17 §33's
+  `endpoint_ref` indirection and doc 10 §17's per-field `source:` attribute were both
+  specified in the source documents but never generalised into a decision; ADR-D2-15
+  already covered the response side (enterprise payload → ERC) but had no request-side
+  or endpoint-location counterpart.
+
 Every ADR follows the CMMI-DAR template with a weighted decision matrix over (wherever the
 option space admits) at least five genuine alternatives, a stated decision and rationale,
 Golden-Rule/precedence conformance, quantitative targets and revisit triggers.

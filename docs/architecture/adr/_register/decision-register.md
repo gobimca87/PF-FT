@@ -5,7 +5,7 @@
 > Generated 2026-08-23.
 
 
-**Total ADRs:** 138 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
+**Total ADRs:** 140 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
 
 
 ## Domain 0 — Decision Programme & Governance
@@ -57,6 +57,8 @@
 | [ADR-D2-17](../02-application-architecture/ADR-D2-17-event-envelope-and-contract-versioning.md) | Event envelope, schema registry and event contract versioning | Accepted | AI Solution Architect | [WS-11] | 2026-08-21 |
 | [ADR-D2-18](../02-application-architecture/ADR-D2-18-message-reliability-and-reconciliation.md) | Message reliability — deduplication, idempotency, dead-lettering and reconciliation | Accepted | AI Solution Architect | [WS-11] | 2026-08-21 |
 | [ADR-D2-19](../02-application-architecture/ADR-D2-19-portal-link-registry-and-no-invented-urls.md) | Portal link registry and the no-invented-URL enforcement mechanism | Accepted | AI Solution Architect | [WS-10] | 2026-08-21 |
+| [ADR-D2-20](../02-application-architecture/ADR-D2-20-enterprise-api-endpoint-environment-resolution.md) | Enterprise API endpoint declaration and per-environment resolution | Accepted | AI Solution Architect | [WS-10] | 2026-08-23 |
+| [ADR-D2-21](../02-application-architecture/ADR-D2-21-request-payload-parameter-sourcing-and-binding.md) | Request payload parameter sourcing and binding | Accepted | AI Solution Architect | [WS-10] | 2026-08-23 |
 
 ## Domain 3 — AI Architecture
 
