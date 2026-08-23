@@ -2,10 +2,10 @@
 
 > Master register of all Architecture Decision Records in this library. Auto-derived
 > from each ADR's YAML front matter (see [ADR-D8-07](../08-business-value/ADR-D8-07-decision-register-and-traceability.md)).
-> Generated 2026-08-22.
+> Generated 2026-08-23.
 
 
-**Total ADRs:** 136 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
+**Total ADRs:** 138 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
 
 
 ## Domain 0 — Decision Programme & Governance
@@ -87,6 +87,8 @@
 | [ADR-D3-23](../03-ai-architecture/ADR-D3-23-embedding-model-selection-and-re-embedding.md) | Embedding model selection, versioning and re-embedding strategy | Proposed | AI Architecture Lead | [WS-17] | 2026-08-22 |
 | [ADR-D3-24](../03-ai-architecture/ADR-D3-24-vector-store-selection.md) | Vector store selection | Proposed | AI Architecture Lead | [WS-17] | 2026-08-22 |
 | [ADR-D3-25](../03-ai-architecture/ADR-D3-25-context-engineering-assembly-and-budget.md) | Context engineering — assembly order, precedence and token-budget allocation | Accepted | AI Architecture Lead | [WS-18] | 2026-08-22 |
+| [ADR-D3-26](../03-ai-architecture/ADR-D3-26-rag-retrieval-invocation-and-agentic-loop.md) | RAG retrieval invocation — tool contract, execution model, agentic loop bound | Accepted | AI Architecture Lead | [WS-17] | 2026-08-23 |
+| [ADR-D3-27](../03-ai-architecture/ADR-D3-27-document-ingestion-trigger-mechanism.md) | Document ingestion trigger mechanism — what starts a (re-)ingest | Accepted | AI Architecture Lead | [WS-17] | 2026-08-23 |
 
 ## Domain 4 — Information Architecture
 

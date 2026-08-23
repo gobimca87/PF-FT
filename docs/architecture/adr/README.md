@@ -151,6 +151,8 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D3-23 | **Embedding model selection**, versioning and re-embedding strategy — awaiting retrieval-eval sign-off | WS-17 |
 | D3-24 | **Vector store selection** — awaiting sign-off | WS-17 |
 | D3-25 | Context engineering — assembly order, precedence and token budget allocation | WS-18 |
+| D3-26 | RAG retrieval invocation — tool contract, execution model, agentic loop bound | WS-17 |
+| D3-27 | Document ingestion trigger mechanism — what starts a (re-)ingest | WS-17 |
 
 ### Domain 4 — Information Architecture
 
@@ -257,7 +259,13 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 
 ## Library status
 
-All **136 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
+**138 ADRs are written** across the nine domains (Domain 0 governance + Domains 1–8).
+The original programme scoped 136; two more — **ADR-D3-26** (RAG retrieval invocation:
+tool contract, execution model, bounded agentic loop) and **ADR-D3-27** (document
+ingestion trigger mechanism: Service Bus events for enterprise sources, CI-on-merge for
+platform-authored content) — were added after a post-completion review found that the
+original RAG ADRs (D3-21 chunking, D3-22 retrieval pipeline) fixed *what happens once
+retrieval/ingestion runs* but not *how retrieval is invoked* or *what starts an ingest*.
 Every ADR follows the CMMI-DAR template with a weighted decision matrix over (wherever the
 option space admits) at least five genuine alternatives, a stated decision and rationale,
 Golden-Rule/precedence conformance, quantitative targets and revisit triggers.
