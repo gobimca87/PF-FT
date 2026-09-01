@@ -49,12 +49,14 @@ class GuardrailBoundary(StrEnum):
 # doc 18 §145: these boundaries must ALWAYS fail closed — no documented exception may
 # opt them into fail-open behavior (unlike every other boundary, which fails closed by
 # default per doc 18 §98 but *may* be explicitly opted into fail-open per doc 18 §99).
-_MANDATORY_FAIL_CLOSED_BOUNDARIES = frozenset({
-    GuardrailBoundary.AUTHORIZATION_CONTEXT,
-    GuardrailBoundary.TOOL,
-    GuardrailBoundary.MODEL,
-    GuardrailBoundary.DATA,
-})
+_MANDATORY_FAIL_CLOSED_BOUNDARIES = frozenset(
+    {
+        GuardrailBoundary.AUTHORIZATION_CONTEXT,
+        GuardrailBoundary.TOOL,
+        GuardrailBoundary.MODEL,
+        GuardrailBoundary.DATA,
+    }
+)
 
 
 def is_fail_open_eligible(boundary: GuardrailBoundary) -> bool:

@@ -20,15 +20,19 @@ class AffiliationApplicationStatus(StrEnum):
 # doc 5 §92 / flow doc Scenarios 6-9: these statuses mean the workflow must stop and
 # wait for an enterprise/HIL event (CFA decision, payment confirmation) before an
 # affiliation-status conversation can reach a final answer.
-WAITING_STATUSES = frozenset({
-    AffiliationApplicationStatus.PENDING_CFA,
-    AffiliationApplicationStatus.INVOICED,
-})
+WAITING_STATUSES = frozenset(
+    {
+        AffiliationApplicationStatus.PENDING_CFA,
+        AffiliationApplicationStatus.INVOICED,
+    }
+)
 
 # Statuses where the workflow has reached a final, explainable outcome with nothing
 # left to wait for.
-TERMINAL_STATUSES = frozenset({
-    AffiliationApplicationStatus.COMPLETE,
-    AffiliationApplicationStatus.REJECTED,
-    AffiliationApplicationStatus.CANCELLED,
-})
+TERMINAL_STATUSES = frozenset(
+    {
+        AffiliationApplicationStatus.COMPLETE,
+        AffiliationApplicationStatus.REJECTED,
+        AffiliationApplicationStatus.CANCELLED,
+    }
+)

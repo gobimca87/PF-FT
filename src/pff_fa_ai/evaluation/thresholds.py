@@ -9,11 +9,13 @@ from pff_fa_ai.evaluation.states import DatasetCategory, EvaluationStatus, Score
 
 # doc 21 §68's `security.critical_failures_allowed`/`secret_leakage.allowed` both boil
 # down to zero tolerance (by default) for FAILed cases in these categories.
-_SECURITY_CATEGORIES = frozenset({
-    DatasetCategory.SECURITY,
-    DatasetCategory.INJECTION,
-    DatasetCategory.JAILBREAK,
-})
+_SECURITY_CATEGORIES = frozenset(
+    {
+        DatasetCategory.SECURITY,
+        DatasetCategory.INJECTION,
+        DatasetCategory.JAILBREAK,
+    }
+)
 
 
 class EvaluationThresholds(BaseModel):

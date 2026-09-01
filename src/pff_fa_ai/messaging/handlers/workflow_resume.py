@@ -10,11 +10,13 @@ from pff_fa_ai.messaging.events.registry import EventRoute
 from pff_fa_ai.messaging.handlers.base import HandlerOutcome
 
 # doc 11 §55-56: only a workflow actually waiting for something may resume.
-_RESUMABLE_STATUSES = frozenset({
-    WorkflowStatus.WAITING_FOR_USER,
-    WorkflowStatus.WAITING_FOR_HUMAN,
-    WorkflowStatus.WAITING_FOR_EXTERNAL_EVENT,
-})
+_RESUMABLE_STATUSES = frozenset(
+    {
+        WorkflowStatus.WAITING_FOR_USER,
+        WorkflowStatus.WAITING_FOR_HUMAN,
+        WorkflowStatus.WAITING_FOR_EXTERNAL_EVENT,
+    }
+)
 
 
 class WorkflowResumeOutcome(BaseModel):

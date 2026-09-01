@@ -43,10 +43,12 @@ def test_cosine_similarity_should_handle_zero_vector() -> None:
 
 async def test_should_return_the_most_similar_vector_first() -> None:
     store = InMemoryVectorStore()
-    await store.upsert([
-        _record("close", (1.0, 0.0)),
-        _record("far", (0.0, 1.0)),
-    ])
+    await store.upsert(
+        [
+            _record("close", (1.0, 0.0)),
+            _record("far", (0.0, 1.0)),
+        ]
+    )
 
     results = await store.search(
         (1.0, 0.0), filters=VectorSearchFilter(tenant_id="tenant-1"), top_k=2
@@ -57,10 +59,12 @@ async def test_should_return_the_most_similar_vector_first() -> None:
 
 async def test_should_isolate_search_results_by_tenant() -> None:
     store = InMemoryVectorStore()
-    await store.upsert([
-        _record("tenant-a-vec", (1.0, 0.0), tenant_id="tenant-a"),
-        _record("tenant-b-vec", (1.0, 0.0), tenant_id="tenant-b"),
-    ])
+    await store.upsert(
+        [
+            _record("tenant-a-vec", (1.0, 0.0), tenant_id="tenant-a"),
+            _record("tenant-b-vec", (1.0, 0.0), tenant_id="tenant-b"),
+        ]
+    )
 
     results = await store.search(
         (1.0, 0.0), filters=VectorSearchFilter(tenant_id="tenant-a"), top_k=10
@@ -71,10 +75,12 @@ async def test_should_isolate_search_results_by_tenant() -> None:
 
 async def test_should_filter_by_organization() -> None:
     store = InMemoryVectorStore()
-    await store.upsert([
-        _record("club-a-vec", (1.0, 0.0), organization_id="club-a"),
-        _record("club-b-vec", (1.0, 0.0), organization_id="club-b"),
-    ])
+    await store.upsert(
+        [
+            _record("club-a-vec", (1.0, 0.0), organization_id="club-a"),
+            _record("club-b-vec", (1.0, 0.0), organization_id="club-b"),
+        ]
+    )
 
     results = await store.search(
         (1.0, 0.0),
@@ -87,10 +93,12 @@ async def test_should_filter_by_organization() -> None:
 
 async def test_should_filter_by_domain() -> None:
     store = InMemoryVectorStore()
-    await store.upsert([
-        _record("affiliation-vec", (1.0, 0.0), domain="affiliation"),
-        _record("discipline-vec", (1.0, 0.0), domain="discipline"),
-    ])
+    await store.upsert(
+        [
+            _record("affiliation-vec", (1.0, 0.0), domain="affiliation"),
+            _record("discipline-vec", (1.0, 0.0), domain="discipline"),
+        ]
+    )
 
     results = await store.search(
         (1.0, 0.0),

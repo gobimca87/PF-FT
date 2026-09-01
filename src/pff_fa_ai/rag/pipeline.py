@@ -60,9 +60,9 @@ class IngestionPipeline:
         if not chunks:
             return []
 
-        vectors = await self._embedding_provider.embed_documents([
-            chunk.content for chunk in chunks
-        ])
+        vectors = await self._embedding_provider.embed_documents(
+            [chunk.content for chunk in chunks]
+        )
         model = self._model_registry.get(self._embedding_model_id)
 
         records = []

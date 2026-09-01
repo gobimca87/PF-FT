@@ -8,11 +8,13 @@ from pff_fa_ai.prompt_engineering.states import PromptStatus
 # finding can surface at any point) and remediable back to DRAFT.
 _VALID_TRANSITIONS: dict[PromptStatus, frozenset[PromptStatus]] = {
     PromptStatus.DRAFT: frozenset({PromptStatus.TESTING, PromptStatus.BLOCKED}),
-    PromptStatus.TESTING: frozenset({
-        PromptStatus.APPROVED,
-        PromptStatus.DRAFT,
-        PromptStatus.BLOCKED,
-    }),
+    PromptStatus.TESTING: frozenset(
+        {
+            PromptStatus.APPROVED,
+            PromptStatus.DRAFT,
+            PromptStatus.BLOCKED,
+        }
+    ),
     PromptStatus.APPROVED: frozenset({PromptStatus.ACTIVE, PromptStatus.BLOCKED}),
     PromptStatus.ACTIVE: frozenset({PromptStatus.DEPRECATED, PromptStatus.BLOCKED}),
     PromptStatus.DEPRECATED: frozenset({PromptStatus.RETIRED}),

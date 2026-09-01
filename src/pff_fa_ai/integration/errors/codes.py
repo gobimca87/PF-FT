@@ -20,13 +20,15 @@ class IntegrationErrorCode(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
-_RETRYABLE_CODES = frozenset({
-    IntegrationErrorCode.TIMEOUT,
-    IntegrationErrorCode.SERVICE_UNAVAILABLE,
-    IntegrationErrorCode.BAD_GATEWAY,
-    IntegrationErrorCode.RATE_LIMITED,
-    IntegrationErrorCode.DEPENDENCY_ERROR,
-})
+_RETRYABLE_CODES = frozenset(
+    {
+        IntegrationErrorCode.TIMEOUT,
+        IntegrationErrorCode.SERVICE_UNAVAILABLE,
+        IntegrationErrorCode.BAD_GATEWAY,
+        IntegrationErrorCode.RATE_LIMITED,
+        IntegrationErrorCode.DEPENDENCY_ERROR,
+    }
+)
 
 _STATUS_TO_ERROR_CODE: dict[int, IntegrationErrorCode] = {
     400: IntegrationErrorCode.VALIDATION_ERROR,

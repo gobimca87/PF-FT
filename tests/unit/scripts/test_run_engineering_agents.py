@@ -38,9 +38,9 @@ def test_main_should_return_one_when_a_ruff_json_file_reports_a_critical_finding
 ) -> None:
     ruff_json = tmp_path / "ruff.json"
     ruff_json.write_text(
-        json.dumps([
-            {"code": "S105", "filename": "x.py", "location": {"row": 1}, "message": "leak"}
-        ]),
+        json.dumps(
+            [{"code": "S105", "filename": "x.py", "location": {"row": 1}, "message": "leak"}]
+        ),
         encoding="utf-8",
     )
 

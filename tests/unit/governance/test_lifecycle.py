@@ -15,10 +15,12 @@ def test_retire_should_be_a_terminal_state() -> None:
 
 
 def test_review_should_fork_to_change_or_retire() -> None:
-    assert allowed_next_states(AiLifecycleState.REVIEW) == frozenset({
-        AiLifecycleState.CHANGE,
-        AiLifecycleState.RETIRE,
-    })
+    assert allowed_next_states(AiLifecycleState.REVIEW) == frozenset(
+        {
+            AiLifecycleState.CHANGE,
+            AiLifecycleState.RETIRE,
+        }
+    )
 
 
 def test_change_should_re_enter_the_build_cycle() -> None:
