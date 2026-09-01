@@ -10,7 +10,7 @@
 
 Four of these were flagged open from the outset in `CLAUDE.md` / `DEVELOPMENT-GUIDE.md`
 §2 (vector store, SLM serving stack, IaC tool, K8s manifest tool). The fifth
-(**ADR-D3-23 embedding model**) is Proposed because doc 14 §13 mandates that the
+(**ADR-D3-23 embedding model**) is Proposed because 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 mandates that the
 embedding model be chosen by a PF-FT-specific retrieval evaluation, not by reputation —
 so its recommendation is explicitly provisional on that evaluation.
 
@@ -34,6 +34,6 @@ so its recommendation is explicitly provisional on that evaluation.
 4. This register and the decision register are regenerated; the row moves out of "open".
 
 **Note on count:** the programme plan anticipated exactly four open decisions; a fifth
-(ADR-D3-23) is Proposed as a deliberate, documented consequence of doc 14 §13's
+(ADR-D3-23) is Proposed as a deliberate, documented consequence of 14.PF-FT-AI-EMBEDDING-VECTOR.md §13's
 evaluation-first requirement — recording it as Proposed is more faithful than marking it
 Accepted before the mandated retrieval evaluation has run.

@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will manage dependencies with **`pyproject.toml` + a committed lock file and
 fully pinned, hash-verified versions**, with reproducible installs across dev, CI and
-production images and automated vulnerability + update scanning (CLAUDE.md; doc 27 §6).
+production images and automated vulnerability + update scanning (CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §6).
 The recommended tool is **uv** (fast, lock-file-native), with `pip-tools` as the
 fallback if uv adoption is blocked.
 
 ## 2. Context and Problem Statement
 
-CLAUDE.md fixes "`pyproject.toml` + lock file, pinned versions"; doc 27 §6 sets the
+CLAUDE.md fixes "`pyproject.toml` + lock file, pinned versions"; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §6 sets the
 project-structure standard. Unpinned or unlocked dependencies produce non-reproducible
 builds, supply-chain risk, and "works on my machine" drift between CI and the container
 image (ADR-D5-09). This ADR fixes the dependency toolchain and pinning policy.
@@ -44,7 +44,7 @@ image (ADR-D5-09). This ADR fixes the dependency toolchain and pinning policy.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | pyproject.toml + committed lock, pinned | CLAUDE.md |
-| DR-F-02 | Reproducible installs dev/CI/image | doc 27 §6; ADR-D5-09 |
+| DR-F-02 | Reproducible installs dev/CI/image | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §6; ADR-D5-09 |
 | DR-N-01 | Fast installs (CI, image build) | operational |
 | DR-C-01 | Vulnerability + license scanning | ADR-D6-18 |
 
@@ -111,7 +111,7 @@ image (ADR-D5-09). This ADR fixes the dependency toolchain and pinning policy.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by CLAUDE.md and doc 27 §6.
+**Method.** Weighted scoring against §4, informed by CLAUDE.md and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §6.
 
 | Criterion | Weight | A: uv | B: pip-tools | C: Poetry | D: PDM | E: plain pip |
 |---|---|---|---|---|---|---|
@@ -250,7 +250,7 @@ for dev/CI/prod parity. Plain unpinned pip (E) is forbidden.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | doc 27 §6, §9 |
+| Specification sections | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §6, §9 |
 | Requirement IDs | TECH-DEP-* |
 | Build phases | 0 |
 | Code paths | `pyproject.toml`, `uv.lock` |

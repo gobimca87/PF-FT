@@ -31,13 +31,13 @@ Because FA football data pervasively involves **children and safeguarding**, PFF
 treats children's personal data and safeguarding information as **special-category-grade,
 most-protected data**: lawful-basis-aware, minimised, never sent to external models
 (ADR-D6-07), ACL-restricted (ADR-D6-12), retained only as needed, subject to a **DPIA**,
-and never used to profile or make automated significant decisions about a child (doc 19
-§31–§34; doc 20 §26, §98; UK GDPR). Where the spec is silent, this ADR mandates a DPIA to
+and never used to profile or make automated significant decisions about a child (19.PF-FT-AI-SECURITY.md
+§31–§34; 20.PF-FT-AI-GOVERNANCE.md §26, §98; UK GDPR). Where the spec is silent, this ADR mandates a DPIA to
 close the gap.
 
 ## 2. Context and Problem Statement
 
-Doc 19 §31–§34 cover PII/classification/data-flow/minimisation; doc 20 §26 privacy, §98
+19.PF-FT-AI-SECURITY.md §31–§34 cover PII/classification/data-flow/minimisation; 20.PF-FT-AI-GOVERNANCE.md §26 privacy, §98
 regulatory mapping (incl. ISO 27701). The spec does not contain a dedicated children's-
 data/safeguarding section, yet the FA domain (players, many minors; officials;
 safeguarding records) makes this the single highest-consequence privacy area. Leaving it
@@ -49,7 +49,7 @@ handling rules and mandates a DPIA.
 | ID | Driver | Source |
 |---|---|---|
 | DR-C-01 | Children's/safeguarding data = most protected | UK GDPR; domain reality |
-| DR-C-02 | Lawful basis + minimisation + retention | doc 19 §34; UK GDPR Art. 5–6 |
+| DR-C-02 | Lawful basis + minimisation + retention | 19.PF-FT-AI-SECURITY.md §34; UK GDPR Art. 5–6 |
 | DR-C-03 | No external-model egress of such data | ADR-D6-07 |
 | DR-C-04 | No profiling/automated significant decisions on children | UK GDPR Art. 22; ADR-D1-02 |
 | DR-F-01 | DPIA for the platform | ICO guidance |
@@ -123,7 +123,7 @@ review board that signs off relevant changes.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 19 §31–§34, doc 20 §26/§98 and
+**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §31–§34, 20.PF-FT-AI-GOVERNANCE.md §26/§98 and
 UK GDPR/ICO age-appropriate design.
 
 | Criterion | Weight | A: Most-protected | B: Standard PII | C: Exclude | D: Anonymise-only | E: A+safeguarding board |
@@ -161,7 +161,7 @@ ADR is the governing requirement.
 - No-profiling rule: the platform makes no automated significant decision about a child;
   such decisions are enterprise/HIL (ADR-D6-14, D1-02).
 - DPIA maintained in `docs/governance/`; rights (access/erasure/rectification) routed to
-  the enterprise system of record (PFF as controller); retention limits enforced (doc 9
+  the enterprise system of record (PFF as controller); retention limits enforced (9 PF-FT-AI-MEMORY-CACHE.md
   §75).
 - Safeguarding review board sign-off wired into change governance (ADR-D6-15) for
   relevant changes.
@@ -270,7 +270,7 @@ ADR is the governing requirement.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-29 Compliance/Safeguarding |
-| Specification sections | doc 19 §31–§34; doc 20 §26, §98 |
+| Specification sections | 19.PF-FT-AI-SECURITY.md §31–§34; 20.PF-FT-AI-GOVERNANCE.md §26, §98 |
 | Requirement IDs | GOV-CHILD-* |
 | Build phases | 9, 12 |
 | Code paths | governance + controls |

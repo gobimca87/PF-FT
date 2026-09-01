@@ -29,12 +29,12 @@ review_due: 2027-08-22
 PFF AI will keep **humans in authority over consequential decisions**: a defined
 human-in-the-loop (HIL) boundary means the platform pauses for human decision/approval
 on defined actions (e.g. CFA review of affiliation, irreversible/high-impact steps),
-humans hold decision authority, and **HIL decisions are captured as evidence** (doc 20
+humans hold decision authority, and **HIL decisions are captured as evidence** (20.PF-FT-AI-GOVERNANCE.md
 §68–§71). HIL is a governed workflow state (ADR-D2-10), not an afterthought.
 
 ## 2. Context and Problem Statement
 
-Doc 20 §68 human oversight, §69 HIL boundary, §70 human decision authority, §71 HIL
+20.PF-FT-AI-GOVERNANCE.md §68 human oversight, §69 HIL boundary, §70 human decision authority, §71 HIL
 evidence. The Golden Rule (ADR-D1-02) makes the enterprise/humans the deciders; the
 platform must therefore know *when* to defer to a human, *who* decides, and *record*
 the decision. Without a governance model, HIL is inconsistent and un-evidenced. This ADR
@@ -45,9 +45,9 @@ D3-07 the conversational trigger).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Defined HIL boundary (when to pause) | doc 20 §69; ADR-D3-07 |
-| DR-C-01 | Humans hold decision authority | doc 20 §70; ADR-D1-02 |
-| DR-F-02 | HIL decisions captured as evidence | doc 20 §71; ADR-D6-17 |
+| DR-F-01 | Defined HIL boundary (when to pause) | 20.PF-FT-AI-GOVERNANCE.md §69; ADR-D3-07 |
+| DR-C-01 | Humans hold decision authority | 20.PF-FT-AI-GOVERNANCE.md §70; ADR-D1-02 |
+| DR-F-02 | HIL decisions captured as evidence | 20.PF-FT-AI-GOVERNANCE.md §71; ADR-D6-17 |
 | DR-F-03 | HIL as a durable workflow state | ADR-D2-10 |
 
 ### 3.4 Assumptions
@@ -73,7 +73,7 @@ D3-07 the conversational trigger).
 
 **Description.** Enumerate HIL-required actions (high-impact/irreversible/CFA-review);
 pause as a durable workflow state (ADR-D2-10); human decides; capture who/what/when as
-evidence (doc 20 §71; ADR-D6-17); resume on decision.
+evidence (20.PF-FT-AI-GOVERNANCE.md §71; ADR-D6-17); resume on decision.
 **Strengths.** Human authority, evidenced, consistent, durable.
 **Weaknesses.** Boundary maintenance.
 **Cost / effort.** Medium.
@@ -113,11 +113,11 @@ trigger to pause even on lower-impact actions.
 | Option | Eliminated by |
 |---|---|
 | Autonomous consequential decisions | ADR-D1-02 |
-| HIL without evidence | doc 20 §71 |
+| HIL without evidence | 20.PF-FT-AI-GOVERNANCE.md §71 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 20 §68–§71 and ADR-D3-07/D2-10.
+**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §68–§71 and ADR-D3-07/D2-10.
 
 | Criterion | Weight | A: Consequence HIL | B: No HIL | C: HIL all | D: Confidence-only | E: Consequence+confidence |
 |---|---|---|---|---|---|---|
@@ -147,7 +147,7 @@ actions (B) is forbidden; HIL-on-everything (C) and confidence-only (D) are reje
 - HIL-required actions enumerated per workflow (e.g. affiliation CFA review); the
   conversational trigger and confirmation are ADR-D3-07; the durable pause/resume is
   ADR-D2-10 (WAITING_FOR_HUMAN state).
-- HIL evidence (who/role, decision, timestamp, context) recorded per doc 20 §71 and
+- HIL evidence (who/role, decision, timestamp, context) recorded per 20.PF-FT-AI-GOVERNANCE.md §71 and
   audited (ADR-D6-17); humans hold authority (§70) — the model never overrides a human
   decision.
 - Confidence-based secondary trigger uses the uncertainty record (ADR-D3-08).
@@ -256,7 +256,7 @@ actions (B) is forbidden; HIL-on-everything (C) and confidence-only (D) are reje
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-28 |
-| Specification sections | doc 20 §68–§71 |
+| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §68–§71 |
 | Requirement IDs | GOV-HIL-* |
 | Build phases | 4, 12 |
 | Code paths | `src/pf_ft_ai/orchestration/` |

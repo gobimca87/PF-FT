@@ -30,14 +30,14 @@ review_due: 2027-08-22
 Every ERC section will carry **provenance** (which enterprise source produced it, and
 when), a **freshness** assessment against a per-section policy, and an explicit
 **authority level** — so the platform can reason about how much to trust each section
-and where it sits in the precedence chain (doc 8 §15–§19, §65–§66). Stale or
+and where it sits in the precedence chain (8 PF-FT-AI-ERC-CONTEXT.md §15–§19, §65–§66). Stale or
 lower-authority context is treated accordingly; the enterprise API/event remains the
 top authority, and ERC never presents inferred or aged data as if freshly
 authoritative.
 
 ## 2. Context and Problem Statement
 
-Doc 8 §15–§16 make provenance a principle; §17–§18 define freshness and its policy;
+8 PF-FT-AI-ERC-CONTEXT.md §15–§16 make provenance a principle; §17–§18 define freshness and its policy;
 §19 defines authority levels; §65–§66 tie ERC to transaction state and uncertainty.
 The precedence chain (ADR-D1-03) requires the platform to know *how authoritative* a
 given datum is. Without provenance/freshness/authority on each section, the platform
@@ -49,11 +49,11 @@ fixes the metadata and policy that make trust computable.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Provenance on every section (source + timestamp) | doc 8 §15–§16 |
-| DR-F-02 | Freshness assessed vs per-section policy | doc 8 §17–§18 |
-| DR-F-03 | Explicit authority level per section | doc 8 §19; ADR-D1-03 |
+| DR-F-01 | Provenance on every section (source + timestamp) | 8 PF-FT-AI-ERC-CONTEXT.md §15–§16 |
+| DR-F-02 | Freshness assessed vs per-section policy | 8 PF-FT-AI-ERC-CONTEXT.md §17–§18 |
+| DR-F-03 | Explicit authority level per section | 8 PF-FT-AI-ERC-CONTEXT.md §19; ADR-D1-03 |
 | DR-C-01 | Enterprise API/event is top authority | CLAUDE.md |
-| DR-F-04 | Transaction-uncertainty reflected in ERC | doc 8 §65–§66 |
+| DR-F-04 | Transaction-uncertainty reflected in ERC | 8 PF-FT-AI-ERC-CONTEXT.md §65–§66 |
 
 ### 3.4 Assumptions
 
@@ -113,19 +113,19 @@ changes; less accurate than policy that uses source signals.
 **Strengths.** Nuanced.
 **Weaknesses.** Enterprise authority is categorical, not probabilistic; a made-up
 confidence on authoritative data is misleading; better to use discrete authority
-levels + freshness. Confidence belongs to RAG/memory (doc 9 §28), not ERC.
+levels + freshness. Confidence belongs to RAG/memory (9 PF-FT-AI-MEMORY-CACHE.md §28), not ERC.
 **Cost / effort.** Medium; conceptually wrong for ERC.
 
 ### 5.6 Options considered and eliminated before scoring
 
 | Option | Eliminated by |
 |---|---|
-| No provenance | doc 8 §16 — provenance is a principle |
+| No provenance | 8 PF-FT-AI-ERC-CONTEXT.md §16 — provenance is a principle |
 | Infer freshness from SLM | Precedence — SLM is lowest authority |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 8 §15–§19/§65–§66 and the
+**Method.** Weighted scoring against §4, informed by 8 PF-FT-AI-ERC-CONTEXT.md §15–§19/§65–§66 and the
 precedence chain.
 
 | Criterion | Weight | A: Per-section full | B: ERC-level | C: Timestamps only | D: TTL only | E: Confidence-scored |
@@ -147,19 +147,19 @@ minor per section; no re-weighting overturns the trust/precedence advantage.
 **PFF AI will stamp every ERC section with provenance (source id + source/fetch
 timestamp), an explicit authority level, and a freshness assessment against a
 per-section policy that uses source change-signals where available (Option A);
-transaction-uncertain sections are flagged per doc 8 §66.** Authority levels map into
+transaction-uncertain sections are flagged per 8 PF-FT-AI-ERC-CONTEXT.md §66.** Authority levels map into
 the precedence chain (enterprise API/event highest). ERC-level-only (B), timestamps-
 only (C), TTL-only (D) are insufficient; probabilistic confidence (E) is conceptually
 wrong for authoritative context.
 
-**Status rationale.** `Accepted` — doc 8 §15–§19 govern this.
+**Status rationale.** `Accepted` — 8 PF-FT-AI-ERC-CONTEXT.md §15–§19 govern this.
 
 ## 8. Architecture Detail
 
 - Section metadata: `provenance{source_id, source_ts, fetch_ts}`, `authority_level`
   (enum ordered per precedence), `freshness{policy_id, assessed_at, state:
-  FRESH|AGING|STALE}`, `transaction_uncertain: bool` (doc 8 §66).
-- Freshness policies per section (doc 8 §18) keyed to data volatility; where the source
+  FRESH|AGING|STALE}`, `transaction_uncertain: bool` (8 PF-FT-AI-ERC-CONTEXT.md §66).
+- Freshness policies per section (8 PF-FT-AI-ERC-CONTEXT.md §18) keyed to data volatility; where the source
   exposes etag/last-modified/change events, freshness uses them; else fetch-age vs TTL.
 - On use, the context assembler (ADR-D3-25) and consumers respect authority + freshness;
   stale/uncertain sections trigger refresh (ADR-D4-06) or explicit handling.
@@ -268,7 +268,7 @@ wrong for authoritative context.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-19 |
-| Specification sections | doc 8 §15–§19, §65–§66; doc 5 §26, §28 |
+| Specification sections | 8 PF-FT-AI-ERC-CONTEXT.md §15–§19, §65–§66; 5. PF-FT-AI-STATE-MODEL.md §26, §28 |
 | Requirement IDs | ERC-PROV-* |
 | Build phases | 4 |
 | Code paths | `src/pf_ft_ai/erc/` |

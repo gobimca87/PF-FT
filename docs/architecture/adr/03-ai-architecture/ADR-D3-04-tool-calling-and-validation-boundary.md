@@ -36,11 +36,11 @@ schema-valid `club_id` that belongs to a different club is the attack a type che
 
 ## 2. Context and Problem Statement
 
-Doc 7 §45 covers the tool node, §46 the tool allow-list, §47 tool authorization, §49 tool result
-normalisation, §70 tool call validation. Doc 10 §30–§37 cover selection, the selection boundary,
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §45 covers the tool node, §46 the tool allow-list, §47 tool authorization, §49 tool result
+normalisation, §70 tool call validation. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §30–§37 cover selection, the selection boundary,
 the executor and what it must not do, the execution lifecycle, input and output validation, and
-the tool result contract. Doc 15 §41–§42 cover tool calling and tool call validation from the SLM
-side. Doc 18 §38–§41 cover tool restrictions, authorization, parameter validation and the tool
+the tool result contract. 15.PF-FT-AI-SLM.md §41–§42 cover tool calling and tool call validation from the SLM
+side. 18.PF-FT-AI-GUARDRAILS.md §38–§41 cover tool restrictions, authorization, parameter validation and the tool
 parameter guardrail.
 
 Four documents converge on the same boundary, which signals its importance. What none of them
@@ -61,13 +61,13 @@ it is a valid club identifier string.
 
 This is the shape of a successful prompt injection against a tool boundary. The attacker does not
 need an unpermitted tool or a malformed argument; they need a permitted tool pointed at a resource
-outside the user's scope. Doc 18 §40's parameter validation and §41's parameter guardrail exist for
-this, and doc 12 §42's entity ownership validation addresses the analogous case for links — but
+outside the user's scope. 18.PF-FT-AI-GUARDRAILS.md §40's parameter validation and §41's parameter guardrail exist for
+this, and 12 PF-FT-AI-PORTAL-LINKS.md §42's entity ownership validation addresses the analogous case for links — but
 the tool path's equivalent is not stated as a distinct gate anywhere.
 
-There are two further gaps. Doc 10 §33 lists what the executor must not do without stating the
-positive sequence. And doc 15 §42 requires tool call validation without saying whether a malformed
-proposal is repaired, retried or refused — doc 18 §55's "output repair" suggests repair is
+There are two further gaps. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 lists what the executor must not do without stating the
+positive sequence. And 15.PF-FT-AI-SLM.md §42 requires tool call validation without saying whether a malformed
+proposal is repaired, retried or refused — 18.PF-FT-AI-GUARDRAILS.md §55's "output repair" suggests repair is
 contemplated somewhere, and repairing a tool call is materially different from repairing prose.
 
 ## 3. Decision Drivers
@@ -76,19 +76,19 @@ contemplated somewhere, and repairing a tool call is materially different from r
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Tools must be allowlisted per agent | doc 7 §46; doc 18 §38 |
-| DR-F-02 | Tool calls must be authorized from claims | doc 7 §47; doc 18 §39 |
-| DR-F-03 | Tool parameters must be validated | doc 10 §35; doc 18 §40–§41 |
-| DR-F-04 | Tool results must be validated | doc 10 §36; doc 18 §46 |
-| DR-F-05 | Tool results must be normalised to a contract | doc 7 §49; doc 10 §37 |
-| DR-F-06 | The executor must not do what doc 10 §33 forbids | doc 10 §33 |
+| DR-F-01 | Tools must be allowlisted per agent | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §46; 18.PF-FT-AI-GUARDRAILS.md §38 |
+| DR-F-02 | Tool calls must be authorized from claims | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §47; 18.PF-FT-AI-GUARDRAILS.md §39 |
+| DR-F-03 | Tool parameters must be validated | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §35; 18.PF-FT-AI-GUARDRAILS.md §40–§41 |
+| DR-F-04 | Tool results must be validated | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36; 18.PF-FT-AI-GUARDRAILS.md §46 |
+| DR-F-05 | Tool results must be normalised to a contract | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §49; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §37 |
+| DR-F-06 | The executor must not do what 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 forbids | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Gate overhead must be small relative to the call | ≤10 ms per call | ADR-D5-18 |
-| DR-N-02 | Every gate decision must be traceable | 100% logged | doc 20 §29 |
+| DR-N-02 | Every gate decision must be traceable | 100% logged | 20.PF-FT-AI-GOVERNANCE.md §29 |
 | DR-N-03 | A rejected call must produce a usable outcome, not a crash | Bounded handling | ADR-D2-11 |
 
 ### 3.3 Constraints
@@ -97,7 +97,7 @@ contemplated somewhere, and repairing a tool call is materially different from r
 |---|---|---|---|
 | DR-C-01 | Model output is never an authorization input | Platform | ADR-D1-02 I-2 |
 | DR-C-02 | Only allowlisted tools with schema-valid parameters execute | Platform | ADR-D1-02 I-3 |
-| DR-C-03 | The SLM never receives unrestricted API access | Platform | doc 2 §3.4 |
+| DR-C-03 | The SLM never receives unrestricted API access | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4 |
 | DR-C-04 | Non-idempotent writes are never retried | Platform | ADR-D2-11 §7.2 |
 
 ### 3.4 Assumptions
@@ -113,7 +113,7 @@ contemplated somewhere, and repairing a tool call is materially different from r
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Prevention of out-of-scope resource access | 35 | The §2 case: a permitted tool pointed at another club's data. This is the tool boundary's highest-consequence failure | Can a schema-valid call reach an unentitled resource? |
-| EC-02 | Prevention of unpermitted tool execution | 25 | Doc 2 §3.4 and ADR-D1-02 I-3 make this categorical | Can an unallowlisted tool execute? |
+| EC-02 | Prevention of unpermitted tool execution | 25 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4 and ADR-D1-02 I-3 make this categorical | Can an unallowlisted tool execute? |
 | EC-03 | Result trustworthiness | 20 | An unvalidated result becomes an ERC fact at authority 5 | Can a malformed result enter ERC? |
 | EC-04 | Recoverability from a rejected call | 12 | A rejection should produce a usable turn, not a failure | Does the agent get an actionable outcome? |
 | EC-05 | Overhead | 8 | Applied per tool call | Milliseconds and calls added |
@@ -179,7 +179,7 @@ should. The enterprise is authoritative for authorization anyway.
 **Weaknesses.**
 - Every out-of-scope attempt becomes an enterprise call, so an injection can be used to probe for
   resource existence through response timing and error differences (EC-01 weakened).
-- Defence in depth is abandoned: doc 18 §5 requires layered defence, and relying solely on the
+- Defence in depth is abandoned: 18.PF-FT-AI-GUARDRAILS.md §5 requires layered defence, and relying solely on the
   enterprise makes the platform's boundary meaningless.
 - A permitted-but-wrong call still consumes budget and enterprise capacity.
 - Confuses two things: the platform must not *reimplement* enterprise rules, but scoping a call to
@@ -204,7 +204,7 @@ identifiers within the caller's scope, so it cannot propose an out-of-scope one.
   saw in context — the attacker provides it, and the model relays it (EC-01 fails against the
   actual threat).
 - Depends entirely on context scoping being perfect, with no second line.
-- Doc 18 §5's defence-in-depth principle argues against single-mechanism reliance.
+- 18.PF-FT-AI-GUARDRAILS.md §5's defence-in-depth principle argues against single-mechanism reliance.
 
 **Cost / effort.** Already done as part of ADR-D1-07; adds nothing new.
 
@@ -246,7 +246,7 @@ Ordered so that cheap, local checks precede expensive ones and no gate depends o
 | **5** | **Idempotency** | A key is present where the tool declares one required | Missing idempotency key on a write requiring one |
 
 Gate 3 is this decision's substance. Gates 1, 2, 4 and 5 exist in the specification set; gate 3 is
-implied by doc 18 §40–§41 and doc 12 §42's analogue but is not stated as a distinct step, and it is
+implied by 18.PF-FT-AI-GUARDRAILS.md §40–§41 and 12 PF-FT-AI-PORTAL-LINKS.md §42's analogue but is not stated as a distinct step, and it is
 the one that catches the §2 case.
 
 ### 7.2 What semantic parameter validation actually does
@@ -268,7 +268,7 @@ whether the enterprise would have permitted it.
 This is why Option D is insufficient. Context scoping ensures the model never *sees* an
 out-of-scope identifier; gate 3 ensures that an identifier arriving by any other route — injected
 text, a hallucination that happens to be valid, a copied value from a document — does not execute.
-Doc 18 §5's defence in depth is the principle; gate 3 is the second layer.
+18.PF-FT-AI-GUARDRAILS.md §5's defence in depth is the principle; gate 3 is the second layer.
 
 Where an entity reference cannot be resolved against assembled context (DR-A-01), the tool
 declares it as requiring enterprise-side scoping and gate 3 defers to gate 4, recording that it
@@ -278,7 +278,7 @@ did so. That is a documented weakening for specific parameters, not a silent gap
 
 Gate 4 reads the caller's claims from the harness (ADR-D2-09 §7.1), which are read-only to the
 agent (ADR-D2-07 §7.4). Nothing in the model's proposal contributes to the authorization decision.
-This is ADR-D1-02 invariant I-2 at the tool boundary, and doc 10 §33's prohibition on the executor
+This is ADR-D1-02 invariant I-2 at the tool boundary, and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33's prohibition on the executor
 bypassing authorization is what it prevents.
 
 The platform's check does not replace the enterprise's. The enterprise authorizes at the endpoint;
@@ -289,19 +289,19 @@ avoids the probing surface Option C creates.
 
 | # | Gate | Checks | On failure |
 |---|---|---|---|
-| **6** | **Result schema validation** | The response satisfies the tool's response contract (doc 10 §36; ADR-D2-15 §7.3) | Treated as a failed call; no defaulting |
+| **6** | **Result schema validation** | The response satisfies the tool's response contract (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36; ADR-D2-15 §7.3) | Treated as a failed call; no defaulting |
 | **7** | **Transaction state classification** | Confirmed success, confirmed failure, or UNKNOWN (ADR-D2-11 §7.4) | UNKNOWN propagates to ADR-D1-02 I-4 |
 
 Gate 6 is what stops a malformed enterprise response entering ERC at authority 5. Gate 7 is what
 makes ADR-D1-02's invariant I-4 possible — the output guardrail cannot block success language for
 an unconfirmed transaction unless something classified the transaction state.
 
-Doc 7 §49's result normalisation happens after gate 6: the validated response is mapped to the
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §49's result normalisation happens after gate 6: the validated response is mapped to the
 tool's result contract and to ERC shapes (ADR-D2-12 §7.2).
 
 ### 7.5 A rejected call is an outcome, not an error
 
-Doc 15 §42 requires tool call validation; doc 18 §55 mentions output repair. Repairing a tool call
+15.PF-FT-AI-SLM.md §42 requires tool call validation; 18.PF-FT-AI-GUARDRAILS.md §55 mentions output repair. Repairing a tool call
 is rejected: a proposal that fails gate 3 or 4 is not a formatting problem to fix, and "repairing"
 it would mean the platform choosing a different resource than the model proposed.
 
@@ -331,7 +331,7 @@ parameter summary (ADR-D7-04). Gate 3 and gate 4 rejections are security-relevan
 surfaced as such — a rising gate 3 rejection rate is an injection indicator, in the same way that
 ADR-D2-19's stripped-URL count is.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — tool/MCP is a named doc 2 §52
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — tool/MCP is a named 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
 category and this is a security boundary — ratified by the external ADF/ADR governance forum with
 the Security Owner co-approving.
 
@@ -355,7 +355,7 @@ flowchart TD
     D --> G6{6 Result schema}
     G6 -- no --> F[Failed call<br/>no defaulting]
     G6 -- yes --> G7[7 Classify transaction state]
-    G7 --> N[Normalise to result contract<br/>doc 7 §49]
+    G7 --> N[Normalise to result contract<br/>7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §49]
     N --> E[Update ERC<br/>ADR-D2-12 §7.2]
 
     style G3 fill:#e8e8e8
@@ -424,7 +424,7 @@ distinct check with a distinct data dependency.
 |---|---|---|
 | Per-call speed | A gate that catches the injection a schema check cannot | Security Owner |
 | Helpful error detail on out-of-scope references | No existence oracle | Security Owner |
-| Simplicity of trusting the enterprise to refuse | Defence in depth per doc 18 §5 | External ADF/ADR forum |
+| Simplicity of trusting the enterprise to refuse | Defence in depth per 18.PF-FT-AI-GUARDRAILS.md §5 | External ADF/ADR forum |
 
 ## 10. Golden-Rule and Precedence Conformance
 
@@ -538,7 +538,7 @@ an identifier arrived from somewhere else.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-13 Agentic AI Architecture |
-| Specification sections | doc 7 §45 (Tool Node), §46 (Tool Allow-List), §47 (Tool Authorization), §49 (Tool Result Normalization), §70 (Tool Call Validation); doc 10 §30–§37 (Selection, Selection Boundary, Executor, Executor Must Not, Execution Lifecycle, Input Validation, Output Validation, Result Contract), §33; doc 15 §41–§42 (Tool Calling, Tool Call Validation); doc 18 §5 (Defense in Depth), §38–§41 (Tool Restrictions, Authorization, Parameter Validation, Parameter Guardrail), §46 (API Response Validation), §55 (Output Repair); doc 12 §42 (Entity Ownership Validation) |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §45 (Tool Node), §46 (Tool Allow-List), §47 (Tool Authorization), §49 (Tool Result Normalization), §70 (Tool Call Validation); 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §30–§37 (Selection, Selection Boundary, Executor, Executor Must Not, Execution Lifecycle, Input Validation, Output Validation, Result Contract), §33; 15.PF-FT-AI-SLM.md §41–§42 (Tool Calling, Tool Call Validation); 18.PF-FT-AI-GUARDRAILS.md §5 (Defense in Depth), §38–§41 (Tool Restrictions, Authorization, Parameter Validation, Parameter Guardrail), §46 (API Response Validation), §55 (Output Repair); 12 PF-FT-AI-PORTAL-LINKS.md §42 (Entity Ownership Validation) |
 | Requirement IDs | `FR-A39-07`, `FR-A39-11`, `NFR-A38-SEC` |
 | Build phases | 6, 11 |
 | Code paths | `src/pf_ft_ai/integration/tools/` |

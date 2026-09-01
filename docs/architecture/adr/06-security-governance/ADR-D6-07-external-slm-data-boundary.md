@@ -32,13 +32,13 @@ While the SLM runs on the external Hugging Face API (initial phase, ADR-D3-13), 
 will **strictly bound what may leave the Azure tenancy**: only the minimum
 non-personal, redacted text needed for generation; **no special-category or children's
 personal data**, no secrets, no raw enterprise records — enforced at the external-SLM
-boundary guardrail (doc 19 §22–§24; doc 18 §70–§71; doc 15 §124–§126). Flows that would
+boundary guardrail (19.PF-FT-AI-SECURITY.md §22–§24; 18.PF-FT-AI-GUARDRAILS.md §70–§71; 15.PF-FT-AI-SLM.md §124–§126). Flows that would
 require sending sensitive data are prioritised for the in-tenancy self-hosted SLM.
 
 ## 2. Context and Problem Statement
 
-Doc 19 §22 SLM network security, §23 external-SLM data boundary, §24 self-hosted SLM
-security; doc 18 §70 external-SLM boundary, §71 self-hosted boundary; doc 15 §124–§126
+19.PF-FT-AI-SECURITY.md §22 SLM network security, §23 external-SLM data boundary, §24 self-hosted SLM
+security; 18.PF-FT-AI-GUARDRAILS.md §70 external-SLM boundary, §71 self-hosted boundary; 15.PF-FT-AI-SLM.md §124–§126
 data residency/sensitive-data/minimisation. Sending text to an external inference API is
 a cross-tenancy data transfer with GDPR and safeguarding implications. This ADR fixes
 exactly what may cross that boundary and when.
@@ -47,10 +47,10 @@ exactly what may cross that boundary and when.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Minimise + control what leaves the tenancy | doc 19 §23; doc 15 §126 |
-| DR-C-02 | No special-category/children's data externally | ADR-D6-16; doc 15 §125 |
-| DR-F-01 | Boundary guardrail enforces the policy | doc 18 §70 |
-| DR-C-03 | Prioritise sensitive flows for self-host | ADR-D3-13; doc 19 §24 |
+| DR-C-01 | Minimise + control what leaves the tenancy | 19.PF-FT-AI-SECURITY.md §23; 15.PF-FT-AI-SLM.md §126 |
+| DR-C-02 | No special-category/children's data externally | ADR-D6-16; 15.PF-FT-AI-SLM.md §125 |
+| DR-F-01 | Boundary guardrail enforces the policy | 18.PF-FT-AI-GUARDRAILS.md §70 |
+| DR-C-03 | Prioritise sensitive flows for self-host | ADR-D3-13; 19.PF-FT-AI-SECURITY.md §24 |
 
 ### 3.4 Assumptions
 
@@ -116,13 +116,12 @@ target/cost posture (ADR-D3-13); a fallback, not the base policy.
 
 | Option | Eliminated by |
 |---|---|
-| No boundary control | doc 19 §23; unacceptable |
+| No boundary control | 19.PF-FT-AI-SECURITY.md §23; unacceptable |
 | Log external payloads in full | PII leakage (ADR-D7-04) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 19 §22–§24, doc 18 §70–§71, doc
-15 §124–§126.
+**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §22–§24, 18.PF-FT-AI-GUARDRAILS.md §70–§71, 15.PF-FT-AI-SLM.md §124–§126.
 
 | Criterion | Weight | A: Minimise+block sensitive | B: Send all | C: Block external | D: Anonymise all | E: Azure OpenAI |
 |---|---|---|---|---|---|---|
@@ -152,7 +151,7 @@ is unnecessary given the controls.
 
 ## 8. Architecture Detail
 
-- The external-SLM boundary guardrail (doc 18 §70; ADR-D6-09) inspects each payload:
+- The external-SLM boundary guardrail (18.PF-FT-AI-GUARDRAILS.md §70; ADR-D6-09) inspects each payload:
   minimise (ADR-D6-06), redact PII, and hard-block special-category/children's/secret
   content; blocked flows are marked for self-host routing (ADR-D3-14 provider selection).
 - Transfers are logged (redacted) for audit (ADR-D6-17); egress restricted to the
@@ -264,7 +263,7 @@ is unnecessary given the controls.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | doc 19 §22–§24; doc 18 §70–§71; doc 15 §124–§126 |
+| Specification sections | 19.PF-FT-AI-SECURITY.md §22–§24; 18.PF-FT-AI-GUARDRAILS.md §70–§71; 15.PF-FT-AI-SLM.md §124–§126 |
 | Requirement IDs | SEC-SLM-BND-* |
 | Build phases | 6, 20 |
 | Code paths | `src/pf_ft_ai/slm/` |

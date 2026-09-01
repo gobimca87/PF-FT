@@ -31,12 +31,12 @@ PFF AI will front its API with **Azure API Management (APIM)** as the edge gatew
 **authorization boundary**: APIM authenticates and authorizes requests (validating
 tokens/claims), applies rate limiting and edge policies, and the AI platform
 **consumes already-validated claims** rather than performing authentication itself
-(CLAUDE.md Golden Rule; doc 25 §6–§7). The AI never authenticates or authorizes a
+(CLAUDE.md Golden Rule; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7). The AI never authenticates or authorizes a
 request on its own.
 
 ## 2. Context and Problem Statement
 
-Doc 25 §6–§7 define the edge layer and API gateway; §64 rate limits; doc 27 §5 the AI
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7 define the edge layer and API gateway; §64 rate limits; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §5 the AI
 platform boundary; CLAUDE.md states the AI "never authenticates or authorizes a
 request itself (APIM/enterprise auth does that — AI only consumes validated claims)."
 Without a designated gateway/authz boundary, the AI would be tempted to re-implement
@@ -47,9 +47,9 @@ and authz boundary.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | AI consumes validated claims; never authenticates | CLAUDE.md; doc 27 §5 |
-| DR-F-01 | Edge gateway: routing, rate limit, policy | doc 25 §6–§7, §64 |
-| DR-F-02 | Token/claim validation at the edge | doc 25 §7; ADR-D6-02 |
+| DR-C-01 | AI consumes validated claims; never authenticates | CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §5 |
+| DR-F-01 | Edge gateway: routing, rate limit, policy | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7, §64 |
+| DR-F-02 | Token/claim validation at the edge | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §7; ADR-D6-02 |
 | DR-N-01 | Azure-native, private, observable | ADR-D5-08 |
 
 ### 3.4 Assumptions
@@ -76,7 +76,7 @@ and authz boundary.
 **Description.** APIM as edge gateway + authz boundary; validates JWT/claims, rate
 limits, transforms, routes to the FastAPI backend; AI consumes claims.
 **Strengths.** Azure-native; rich policy; enterprise identity integration; matches
-CLAUDE.md/doc 25.
+CLAUDE.md/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md.
 **Weaknesses.** Cost at higher tiers; APIM policy learning curve.
 **Cost / effort.** Medium; strong fit.
 
@@ -92,7 +92,7 @@ app (Golden-Rule risk).
 
 **Description.** App validates tokens itself.
 **Strengths.** Simple; no gateway product.
-**Weaknesses.** AI performing authz violates CLAUDE.md/doc 27 §5; scatters security;
+**Weaknesses.** AI performing authz violates CLAUDE.md/27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §5; scatters security;
 no central rate limit/policy.
 **Cost / effort.** Low; wrong boundary.
 
@@ -114,12 +114,12 @@ no central rate limit/policy.
 
 | Option | Eliminated by |
 |---|---|
-| No gateway (direct to app) | doc 25 §6–§7; no edge protection |
+| No gateway (direct to app) | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7; no edge protection |
 | AI issues/validates its own tokens | CLAUDE.md Golden Rule |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 25 §6–§7/§64, doc 27 §5 and
+**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7/§64, 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §5 and
 CLAUDE.md.
 
 | Criterion | Weight | A: APIM | B: AppGW+WAF | C: In-app auth | D: Kong/Apigee | E: NGINX+authz |
@@ -145,7 +145,7 @@ validated claims only (Option A).** Application Gateway/WAF may front APIM for W
 In-app auth (C) is forbidden by the Golden Rule; non-Azure gateways (D) and bespoke
 NGINX authz (E) are rejected.
 
-**Status rationale.** `Accepted` — CLAUDE.md and doc 25 §6–§7 mandate this.
+**Status rationale.** `Accepted` — CLAUDE.md and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7 mandate this.
 
 ## 8. Architecture Detail
 
@@ -154,7 +154,7 @@ NGINX authz (E) are rejected.
   (ADR-D6-04).
 - The AI reads authorization context from validated claims (ADR-D6-03) and never
   re-authenticates; the Conversation Manager (ADR-D2-04) receives claims context
-  (doc 6 §36).
+  (6 PF-FT-AI-CONVERSATION-SESSION.md §36).
 - Standard error envelope (ADR-D4-09) preserved through APIM policies.
 
 ## 9. Consequences
@@ -185,7 +185,7 @@ NGINX authz (E) are rejected.
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
-| RSK-01 | AI code re-implements authz | Low | High | M | Boundary tests; code review (doc 27 §5) | Security Architect | Low |
+| RSK-01 | AI code re-implements authz | Low | High | M | Boundary tests; code review (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §5) | Security Architect | Low |
 | RSK-02 | APIM misconfig bypasses validation | Low | High | M | Policy tests; least-privilege backend | Security Architect | Low |
 | RSK-03 | APIM cost at scale | Med | Med | M | Tier right-sizing | FinOps | Low |
 
@@ -260,7 +260,7 @@ NGINX authz (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-25 Security/Gateway |
-| Specification sections | doc 25 §6–§7, §64; doc 27 §5 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §6–§7, §64; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §5 |
 | Requirement IDs | GW-* |
 | Build phases | 2 |
 | Code paths | `infra/` |

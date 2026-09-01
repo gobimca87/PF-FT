@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will measure cost as **unit economics — cost per request, per workflow, and per
 successful outcome — with cost attribution/tagging, budgets, alerts and anomaly detection**
-(doc 26 §74–§93, §95). The headline metric is **cost per successful workflow completion**
+(26.PF-FT-AI-PERFORMANCE-COST.md §74–§93, §95). The headline metric is **cost per successful workflow completion**
 (e.g. per completed affiliation), because that ties spend to delivered value; token/GPU/
 infra costs roll up into it.
 
 ## 2. Context and Problem Statement
 
-Doc 26 §74–§75 cost model/categories, §76–§79 cost per request/workflow/outcome/user,
+26.PF-FT-AI-PERFORMANCE-COST.md §74–§75 cost model/categories, §76–§79 cost per request/workflow/outcome/user,
 §80–§87 token/GPU/RAG/eval/agent/observability cost, §88–§93 allocation/tags/budgets/
 alerts/anomaly/guardrails. Without a unit-cost model, AI spend is opaque and can't be tied
 to value or controlled. This ADR fixes the cost model and its headline unit.
@@ -43,10 +43,10 @@ to value or controlled. This ADR fixes the cost model and its headline unit.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Cost per request/workflow/outcome | doc 26 §76–§78 |
-| DR-F-02 | Cost attribution + tags | doc 26 §88–§89 |
-| DR-F-03 | Budgets + alerts + anomaly detection | doc 26 §90–§92 |
-| DR-F-04 | Tie cost to value (successful outcome) | doc 26 §78; ADR-D8-03 |
+| DR-F-01 | Cost per request/workflow/outcome | 26.PF-FT-AI-PERFORMANCE-COST.md §76–§78 |
+| DR-F-02 | Cost attribution + tags | 26.PF-FT-AI-PERFORMANCE-COST.md §88–§89 |
+| DR-F-03 | Budgets + alerts + anomaly detection | 26.PF-FT-AI-PERFORMANCE-COST.md §90–§92 |
+| DR-F-04 | Tie cost to value (successful outcome) | 26.PF-FT-AI-PERFORMANCE-COST.md §78; ADR-D8-03 |
 
 ### 3.4 Assumptions
 
@@ -70,7 +70,7 @@ to value or controlled. This ADR fixes the cost model and its headline unit.
 ### 5.1 Option A — Unit economics (request/workflow/outcome) + attribution/tags + budgets/alerts/anomaly
 
 **Description.** Compute cost per request, per workflow and per successful outcome; attribute
-via cost tags (doc 26 §89) and Langfuse token/cost traces (ADR-D7-02); budgets + alerts
+via cost tags (26.PF-FT-AI-PERFORMANCE-COST.md §89) and Langfuse token/cost traces (ADR-D7-02); budgets + alerts
 (§90–§91) + anomaly detection (§92); headline = cost per successful workflow completion.
 **Strengths.** Value-linked, granular, controllable.
 **Weaknesses.** Instrumentation upkeep.
@@ -99,7 +99,7 @@ via cost tags (doc 26 §89) and Langfuse token/cost traces (ADR-D7-02); budgets 
 
 ### 5.5 Option E — Unit economics + FinOps dashboard + cost gates in CI (cost regression) + showback
 
-**Description.** Option A plus a FinOps dashboard, a cost-regression gate in CI (doc 26
+**Description.** Option A plus a FinOps dashboard, a cost-regression gate in CI (26.PF-FT-AI-PERFORMANCE-COST.md
 §132/§135) and showback per workflow/county.
 **Strengths.** A + prevents cost regressions + accountability.
 **Weaknesses.** Dashboard/gate upkeep.
@@ -109,12 +109,12 @@ via cost tags (doc 26 §89) and Langfuse token/cost traces (ADR-D7-02); budgets 
 
 | Option | Eliminated by |
 |---|---|
-| No cost tracking | doc 26 §74 |
+| No cost tracking | 26.PF-FT-AI-PERFORMANCE-COST.md §74 |
 | Estimate-only (no measurement) | Not actionable |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 26 §74–§95/§132/§135.
+**Method.** Weighted scoring against §4, informed by 26.PF-FT-AI-PERFORMANCE-COST.md §74–§95/§132/§135.
 
 | Criterion | Weight | A: Unit econ | B: Total only | C: Per-request | D: Infra-only | E: A+dashboard+gate |
 |---|---|---|---|---|---|---|
@@ -140,7 +140,7 @@ detection, a FinOps dashboard, a CI cost-regression gate and per-workflow/county
 
 ## 8. Architecture Detail
 
-- Cost computed from Langfuse token/cost traces (ADR-D7-02) + cloud cost tags (doc 26 §89);
+- Cost computed from Langfuse token/cost traces (ADR-D7-02) + cloud cost tags (26.PF-FT-AI-PERFORMANCE-COST.md §89);
   rolled up to per-request/workflow/outcome (§76–§78); headline = £/completed affiliation.
 - Budgets + alerts (§90–§91), anomaly detection (§92) and cost guardrails (§93–§94, e.g.
   model routing §95–§98 to cheaper models where adequate); cost-regression gate in CI
@@ -250,7 +250,7 @@ detection, a FinOps dashboard, a CI cost-regression gate and per-workflow/county
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-34 Business Value |
-| Specification sections | doc 26 §74–§98, §132, §135 |
+| Specification sections | 26.PF-FT-AI-PERFORMANCE-COST.md §74–§98, §132, §135 |
 | Requirement IDs | COST-* |
 | Build phases | 20 |
 | Code paths | observability/cost |

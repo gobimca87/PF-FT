@@ -32,14 +32,14 @@ review_due: 2027-08-23
 The API catalogue declares each enterprise operation's **business contract** — `api_id`,
 version, operation, purpose — against a logical `endpoint_ref`, never a physical URL. The
 physical `base_url` each `endpoint_ref` resolves to is layered, environment-scoped
-configuration (doc 17 §33), owned by ADR-D5-06's config model and never hard-coded in
+configuration (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33), owned by ADR-D5-06's config model and never hard-coded in
 the catalogue, a tool implementation, or agent code. This is the same treatment
 ADR-D2-19 already gives portal URLs, extended here to the enterprise API surface, which
 had no equivalent decision.
 
 ## 2. Context and Problem Statement
 
-Doc 17 §31–§32 define enterprise API catalogue configuration and API versioning
+17.PF-FT-AI-CONFIGURATION-VERSIONING.md §31–§32 define enterprise API catalogue configuration and API versioning
 tracking (API ID, API version, contract version, transformation version, auth scheme,
 timeout, retry, idempotency). §33, titled **API Endpoint Environment Configuration**,
 states the rule directly: "keep endpoint location separate from business contract,"
@@ -51,9 +51,9 @@ contract changed. §35 covers the transformation version separately again.
 This is a complete, specific mechanism. It is also **never cited by any ADR in this
 library** — not ADR-D2-13 (integration pattern), not ADR-D2-15 (API contract and
 versioning), not ADR-D5-14 (environment model), not ADR-D5-06 (configuration
-architecture). Doc 10's own catalogue metadata example (§10) shows `endpoint: {method,
-path}` with a relative path and no host, which is consistent with doc 17 §33's
-indirection but never says so — a reader of doc 10 alone would not know where the host
+architecture). 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md's own catalogue metadata example (§10) shows `endpoint: {method,
+path}` with a relative path and no host, which is consistent with 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33's
+indirection but never says so — a reader of 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md alone would not know where the host
 comes from, and could reasonably assume it belongs in the catalogue entry itself.
 
 That ambiguity matters for a reason specific to this platform: **the API catalogue is a
@@ -65,9 +65,9 @@ per environment (defeating "the same tested artefact reaches production," ADR-D5
 whole point) or the catalogue would need per-environment variants, multiplying
 maintenance and inviting drift.
 
-Doc 2 §48 lists hard-coded URLs among the platform's anti-patterns; ADR-D2-19 already
+2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists hard-coded URLs among the platform's anti-patterns; ADR-D2-19 already
 enforces that discipline for portal links, with its own environment-resolution decision
-(doc 12 §7–§10). Enterprise API endpoints carry the identical risk — a DEV base URL
+(12 PF-FT-AI-PORTAL-LINKS.md §7–§10). Enterprise API endpoints carry the identical risk — a DEV base URL
 reaching a PROD deployment, or vice versa, is at least as damaging as a cross-environment
 portal link, because it is a machine calling the wrong enterprise system rather than a
 user following a bad link — and yet no ADR states the enterprise-API equivalent.
@@ -78,17 +78,17 @@ user following a bad link — and yet no ADR states the enterprise-API equivalen
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Endpoint location must be declared separately from the business contract | doc 17 §33 |
-| DR-F-02 | The catalogue entry (`api_id`, version, operation) must be environment-agnostic | doc 17 §31–§32; ADR-D5-06 |
-| DR-F-03 | The physical `base_url` per `endpoint_ref` must resolve per environment | doc 17 §33 |
-| DR-F-04 | Endpoint (URL) version and API contract version must be tracked independently | doc 17 §34 |
-| DR-F-05 | No API host/URL is hard-coded in agent, tool or catalogue code | doc 2 §48; ADR-D2-19 (parallel) |
+| DR-F-01 | Endpoint location must be declared separately from the business contract | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 |
+| DR-F-02 | The catalogue entry (`api_id`, version, operation) must be environment-agnostic | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §31–§32; ADR-D5-06 |
+| DR-F-03 | The physical `base_url` per `endpoint_ref` must resolve per environment | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 |
+| DR-F-04 | Endpoint (URL) version and API contract version must be tracked independently | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §34 |
+| DR-F-05 | No API host/URL is hard-coded in agent, tool or catalogue code | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48; ADR-D2-19 (parallel) |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | No cross-environment enterprise call | 0 occurrences | doc 25 §39 |
+| DR-N-01 | No cross-environment enterprise call | 0 occurrences | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §39 |
 | DR-N-02 | A release manifest promotes unchanged across environments | Same catalogue version DEV→PROD | ADR-D5-06 §7; ADR-D5-14 |
 | DR-N-03 | Endpoint resolution adds no material latency | ≤2 ms | ADR-D5-18 |
 
@@ -112,7 +112,7 @@ user following a bad link — and yet no ADR states the enterprise-API equivalen
 |---|---|---|---|---|
 | EC-01 | Impossibility of a cross-environment call | 30 | Highest-consequence failure — wrong system, not just wrong data | Can any deployment reach the wrong host? |
 | EC-02 | Catalogue stays environment-agnostic (release-manifest safe) | 25 | Directly protects ADR-D5-06's promotion model | Same catalogue version usable in every environment |
-| EC-03 | No hard-coded host in code | 20 | doc 2 §48 anti-pattern | Static analysis for literal hosts |
+| EC-03 | No hard-coded host in code | 20 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 anti-pattern | Static analysis for literal hosts |
 | EC-04 | Operational flexibility (rotate/repoint without redeploy) | 15 | Endpoint moves happen without a contract change (§7) | Change requires config change only |
 | EC-05 | Simplicity / maintenance cost | 10 | Fewer moving parts | Concepts an integrator must learn |
 | | **Total** | **100** | | |
@@ -136,7 +136,7 @@ change.
 
 **Cost / effort.** Lowest to write, highest to operate.
 
-### 5.2 Option B — `endpoint_ref` indirection; environment config resolves `base_url` (doc 17 §33)
+### 5.2 Option B — `endpoint_ref` indirection; environment config resolves `base_url` (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33)
 
 **Description.** The catalogue entry names a logical `endpoint_ref`. A separate,
 environment-layered configuration file (ADR-D5-06's base+overlay model) maps each
@@ -145,7 +145,7 @@ every environment; only the resolution table changes.
 
 **Strengths.** Catalogue is genuinely environment-agnostic (EC-02); no host ever appears
 in code (EC-03); an endpoint move is a config change, not a release (EC-04); this is
-exactly what doc 17 §33 already specifies — adopting it is recognising an existing
+exactly what 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 already specifies — adopting it is recognising an existing
 design, not inventing one; symmetric with ADR-D2-19's portal-URL treatment.
 
 **Weaknesses.** One extra lookup per call (bounded by DR-N-03); the catalogue and the
@@ -162,9 +162,9 @@ environment-scoped DNS to resolve the operation to a live instance at call time.
 **Strengths.** Adapts automatically to endpoint changes; no configuration to update.
 
 **Weaknesses.** Introduces a live dependency and failure mode (the registry itself) that
-doc 17's static model does not have; a misconfigured DNS zone silently crosses
+17.PF-FT-AI-CONFIGURATION-VERSIONING.md's static model does not have; a misconfigured DNS zone silently crosses
 environments, which is precisely EC-01's worst case, with no config diff to catch it;
-disproportionate for an integration surface doc 10 §7 already catalogues explicitly and
+disproportionate for an integration surface 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 already catalogues explicitly and
 statically; no evidence the enterprise side exposes such a registry.
 
 **Cost / effort.** High, and it fails the criterion it would need to win on.
@@ -182,7 +182,7 @@ different team, for a concern (which backend an AI-platform deployment should re
 that the AI platform's own environment model (ADR-D5-14) already exists to answer;
 a routing misconfiguration in a shared gateway is a cross-environment failure affecting
 every caller, not just this platform, which is a larger blast radius than DR-N-01 needs
-to accept; no evidence in doc 10/17/25 that APIM is meant to carry this responsibility.
+to accept; no evidence in 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md / 17.PF-FT-AI-CONFIGURATION-VERSIONING.md / 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md that APIM is meant to carry this responsibility.
 
 **Cost / effort.** Moderate, with an availability/ownership trade-off not asked for.
 
@@ -196,7 +196,7 @@ host inline.
 **Weaknesses.** This is a hard-coded host by another name — it fails DR-F-05 and EC-03
 exactly as Option A does, just distributed across call sites instead of centralised in
 one catalogue; every new environment or endpoint change is a code change and a release;
-doc 2 §48's anti-pattern applies directly.
+2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48's anti-pattern applies directly.
 
 **Cost / effort.** Low to write, and explicitly the pattern the specification forbids.
 
@@ -204,7 +204,7 @@ doc 2 §48's anti-pattern applies directly.
 
 | Option | Eliminated by |
 |---|---|
-| Option E (code conditionals) | DR-F-05 — hard-coded environment logic is the anti-pattern doc 2 §48 names |
+| Option E (code conditionals) | DR-F-05 — hard-coded environment logic is the anti-pattern 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 names |
 
 ## 6. Evaluation Method and Decision Matrix
 
@@ -226,7 +226,7 @@ reasons).
 
 **Sensitivity.** B leads D by 60 points, on the two highest-weighted criteria (EC-01,
 EC-02) where B is unambiguously the direct implementation of a mechanism the
-specification already states (doc 17 §33), and D is a plausible but undocumented
+specification already states (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33), and D is a plausible but undocumented
 alternative that relocates the decision outside the AI platform's own configuration.
 No plausible reweighting closes the gap, because A and E fail DR-F-05/DR-F-02 as hard
 constraints rather than on scoring.
@@ -257,19 +257,19 @@ platform never discovers a missing endpoint mapping from a live call.
 
 ### 7.3 Endpoint version and contract version move independently
 
-Per doc 17 §34, a `base_url` change (a service relocating) does not imply the request/
+Per 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §34, a `base_url` change (a service relocating) does not imply the request/
 response contract changed, and a contract version bump (ADR-D2-15) does not imply the
 host changed. Both are tracked, and either can change without the other.
 
 ### 7.4 No exceptions for "just this once"
 
 No tool implementation, agent, or catalogue entry constructs or contains a host string.
-Where doc 17 §33's example shows `base_url: https://...` sourced from environment
+Where 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33's example shows `base_url: https://...` sourced from environment
 configuration, that is the only place a host is permitted to appear outside a secret
 reference (ADR-D5-07) for any authentication component of it.
 
 **Status rationale.** Accepted. This closes a gap identified in a post-completion
-review of the ADR library: doc 17 §33 already specifies this mechanism, and ADR-D2-19
+review of the ADR library: 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 already specifies this mechanism, and ADR-D2-19
 already applies the identical pattern to portal URLs, but no ADR extended it to
 enterprise API endpoints. Recording it as Accepted, not Proposed, because it states an
 existing specification mechanism rather than opening a new choice — consistent with how
@@ -310,7 +310,7 @@ satisfying ADR-D5-14's "progressively production-like stages" without a catalogu
 
 ### 8.3 Interaction with contract versioning (ADR-D2-15)
 
-An enterprise service relocating (endpoint version bump, doc 17 §34) triggers only an
+An enterprise service relocating (endpoint version bump, 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §34) triggers only an
 environment-config change. An enterprise service changing its response shape (contract
 version bump) triggers ADR-D2-15's full validate/map/fail path. The two are
 independent, and conflating them — for example, treating a URL change as if it might
@@ -337,7 +337,7 @@ operational move.
 
 ### 9.3 Neutral
 
-- The mechanism is not new — it recognises doc 17 §33 as already specifying it. This ADR
+- The mechanism is not new — it recognises 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 as already specifying it. This ADR
   is what makes it a decision the library actually records and enforces.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -392,7 +392,7 @@ operational move.
 |---|---|
 | Build phases | 1 (environment/config scaffolding), 6 (integration layer) |
 | Repository paths | `src/pf_ft_ai/integration/api/` (catalogue loader, `endpoint_ref` resolver); `config/` (per-environment endpoint maps) |
-| Configuration | `endpoints.<ENDPOINT_REF>.base_url` per environment overlay (doc 17 §33) |
+| Configuration | `endpoints.<ENDPOINT_REF>.base_url` per environment overlay (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33) |
 | Contracts / schemas | Catalogue entry schema gains a mandatory `endpoint_ref` field; drops any `base_url`/host field |
 | Migration | None — no prior catalogue schema existed with embedded hosts |
 | Dependencies on other ADRs | ADR-D5-06 (config layering), ADR-D5-14 (environment model), ADR-D2-13 (catalogue ownership) |
@@ -423,7 +423,7 @@ operational move.
 | Cost element | One-off | Recurring | Basis |
 |---|---|---|---|
 | Catalogue schema + resolver | Phase 6 | — | `DEVELOPMENT-GUIDE.md` §4 |
-| Per-environment endpoint config authoring | Small, per operation | Per new operation or relocation | doc 17 §33 |
+| Per-environment endpoint config authoring | Small, per operation | Per new operation or relocation | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 |
 | Avoided cost | — | Ongoing | Avoids a wrong-environment enterprise call incident and the manifest-repinning cost of Option A |
 
 ## 18. Revisit Triggers and Causal Analysis Hooks
@@ -441,7 +441,7 @@ operational move.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-10 Integration & 18-Microservice Matrix |
-| Specification sections | doc 17 §31 (Enterprise API Configuration), §32 (Enterprise API Versioning), §33 (API Endpoint Environment Configuration), §34 (API Contract Version), §35 (API Transformation Version); doc 10 §7–§10 (API Catalog, Purpose, Metadata, Extended Metadata), §15–§16 (API Versioning, Contract); doc 25 §33–§39 (environment definitions and isolation) |
+| Specification sections | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §31 (Enterprise API Configuration), §32 (Enterprise API Versioning), §33 (API Endpoint Environment Configuration), §34 (API Contract Version), §35 (API Transformation Version); 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7–§10 (API Catalog, Purpose, Metadata, Extended Metadata), §15–§16 (API Versioning, Contract); 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§39 (environment definitions and isolation) |
 | Requirement IDs | `FR-P-04` |
 | Build phases | 1, 6 |
 | Code paths | `src/pf_ft_ai/integration/api/`, `config/` |
@@ -454,4 +454,4 @@ operational move.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-23 | AI Solution Architect | Initial decision recorded, closing a gap found in a post-completion review: doc 17 §33 already specifies `endpoint_ref` indirection for enterprise API endpoints, and ADR-D2-19 already applies the identical pattern to portal URLs, but no ADR had extended environment-based resolution to enterprise API endpoints themselves. |
+| 1.0.0 | 2026-08-23 | AI Solution Architect | Initial decision recorded, closing a gap found in a post-completion review: 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33 already specifies `endpoint_ref` indirection for enterprise API endpoints, and ADR-D2-19 already applies the identical pattern to portal URLs, but no ADR had extended environment-based resolution to enterprise API endpoints themselves. |

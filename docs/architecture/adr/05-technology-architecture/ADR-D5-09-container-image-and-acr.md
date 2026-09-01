@@ -30,11 +30,11 @@ review_due: 2027-08-22
 PFF AI will build **minimal, multi-stage, non-root container images**, publish them to
 **Azure Container Registry (ACR)** with **immutable, digest-pinned tags**, vulnerability
 scanning and (target) signing, and deploy images **by digest** so what runs is exactly
-what was built and scanned (doc 25 §14–§18, §69). No `latest`, no in-place tag reuse.
+what was built and scanned (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §14–§18, §69). No `latest`, no in-place tag reuse.
 
 ## 2. Context and Problem Statement
 
-Doc 25 §14 defines the container image, §15 the registry (ACR), §16 image immutability,
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §14 defines the container image, §15 the registry (ACR), §16 image immutability,
 §17–§18 container/runtime security, §69 the build artifact. Mutable tags let a
 different image run than the one tested/scanned — a supply-chain and reproducibility
 hazard. This ADR fixes image build, registry and immutability.
@@ -43,9 +43,9 @@ hazard. This ADR fixes image build, registry and immutability.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Immutable, digest-pinned images in ACR | doc 25 §15–§16 |
-| DR-F-02 | Minimal, non-root, hardened images | doc 25 §14, §17–§18 |
-| DR-C-01 | Deploy by digest (what built = what runs) | doc 25 §16; ADR-D5-06 |
+| DR-F-01 | Immutable, digest-pinned images in ACR | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §15–§16 |
+| DR-F-02 | Minimal, non-root, hardened images | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §14, §17–§18 |
+| DR-C-01 | Deploy by digest (what built = what runs) | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §16; ADR-D5-06 |
 | DR-N-01 | Vulnerability scan (+ signing target) | ADR-D6-18 |
 
 ### 3.4 Assumptions
@@ -109,12 +109,12 @@ holds digest, ADR-D5-06).
 
 | Option | Eliminated by |
 |---|---|
-| Root-running containers | doc 25 §17–§18 |
-| `latest` in production | doc 25 §16 |
+| Root-running containers | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §17–§18 |
+| `latest` in production | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §16 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 25 §14–§18/§69 and ADR-D6-18.
+**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §14–§18/§69 and ADR-D6-18.
 
 | Criterion | Weight | A: multi-stage+ACR+digest | B: mutable tags | C: ext registry | D: buildpacks | E: moving :prod tag |
 |---|---|---|---|---|---|---|
@@ -139,7 +139,7 @@ target), and deploy by digest via the release manifest (Option A).** Managed-Ide
 auth to ACR (ADR-D5-08). Mutable tags (B/E), external registries (C) and buildpacks
 (D) are rejected.
 
-**Status rationale.** `Accepted` — doc 25 §14–§18 govern this.
+**Status rationale.** `Accepted` — 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §14–§18 govern this.
 
 ## 8. Architecture Detail
 
@@ -255,7 +255,7 @@ auth to ACR (ADR-D5-08). Mutable tags (B/E), external registries (C) and buildpa
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 |
-| Specification sections | doc 25 §14–§18, §69 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §14–§18, §69 |
 | Requirement IDs | INFRA-IMG-* |
 | Build phases | 1 |
 | Code paths | `Dockerfile`, `infra/` |

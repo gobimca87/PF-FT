@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will follow a **test pyramid** — many fast unit tests, fewer component/integration
 tests, few end-to-end — with a **deterministic mock SLM** and **mock enterprise APIs** so
-AI-dependent tests are stable and fast (doc 22 §5–§8, §12, §20–§21, §37–§38). Non-
+AI-dependent tests are stable and fast (22.PF-FT-AI-TESTING.md §5–§8, §12, §20–§21, §37–§38). Non-
 deterministic model behaviour is tested at the eval layer (ADR-D7-13), not in unit tests;
 security/ACL/idempotency tests are first-class.
 
 ## 2. Context and Problem Statement
 
-Doc 22 §5–§6 test pyramid/layers, §7–§8 categories/structure, §10–§12 unit principles/
+22.PF-FT-AI-TESTING.md §5–§6 test pyramid/layers, §7–§8 categories/structure, §10–§12 unit principles/
 AI-component testing, §20–§21 mocking enterprise APIs, §30 state tests, §37–§38 SLM/SLM-
 failure testing, §41 RAG ACL testing, §50 idempotency, §56 memory isolation. LLM
 non-determinism makes naive AI tests flaky. This ADR fixes the test strategy and the
@@ -44,10 +44,10 @@ mock-SLM approach that keeps CI deterministic.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Test pyramid (unit-heavy) | doc 22 §5 |
-| DR-F-02 | Deterministic mock SLM + mock enterprise APIs | doc 22 §12, §20–§21, §37 |
+| DR-F-01 | Test pyramid (unit-heavy) | 22.PF-FT-AI-TESTING.md §5 |
+| DR-F-02 | Deterministic mock SLM + mock enterprise APIs | 22.PF-FT-AI-TESTING.md §12, §20–§21, §37 |
 | DR-F-03 | Non-determinism tested at eval layer | ADR-D7-13 |
-| DR-F-04 | Security/ACL/idempotency/isolation tests | doc 22 §41, §50, §56 |
+| DR-F-04 | Security/ACL/idempotency/isolation tests | 22.PF-FT-AI-TESTING.md §41, §50, §56 |
 
 ### 3.4 Assumptions
 
@@ -71,7 +71,7 @@ mock-SLM approach that keeps CI deterministic.
 ### 5.1 Option A — Test pyramid + deterministic mock SLM + mock enterprise APIs; non-determinism at eval layer
 
 **Description.** Unit-heavy pyramid; a deterministic mock `SLMProvider` (ADR-D3-14) and
-contract-based enterprise-API mocks (doc 22 §20–§21); component/integration for wiring;
+contract-based enterprise-API mocks (22.PF-FT-AI-TESTING.md §20–§21); component/integration for wiring;
 few e2e; security/ACL/idempotency/isolation suites; model quality at eval (ADR-D7-13).
 **Strengths.** Stable, fast, well-covered, realistic where needed.
 **Weaknesses.** Mock upkeep + contract drift risk (mitigated by contract tests).
@@ -110,12 +110,12 @@ recorded response fixtures to prevent mock drift.
 
 | Option | Eliminated by |
 |---|---|
-| Non-deterministic model asserts in unit tests | doc 22 §12; flake |
-| No security/ACL tests | doc 22 §41 |
+| Non-deterministic model asserts in unit tests | 22.PF-FT-AI-TESTING.md §12; flake |
+| No security/ACL tests | 22.PF-FT-AI-TESTING.md §41 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 22 §5–§56.
+**Method.** Weighted scoring against §4, informed by 22.PF-FT-AI-TESTING.md §5–§56.
 
 | Criterion | Weight | A: Pyramid+mock | B: Heavy e2e | C: Live-SLM | D: Unit-only | E: A+contract+fixtures |
 |---|---|---|---|---|---|---|
@@ -142,10 +142,10 @@ Heavy-e2e (B), live-SLM-in-CI (C) and unit-only (D) are rejected.
 
 ## 8. Architecture Detail
 
-- `tests/` structured per doc 22 §8; a deterministic `MockSLMProvider` (ADR-D3-14) returns
-  fixed outputs; enterprise-API mocks are contract-driven (doc 22 §19–§21) with recorded
-  fixtures; TypedDict/graph state tested (doc 22 §30; ADR-D2-07).
-- Security suites: prompt-injection/tool-abuse (doc 22 §34/§45), RAG ACL (§41; ADR-D6-12),
+- `tests/` structured per 22.PF-FT-AI-TESTING.md §8; a deterministic `MockSLMProvider` (ADR-D3-14) returns
+  fixed outputs; enterprise-API mocks are contract-driven (22.PF-FT-AI-TESTING.md §19–§21) with recorded
+  fixtures; TypedDict/graph state tested (22.PF-FT-AI-TESTING.md §30; ADR-D2-07).
+- Security suites: prompt-injection/tool-abuse (22.PF-FT-AI-TESTING.md §34/§45), RAG ACL (§41; ADR-D6-12),
   memory isolation (§56), idempotency (§50). Model quality → ADR-D7-13. All gate CI
   (ADR-D7-09).
 
@@ -253,7 +253,7 @@ Heavy-e2e (B), live-SLM-in-CI (C) and unit-only (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 |
-| Specification sections | doc 22 §5–§8, §10–§12, §20–§21, §30, §37–§38, §41, §50, §56 |
+| Specification sections | 22.PF-FT-AI-TESTING.md §5–§8, §10–§12, §20–§21, §30, §37–§38, §41, §50, §56 |
 | Requirement IDs | TEST-* |
 | Build phases | 1 |
 | Code paths | `tests/` |

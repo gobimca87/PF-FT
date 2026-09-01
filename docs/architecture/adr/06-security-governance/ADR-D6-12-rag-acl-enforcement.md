@@ -32,14 +32,14 @@ RAG retrieval will enforce **access control at retrieval time**: the caller's au
 context (ADR-D6-03) is translated into **metadata filters applied before/within the
 vector search**, so a user only ever retrieves knowledge chunks they are authorized to
 see — ACL is a filter on the query, **never a prompt instruction** the model may ignore
-(doc 19 §39–§41, §44–§45; doc 13 §33–§39; doc 14 §49–§51). Filter construction is
+(19.PF-FT-AI-SECURITY.md §39–§41, §44–§45; 13.FP-FT-AI-RAG.md §33–§39; 14.PF-FT-AI-EMBEDDING-VECTOR.md §49–§51). Filter construction is
 injection-safe.
 
 ## 2. Context and Problem Statement
 
-Doc 19 §39–§41 RAG security/ACL enforcement/content trust, §44–§45 vector-store/metadata
-security; doc 13 §33–§39 ACL-aware retrieval (§35 "ACL is not a prompt"), tenant/org/role
-filtering, classification; doc 14 §49–§51 ACL filtering, metadata-filter construction,
+19.PF-FT-AI-SECURITY.md §39–§41 RAG security/ACL enforcement/content trust, §44–§45 vector-store/metadata
+security; 13.FP-FT-AI-RAG.md §33–§39 ACL-aware retrieval (§35 "ACL is not a prompt"), tenant/org/role
+filtering, classification; 14.PF-FT-AI-EMBEDDING-VECTOR.md §49–§51 ACL filtering, metadata-filter construction,
 filter-injection protection. If ACL were a prompt ("only show allowed docs"), the model
 could be jailbroken into leaking restricted knowledge. This ADR fixes retrieval-time,
 filter-based ACL.
@@ -48,10 +48,10 @@ filter-based ACL.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | ACL is a filter, not a prompt | doc 13 §35 |
-| DR-F-01 | Filter by tenant/org/role/classification | doc 13 §36–§39 |
-| DR-F-02 | Filter applied before/within search | doc 13 §62; doc 14 §49 |
-| DR-C-02 | Injection-safe filter construction | doc 14 §51 |
+| DR-C-01 | ACL is a filter, not a prompt | 13.FP-FT-AI-RAG.md §35 |
+| DR-F-01 | Filter by tenant/org/role/classification | 13.FP-FT-AI-RAG.md §36–§39 |
+| DR-F-02 | Filter applied before/within search | 13.FP-FT-AI-RAG.md §62; 14.PF-FT-AI-EMBEDDING-VECTOR.md §49 |
+| DR-C-02 | Injection-safe filter construction | 14.PF-FT-AI-EMBEDDING-VECTOR.md §51 |
 | DR-F-03 | Authz context drives the filter | ADR-D6-03 |
 
 ### 3.4 Assumptions
@@ -76,7 +76,7 @@ filter-based ACL.
 ### 5.1 Option A — Retrieval-time metadata-filter ACL from authz context, injection-safe, pre/within search
 
 **Description.** Translate authz context into a bound metadata filter (tenant/org/role/
-classification) applied before/within the vector search (doc 13 §62; doc 14 §49–§50);
+classification) applied before/within the vector search (13.FP-FT-AI-RAG.md §62; 14.PF-FT-AI-EMBEDDING-VECTOR.md §49–§50);
 filters parameterised to prevent injection (§51); chunks carry security metadata from
 ingestion.
 **Strengths.** Structural, non-bypassable, granular, injection-safe.
@@ -87,7 +87,7 @@ ingestion.
 
 **Description.** Tell the model to respect access rules.
 **Strengths.** Trivial.
-**Weaknesses.** Model can be jailbroken into leaking; violates doc 13 §35.
+**Weaknesses.** Model can be jailbroken into leaking; violates 13.FP-FT-AI-RAG.md §35.
 **Cost / effort.** Low; unsafe.
 
 ### 5.3 Option C — Post-retrieval filtering (retrieve all, then drop unauthorized)
@@ -118,13 +118,12 @@ unauthorized roles even if metadata mislabelled) and access audit.
 
 | Option | Eliminated by |
 |---|---|
-| No ACL (all knowledge to all) | doc 19 §40 |
+| No ACL (all knowledge to all) | 19.PF-FT-AI-SECURITY.md §40 |
 | User-supplied ACL context | ADR-D6-03 — server-owned only |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 19 §39–§45, doc 13 §33–§39, doc
-14 §49–§51.
+**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §39–§45, 13.FP-FT-AI-RAG.md §33–§39, 14.PF-FT-AI-EMBEDDING-VECTOR.md §49–§51.
 
 | Criterion | Weight | A: Filter ACL | B: Prompt ACL | C: Post-filter | D: Per-tenant index | E: Filter+class gate |
 |---|---|---|---|---|---|---|
@@ -153,8 +152,8 @@ never a prompt instruction (B); post-retrieval filtering (C) is rejected for lea
 ## 8. Architecture Detail
 
 - Chunks carry security metadata (tenant/org/role/classification) from ingestion
-  (ADR-D3-21; doc 13 §32); retrieval (ADR-D3-22) builds a bound OData/metadata filter
-  from the authz context (ADR-D6-03), applied in the vector store (ADR-D3-24; doc 14
+  (ADR-D3-21; 13.FP-FT-AI-RAG.md §32); retrieval (ADR-D3-22) builds a bound OData/metadata filter
+  from the authz context (ADR-D6-03), applied in the vector store (ADR-D3-24; 14.PF-FT-AI-EMBEDDING-VECTOR.md
   §49–§50); filter values parameterised (§51) to prevent filter injection.
 - Classification gate blocks restricted classes for unauthorized roles even on metadata
   error; every retrieval's ACL decision is audited (ADR-D6-17).
@@ -230,7 +229,7 @@ never a prompt instruction (B); post-retrieval filtering (C) is rejected for lea
 | ID | Acceptance criterion | Verification method |
 |---|---|---|
 | AC-01 | Filter applied before/within search from authz context | Integration test |
-| AC-02 | No cross-ACL retrieval | ACL eval dataset (doc 13 §131) |
+| AC-02 | No cross-ACL retrieval | ACL eval dataset (13.FP-FT-AI-RAG.md §131) |
 | AC-03 | Filters injection-safe | Security test (§51) |
 | AC-04 | Classification gate blocks mislabel leaks | Test |
 
@@ -265,7 +264,7 @@ never a prompt instruction (B); post-retrieval filtering (C) is rejected for lea
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | doc 19 §39–§45; doc 13 §33–§39; doc 14 §49–§51 |
+| Specification sections | 19.PF-FT-AI-SECURITY.md §39–§45; 13.FP-FT-AI-RAG.md §33–§39; 14.PF-FT-AI-EMBEDDING-VECTOR.md §49–§51 |
 | Requirement IDs | SEC-RAG-ACL-* |
 | Build phases | 8 |
 | Code paths | `src/pf_ft_ai/rag/` |

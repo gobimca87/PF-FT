@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will use **Pydantic v2** for all data crossing a boundary — FastAPI
 request/response, tool req/res, config, event contracts, ERC schema, SLM req/res —
-while **LangGraph-internal state uses `TypedDict`** (doc 27 §16–§17, §36; CLAUDE.md).
+while **LangGraph-internal state uses `TypedDict`** (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17, §36; CLAUDE.md).
 Pydantic v2's Rust-core performance and strict validation make it the single boundary
 validation standard.
 
 ## 2. Context and Problem Statement
 
-CLAUDE.md fixes Pydantic for boundaries and TypedDict for LangGraph state; doc 27 §16
+CLAUDE.md fixes Pydantic for boundaries and TypedDict for LangGraph state; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16
 sets the Pydantic standard and §17 the validation standard, §36 the typed graph state.
 Without one validation standard, boundaries validate inconsistently (some ad hoc, some
 dataclasses), weakening the type guarantees mypy (ADR-D5-02) provides and the envelope
@@ -45,9 +45,9 @@ Pydantic/TypedDict split.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Validate all boundary data | doc 27 §16–§17; CLAUDE.md |
-| DR-F-02 | TypedDict for LangGraph internal state | doc 27 §36; CLAUDE.md |
-| DR-N-01 | High-performance validation | doc 26 §14 |
+| DR-F-01 | Validate all boundary data | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17; CLAUDE.md |
+| DR-F-02 | TypedDict for LangGraph internal state | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §36; CLAUDE.md |
+| DR-N-01 | High-performance validation | 26.PF-FT-AI-PERFORMANCE-COST.md §14 |
 | DR-N-02 | mypy plugin support | ADR-D5-02 |
 
 ### 3.4 Assumptions
@@ -110,12 +110,12 @@ intentional.
 
 | Option | Eliminated by |
 |---|---|
-| No boundary validation | doc 27 §17 |
-| Pydantic everywhere incl. graph state | doc 27 §36 — TypedDict for LangGraph |
+| No boundary validation | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §17 |
+| Pydantic everywhere incl. graph state | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §36 — TypedDict for LangGraph |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 27 §16–§17/§36 and CLAUDE.md.
+**Method.** Weighted scoring against §4, informed by 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17/§36 and CLAUDE.md.
 
 | Criterion | Weight | A: Pydantic v2 | B: dataclasses | C: attrs+cattrs | D: Pydantic v1 | E: marshmallow |
 |---|---|---|---|---|---|---|
@@ -138,7 +138,7 @@ internal state (Option A).** This is CLAUDE.md's rule; Pydantic v2's performance
 FastAPI/mypy integration and JSON-schema output make it the standard. Dataclasses (B),
 attrs (C), Pydantic v1 (D) and marshmallow (E) are rejected.
 
-**Status rationale.** `Accepted` — confirmed in CLAUDE.md and doc 27.
+**Status rationale.** `Accepted` — confirmed in CLAUDE.md and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md.
 
 ## 8. Architecture Detail
 
@@ -248,7 +248,7 @@ attrs (C), Pydantic v1 (D) and marshmallow (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | doc 27 §16–§17, §36 |
+| Specification sections | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17, §36 |
 | Requirement IDs | TECH-VAL-* |
 | Build phases | 1 |
 | Code paths | `src/pf_ft_ai/` |

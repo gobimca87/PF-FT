@@ -30,15 +30,15 @@ review_due: 2027-08-22
 
 PFF AI will define **RPO/RTO targets per data class and a DR strategy** that leans on the
 platform being **largely stateless and reconstructable**: code/config/AI-artefacts redeploy
-from Git + manifest (ADR-D5-06); the RAG index rebuilds from canonical documents (doc 14
-§85–§86; doc 13 §186); only conversation/session/memory state (Redis, ADR-D4-10) needs
-backup/replication (doc 28 §42–§50). Continuity favours graceful degradation over hard
+from Git + manifest (ADR-D5-06); the RAG index rebuilds from canonical documents (14.PF-FT-AI-EMBEDDING-VECTOR.md
+§85–§86; 13.FP-FT-AI-RAG.md §186); only conversation/session/memory state (Redis, ADR-D4-10) needs
+backup/replication (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §42–§50). Continuity favours graceful degradation over hard
 downtime.
 
 ## 2. Context and Problem Statement
 
-Doc 28 §42–§43 rollback, §48–§50 SLM/self-hosted-SLM failure procedures; doc 14 §85–§86
-canonical data/rebuild, §136–§137 DR/rebuild strategy; doc 13 §186 final RAG architecture
+28.PF-FT-AI-OPERATIONS-RUNBOOK.md §42–§43 rollback, §48–§50 SLM/self-hosted-SLM failure procedures; 14.PF-FT-AI-EMBEDDING-VECTOR.md §85–§86
+canonical data/rebuild, §136–§137 DR/rebuild strategy; 13.FP-FT-AI-RAG.md §186 final RAG architecture
 (rebuildable). No DR plan means an outage/region failure could cause data loss or extended
 downtime. This ADR fixes RPO/RTO and the DR/BC strategy, exploiting the platform's
 reconstructability.
@@ -48,9 +48,9 @@ reconstructability.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | RPO/RTO per data class | BC/DR practice |
-| DR-F-02 | Reconstruct code/config/artefacts/index | ADR-D5-06; doc 14 §86; doc 13 §186 |
+| DR-F-02 | Reconstruct code/config/artefacts/index | ADR-D5-06; 14.PF-FT-AI-EMBEDDING-VECTOR.md §86; 13.FP-FT-AI-RAG.md §186 |
 | DR-C-01 | Backup/replicate genuinely stateful data | ADR-D4-10 |
-| DR-F-03 | Graceful degradation for dependency loss | doc 28 §48–§50; ADR-D3-18 |
+| DR-F-03 | Graceful degradation for dependency loss | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §48–§50; ADR-D3-18 |
 
 ### 3.4 Assumptions
 
@@ -74,7 +74,7 @@ reconstructability.
 ### 5.1 Option A — Reconstruct-first DR: redeploy from Git/manifest + rebuild index; backup+replicate only stateful state; degrade gracefully
 
 **Description.** RPO/RTO per data class; code/config/AI-artefacts redeploy from Git +
-manifest; RAG index rebuilds from canonical docs (doc 14 §86); conversation/session/memory
+manifest; RAG index rebuilds from canonical docs (14.PF-FT-AI-EMBEDDING-VECTOR.md §86); conversation/session/memory
 (Redis) backed up + optionally geo-replicated (ADR-D4-10); dependency loss → graceful
 degradation (ADR-D3-18); DR runbooks + drills.
 **Strengths.** Right-sized, fast where it matters, testable; exploits reconstructability.
@@ -119,8 +119,8 @@ conversation/session state and regular DR game-days to prove RTO.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 28 §42–§50, doc 14 §85–§86/§136–
-§137, doc 13 §186.
+**Method.** Weighted scoring against §4, informed by 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §42–§50, 14.PF-FT-AI-EMBEDDING-VECTOR.md §85–§86/§136–
+§137, 13.FP-FT-AI-RAG.md §186.
 
 | Criterion | Weight | A: Reconstruct-first | B: Active-active | C: Backup-only | D: Warm standby | E: A+geo-replica+game-days |
 |---|---|---|---|---|---|---|
@@ -151,12 +151,12 @@ standby (D) is the intermediate escalation; backup-only (C) is rejected for slow
 
 - RPO/RTO table per data class: enterprise data (PFF-owned, their BC); AI code/config/
   artefacts (RPO≈0 via Git/manifest, RTO=redeploy time); RAG index (RPO from canonical
-  docs, RTO=rebuild time, doc 14 §86); conversation/session/memory (RPO from Redis
+  docs, RTO=rebuild time, 14.PF-FT-AI-EMBEDDING-VECTOR.md §86); conversation/session/memory (RPO from Redis
   backup/geo-replica, ADR-D4-10).
 - Long-running workflows resume from durable state (ADR-D2-10); dependency loss →
-  degraded mode (ADR-D3-18; doc 28 §48–§50); DR runbooks (doc 28) + scheduled game-days
+  degraded mode (ADR-D3-18; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §48–§50); DR runbooks (28.PF-FT-AI-OPERATIONS-RUNBOOK.md) + scheduled game-days
   validate RTO/RPO.
-- Region failover procedure documented; index rebuild automated (doc 14 §137; doc 13
+- Region failover procedure documented; index rebuild automated (14.PF-FT-AI-EMBEDDING-VECTOR.md §137; 13.FP-FT-AI-RAG.md
   §186).
 
 ## 9. Consequences
@@ -265,7 +265,7 @@ standby (D) is the intermediate escalation; backup-only (C) is rejected for slow
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-33 |
-| Specification sections | doc 28 §42–§50; doc 14 §85–§86, §136–§137; doc 13 §186 |
+| Specification sections | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §42–§50; 14.PF-FT-AI-EMBEDDING-VECTOR.md §85–§86, §136–§137; 13.FP-FT-AI-RAG.md §186 |
 | Requirement IDs | DR-* |
 | Build phases | 21 |
 | Code paths | `docs/runbooks/` |

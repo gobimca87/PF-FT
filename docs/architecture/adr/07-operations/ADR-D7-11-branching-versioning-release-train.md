@@ -29,12 +29,12 @@ review_due: 2027-08-22
 
 PFF AI will use **trunk-based development with short-lived feature branches, protected
 main, semantic versioning of releases, and a regular release train** that bundles code +
-AI artefacts into an immutable release (ADR-D5-06) (doc 25 §65–§68; doc 17 §58, §60).
+AI artefacts into an immutable release (ADR-D5-06) (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§68; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §58, §60).
 Main is always releasable; releases are versioned, dated and traceable to a git commit.
 
 ## 2. Context and Problem Statement
 
-Doc 25 §65–§68 CI/CD/PR-gate; doc 17 §58 release manifest, §60 release id. Long-lived
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§68 CI/CD/PR-gate; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §58 release manifest, §60 release id. Long-lived
 branches cause merge hell and drift; ad-hoc releases lack traceability. This ADR fixes the
 branching, versioning and release-cadence model.
 
@@ -42,8 +42,8 @@ branching, versioning and release-cadence model.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Protected, always-releasable main | doc 25 §68 |
-| DR-F-02 | Semantic versioned, traceable releases | doc 17 §58, §60 |
+| DR-F-01 | Protected, always-releasable main | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §68 |
+| DR-F-02 | Semantic versioned, traceable releases | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §58, §60 |
 | DR-F-03 | Bundle code + AI artefacts per release | ADR-D5-06, D3-11 |
 | DR-N-01 | Low merge overhead | trunk-based practice |
 
@@ -70,7 +70,7 @@ branching, versioning and release-cadence model.
 
 **Description.** Short-lived feature branches → PR (gates, ADR-D7-09) → protected main;
 releases cut on a regular train, semver-tagged, bundling code + AI artefacts into an
-immutable manifest (ADR-D5-06) with git-commit association (doc 17 §60).
+immutable manifest (ADR-D5-06) with git-commit association (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §60).
 **Strengths.** Healthy integration, traceable, always-releasable, simple.
 **Weaknesses.** Needs feature flags for incomplete work.
 **Cost / effort.** Low.
@@ -108,12 +108,12 @@ safely and decouple deploy from release.
 
 | Option | Eliminated by |
 |---|---|
-| No branch protection | doc 25 §68 |
-| Unversioned releases | doc 17 §58, §60 |
+| No branch protection | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §68 |
+| Unversioned releases | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §58, §60 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 25 §65–§68 and doc 17 §58/§60.
+**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§68 and 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §58/§60.
 
 | Criterion | Weight | A: Trunk+train | B: Gitflow | C: Release-per-commit | D: Env branches | E: Trunk+flags |
 |---|---|---|---|---|---|---|
@@ -144,7 +144,7 @@ env-branches (D) are rejected.
   branches; squash-merge; semver tags; release train cadence.
 - Each release = an immutable manifest (ADR-D5-06) pinning code image digest (ADR-D5-09)
   + AI artefact versions (prompts ADR-D3-11, models ADR-D3-15, index) with git-commit
-  association (doc 17 §60); promoted via CD (ADR-D7-10) through the ladder (ADR-D5-14).
+  association (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §60); promoted via CD (ADR-D7-10) through the ladder (ADR-D5-14).
 - Feature flags (governed) gate incomplete/risky features; flag cleanup tracked.
 
 ## 9. Consequences
@@ -251,7 +251,7 @@ env-branches (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 |
-| Specification sections | doc 25 §65–§68; doc 17 §58, §60 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§68; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §58, §60 |
 | Requirement IDs | REL-* |
 | Build phases | 0 |
 | Code paths | `.github/`, release tooling |

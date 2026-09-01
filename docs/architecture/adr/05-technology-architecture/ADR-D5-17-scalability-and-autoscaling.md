@@ -30,14 +30,14 @@ review_due: 2027-08-22
 PFF AI will scale **horizontally** with **workload-appropriate autoscaling signals**:
 HPA on request concurrency/CPU for the API tier, queue-depth-based scaling for Service
 Bus workers, and inference-utilisation-based scaling for the GPU tier — all with
-**failure-mode-aware capacity** to avoid retry-amplification collapse (doc 25 §51–§53;
-doc 26 §60–§69). No single global signal; each tier scales on what actually drives its
+**failure-mode-aware capacity** to avoid retry-amplification collapse (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53;
+26.PF-FT-AI-PERFORMANCE-COST.md §60–§69). No single global signal; each tier scales on what actually drives its
 load.
 
 ## 2. Context and Problem Statement
 
-Doc 25 §51–§53 define horizontal scaling, autoscaling and Service-Bus worker scaling;
-doc 26 §60–§69 define throughput, concurrency, capacity planning, peak/failure-mode
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53 define horizontal scaling, autoscaling and Service-Bus worker scaling;
+26.PF-FT-AI-PERFORMANCE-COST.md §60–§69 define throughput, concurrency, capacity planning, peak/failure-mode
 capacity, retry amplification and autoscaling safety. Scaling on the wrong signal
 (e.g. CPU for an I/O-bound API, or ignoring queue depth for workers) under- or
 over-provisions; ignoring failure-mode capacity lets a dependency outage trigger a
@@ -47,11 +47,11 @@ retry storm that autoscaling amplifies. This ADR fixes the scaling model per tie
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Horizontal autoscaling per tier | doc 25 §51–§52 |
-| DR-F-02 | Queue-depth scaling for SB workers | doc 25 §53; doc 26 §59 |
-| DR-F-03 | GPU scaling on inference utilisation | ADR-D5-11; doc 15 §79 |
-| DR-C-01 | Failure-mode capacity; no retry amplification | doc 26 §66–§67, §69 |
-| DR-N-01 | Cost efficiency | doc 26 §63–§65 |
+| DR-F-01 | Horizontal autoscaling per tier | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§52 |
+| DR-F-02 | Queue-depth scaling for SB workers | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §53; 26.PF-FT-AI-PERFORMANCE-COST.md §59 |
+| DR-F-03 | GPU scaling on inference utilisation | ADR-D5-11; 15.PF-FT-AI-SLM.md §79 |
+| DR-C-01 | Failure-mode capacity; no retry amplification | 26.PF-FT-AI-PERFORMANCE-COST.md §66–§67, §69 |
+| DR-N-01 | Cost efficiency | 26.PF-FT-AI-PERFORMANCE-COST.md §63–§65 |
 
 ### 3.4 Assumptions
 
@@ -76,7 +76,7 @@ retry storm that autoscaling amplifies. This ADR fixes the scaling model per tie
 
 **Description.** API: HPA on concurrency/CPU/RPS; workers: KEDA on Service Bus queue
 depth; GPU: scale on inference utilisation/queue; headroom + breakers for failure-mode
-capacity (doc 26 §66–§69).
+capacity (26.PF-FT-AI-PERFORMANCE-COST.md §66–§69).
 **Strengths.** Right signal per tier; safe under fault; cost-efficient.
 **Weaknesses.** Multiple autoscalers to tune.
 **Cost / effort.** Medium.
@@ -117,12 +117,12 @@ replacing it.
 
 | Option | Eliminated by |
 |---|---|
-| Autoscale on error rate | Amplifies incidents (doc 26 §67) |
+| Autoscale on error rate | Amplifies incidents (26.PF-FT-AI-PERFORMANCE-COST.md §67) |
 | Scale-to-zero for the API | Cold-start hurts conversational latency |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 25 §51–§53 and doc 26
+**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53 and 26.PF-FT-AI-PERFORMANCE-COST.md
 §60–§69.
 
 | Criterion | Weight | A: Per-tier signals | B: CPU-only | C: Fixed | D: Vertical | E: Predictive |
@@ -149,15 +149,15 @@ circuit breakers to prevent retry amplification (Option A).** Predictive/schedul
 scaling (E) may be layered on for known peaks. CPU-only (B), fixed (C) and vertical (D)
 are rejected as primary strategies.
 
-**Status rationale.** `Accepted` — doc 25 §51–§53 and doc 26 §60–§69 govern this.
+**Status rationale.** `Accepted` — 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53 and 26.PF-FT-AI-PERFORMANCE-COST.md §60–§69 govern this.
 
 ## 8. Architecture Detail
 
 - API HPA on RPS/concurrency (and CPU as guard); workers scaled by KEDA on Service Bus
-  queue length (doc 25 §53; ADR-D2-16); GPU pool scaled on utilisation/queue (ADR-D5-11;
-  doc 15 §79) with warm-up (doc 15 §80).
-- Failure-mode capacity (doc 26 §66): headroom sized for a dependency slowdown; breakers
-  (ADR-D7-06/D3-18) stop retry storms; autoscaling safety limits (doc 26 §69) cap
+  queue length (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §53; ADR-D2-16); GPU pool scaled on utilisation/queue (ADR-D5-11;
+  15.PF-FT-AI-SLM.md §79) with warm-up (15.PF-FT-AI-SLM.md §80).
+- Failure-mode capacity (26.PF-FT-AI-PERFORMANCE-COST.md §66): headroom sized for a dependency slowdown; breakers
+  (ADR-D7-06/D3-18) stop retry storms; autoscaling safety limits (26.PF-FT-AI-PERFORMANCE-COST.md §69) cap
   scale velocity/max replicas.
 - Latency budget (ADR-D5-18) informs target concurrency per replica.
 
@@ -267,7 +267,7 @@ are rejected as primary strategies.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-26 Performance |
-| Specification sections | doc 25 §51–§53; doc 26 §60–§69 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53; 26.PF-FT-AI-PERFORMANCE-COST.md §60–§69 |
 | Requirement IDs | SCALE-* |
 | Build phases | 7, 20 |
 | Code paths | `deploy/` |

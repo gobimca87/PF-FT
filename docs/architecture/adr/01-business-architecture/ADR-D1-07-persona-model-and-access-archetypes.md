@@ -60,13 +60,13 @@ working through a review queue.
 
 The second is access. A club secretary sees their own club. A county officer sees every club
 in their county. An FA administrator sees more. These are authorization boundaries, and they
-are decided by APIM claims before the request reaches the platform (doc 3 §5.2).
+are decided by APIM claims before the request reaches the platform (3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2).
 
 The failure mode when these are conflated is specific and serious. If "persona" becomes a
 single concept covering both, then a conversational signal — the user says "I'm the county
 secretary" — starts to look like something that could influence what data is assembled into
-context. Doc 3 §5.2 is explicit that the AI platform does not override an APIM authorization
-decision, and doc 2 §48 lists SLM-controlled authorization as a never. But that prohibition is
+context. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2 is explicit that the AI platform does not override an APIM authorization
+decision, and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists SLM-controlled authorization as a never. But that prohibition is
 only enforceable if the two concepts are separate objects in the design, not two aspects of
 one "persona" field.
 
@@ -82,9 +82,9 @@ that only considers users misses them entirely.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Communication style must adapt to who is being spoken to | `SampleWorkflowchat.md`; doc 3 §65 |
-| DR-F-02 | What a user may see and do must derive from validated enterprise claims only | doc 3 §5.2 |
-| DR-F-03 | The platform must never derive access from conversational content | doc 2 §48; ADR-D1-02 I-2 |
+| DR-F-01 | Communication style must adapt to who is being spoken to | `SampleWorkflowchat.md`; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §65 |
+| DR-F-02 | What a user may see and do must derive from validated enterprise claims only | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2 |
+| DR-F-03 | The platform must never derive access from conversational content | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48; ADR-D1-02 I-2 |
 | DR-F-04 | Data subjects appearing in context who are not users must be accounted for | Affiliation Phase 1 officials' data |
 | DR-F-05 | A user holding several roles must be handled without ambiguity | County officers who also administer a club |
 
@@ -93,16 +93,16 @@ that only considers users misses them entirely.
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Archetype resolution must add no enterprise call | 0 additional calls | ADR-D5-18 |
-| DR-N-02 | Persona selection must be auditable | Every turn's persona recorded in the trace | doc 20 §29 |
-| DR-N-03 | The model must scale to further workflows without new archetypes per workflow | Archetypes are role-based, not workflow-based | doc 2 §49 |
+| DR-N-02 | Persona selection must be auditable | Every turn's persona recorded in the trace | 20.PF-FT-AI-GOVERNANCE.md §29 |
+| DR-N-03 | The model must scale to further workflows without new archetypes per workflow | Archetypes are role-based, not workflow-based | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | APIM validates identity and authorization; the platform consumes claims and never derives them | Platform | doc 3 §5.1, §5.2 |
-| DR-C-02 | The platform must not independently authenticate a user | Platform | doc 3 §5.1 |
-| DR-C-03 | The AI platform does not override an APIM authorization decision | Platform | doc 3 §5.2 |
+| DR-C-01 | APIM validates identity and authorization; the platform consumes claims and never derives them | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.1, §5.2 |
+| DR-C-02 | The platform must not independently authenticate a user | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.1 |
+| DR-C-03 | The AI platform does not override an APIM authorization decision | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2 |
 | DR-C-04 | Officials' safeguarding data is special-category personal data about people who may not be users | Regulatory | Affiliation Phase 1; UK GDPR |
 
 ### 3.4 Assumptions
@@ -117,7 +117,7 @@ that only considers users misses them entirely.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Impossibility of persona influencing access | 35 | The failure this decision exists to prevent; doc 2 §48 makes it categorical | Can any conversational signal change what data is assembled? |
+| EC-01 | Impossibility of persona influencing access | 35 | The failure this decision exists to prevent; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 makes it categorical | Can any conversational signal change what data is assembled? |
 | EC-02 | Communication appropriateness | 25 | A model that cannot distinguish a volunteer from a county officer produces poor output for both | Does style match the audience? |
 | EC-03 | Auditability of both dimensions | 15 | Access decisions and style decisions must both be traceable | Are both recorded per turn? |
 | EC-04 | Handling of multi-role users | 15 | Real county officers do administer clubs | Is the resolution unambiguous? |
@@ -140,11 +140,11 @@ the platform speaks and what it retrieves.
 
 **Weaknesses.**
 - Creates exactly the coupling this decision exists to prevent. Once one field drives both, a
-  change to it for stylistic reasons changes access, and the boundary in doc 3 §5.2 depends on
+  change to it for stylistic reasons changes access, and the boundary in 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2 depends on
   the discipline of everyone who touches that field (EC-01 fails).
 - Multi-role users are unresolvable: a county officer administering their own club needs
   county access in one conversation and club access in another, with the same tone.
-- Makes the prohibition in doc 2 §48 unenforceable by design rather than by policy.
+- Makes the prohibition in 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 unenforceable by design rather than by policy.
 
 **Cost / effort.** Lowest.
 
@@ -237,7 +237,7 @@ answer "no by design" or "no by discipline"?
 if a single well-designed persona serves both audiences adequately — C becomes competitive and
 the variants collapse with no structural change, because B's separation is preserved either
 way. That is the fallback recorded in RT-03. A fails EC-01 categorically. D scores 3 on EC-01
-rather than 1 because it drives only style, but the mechanism it creates is the one doc 2 §48
+rather than 1 because it drives only style, but the mechanism it creates is the one 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48
 exists to prevent, and its privacy cost is unjustified by the benefit.
 
 ## 7. Decision
@@ -317,7 +317,7 @@ co-approving.
 
 ```mermaid
 flowchart TD
-    A[Request arrives at FastAPI<br/>with APIM-validated claims] --> B[Extract identity context<br/>doc 3 §5.1]
+    A[Request arrives at FastAPI<br/>with APIM-validated claims] --> B[Extract identity context<br/>3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.1]
     B --> C[Resolve access archetype<br/>from claims + target resource]
     C --> D[Context assembly scoped<br/>by archetype]
     C --> E[Tool allowlist filtered<br/>by archetype]
@@ -487,7 +487,7 @@ separation this decision establishes.
 
 | ID | Trigger | Detected by | Action on trigger |
 |---|---|---|---|
-| RT-01 | QM-01 or QM-03 records any occurrence | Daily audit | Governance incident per doc 20 §105; the separation has failed |
+| RT-01 | QM-01 or QM-03 records any occurrence | Daily audit | Governance incident per 20.PF-FT-AI-GOVERNANCE.md §105; the separation has failed |
 | RT-02 | QM-02 finds persona referenced in an access path | CI | Build failure; remove before merge |
 | RT-03 | QM-05 shows no meaningful difference in fitness between variants (DR-A-03 false) | Quarterly evaluation | Collapse to a single persona (Option C); separation is unaffected |
 | RT-04 | A fifth user role appears in a new workflow | Workflow onboarding | Add an archetype with its claims basis and scope; do not stretch an existing one |
@@ -501,7 +501,7 @@ separation this decision establishes.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-04 Personas & User Journey Mapping |
-| Specification sections | doc 3 §5.1 (Authentication), §5.2 (Authorization), §65 (Responsibility for User Communication); doc 6 §1 (Purpose); affiliation flow Phases 0, 1, 6, Notification Summary; `Examples/SampleWorkflowchat.md` |
+| Specification sections | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.1 (Authentication), §5.2 (Authorization), §65 (Responsibility for User Communication); 6 PF-FT-AI-CONVERSATION-SESSION.md §1 (Purpose); affiliation flow Phases 0, 1, 6, Notification Summary; `Examples/SampleWorkflowchat.md` |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 3, 5, 10, 23 |
 | Code paths | `src/pf_ft_ai/application/session/`, `src/pf_ft_ai/orchestration/harness/`, `prompts/persona/` |

@@ -31,14 +31,14 @@ review_due: 2027-02-21
 
 Requirements are identified by a scheme that names their **source** rather than a flat
 sequence, and the baseline is derived from what the specifications already state rather than
-re-elicited. Doc 1 §39's twenty architecture success criteria become the functional baseline;
-doc 1 §38's eleven quality attributes become the non-functional baseline once each is given a
-target, since doc 1 §38 lists the attributes and defers the numbers.
+re-elicited. 1 PF-FT-AI-ARCHITECTURE.md §39's twenty architecture success criteria become the functional baseline;
+1 PF-FT-AI-ARCHITECTURE.md §38's eleven quality attributes become the non-functional baseline once each is given a
+target, since 1 PF-FT-AI-ARCHITECTURE.md §38 lists the attributes and defers the numbers.
 
 ## 2. Context and Problem Statement
 
-Doc 20 §115 mandates a traceability chain: requirement → architecture → implementation → test →
-evaluation → release → evidence. Doc 20 §116 makes it part of the governance definition of
+20.PF-FT-AI-GOVERNANCE.md §115 mandates a traceability chain: requirement → architecture → implementation → test →
+evaluation → release → evidence. 20.PF-FT-AI-GOVERNANCE.md §116 makes it part of the governance definition of
 done. Every ADR in this library carries a `Requirement IDs` row in its §19 traceability table.
 
 None of those IDs exist. There is no requirements baseline, no identifier scheme, and no
@@ -46,17 +46,17 @@ statement of what a requirement *is* for this programme.
 
 The specifications get most of the way there without quite arriving:
 
-- **Doc 1 §39** gives twenty architecture success criteria, each a testable statement ("ERC
+- **1 PF-FT-AI-ARCHITECTURE.md §39** gives twenty architecture success criteria, each a testable statement ("ERC
   supports 20-record batching", "Supervisor routes to the correct workflow agent"). These are
   functional requirements in all but name and identifier.
-- **Doc 1 §38** lists eleven quality attributes — availability, reliability, scalability,
+- **1 PF-FT-AI-ARCHITECTURE.md §38** lists eleven quality attributes — availability, reliability, scalability,
   performance, security, observability, maintainability, testability, versionability,
   recoverability, cost control — and then says, explicitly: *"Detailed targets will be defined
   in the NFR and performance documents."* The attributes are named; the numbers are deferred.
-- **Doc 2 §50** defines "architecture complete" in similar terms.
+- **2. PF-FT-AI-ARCHITECTURE-DETAILED.md §50** defines "architecture complete" in similar terms.
 
 So the gap is narrower than "no requirements exist". It is: the functional statements need
-identifiers, the quality attributes need targets, and both need a scheme that makes doc 20
+identifiers, the quality attributes need targets, and both need a scheme that makes 20.PF-FT-AI-GOVERNANCE.md
 §115's chain navigable.
 
 The identifier scheme is where the real decision lies. A flat sequence — `FR-001`, `FR-002` —
@@ -66,7 +66,7 @@ section is amended, the question "which requirements does this change?" should b
 inspection, not by search.
 
 There is a scoping caution. Re-eliciting requirements from scratch would produce a fourth
-statement of what the platform must do, alongside doc 1 §39, doc 2 §50 and this library, and
+statement of what the platform must do, alongside 1 PF-FT-AI-ARCHITECTURE.md §39, 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §50 and this library, and
 they would drift apart. The specifications are the requirements; what is missing is the
 apparatus to trace them.
 
@@ -76,11 +76,11 @@ apparatus to trace them.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every requirement must have a stable unique identifier | doc 20 §115 |
-| DR-F-02 | The chain requirement → architecture → implementation → test → evaluation → release → evidence must be navigable | doc 20 §115 |
-| DR-F-03 | Non-functional attributes must have measurable targets, not just names | doc 1 §38 |
+| DR-F-01 | Every requirement must have a stable unique identifier | 20.PF-FT-AI-GOVERNANCE.md §115 |
+| DR-F-02 | The chain requirement → architecture → implementation → test → evaluation → release → evidence must be navigable | 20.PF-FT-AI-GOVERNANCE.md §115 |
+| DR-F-03 | Non-functional attributes must have measurable targets, not just names | 1 PF-FT-AI-ARCHITECTURE.md §38 |
 | DR-F-04 | A specification amendment must identify the requirements it affects | Programme practice |
-| DR-F-05 | Requirements must not be re-elicited, creating a competing statement | doc 1 §39; doc 2 §50 |
+| DR-F-05 | Requirements must not be re-elicited, creating a competing statement | 1 PF-FT-AI-ARCHITECTURE.md §39; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §50 |
 
 ### 3.2 Non-functional drivers
 
@@ -88,30 +88,30 @@ apparatus to trace them.
 |---|---|---|---|
 | DR-N-01 | Identifiers must be allocatable without central coordination | 0 collisions | ADR-D0-02 §4 EC-02 |
 | DR-N-02 | The baseline must be maintainable by a small team | ≤1 day per quarter | Programme practice |
-| DR-N-03 | Traceability must be verifiable mechanically | Broken links detectable by a script | doc 20 §116 |
+| DR-N-03 | Traceability must be verifiable mechanically | Broken links detectable by a script | 20.PF-FT-AI-GOVERNANCE.md §116 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | `MD files/` is the specification source of truth and is not modified | Organisational | `CLAUDE.md` |
-| DR-C-02 | Doc 1 §38 defers NFR targets to the NFR and performance documents | Organisational | doc 1 §38 |
-| DR-C-03 | Doc 1 §39's twenty criteria are the stated definition of architectural success | Organisational | doc 1 §39 |
+| DR-C-02 | 1 PF-FT-AI-ARCHITECTURE.md §38 defers NFR targets to the NFR and performance documents | Organisational | 1 PF-FT-AI-ARCHITECTURE.md §38 |
+| DR-C-03 | 1 PF-FT-AI-ARCHITECTURE.md §39's twenty criteria are the stated definition of architectural success | Organisational | 1 PF-FT-AI-ARCHITECTURE.md §39 |
 | DR-C-04 | ADR IDs are domain-prefixed per ADR-D0-02; requirement IDs must not collide with them | Platform | ADR-D0-02 §7.1 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | Doc 1 §39's criteria are complete enough to serve as the functional baseline | Gaps are added as programme-derived requirements under §7.2's `FR-P-` prefix | Coverage review at Phase 17 |
-| DR-A-02 | NFR targets can be set from doc 26 and programme judgement without a separate elicitation | Targets are provisional until doc 26 is fully mined | Reviewed at Phase 20 |
+| DR-A-01 | 1 PF-FT-AI-ARCHITECTURE.md §39's criteria are complete enough to serve as the functional baseline | Gaps are added as programme-derived requirements under §7.2's `FR-P-` prefix | Coverage review at Phase 17 |
+| DR-A-02 | NFR targets can be set from 26.PF-FT-AI-PERFORMANCE-COST.md and programme judgement without a separate elicitation | Targets are provisional until 26.PF-FT-AI-PERFORMANCE-COST.md is fully mined | Reviewed at Phase 20 |
 | DR-A-03 | Specification sections are stable enough for source-anchored IDs to remain valid | Section renumbering breaks IDs; §7.4 handles this | Change notices on `MD files/` |
 
 ## 4. Evaluation Criteria and Weights
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Traceability chain navigability | 30 | Doc 20 §115 and §116 make this a governance obligation | Can the chain be walked in both directions? |
+| EC-01 | Traceability chain navigability | 30 | 20.PF-FT-AI-GOVERNANCE.md §115 and §116 make this a governance obligation | Can the chain be walked in both directions? |
 | EC-02 | Impact analysis on specification change | 25 | The most frequent real use: "what does this amendment affect?" | Can affected requirements be identified by inspection? |
 | EC-03 | Avoidance of a competing requirements statement | 20 | A fourth statement of what the platform must do would drift | Does it restate or reference? |
 | EC-04 | Maintenance cost | 15 | An unmaintained baseline misleads | Effort per quarter |
@@ -135,7 +135,7 @@ specification that restates what the platform must do.
 
 **Weaknesses.**
 - The identifier carries no information. `FR-047` requires a lookup to learn anything (EC-02).
-- Creates a fourth statement of platform requirements alongside doc 1 §39, doc 2 §50 and this
+- Creates a fourth statement of platform requirements alongside 1 PF-FT-AI-ARCHITECTURE.md §39, 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §50 and this
   library, which will drift (EC-03 fails).
 - Central allocation, so concurrent authoring collides (DR-N-01).
 - Restating specification content invites divergence from `MD files/`, which DR-C-01 makes the
@@ -145,8 +145,8 @@ specification that restates what the platform must do.
 
 ### 5.2 Option B — Source-anchored identifiers referencing the specifications
 
-**Description.** Identifiers encode their origin: `FR-A39-01` for doc 1 §39 criterion 1,
-`NFR-A38-PERF` for the performance attribute in doc 1 §38, `FR-P-nn` for requirements the
+**Description.** Identifiers encode their origin: `FR-A39-01` for 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 1,
+`NFR-A38-PERF` for the performance attribute in 1 PF-FT-AI-ARCHITECTURE.md §38, `FR-P-nn` for requirements the
 programme derives that no specification states. The baseline is a *mapping*, not a restatement:
 each row cites the specification text rather than reproducing it.
 
@@ -184,7 +184,7 @@ that states them — `REQ-D1-04-01` for the first requirement in ADR-D1-04.
 - Inverts the correct dependency. Requirements should precede and justify decisions; deriving
   them from decisions means the requirement exists because the decision does (EC-01 weakens —
   the chain's first link becomes circular).
-- Doc 1 §39's criteria predate this library and would need reassigning to ADRs artificially.
+- 1 PF-FT-AI-ARCHITECTURE.md §39's criteria predate this library and would need reassigning to ADRs artificially.
 - A requirement no ADR happens to mention would not exist.
 - Makes it impossible to ask "does this decision satisfy its requirements?" independently.
 
@@ -213,7 +213,7 @@ traceability links to code, tests and decisions.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4. EC-02 tested against a concrete case: doc 8 §36 fixes
+**Method.** Weighted scoring against §4. EC-02 tested against a concrete case: 8 PF-FT-AI-ERC-CONTEXT.md §36 fixes
 the ERC batch size at 20 — if that section were amended, which requirements, ADRs, code paths
 and tests are affected, and how quickly can each option answer?
 
@@ -232,7 +232,7 @@ and tests are affected, and how quickly can each option answer?
 criterion (EC-05, by one point), and loses decisively on EC-03 and EC-04 for a baseline of this
 size — a requirements management tool is the right answer at a scale this programme is not at.
 C's flaw is structural rather than scored: deriving requirements from decisions makes the first
-link of doc 20 §115's chain circular, and no reweighting repairs that.
+link of 20.PF-FT-AI-GOVERNANCE.md §115's chain circular, and no reweighting repairs that.
 
 ## 7. Decision
 
@@ -247,10 +247,10 @@ NFR-<source>-<attr>   non-functional requirement
 
 | Source code | Origin |
 |---|---|
-| `A38` | doc 1 §38 — quality attributes |
-| `A39` | doc 1 §39 — architecture success criteria |
+| `A38` | 1 PF-FT-AI-ARCHITECTURE.md §38 — quality attributes |
+| `A39` | 1 PF-FT-AI-ARCHITECTURE.md §39 — architecture success criteria |
 | `AFF` | `MD files/0 Workflow/pff_affiliation_e2e_flow.md` |
-| `GR` | The Golden Rule and its constraints (`CLAUDE.md`, doc 3 §63) |
+| `GR` | The Golden Rule and its constraints (`CLAUDE.md`, 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63) |
 | `P` | Programme-derived — no specification states it; the programme added it |
 
 Examples: `FR-A39-05` (ERC aggregates multiple enterprise APIs), `NFR-A38-PERF`
@@ -265,10 +265,10 @@ No collision with `ADR-D<n>-<nn>` is possible, satisfying DR-C-04.
 
 ### 7.2 Functional baseline
 
-Doc 1 §39's twenty architecture success criteria become `FR-A39-01` … `FR-A39-20`, cited not
+1 PF-FT-AI-ARCHITECTURE.md §39's twenty architecture success criteria become `FR-A39-01` … `FR-A39-20`, cited not
 restated. A representative extract:
 
-| ID | Requirement (doc 1 §39) | Primary ADRs |
+| ID | Requirement (1 PF-FT-AI-ARCHITECTURE.md §39) | Primary ADRs |
 |---|---|---|
 | `FR-A39-02` | Supervisor routes to the correct workflow agent | ADR-D3-05, ADR-D1-11 |
 | `FR-A39-05` | ERC aggregates multiple enterprise APIs | ADR-D2-12, ADR-D4-04 |
@@ -286,7 +286,7 @@ requirement set, the test plan (ADR-D1-05 §7.4) and the evidence set.
 
 ### 7.3 Non-functional baseline
 
-Doc 1 §38 names eleven attributes and defers targets. This decision assigns each attribute an
+1 PF-FT-AI-ARCHITECTURE.md §38 names eleven attributes and defers targets. This decision assigns each attribute an
 identifier and points at the ADR that sets its target — the target itself belongs with the
 decision that determines it, not in a separate list that would immediately diverge.
 
@@ -304,7 +304,7 @@ decision that determines it, not in a separate list that would immediately diver
 | `NFR-A38-RECOV` | Recoverability | ADR-D7-18 (RPO/RTO) | Target pending Phase 19 |
 | `NFR-A38-COST` | Cost control | ADR-D8-01 | Target pending Phase 20 |
 
-"Target pending" is honest rather than deficient: doc 1 §38 defers these to the performance and
+"Target pending" is honest rather than deficient: 1 PF-FT-AI-ARCHITECTURE.md §38 defers these to the performance and
 NFR work in Phases 14, 19 and 20, and asserting numbers now would be inventing them. What this
 decision fixes is that each attribute has an identifier and a named owner-decision, so no
 attribute can be quietly dropped. A `NFR-A38-*` row still showing "target pending" after its
@@ -313,7 +313,7 @@ phase has passed is a visible failure — QM-02 tracks exactly that.
 ### 7.4 Handling specification renumbering
 
 DR-A-03's risk is real: source-anchored IDs break if `MD files/` sections are renumbered. The
-response is that **an identifier is never reassigned**. If doc 1 §39's criterion 5 becomes
+response is that **an identifier is never reassigned**. If 1 PF-FT-AI-ARCHITECTURE.md §39's criterion 5 becomes
 criterion 6, `FR-A39-05` continues to denote the same requirement, and the traceability matrix
 records the section move. The ID is an identity, not a pointer — the same principle ADR-D0-02
 §7.3 applies to ADR IDs.
@@ -327,11 +327,11 @@ ID is cited by at least one ADR — an uncited requirement is either unimplement
 unnecessary, and both are worth knowing.
 
 **Status rationale.** Accepted. Tier 3 under ADR-D0-03 §7.1 — it concerns how requirements are
-identified, not any doc 2 §52 architecture category — ratified by the AI Solution Architect.
+identified, not any 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 architecture category — ratified by the AI Solution Architect.
 
 ## 8. Architecture Detail
 
-### 8.1 The doc 20 §115 chain, instantiated
+### 8.1 The 20.PF-FT-AI-GOVERNANCE.md §115 chain, instantiated
 
 ```mermaid
 flowchart LR
@@ -350,7 +350,7 @@ inverts it.
 
 ### 8.2 Impact analysis, worked
 
-Doc 8 §36 fixes the agreed ERC batch size at 20. Suppose it is amended to 50.
+8 PF-FT-AI-ERC-CONTEXT.md §36 fixes the agreed ERC batch size at 20. Suppose it is amended to 50.
 
 1. Grep the baseline for source `A39` and `AFF` requirements citing batching: `FR-A39-06`.
 2. The traceability matrix gives its ADRs: `ADR-D4-04`, and `ADR-D2-12` as related.
@@ -380,7 +380,7 @@ enterprise business logic to leak in under the guise of completeness.
 
 ### 9.1 Positive
 
-- Doc 20 §115's chain becomes navigable and mechanically checkable.
+- 20.PF-FT-AI-GOVERNANCE.md §115's chain becomes navigable and mechanically checkable.
 - Impact analysis on a specification amendment is inspection rather than search.
 - No competing requirements statement is created; `MD files/` remains the source of truth.
 - The `FR-P-` prefix makes programme-invented requirements visible as such.
@@ -408,7 +408,7 @@ enterprise business logic to leak in under the guise of completeness.
 |---|---|---|
 | Conventional flat identifiers | Impact analysis by inspection | AI Solution Architect |
 | A single consolidated requirements document | No fourth competing statement of what the platform must do | Business Owner |
-| Immediate NFR targets | Not inventing numbers doc 1 §38 explicitly defers | AI Product Owner |
+| Immediate NFR targets | Not inventing numbers 1 PF-FT-AI-ARCHITECTURE.md §38 explicitly defers | AI Product Owner |
 
 ## 10. Golden-Rule and Precedence Conformance
 
@@ -416,7 +416,7 @@ enterprise business logic to leak in under the guise of completeness.
 |---|---|
 | Enterprise decides; AI orchestrates | §8.3 excludes enterprise business rules from the baseline explicitly — a requirements document is a natural place for them to leak in. |
 | Authoritative-truth precedence | `FR-GR-*` requirements derive from the precedence chain; ADR-D1-03 satisfies them. |
-| Four-state separation | Traced through requirements derived from doc 5 and satisfied by ADR-D4-01. |
+| Four-state separation | Traced through requirements derived from 5. PF-FT-AI-STATE-MODEL.md and satisfied by ADR-D4-01. |
 | Versioned artefacts, never mutated in place | §7.4's never-reassign rule applies ADR-D0-02's identity principle to requirement IDs. |
 | Adam persona governs how, never what | Persona requirements are quality expectations traced to ADR-D1-09 and ADR-D8-05, not functional requirements. |
 
@@ -451,7 +451,7 @@ enterprise business logic to leak in under the guise of completeness.
 | Personal data / PII | None. |
 | Children's data and safeguarding | Indirect: safeguarding-relevant requirements derived from affiliation Phase 1 carry `FR-AFF-` identifiers and are traceable to ADR-D6-16 and ADR-D1-09's X-1 exclusion zone, so a safeguarding obligation cannot be implemented without a traceable requirement behind it. |
 | UK GDPR lawful basis and rights impact | None from this decision; privacy requirements trace to ADR-D6-06 and ADR-D6-16. |
-| Audit and evidential requirements | This decision is what makes doc 20 §115 and §116 satisfiable. Without identifiers there is no chain to evidence. |
+| Audit and evidential requirements | This decision is what makes 20.PF-FT-AI-GOVERNANCE.md §115 and §116 satisfiable. Without identifiers there is no chain to evidence. |
 | Standards touched | ISO 9001 §8.2.2 (determining requirements), §8.3.3 (design inputs); ISO/IEC 42001 (AI system requirements); CMMI-DEV RD (Requirements Development), REQM (Requirements Management) SP 1.4 — bidirectional traceability. |
 
 ## 14. Implementation Impact
@@ -473,8 +473,8 @@ enterprise business logic to leak in under the guise of completeness.
 | AC-01 | Every requirement ID matches the §7.1 format | Format check over the matrix |
 | AC-02 | Every requirement ID cited in an ADR exists in the baseline | Verification script; QM-03 |
 | AC-03 | Every baseline requirement is cited by at least one ADR | Verification script; QM-01 |
-| AC-04 | Doc 1 §39's twenty criteria all appear as `FR-A39-01` … `FR-A39-20` | Baseline audit |
-| AC-05 | All eleven doc 1 §38 attributes appear with a named target-setting ADR | Baseline audit |
+| AC-04 | 1 PF-FT-AI-ARCHITECTURE.md §39's twenty criteria all appear as `FR-A39-01` … `FR-A39-20` | Baseline audit |
+| AC-05 | All eleven 1 PF-FT-AI-ARCHITECTURE.md §38 attributes appear with a named target-setting ADR | Baseline audit |
 | AC-06 | No requirement restates an enterprise business rule | Review of `FR-` entries against §8.3 |
 | AC-07 | No requirement ID has been reassigned | Baseline change history; QM-06 |
 
@@ -516,7 +516,7 @@ enterprise business logic to leak in under the guise of completeness.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-06 Functional & Non-Functional Requirements |
-| Specification sections | doc 1 §38 (Non-Functional Requirements — attributes named, targets deferred), §39 (Architecture Success Criteria); doc 2 §50 (Definition of Architecture Complete); doc 20 §115 (Governance Traceability Matrix), §116 (Governance Definition of Done); doc 26 (Performance & Cost); affiliation flow scenario table |
+| Specification sections | 1 PF-FT-AI-ARCHITECTURE.md §38 (Non-Functional Requirements — attributes named, targets deferred), §39 (Architecture Success Criteria); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §50 (Definition of Architecture Complete); 20.PF-FT-AI-GOVERNANCE.md §115 (Governance Traceability Matrix), §116 (Governance Definition of Done); 26.PF-FT-AI-PERFORMANCE-COST.md (Performance & Cost); affiliation flow scenario table |
 | Requirement IDs | This ADR defines the scheme; it is traced by `FR-P-01` (a traceability scheme must exist) |
 | Build phases | 0, 17, 21 |
 | Code paths | Traceability verification script in `scripts/` |
@@ -529,4 +529,4 @@ enterprise business logic to leak in under the guise of completeness.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Source-anchored identifier scheme; doc 1 §39 adopted as the functional baseline by reference; doc 1 §38's eleven attributes given identifiers with targets assigned to the ADRs that set them; enterprise business rules explicitly excluded from the baseline. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Source-anchored identifier scheme; 1 PF-FT-AI-ARCHITECTURE.md §39 adopted as the functional baseline by reference; 1 PF-FT-AI-ARCHITECTURE.md §38's eleven attributes given identifiers with targets assigned to the ADRs that set them; enterprise business rules explicitly excluded from the baseline. |

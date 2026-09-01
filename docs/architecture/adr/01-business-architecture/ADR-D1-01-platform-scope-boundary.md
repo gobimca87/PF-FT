@@ -31,7 +31,7 @@ review_due: 2027-08-21
 PFF AI is scoped as a conversational orchestration layer over the existing PFF platform. It
 owns conversation, context assembly, agent execution, knowledge retrieval and communication.
 It owns no business rule, no transaction, no authorization decision and no system-of-record
-data. The scope is defined by explicit exclusion as much as inclusion — doc 1 §2.3's nine
+data. The scope is defined by explicit exclusion as much as inclusion — 1 PF-FT-AI-ARCHITECTURE.md §2.3's nine
 non-goals are part of this decision, not commentary on it.
 
 ## 2. Context and Problem Statement
@@ -69,9 +69,9 @@ conversation that gathers the relevant context and explains each item requires o
 across several enterprise services — more than a veneer can do.
 
 The specifications answer this question consistently but in fragments across three documents.
-Doc 1 §1 states the boundary as a principle. Doc 1 §2.1–§2.3 enumerate ownership and
-non-goals. Doc 2 §5.1–§5.3 restate it as three boundaries. Doc 3 §71 restates it again as a
-diagram. Doc 2 §48 lists the anti-patterns that follow from it. None of them records why this
+1 PF-FT-AI-ARCHITECTURE.md §1 states the boundary as a principle. 1 PF-FT-AI-ARCHITECTURE.md §2.1–§2.3 enumerate ownership and
+non-goals. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.1–§5.3 restate it as three boundaries. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §71 restates it again as a
+diagram. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists the anti-patterns that follow from it. None of them records why this
 scope was chosen over the alternatives, what it costs, or what would justify revisiting it.
 
 ## 3. Decision Drivers
@@ -80,28 +80,28 @@ scope was chosen over the alternatives, what it costs, or what would justify rev
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Users must be able to complete real business workflows conversationally, not merely ask questions about them | doc 1 §39 criteria 1–7; affiliation flow Phases 1–6 |
-| DR-F-02 | The platform must assemble context across multiple enterprise services in one interaction | doc 1 §39 criterion 5; affiliation flow Phase 1 club checks |
-| DR-F-03 | Enterprise systems must remain the single system of record for all business state | doc 1 §2.1; doc 3 §71 |
-| DR-F-04 | The platform must be extensible to new workflows without redesigning its core | doc 1 §39 criterion 20; doc 2 §49 |
-| DR-F-05 | The platform must explain enterprise outcomes it did not decide, faithfully | doc 3 §65; doc 1 §1 |
+| DR-F-01 | Users must be able to complete real business workflows conversationally, not merely ask questions about them | 1 PF-FT-AI-ARCHITECTURE.md §39 criteria 1–7; affiliation flow Phases 1–6 |
+| DR-F-02 | The platform must assemble context across multiple enterprise services in one interaction | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 5; affiliation flow Phase 1 club checks |
+| DR-F-03 | Enterprise systems must remain the single system of record for all business state | 1 PF-FT-AI-ARCHITECTURE.md §2.1; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §71 |
+| DR-F-04 | The platform must be extensible to new workflows without redesigning its core | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 20; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
+| DR-F-05 | The platform must explain enterprise outcomes it did not decide, faithfully | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §65; 1 PF-FT-AI-ARCHITECTURE.md §1 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | No divergence between AI-stated and enterprise-held business state | 0 contradictions of authoritative state | doc 3 §63; doc 1 §2.3 |
-| DR-N-02 | Enterprise change must not require a corresponding AI change for rule updates | 0 AI releases required when a PFF business rule changes | doc 1 §2.3; doc 2 §3.1 |
-| DR-N-03 | New workflow onboarding cost stays bounded | A new agent added without core changes | doc 1 §39 criterion 20 |
-| DR-N-04 | Auditability of every enterprise action the platform triggers | 100% traceable to an enterprise API call or event | doc 20 §29 |
+| DR-N-01 | No divergence between AI-stated and enterprise-held business state | 0 contradictions of authoritative state | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63; 1 PF-FT-AI-ARCHITECTURE.md §2.3 |
+| DR-N-02 | Enterprise change must not require a corresponding AI change for rule updates | 0 AI releases required when a PFF business rule changes | 1 PF-FT-AI-ARCHITECTURE.md §2.3; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.1 |
+| DR-N-03 | New workflow onboarding cost stays bounded | A new agent added without core changes | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 20 |
+| DR-N-04 | Auditability of every enterprise action the platform triggers | 100% traceable to an enterprise API call or event | 20.PF-FT-AI-GOVERNANCE.md §29 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The AI platform must not reimplement enterprise business rules, access enterprise databases directly, replace enterprise workflow execution, implement an independent authorization engine, implement scheduled processing, make independent compliance/eligibility decisions, treat RAG as operational truth, allow the SLM unrestricted tool access, or invent portal URLs or API results | Organisational | doc 1 §2.3 |
-| DR-C-02 | Enterprise owns identity, authentication, authorization decisioning, business rules, workflow authority, transaction authority, database authority, payment authority, scheduled workflows, post-completion workflows and human decision authority | Organisational | doc 2 §5.1; doc 1 §2.1 |
-| DR-C-03 | Integration is only through APIM-protected APIs, controlled semantic tools, selective MCP, Service Bus events and approved portal links | Platform | doc 2 §5.3 |
+| DR-C-01 | The AI platform must not reimplement enterprise business rules, access enterprise databases directly, replace enterprise workflow execution, implement an independent authorization engine, implement scheduled processing, make independent compliance/eligibility decisions, treat RAG as operational truth, allow the SLM unrestricted tool access, or invent portal URLs or API results | Organisational | 1 PF-FT-AI-ARCHITECTURE.md §2.3 |
+| DR-C-02 | Enterprise owns identity, authentication, authorization decisioning, business rules, workflow authority, transaction authority, database authority, payment authority, scheduled workflows, post-completion workflows and human decision authority | Organisational | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.1; 1 PF-FT-AI-ARCHITECTURE.md §2.1 |
+| DR-C-03 | Integration is only through APIM-protected APIs, controlled semantic tools, selective MCP, Service Bus events and approved portal links | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.3 |
 | DR-C-04 | PFF business logic is subject to FA safeguarding obligations covering minors | Regulatory | Affiliation flow Phase 1 (CRC/DBS checks for U5–U18 teams) |
 
 ### 3.4 Assumptions
@@ -140,7 +140,7 @@ participation.
 
 **Strengths.**
 - Cannot diverge from enterprise truth, because it holds none.
-- Trivially safe against every anti-pattern in doc 2 §48.
+- Trivially safe against every anti-pattern in 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48.
 - Lowest cost to build and run.
 - No coupling to enterprise rules whatsoever.
 
@@ -148,7 +148,7 @@ participation.
 - Delivers little. The Phase 1 pre-check failure — the moment a club secretary most needs
   help — produces the same banner, now narrated.
 - Cannot satisfy DR-F-01 or DR-F-02; no workflow is completed and no context is assembled.
-- Fails 15 of doc 1 §39's 20 success criteria outright.
+- Fails 15 of 1 PF-FT-AI-ARCHITECTURE.md §39's 20 success criteria outright.
 - Sets up the wrong expectation with users, who will ask it to do things it cannot.
 
 **Cost / effort.** Low.
@@ -167,7 +167,7 @@ transactions and authorization remain with PFF.
 - Delivers real value — a user completes affiliation conversationally, with context gathered
   across services and outcomes explained.
 - Enterprise rule changes flow through automatically; the AI reads results, not rules.
-- Extensible: a new workflow is a new agent over the same core, per doc 2 §49.
+- Extensible: a new workflow is a new agent over the same core, per 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49.
 - Every enterprise action is a traceable tool call.
 
 **Weaknesses.**
@@ -193,13 +193,13 @@ acts with broad authority, calling enterprise systems where convenient.
 - Simplest architecture in the small — one system, one data path.
 
 **Weaknesses.**
-- Violates DR-C-01 and DR-C-02 comprehensively; prohibited by doc 1 §2.3 and doc 2 §48.
+- Violates DR-C-01 and DR-C-02 comprehensively; prohibited by 1 PF-FT-AI-ARCHITECTURE.md §2.3 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48.
 - Creates a second source of truth for eligibility, compliance and safeguarding. When it
   diverges — and a copied rule always eventually diverges — the platform gives two answers to
   a DBS-clearance question about work with minors.
 - Direct database access defeats the authorization model: APIM claims mean nothing if the AI
   reads around them.
-- A model output becomes an authorization decision, which doc 2 §48 prohibits absolutely.
+- A model output becomes an authorization decision, which 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 prohibits absolutely.
 - Every PFF rule change requires a corresponding AI change, forever.
 
 **Cost / effort.** Moderate to build, extreme to operate correctly and to assure.
@@ -231,8 +231,8 @@ checks locally, gradually becoming authoritative for some decisions.
 ## 6. Evaluation Method and Decision Matrix
 
 **Method.** Weighted scoring against §4. EC-01 and EC-03 are assessed against the specific
-prohibitions in doc 1 §2.3 and the anti-patterns in doc 2 §48. EC-02 is assessed by walking
-each option against the affiliation flow's Phases 1–6 and doc 1 §39's twenty success criteria.
+prohibitions in 1 PF-FT-AI-ARCHITECTURE.md §2.3 and the anti-patterns in 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48. EC-02 is assessed by walking
+each option against the affiliation flow's Phases 1–6 and 1 PF-FT-AI-ARCHITECTURE.md §39's twenty success criteria.
 
 | Criterion | Weight | A: Veneer | B: Orchestration | C: Autonomous | D: Progressive |
 |---|---|---|---|---|---|
@@ -278,14 +278,14 @@ operational notifications.
 
 ### 7.3 What PFF AI must never do
 
-The nine prohibitions of doc 1 §2.3 are adopted as binding architectural constraints, not
+The nine prohibitions of 1 PF-FT-AI-ARCHITECTURE.md §2.3 are adopted as binding architectural constraints, not
 guidance. PFF AI must not reimplement enterprise business rules; access enterprise databases
 directly; replace enterprise workflow execution; implement an independent authorization
 engine; implement enterprise scheduled processing; make independent compliance or eligibility
 decisions; treat RAG as operational truth; allow the SLM unrestricted API or tool access; or
 invent portal URLs or enterprise API results.
 
-Each maps to an anti-pattern in doc 2 §48 and to a specific enforcement mechanism recorded in
+Each maps to an anti-pattern in 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 and to a specific enforcement mechanism recorded in
 a downstream ADR — §8.2 gives the mapping. A prohibition with no enforcement point is a
 wish, and this decision does not rely on wishes.
 
@@ -297,7 +297,7 @@ proposal appears to be both, it is out of scope: the ambiguity means it contains
 the enterprise should be making.
 
 **Status rationale.** Accepted. This is a tier 1 decision under ADR-D0-03 §7.1 — it defines
-system boundaries and data ownership, two of doc 2 §52's enumerated categories — so it is
+system boundaries and data ownership, two of 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52's enumerated categories — so it is
 ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -337,15 +337,15 @@ flowchart TB
     AI --> USER([User])
 ```
 
-There are exactly five crossings, per doc 2 §5.3. Any proposed sixth is a boundary change and
+There are exactly five crossings, per 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.3. Any proposed sixth is a boundary change and
 a tier 1 decision under ADR-D0-03.
 
 ### 8.2 Prohibitions and their enforcement points
 
-A prohibition is only real where something enforces it. Each of doc 1 §2.3's nine
+A prohibition is only real where something enforces it. Each of 1 PF-FT-AI-ARCHITECTURE.md §2.3's nine
 non-goals has a named enforcement mechanism:
 
-| Prohibition (doc 1 §2.3) | Anti-pattern (doc 2 §48) | Enforcement | ADR |
+| Prohibition (1 PF-FT-AI-ARCHITECTURE.md §2.3) | Anti-pattern (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48) | Enforcement | ADR |
 |---|---|---|---|
 | No reimplementing business rules | LLM as business-rule engine | Agents call tools for outcomes; no rule evaluation in agent code; architecture-fitness check on `src/pf_ft_ai/domain/` | ADR-D1-02, ADR-D2-09 |
 | No direct database access | Direct database access | No DB driver dependency in the package; integration is HTTP-only through the API catalogue | ADR-D2-13 |
@@ -388,7 +388,7 @@ evaluate them.
   satisfies DR-N-04 without additional machinery.
 - The nine prohibitions become testable through the §8.2 enforcement points rather than
   remaining aspirational.
-- New workflows are new agents over the same core, per doc 2 §49 and ADR-D8-08.
+- New workflows are new agents over the same core, per 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 and ADR-D8-08.
 
 ### 9.2 Negative
 
@@ -495,7 +495,7 @@ been breached somewhere.
 | Aspect | Detail |
 |---|---|
 | Monitoring | Langfuse traces show every tool call and its enterprise response, so boundary conformance is observable rather than asserted |
-| Alerting | QM-01 and QM-04 breaches alert as governance incidents per doc 20 §105 |
+| Alerting | QM-01 and QM-04 breaches alert as governance incidents per 20.PF-FT-AI-GOVERNANCE.md §105 |
 | Runbook | `docs/runbooks/enterprise-api.md` covers enterprise API failure — the platform's principal dependency under this scope |
 | Failure mode and degradation | When an enterprise API is unavailable the platform degrades to explaining that it cannot currently retrieve authoritative state. It must not substitute cached, inferred or remembered business state — that would breach the scope this ADR sets. ADR-D3-08 governs the wording. |
 | Rollback | Not applicable; scope is not deployed. A boundary change requires tier 1 ratification and a superseding ADR. |
@@ -516,7 +516,7 @@ been breached somewhere.
 |---|---|---|---|
 | RT-01 | QM-03 records an AI release forced by a PFF rule change | Release correlation | Causal analysis: locate the copied rule and remove it. A breach of DR-C-01 has occurred. |
 | RT-02 | QM-05 shows ≥3 workflows concurrently blocked on missing enterprise APIs | Quarterly review | Escalate to the enterprise as a platform-level API gap; do not narrow the boundary to compensate |
-| RT-03 | QM-01 records any unsourced business assertion reaching a user | Trace audit | Governance incident per doc 20 §105; strengthen the output guardrail |
+| RT-03 | QM-01 records any unsourced business assertion reaching a user | Trace audit | Governance incident per 20.PF-FT-AI-GOVERNANCE.md §105; strengthen the output guardrail |
 | RT-04 | Latency budget (ADR-D5-18) unachievable within the API-only constraint | Performance testing | Re-evaluate DR-A-02; consider read-model provision by the enterprise, never direct data access by the AI |
 | RT-05 | Benefit realisation (ADR-D8-03) shows orchestration scope does not justify the platform | Quarterly business review | Re-open scope with the Business Owner; a scope widening is a tier 1 decision |
 | RT-06 | PFF exposes a capability that changes what orchestration can achieve — e.g. a rules API returning explanations | Enterprise roadmap | Re-evaluate §7.1 inclusions; the boundary may move without weakening |
@@ -528,7 +528,7 @@ been breached somewhere.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-01 Executive Summary |
-| Specification sections | doc 1 §1 (Purpose), §2.1 (Enterprise-owned), §2.2 (AI-platform-owned), §2.3 (Explicit non-goals), §39 (Architecture Success Criteria); doc 2 §2 (Architectural Objective), §5.1–§5.3 (Architectural Boundaries), §48 (Anti-Patterns), §49 (Extension Model); doc 3 §2 (Core Responsibility Principle), §71 (Final Boundary Statement); `MD files/0 Workflow/pff_affiliation_e2e_flow.md` Phases 1–8 |
+| Specification sections | 1 PF-FT-AI-ARCHITECTURE.md §1 (Purpose), §2.1 (Enterprise-owned), §2.2 (AI-platform-owned), §2.3 (Explicit non-goals), §39 (Architecture Success Criteria); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §2 (Architectural Objective), §5.1–§5.3 (Architectural Boundaries), §48 (Anti-Patterns), §49 (Extension Model); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §2 (Core Responsibility Principle), §71 (Final Boundary Statement); `MD files/0 Workflow/pff_affiliation_e2e_flow.md` Phases 1–8 |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 23 |
 | Code paths | `src/pf_ft_ai/` in its entirety |
@@ -541,4 +541,4 @@ been breached somewhere.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Orchestration scope adopted; doc 1 §2.3's nine non-goals made binding with named enforcement points. Tier 1 — ratified by the external ADF/ADR forum. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Orchestration scope adopted; 1 PF-FT-AI-ARCHITECTURE.md §2.3's nine non-goals made binding with named enforcement points. Tier 1 — ratified by the external ADF/ADR forum. |

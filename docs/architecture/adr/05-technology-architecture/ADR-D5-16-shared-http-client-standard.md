@@ -31,14 +31,14 @@ review_due: 2027-08-22
 PFF AI will route all outbound HTTP through a **single shared async client** (httpx
 `AsyncClient`) with **connection pooling, mandatory timeouts, bounded retries with
 backoff, circuit-breaking, correlation-ID propagation and tracing** — no ad-hoc clients
-or blocking calls in async paths (CLAUDE.md; doc 27 §24–§26; doc 25 §63; doc 26 §15).
+or blocking calls in async paths (CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §24–§26; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §63; 26.PF-FT-AI-PERFORMANCE-COST.md §15).
 Enterprise API, SLM, embedding, MCP and RAG calls all use it.
 
 ## 2. Context and Problem Statement
 
 CLAUDE.md mandates "a shared HTTP client with pooling/timeout/retry/tracing" and "never
-a blocking call inside an async path"; doc 27 §24–§26 async/blocking/HTTP-client
-standards; doc 25 §63 HTTP client infrastructure; doc 26 §15 HTTP client performance.
+a blocking call inside an async path"; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §24–§26 async/blocking/HTTP-client
+standards; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §63 HTTP client infrastructure; 26.PF-FT-AI-PERFORMANCE-COST.md §15 HTTP client performance.
 Scattered, unconfigured clients cause connection exhaustion, hung requests (no
 timeout), retry storms and missing traces. This ADR fixes the shared client standard.
 
@@ -46,8 +46,8 @@ timeout), retry storms and missing traces. This ADR fixes the shared client stan
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | One shared pooled async client | CLAUDE.md; doc 25 §63 |
-| DR-F-02 | Mandatory timeouts; no blocking calls | CLAUDE.md; doc 27 §25 |
+| DR-F-01 | One shared pooled async client | CLAUDE.md; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §63 |
+| DR-F-02 | Mandatory timeouts; no blocking calls | CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §25 |
 | DR-F-03 | Bounded retry + circuit breaker | ADR-D7-06; ADR-D3-18 |
 | DR-F-04 | Correlation-ID propagation + tracing | ADR-D7-03 |
 
@@ -98,7 +98,7 @@ common FastAPI-era choice; no compelling edge here.
 
 **Description.** Sync requests offloaded to threads.
 **Strengths.** Familiar.
-**Weaknesses.** Blocking in an async app; thread overhead; violates doc 27 §25.
+**Weaknesses.** Blocking in an async app; thread overhead; violates 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §25.
 **Cost / effort.** Low; wrong model.
 
 ### 5.5 Option E — Service-mesh-handled resilience (client stays naive)
@@ -118,8 +118,8 @@ adds platform complexity; app still needs client config. Complement, not replace
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by CLAUDE.md, doc 27 §24–§26, doc 25
-§63, doc 26 §15.
+**Method.** Weighted scoring against §4, informed by CLAUDE.md, 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §24–§26, 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md
+§63, 26.PF-FT-AI-PERFORMANCE-COST.md §15.
 
 | Criterion | Weight | A: Shared httpx | B: Per-call httpx | C: aiohttp | D: requests+threads | E: mesh-only |
 |---|---|---|---|---|---|---|
@@ -146,12 +146,12 @@ no ad-hoc clients or blocking HTTP in async paths. A service mesh may later add
 in-cluster mTLS/resilience. aiohttp (C) is a viable alternative not chosen;
 per-call (B), sync requests (D) and mesh-only (E) are rejected.
 
-**Status rationale.** `Accepted` — CLAUDE.md and doc 27/25/26 mandate this.
+**Status rationale.** `Accepted` — CLAUDE.md and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md / 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md / 26.PF-FT-AI-PERFORMANCE-COST.md mandate this.
 
 ## 8. Architecture Detail
 
 - `src/pf_ft_ai/infrastructure/http/`: a `SharedHttpClient` wrapping one `AsyncClient`
-  with pool limits, default + per-call timeouts (doc 27 §26), retry/backoff and a
+  with pool limits, default + per-call timeouts (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §26), retry/backoff and a
   circuit breaker (shared policy with ADR-D3-18/D7-06), correlation-ID header injection
   (ADR-D7-03) and tracing spans.
 - Integration layer (ADR-D2-13), SLM/embedding providers (ADR-D3-14/23), MCP and RAG
@@ -263,7 +263,7 @@ per-call (B), sync requests (D) and mesh-only (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-25 |
-| Specification sections | doc 25 §63; doc 27 §24–§26; doc 26 §15 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §63; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §24–§26; 26.PF-FT-AI-PERFORMANCE-COST.md §15 |
 | Requirement IDs | HTTP-* |
 | Build phases | 2 |
 | Code paths | `src/pf_ft_ai/infrastructure/http/` |

@@ -37,11 +37,11 @@ mechanism" structurally true rather than a rule people follow.
 
 ## 2. Context and Problem Statement
 
-Doc 7 §8 calls the harness *"the controlled runtime boundary"* and lists seventeen things it
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §8 calls the harness *"the controlled runtime boundary"* and lists seventeen things it
 manages — prompt, context, ERC, memory, tools, MCP, RAG, SLM, guardrails, limits, retries,
 timeouts, observability, evaluation, versioning. It adds the requirement that matters most:
 *"The Harness must prevent the SLM from directly controlling unrestricted runtime operations."*
-Doc 7 §50 gives an eleven-stage execution pipeline. Doc 2 §10 and doc 1 §11 give it a place.
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50 gives an eleven-stage execution pipeline. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §10 and 1 PF-FT-AI-ARCHITECTURE.md §11 give it a place.
 
 Two things are underdetermined, and both determine whether the harness is a real boundary or a
 convention.
@@ -53,8 +53,8 @@ route. The difference is invisible in a diagram and total in practice. If an age
 token accounting are all optional — and the first agent written under deadline pressure will
 skip them, correctly observing that everything still works.
 
-**Does it apply per node, per agent run, or per turn?** Doc 7 §50's pipeline reads as a
-per-invocation sequence, but doc 7 §72's agent loop and §73's loop protection imply an agent
+**Does it apply per node, per agent run, or per turn?** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50's pipeline reads as a
+per-invocation sequence, but 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72's agent loop and §73's loop protection imply an agent
 runs many nodes across many model calls within one harness invocation. Where the pipeline's
 stages apply is not stated, and it matters: applying security validation once per run and then
 executing twenty nodes means nineteen of them are unguarded.
@@ -71,10 +71,10 @@ enforced only when the agent chooses to go through it, which is not enforcement 
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | The harness must prevent the SLM controlling unrestricted runtime operations | doc 7 §8 |
-| DR-F-02 | The eleven-stage pipeline must execute for agent work | doc 7 §50 |
-| DR-F-03 | Loop protection and limits must be enforced | doc 7 §72–§73; doc 4 §54 |
-| DR-F-04 | Retries and timeouts follow a single hierarchy | doc 4 §55–§56 |
+| DR-F-01 | The harness must prevent the SLM controlling unrestricted runtime operations | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §8 |
+| DR-F-02 | The eleven-stage pipeline must execute for agent work | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50 |
+| DR-F-03 | Loop protection and limits must be enforced | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72–§73; 4. PF-FT-AI-RUNTIME.md §54 |
+| DR-F-04 | Retries and timeouts follow a single hierarchy | 4. PF-FT-AI-RUNTIME.md §55–§56 |
 | DR-F-05 | ADR-D1-02's invariants must be enforceable at harness-owned boundaries | ADR-D1-02 §7.1 |
 | DR-F-06 | The harness applies identically on both runtime paths | ADR-D2-03 §7.1 |
 
@@ -83,17 +83,17 @@ enforced only when the agent chooses to go through it, which is not enforcement 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Harness overhead must be small relative to inference | ≤5% of turn latency | ADR-D5-18 |
-| DR-N-02 | An agent must not be able to bypass the harness | Structurally impossible, not merely prohibited | doc 7 §8 |
-| DR-N-03 | Agents must remain testable without the full harness | Unit-testable node handlers | doc 22 |
+| DR-N-02 | An agent must not be able to bypass the harness | Structurally impossible, not merely prohibited | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §8 |
+| DR-N-03 | Agents must remain testable without the full harness | Unit-testable node handlers | 22.PF-FT-AI-TESTING.md |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Critical controls are deterministic; the SLM is never the sole mechanism | Platform | doc 2 §3.3 |
-| DR-C-02 | Agents may not bypass tools, override authorization or execute unrestricted APIs | Platform | doc 7 §5 |
+| DR-C-01 | Critical controls are deterministic; the SLM is never the sole mechanism | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-C-02 | Agents may not bypass tools, override authorization or execute unrestricted APIs | Platform | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5 |
 | DR-C-03 | Layering: orchestration imports infrastructure interfaces only | Platform | ADR-D2-01 §7.2 |
-| DR-C-04 | Guardrails apply at every boundary | Platform | doc 18; ADR-D6-09 |
+| DR-C-04 | Guardrails apply at every boundary | Platform | 18.PF-FT-AI-GUARDRAILS.md; ADR-D6-09 |
 
 ### 3.4 Assumptions
 
@@ -130,7 +130,7 @@ import the SLM client, tool executor or ERC service directly.
 - No inversion of control to reason about.
 
 **Weaknesses.**
-- Fails DR-N-02 and doc 7 §8 outright. An agent can reach the SLM directly, and then guardrails,
+- Fails DR-N-02 and 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §8 outright. An agent can reach the SLM directly, and then guardrails,
   token accounting, loop limits and tracing are all optional (EC-01).
 - ADR-D1-02's invariants I-2, I-3 and I-4 become unenforced whenever an agent takes a direct
   route.
@@ -248,14 +248,14 @@ second as the backstop for the first.
 
 ### 7.2 Where the pipeline stages apply
 
-Doc 7 §50's eleven stages do not all apply at the same frequency. Applying them all per node
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50's eleven stages do not all apply at the same frequency. Applying them all per node
 would be wasteful; applying them all per run would leave most operations unguarded. They are
 therefore split by scope:
 
-| Stage (doc 7 §50) | Scope | Rationale |
+| Stage (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50) | Scope | Rationale |
 |---|---|---|
 | Security validation | **Per run**, on entry | Claims and archetype do not change mid-run |
-| Context validation | **Per context read** | Each ERC read is validated on retrieval (doc 8 §67) |
+| Context validation | **Per context read** | Each ERC read is validated on retrieval (8 PF-FT-AI-ERC-CONTEXT.md §67) |
 | Prompt resolution | **Per model call** | Prompt composition differs per node and per content class (ADR-D1-09 §7.5) |
 | Context budget | **Per model call** | Budget is consumed cumulatively; each call must fit what remains |
 | Tool/MCP policy | **Per tool call** | Allowlist and parameter validation apply to every call (ADR-D6-10) |
@@ -264,7 +264,7 @@ therefore split by scope:
 | Output validation | **Per model call**, and per turn at the response boundary | Structured output validated per call; user-facing output validated once |
 | Observability | **Per node and per call** | Spans at every level |
 | Evaluation | **Per run**, sampled | Evaluation hooks capture the run, not each node |
-| Limits and loop protection | **Continuous across the run** | Cumulative by nature (doc 7 §73) |
+| Limits and loop protection | **Continuous across the run** | Cumulative by nature (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73) |
 
 The load-bearing entries are the per-call ones. Every model call and every tool call is guarded,
 which is what makes ADR-D1-02's invariants hold across a twenty-node graph rather than only at
@@ -272,14 +272,14 @@ its edges.
 
 ### 7.3 Cumulative limits across a run
 
-Doc 7 §72–§73 and doc 4 §54 require loop protection and runtime limits. These are cumulative
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72–§73 and 4. PF-FT-AI-RUNTIME.md §54 require loop protection and runtime limits. These are cumulative
 properties of a run, held by the harness and checked before each operation:
 
 | Limit | Scope | Breach behaviour |
 |---|---|---|
 | Model calls per run | Run | Terminate the run; report inability to complete |
 | Tool calls per run | Run | Terminate the run |
-| Same tool with same parameters, repeated | Run | Terminate — a loop, not progress (doc 7 §73) |
+| Same tool with same parameters, repeated | Run | Terminate — a loop, not progress (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73) |
 | Total tokens per run | Run | Terminate |
 | Wall-clock per run | Run | Terminate |
 | Node revisits | Run | Terminate |
@@ -354,14 +354,14 @@ There is no edge from `AGENT` to `INFRA`. That absence is the decision.
 A node handler calls `capabilities.call_tool(ToolCall(name="submit_affiliation", params={...}))`:
 
 1. **Limits** — has this run exceeded its tool-call budget? Has this exact call been made before
-   with these parameters (doc 7 §73)?
+   with these parameters (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73)?
 2. **Tool policy** — is `submit_affiliation` in this agent's allowlist? (I-3)
-3. **Parameter validation** — do the parameters satisfy the tool's schema? (I-3, doc 10 §35)
+3. **Parameter validation** — do the parameters satisfy the tool's schema? (I-3, 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §35)
 4. **Authorization** — do the harness-held claims permit this operation on this resource? Model
    output is not consulted. (I-2)
-5. **Idempotency** — is an idempotency key required and present? (doc 10 §45–§47)
+5. **Idempotency** — is an idempotency key required and present? (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47)
 6. **Execution** — dispatch through the tool executor with timeout and retry per ADR-D2-11.
-7. **Result validation** — does the response satisfy the tool's response schema? (doc 10 §36)
+7. **Result validation** — does the response satisfy the tool's response schema? (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36)
 8. **Transaction state** — is the outcome confirmed, failed, or unknown? Recorded for I-4.
 9. **Observability** — span emitted with tool, duration, outcome.
 10. **Return** — a `ToolResultReference`, not a raw payload (ADR-D2-07 §7.2).
@@ -401,7 +401,7 @@ often ends with tests that instantiate real objects.
 
 ### 9.3 Neutral
 
-- Doc 7 §50's eleven stages are adopted with §7.2's scoping, which the specification leaves open.
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50's eleven stages are adopted with §7.2's scoping, which the specification leaves open.
 - Per-agent variation moves from code to configuration.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -417,7 +417,7 @@ often ends with tests that instantiate real objects.
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | The harness is where doc 7 §8's requirement is realised: the SLM controls no runtime operation directly. Every enterprise reach passes tool policy, parameter validation and claims-based authorization. |
+| Enterprise decides; AI orchestrates | The harness is where 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §8's requirement is realised: the SLM controls no runtime operation directly. Every enterprise reach passes tool policy, parameter validation and claims-based authorization. |
 | Authoritative-truth precedence | The harness assembles the context manifest that I-1 checks against, so every business assertion is traceable to a ranked source. |
 | Four-state separation | The harness holds claims (session-derived) read-only, mediates ERC (enterprise projection) by reference, and lets the agent own only workflow state. |
 | Versioned artefacts, never mutated in place | Prompt resolution and SLM configuration resolve versioned artefacts (ADR-D3-11, ADR-D3-15); the harness records which versions were used per run. |
@@ -523,7 +523,7 @@ a passthrough, which is RSK-04.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture |
-| Specification sections | doc 7 §8 (Agent Harness Responsibility), §50 (Agent Harness Execution Pipeline), §61 (Guardrail Architecture), §67–§69 (Reasoning Boundary, Deterministic Control Boundary, AI Reasoning Boundary), §72–§73 (Agent Loop, Loop Protection), §5 (agent prohibitions); doc 1 §11 (Agent Harness); doc 2 §10 (Agent Harness), §3.3 (Deterministic Control); doc 4 §16 (Agent Harness Initialization), §54 (Runtime Limits), §55–§56 (Timeout and Retry Hierarchy) |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §8 (Agent Harness Responsibility), §50 (Agent Harness Execution Pipeline), §61 (Guardrail Architecture), §67–§69 (Reasoning Boundary, Deterministic Control Boundary, AI Reasoning Boundary), §72–§73 (Agent Loop, Loop Protection), §5 (agent prohibitions); 1 PF-FT-AI-ARCHITECTURE.md §11 (Agent Harness); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §10 (Agent Harness), §3.3 (Deterministic Control); 4. PF-FT-AI-RUNTIME.md §16 (Agent Harness Initialization), §54 (Runtime Limits), §55–§56 (Timeout and Retry Hierarchy) |
 | Requirement IDs | `FR-A39-03`, `FR-A39-07`, `FR-A39-11`, `NFR-A38-SEC` |
 | Build phases | 4 |
 | Code paths | `src/pf_ft_ai/orchestration/harness/` |
@@ -536,4 +536,4 @@ a passthrough, which is RSK-04.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Harness made a mandatory gateway with capability injection rather than a facade; doc 7 §50's pipeline stages scoped per run, per call and continuously; five of ADR-D1-02's six invariants mapped to harness-owned enforcement sites. Tier 1 — ratified by the external ADF/ADR forum. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Harness made a mandatory gateway with capability injection rather than a facade; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §50's pipeline stages scoped per run, per call and continuously; five of ADR-D1-02's six invariants mapped to harness-owned enforcement sites. Tier 1 — ratified by the external ADF/ADR forum. |

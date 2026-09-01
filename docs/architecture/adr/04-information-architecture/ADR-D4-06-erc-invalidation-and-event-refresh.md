@@ -30,15 +30,15 @@ review_due: 2027-08-22
 PFF AI will keep ERC current through **section-level invalidation and patching** and
 **event-driven refresh**: when an enterprise event indicates a change (via Azure
 Service Bus, ADR-D2-16), only the affected ERC section is invalidated and re-collected
-(patched), not the whole ERC (doc 8 §60–§64). On-demand freshness checks (ADR-D4-03)
+(patched), not the whole ERC (8 PF-FT-AI-ERC-CONTEXT.md §60–§64). On-demand freshness checks (ADR-D4-03)
 trigger the same section refresh. Refresh never fabricates — it re-reads from the
 authoritative source.
 
 ## 2. Context and Problem Statement
 
-Doc 8 §60–§61 define the ERC update strategy and patch model; §62–§63 define
+8 PF-FT-AI-ERC-CONTEXT.md §60–§61 define the ERC update strategy and patch model; §62–§63 define
 invalidation and refresh; §64 defines event-driven refresh; §65–§66 tie ERC to
-transaction state/uncertainty; doc 5 §67 covers state and enterprise events. Because
+transaction state/uncertainty; 5. PF-FT-AI-STATE-MODEL.md §67 covers state and enterprise events. Because
 ERC is a reference view of enterprise truth (ADR-D2-12), it can go stale as the
 enterprise changes. Rebuilding the whole ERC on any change is wasteful and slow;
 never refreshing risks stale-as-fresh (ADR-D4-03). This ADR fixes how ERC stays
@@ -48,10 +48,10 @@ current efficiently and safely.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Section-level invalidation + patch | doc 8 §60–§62 |
-| DR-F-02 | Event-driven refresh from Service Bus | doc 8 §64; ADR-D2-16 |
-| DR-F-03 | On-demand refresh when freshness stale | ADR-D4-03; doc 8 §63 |
-| DR-C-01 | Refresh re-reads source; never fabricates | doc 8; CLAUDE.md |
+| DR-F-01 | Section-level invalidation + patch | 8 PF-FT-AI-ERC-CONTEXT.md §60–§62 |
+| DR-F-02 | Event-driven refresh from Service Bus | 8 PF-FT-AI-ERC-CONTEXT.md §64; ADR-D2-16 |
+| DR-F-03 | On-demand refresh when freshness stale | ADR-D4-03; 8 PF-FT-AI-ERC-CONTEXT.md §63 |
+| DR-C-01 | Refresh re-reads source; never fabricates | 8 PF-FT-AI-ERC-CONTEXT.md; CLAUDE.md |
 | DR-C-02 | Consume events reliably (idempotent) | ADR-D2-18 |
 
 ### 3.4 Assumptions
@@ -121,7 +121,7 @@ Service Bus capability the platform already has.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 8 §60–§66, ADR-D2-16/18 and
+**Method.** Weighted scoring against §4, informed by 8 PF-FT-AI-ERC-CONTEXT.md §60–§66, ADR-D2-16/18 and
 the freshness model (ADR-D4-03).
 
 | Criterion | Weight | A: Event patch + on-demand | B: Full rebuild | C: TTL-only | D: Poll | E: Event full-rebuild |
@@ -149,7 +149,7 @@ event body as full truth); sections lacking change events fall back to TTL-based
 freshness refresh (ADR-D4-03). Consumption is idempotent (ADR-D2-18). Full-rebuild
 (B/E) is wasteful; TTL-only (C) and polling (D) are less timely/efficient.
 
-**Status rationale.** `Accepted` — doc 8 §60–§64 govern this.
+**Status rationale.** `Accepted` — 8 PF-FT-AI-ERC-CONTEXT.md §60–§64 govern this.
 
 ## 8. Architecture Detail
 
@@ -265,7 +265,7 @@ freshness refresh (ADR-D4-03). Consumption is idempotent (ADR-D2-18). Full-rebui
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-19 |
-| Specification sections | doc 8 §60–§66; doc 5 §67 |
+| Specification sections | 8 PF-FT-AI-ERC-CONTEXT.md §60–§66; 5. PF-FT-AI-STATE-MODEL.md §67 |
 | Requirement IDs | ERC-REFRESH-* |
 | Build phases | 4, 5 |
 | Code paths | `src/pf_ft_ai/erc/` |

@@ -29,13 +29,13 @@ review_due: 2027-08-22
 PFF AI will make SLM resilience explicit and **never silent**: ordered fallback
 across compatible models/providers, per-provider circuit breakers, layered timeouts,
 bounded retries with backoff, and a defined degraded mode when no model is available
-(doc 15 §61–§69, §163, §168). A fallback or degradation is always logged and, where
+(15.PF-FT-AI-SLM.md §61–§69, §163, §168). A fallback or degradation is always logged and, where
 it affects the user, communicated honestly by Adam — the platform never pretends a
 degraded answer is a normal one.
 
 ## 2. Context and Problem Statement
 
-Doc 15 §62–§64 require fallback that is compatible and **not silent**; §65–§69 define
+15.PF-FT-AI-SLM.md §62–§64 require fallback that is compatible and **not silent**; §65–§69 define
 retry, backoff, circuit breaker, timeout layers and cancellation; §163/§168 define
 degraded mode and the failure principle. Model endpoints fail, throttle and slow
 down. Without an explicit policy, a provider outage becomes a user-facing hang or a
@@ -46,11 +46,11 @@ resilience behaviour of the SLM path.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Fallback across compatible models/providers | doc 15 §62–§63 |
-| DR-F-02 | Fallback/degradation never silent | doc 15 §64; CLAUDE.md §Adam 7 |
-| DR-F-03 | Circuit-break failing providers | doc 15 §67 |
-| DR-N-01 | Bounded latency via layered timeouts | doc 15 §68 |
-| DR-N-02 | Retries must not amplify incidents | doc 15 §65–§66; ADR-D2-11 |
+| DR-F-01 | Fallback across compatible models/providers | 15.PF-FT-AI-SLM.md §62–§63 |
+| DR-F-02 | Fallback/degradation never silent | 15.PF-FT-AI-SLM.md §64; CLAUDE.md §Adam 7 |
+| DR-F-03 | Circuit-break failing providers | 15.PF-FT-AI-SLM.md §67 |
+| DR-N-01 | Bounded latency via layered timeouts | 15.PF-FT-AI-SLM.md §68 |
+| DR-N-02 | Retries must not amplify incidents | 15.PF-FT-AI-SLM.md §65–§66; ADR-D2-11 |
 | DR-C-01 | Degraded answers communicated honestly | CLAUDE.md §Adam 7 |
 
 ### 3.4 Assumptions
@@ -75,7 +75,7 @@ resilience behaviour of the SLM path.
 
 ### 5.1 Option A — Ordered compatible fallback + circuit breaker + bounded retry/backoff + layered timeouts + honest degraded mode
 
-**Description.** The full pattern from doc 15 §61–§69: try primary; on failure/timeout
+**Description.** The full pattern from 15.PF-FT-AI-SLM.md §61–§69: try primary; on failure/timeout
 fall back to next compatible model (per registry capabilities, ADR-D3-15); breakers
 trip per provider; retries are bounded with jittered backoff; layered timeouts
 (per-call, per-attempt, overall); if all fail, enter degraded mode and tell the user.
@@ -122,7 +122,7 @@ must be flagged. A complement, not a whole strategy.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 15 §61–§69/§163/§168 and
+**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §61–§69/§163/§168 and
 the resilience patterns of ADR-D7-06.
 
 | Criterion | Weight | A: Full pattern | B: Retry-only | C: Fallback no breaker | D: Fail-fast | E: Cache fallback |
@@ -152,13 +152,13 @@ outputs and is flagged as such. Every fallback and degradation is logged and, wh
 user-affecting, communicated plainly by Adam (never celebrated, never disguised).
 B/C/D rejected as standalone strategies.
 
-**Status rationale.** `Accepted` — doc 15 §61–§69 mandate this behaviour.
+**Status rationale.** `Accepted` — 15.PF-FT-AI-SLM.md §61–§69 mandate this behaviour.
 
 ## 8. Architecture Detail
 
 - Implemented in the SLM abstraction (ADR-D3-14): a resilience wrapper around
   provider adapters using the shared HTTP client's retry/timeout (ADR-D5-16) and a
-  circuit-breaker per provider (doc 15 §67).
+  circuit-breaker per provider (15.PF-FT-AI-SLM.md §67).
 - Fallback order and compatibility from the model registry (ADR-D3-15); only
   capability-compatible models are fallback targets (§63).
 - Timeout layers (§68): per-attempt, per-call, and an overall budget aligned to the
@@ -273,7 +273,7 @@ B/C/D rejected as standalone strategies.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 |
-| Specification sections | doc 15 §61–§69, §163, §168 |
+| Specification sections | 15.PF-FT-AI-SLM.md §61–§69, §163, §168 |
 | Requirement IDs | SLM-RESIL-* |
 | Build phases | 6 |
 | Code paths | `src/pf_ft_ai/slm/` |

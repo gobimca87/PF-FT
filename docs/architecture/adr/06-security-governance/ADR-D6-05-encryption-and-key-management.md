@@ -30,13 +30,13 @@ review_due: 2027-08-22
 PFF AI will enforce **TLS 1.2+ in transit everywhere and encryption at rest on all
 stores**, using **Azure-managed keys by default and customer-managed keys (CMK) in Key
 Vault for Confidential/Personal/special-category data**, with defined **rotation** and
-no secrets/keys in code or images (doc 19 §25–§30; doc 25 §58–§60). Keys are managed in
+no secrets/keys in code or images (19.PF-FT-AI-SECURITY.md §25–§30; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §58–§60). Keys are managed in
 Key Vault (ADR-D5-07); certificates are automatically managed.
 
 ## 2. Context and Problem Statement
 
-Doc 19 §25 TLS, §26 encryption at rest, §27 key management, §28 secret references, §29
-secret rotation, §30 secret-exposure prevention; doc 25 §58 encryption, §59 TLS, §60
+19.PF-FT-AI-SECURITY.md §25 TLS, §26 encryption at rest, §27 key management, §28 secret references, §29
+secret rotation, §30 secret-exposure prevention; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §58 encryption, §59 TLS, §60
 certificate management. Unencrypted data or unmanaged keys are baseline compliance
 failures for FA personal/children's data. This ADR fixes encryption and key management.
 
@@ -44,10 +44,10 @@ failures for FA personal/children's data. This ADR fixes encryption and key mana
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | TLS in transit; encryption at rest everywhere | doc 19 §25–§26; doc 25 §58–§59 |
-| DR-F-01 | Key management in Key Vault; rotation | doc 19 §27, §29 |
-| DR-C-02 | CMK for sensitive data | doc 19 §26–§27 |
-| DR-C-03 | No keys/secrets in code/images | doc 19 §30; ADR-D5-07 |
+| DR-C-01 | TLS in transit; encryption at rest everywhere | 19.PF-FT-AI-SECURITY.md §25–§26; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §58–§59 |
+| DR-F-01 | Key management in Key Vault; rotation | 19.PF-FT-AI-SECURITY.md §27, §29 |
+| DR-C-02 | CMK for sensitive data | 19.PF-FT-AI-SECURITY.md §26–§27 |
+| DR-C-03 | No keys/secrets in code/images | 19.PF-FT-AI-SECURITY.md §30; ADR-D5-07 |
 
 ### 3.4 Assumptions
 
@@ -111,12 +111,12 @@ encryption. Useful for specific ultra-sensitive fields only.
 
 | Option | Eliminated by |
 |---|---|
-| Plaintext at rest | doc 19 §26 |
-| Self-managed keys in code | doc 19 §30 |
+| Plaintext at rest | 19.PF-FT-AI-SECURITY.md §26 |
+| Self-managed keys in code | 19.PF-FT-AI-SECURITY.md §30 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 19 §25–§30 and doc 25 §58–§60.
+**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §25–§30 and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §58–§60.
 
 | Criterion | Weight | A: Managed+CMK-sensitive | B: Managed only | C: CMK everywhere | D: App-layer | E: HSM |
 |---|---|---|---|---|---|---|
@@ -144,7 +144,7 @@ at rest and in-code keys are forbidden.
 
 ## 8. Architecture Detail
 
-- TLS enforced at APIM, ingress and all service-to-service hops (doc 25 §59); cert
+- TLS enforced at APIM, ingress and all service-to-service hops (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §59); cert
   management automated (§60).
 - At-rest encryption on Redis (ADR-D4-10), vector store (ADR-D3-24), any storage; CMK in
   Key Vault (ADR-D5-07) for sensitive stores; rotation scheduled (§29).
@@ -256,7 +256,7 @@ at rest and in-code keys are forbidden.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | doc 19 §25–§30; doc 25 §58–§60 |
+| Specification sections | 19.PF-FT-AI-SECURITY.md §25–§30; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §58–§60 |
 | Requirement IDs | SEC-CRYPTO-* |
 | Build phases | 1, 7 |
 | Code paths | `infra/` |

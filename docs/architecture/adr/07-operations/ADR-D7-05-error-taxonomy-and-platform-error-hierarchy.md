@@ -30,12 +30,12 @@ PFF AI will use a single **`PlatformError` exception hierarchy** — `Validation
 `ConfigurationError`, `IntegrationError`, `ToolError`, `ModelError`, `RAGError`,
 `GuardrailError`, `WorkflowError` (CLAUDE.md) — each carrying **structured fields
 (code, severity, retryable)** that drive error translation (ADR-D4-09), retry
-classification (ADR-D3-18/D2-11) and severity-based alerting (doc 24 §51–§54). Errors
+classification (ADR-D3-18/D2-11) and severity-based alerting (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §51–§54). Errors
 are classified, not stringly-typed.
 
 ## 2. Context and Problem Statement
 
-Doc 24 §51 error taxonomy, §52 error structure, §53 error severity, §54 retry
+24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §51 error taxonomy, §52 error structure, §53 error severity, §54 retry
 classification; CLAUDE.md fixes the `PlatformError` root and its subclasses. Without a
 consistent taxonomy, error handling is ad hoc: retries fire on non-retryable errors,
 severities are guessed, and the response envelope (ADR-D4-09) can't map codes reliably.
@@ -46,7 +46,7 @@ This ADR fixes the exception hierarchy and its structured semantics.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Single PlatformError hierarchy | CLAUDE.md |
-| DR-F-02 | Structured fields: code, severity, retryable | doc 24 §52–§54 |
+| DR-F-02 | Structured fields: code, severity, retryable | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §52–§54 |
 | DR-F-03 | Drive translation/retry/alerting from taxonomy | ADR-D4-09, D3-18, D7-08 |
 
 ### 3.4 Assumptions
@@ -112,11 +112,11 @@ retryability, user message and alert routing.
 | Option | Eliminated by |
 |---|---|
 | Ad-hoc per-module exceptions | CLAUDE.md single hierarchy |
-| Retry on all errors | doc 24 §54, §58 |
+| Retry on all errors | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54, §58 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 24 §51–§54 and CLAUDE.md.
+**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §51–§54 and CLAUDE.md.
 
 | Criterion | Weight | A: Hierarchy+fields | B: Generic+strings | C: Codes-only | D: Result type | E: Hierarchy+catalogue |
 |---|---|---|---|---|---|---|
@@ -146,7 +146,7 @@ Result-type (D) are rejected.
 
 - `src/pf_ft_ai/common/errors.py`: `PlatformError(code, severity, retryable, details)`
   and subclasses; a catalogue (config) maps codes → severity/retry/user-message/alert.
-- Retry classification (doc 24 §54–§58): only `retryable=True` errors retried (ADR-D3-18/
+- Retry classification (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§58): only `retryable=True` errors retried (ADR-D3-18/
   D2-11); the retry anti-pattern (§58) avoided.
 - Envelope mapping (ADR-D4-09) translates subclass→`PFF.<CATEGORY>.<NAME>`; severity
   drives alert routing (ADR-D7-08); logs/audit record the code (ADR-D7-04/D6-17).
@@ -253,7 +253,7 @@ Result-type (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | doc 24 §51–§54, §58 |
+| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §51–§54, §58 |
 | Requirement IDs | ERR-* |
 | Build phases | 1 |
 | Code paths | `src/pf_ft_ai/common/errors.py` |

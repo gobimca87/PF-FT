@@ -39,10 +39,10 @@ The workshop pack names this sheet *"Integration & 18-Microservice Matrix"*. Tha
 appear in the specification set, and recording where it comes from matters more than reproducing
 it.
 
-Doc 10 §7 gives a recommended API catalogue structure with six example files — `clubs`,
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 gives a recommended API catalogue structure with six example files — `clubs`,
 `affiliations`, `teams`, `officials`, `courses`, `compliance` — and adds *"the exact repository
-structure will be finalized with the overall platform structure."* Doc 10 §13 covers API
-ownership and §14 API lifecycle. Doc 3 §4 lists capabilities, not services. The affiliation flow
+structure will be finalized with the overall platform structure."* 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §13 covers API
+ownership and §14 API lifecycle. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 lists capabilities, not services. The affiliation flow
 names several systems by their function: PAAS/Payment Service, SmartPayFuse, Xero, WGS, Bluefin.
 
 So the specification set describes **six example API domains** and the affiliation flow implies
@@ -57,7 +57,7 @@ until integration work began. That is worse than an admittedly incomplete matrix
 
 The genuine architectural questions are separate from the count, and they are:
 
-- **How does the platform depend on an enterprise service?** Doc 3 §4 marks Enterprise API
+- **How does the platform depend on an enterprise service?** 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 marks Enterprise API
   Integration as shared — enterprise owns the APIs, the AI owns the integration abstraction
   (ADR-D1-06 §7.2). What that permits and forbids in practice is undefined.
 - **What happens when a needed capability has no API?** ADR-D1-01 §9.2 accepted that the platform
@@ -72,10 +72,10 @@ The genuine architectural questions are separate from the count, and they are:
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every enterprise API used must have a catalogued owner | doc 10 §13 |
-| DR-F-02 | API lifecycle and versioning must be tracked | doc 10 §14–§15 |
+| DR-F-01 | Every enterprise API used must have a catalogued owner | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §13 |
+| DR-F-02 | API lifecycle and versioning must be tracked | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §14–§15 |
 | DR-F-03 | Integration gaps must be recorded, not worked around | ADR-D1-01 §7.3, RSK-02 |
-| DR-F-04 | Coupling to enterprise services must be bounded | doc 3 §4; ADR-D1-06 §7.2 |
+| DR-F-04 | Coupling to enterprise services must be bounded | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4; ADR-D1-06 §7.2 |
 | DR-F-05 | The matrix must support incident routing | ADR-D1-06 §7.2; ADR-D7-16 |
 
 ### 3.2 Non-functional drivers
@@ -84,16 +84,16 @@ The genuine architectural questions are separate from the count, and they are:
 |---|---|---|---|
 | DR-N-01 | The matrix must be accurate rather than complete | 0 unevidenced entries | Programme integrity |
 | DR-N-02 | Maintenance must be proportionate | Updated as integrations are added | Programme practice |
-| DR-N-03 | A service change must identify affected platform components | Traceable both ways | doc 20 §115 |
+| DR-N-03 | A service change must identify affected platform components | Traceable both ways | 20.PF-FT-AI-GOVERNANCE.md §115 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | No direct database access to any enterprise service | Platform | ADR-D1-01 §7.3 |
-| DR-C-02 | Integration only through the five crossings | Platform | doc 2 §5.3; ADR-D1-01 §8.1 |
-| DR-C-03 | Enterprise owns its APIs and their contracts | Organisational | doc 3 §4; ADR-D1-06 §7.2 |
-| DR-C-04 | The specification set does not enumerate the enterprise service inventory | Organisational | doc 10 §7 |
+| DR-C-02 | Integration only through the five crossings | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.3; ADR-D1-01 §8.1 |
+| DR-C-03 | Enterprise owns its APIs and their contracts | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4; ADR-D1-06 §7.2 |
+| DR-C-04 | The specification set does not enumerate the enterprise service inventory | Organisational | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 |
 
 ### 3.4 Assumptions
 
@@ -189,14 +189,14 @@ a separate matrix.
 
 **Strengths.**
 - No duplication; one artefact (EC-04).
-- The catalogue is already required by doc 10 §7.
+- The catalogue is already required by 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7.
 - Cannot drift from reality, being the thing itself.
 
 **Weaknesses.**
 - The catalogue is operation-level; incident routing, ownership relationships and coupling class
   are service-level concerns it does not express (EC-02).
 - Gaps have no home — the catalogue records what exists, not what is missing (EC-03 fails).
-- Doc 3 §13's API ownership and doc 10 §14's lifecycle are service-level properties.
+- 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §13's API ownership and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §14's lifecycle are service-level properties.
 
 **Cost / effort.** Nil, with two real needs unmet.
 
@@ -240,10 +240,10 @@ Stating this prevents the matrix being read as a claim it does not make.
 | Field | Purpose |
 |---|---|
 | Service name and domain | Identity |
-| **Owning team** | doc 10 §13; incident routing per ADR-D1-06 §7.2 |
+| **Owning team** | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §13; incident routing per ADR-D1-06 §7.2 |
 | Operations used | Catalogue entry IDs — the evidence for the row |
 | **Coupling class** | Per §7.3 |
-| Contract version and compatibility policy | doc 10 §14–§15; ADR-D2-15 |
+| Contract version and compatibility policy | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §14–§15; ADR-D2-15 |
 | Events produced and consumed | ADR-D2-16 |
 | Known gaps | Capabilities needed but unavailable |
 | Rate limits and capacity notes | ADR-D2-08 §7.3's per-service bounds |
@@ -254,18 +254,18 @@ is not in the matrix.
 
 ### 7.3 Three coupling classes and the rules that bound them
 
-Doc 3 §4 marks Enterprise API Integration as shared without saying what the platform may depend
+3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 marks Enterprise API Integration as shared without saying what the platform may depend
 on. Three classes, each with a rule:
 
 | Class | The platform depends on | Rule |
 |---|---|---|
 | **Contract coupling** | The service's published API contract | **Permitted.** This is the intended dependency. Versioning and compatibility per ADR-D2-15. |
 | **Behavioural coupling** | Observed behaviour not in the contract — response timing, field ordering, undocumented fields, error text | **Forbidden.** If the platform needs it, it belongs in the contract; raise it with the owning team. |
-| **Structural coupling** | The service's internals — its database, its queues, its deployment | **Forbidden absolutely.** DR-C-01 and doc 2 §5.3. |
+| **Structural coupling** | The service's internals — its database, its queues, its deployment | **Forbidden absolutely.** DR-C-01 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.3. |
 
 Behavioural coupling is the one worth stating explicitly, because it happens by accident. A
 platform that parses an error message to distinguish two failure modes has coupled to a string the
-service may change without notice. The correct response is an error-code contract (doc 10 §38–§40),
+service may change without notice. The correct response is an error-code contract (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §38–§40),
 not a cleverer parser.
 
 ### 7.4 Gaps are recorded, never worked around
@@ -283,7 +283,7 @@ flagged the pressure that creates. The response is procedural:
    blocked concurrently.
 
 Point 3 is the rule that matters. "The enterprise does not expose this, so we will infer it" is
-how ADR-D1-01's boundary erodes, and inference about eligibility is precisely what doc 1 §2.3
+how ADR-D1-01's boundary erodes, and inference about eligibility is precisely what 1 PF-FT-AI-ARCHITECTURE.md §2.3
 prohibits.
 
 ### 7.5 The enterprise inventory is requested in parallel
@@ -298,18 +298,18 @@ supplied.
 
 ### 7.6 Known integration surface at the time of this decision
 
-From doc 10 §7's six example domains and the affiliation flow's named systems. This is the
+From 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7's six example domains and the affiliation flow's named systems. This is the
 **starting point** for Phase 6 and Phase 23, not a completed matrix — every row is confirmed
 during integration mapping before anything is built against it.
 
 | Domain / system | Source | Affiliation involvement | Status |
 |---|---|---|---|
-| Clubs | doc 10 §7 | Club record, officials | To be mapped |
-| Affiliations | doc 10 §7 | Application lifecycle, statuses, flags | To be mapped |
-| Teams | doc 10 §7 | Team list, eligibility, fold status | To be mapped |
-| Officials | doc 10 §7 | Club and team officials, roles | To be mapped |
-| Courses | doc 10 §7 | Referenced in doc 7 §7's tool example | Not in affiliation scope |
-| Compliance | doc 10 §7 | DBS/CRC validity, suspension, welfare officer | To be mapped |
+| Clubs | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 | Club record, officials | To be mapped |
+| Affiliations | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 | Application lifecycle, statuses, flags | To be mapped |
+| Teams | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 | Team list, eligibility, fold status | To be mapped |
+| Officials | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 | Club and team officials, roles | To be mapped |
+| Courses | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 | Referenced in 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7's tool example | Not in affiliation scope |
+| Compliance | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 | DBS/CRC validity, suspension, welfare officer | To be mapped |
 | Payment service (PAAS) | affiliation flow Phase 6 | Invoice creation, mapping to application | To be mapped |
 | SmartPayFuse | affiliation flow Phase 6 | Online payment | Likely indirect, via payment service |
 | Xero | affiliation flow Phases 6, 10 | Invoice reconciliation | Likely indirect; Scenarios 23, 25 concern it |
@@ -426,7 +426,7 @@ which is what makes DR-N-02 achievable.
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | The matrix is read as a complete enterprise picture and used for planning | Medium | Medium | Medium | §7.1's explicit provenance note; "to be mapped" status on unconfirmed rows | AI Solution Architect | Low |
-| RSK-02 | Behavioural coupling introduced accidentally | Medium | High | High | §7.3's named class; error-code contracts (doc 10 §38–§40); code review for response parsing beyond the contract; QM-03 | AI Engineering Lead | Medium |
+| RSK-02 | Behavioural coupling introduced accidentally | Medium | High | High | §7.3's named class; error-code contracts (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §38–§40); code review for response parsing beyond the contract; QM-03 | AI Engineering Lead | Medium |
 | RSK-03 | A gap is worked around rather than raised (§7.4 point 3) | Medium | Very High | High | Gap register reviewed at governance review; ADR-D1-01 QM-03 detects a copied business rule | Security Owner | Medium |
 | RSK-04 | The enterprise inventory is never supplied (DR-A-01) | Medium | Low | Low | The derived matrix is sufficient for the platform's purposes; that is why EC-05 is weighted 8 | AI Platform Owner | Low |
 | RSK-05 | Matrix goes stale as integrations change | Medium | Medium | Medium | §8.3's trigger-driven updates plus quarterly owner confirmation; QM-02 | AI Engineering Lead | Low |
@@ -465,7 +465,7 @@ operations (which cannot exist by §7.2) but an operation whose service was neve
 | Build phases | 6 (initial rows from affiliation integration), 23 (confirmed during E2E) |
 | Repository paths | Matrix maintained alongside `config/enterprise/api-catalog/`; gap register with it |
 | Configuration | Per-service rate limits feed `config/base/batching.yaml` bounds |
-| Contracts / schemas | Catalogue entry `owner` and `version` fields (doc 10 §9–§10) |
+| Contracts / schemas | Catalogue entry `owner` and `version` fields (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §9–§10) |
 | Migration | None |
 | Dependencies on other ADRs | ADR-D2-13 (catalogue), ADR-D2-15 (contract versioning), ADR-D1-06 (ownership model) |
 | Effort estimate | Small, incremental — a by-product of integration work |
@@ -520,7 +520,7 @@ operations (which cannot exist by §7.2) but an operation whose service was neve
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-10 Integration & 18-Microservice Matrix — see §7.1 on the count's provenance |
-| Specification sections | doc 10 §7 (API Catalog — six example domains), §9–§10 (Metadata), §13 (API Ownership), §14 (API Lifecycle), §15 (API Versioning), §38–§40 (Error Contract, Translation, Categories); doc 3 §4 (Executive Responsibility Matrix), §13–§14 (Enterprise API, API Catalog Responsibility), §62 (Team Boundary Model); affiliation flow Phases 1, 3, 6, 8, 10 |
+| Specification sections | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7 (API Catalog — six example domains), §9–§10 (Metadata), §13 (API Ownership), §14 (API Lifecycle), §15 (API Versioning), §38–§40 (Error Contract, Translation, Categories); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 (Executive Responsibility Matrix), §13–§14 (Enterprise API, API Catalog Responsibility), §62 (Team Boundary Model); affiliation flow Phases 1, 3, 6, 8, 10 |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-MAINT` |
 | Build phases | 6, 23 |
 | Code paths | None directly; governs `config/enterprise/api-catalog/` |

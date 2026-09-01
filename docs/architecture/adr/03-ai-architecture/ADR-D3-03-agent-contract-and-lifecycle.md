@@ -35,9 +35,9 @@ reviewable without reading its implementation.
 
 ## 2. Context and Problem Statement
 
-Doc 7 §16 gives the agent lifecycle, §17 the execution contract, §18 the execution context, §19
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §16 gives the agent lifecycle, §17 the execution contract, §18 the execution context, §19
 the agent result, §20 agent configuration, §21 versioning, §22–§23 the capability registry and an
-example, §24 agent selection. Doc 20 §45–§46 cover agent governance and capability boundaries;
+example, §24 agent selection. 20.PF-FT-AI-GOVERNANCE.md §45–§46 cover agent governance and capability boundaries;
 §93 covers agent review.
 
 The material describes an agent from several angles and leaves one question underdetermined: **what
@@ -51,12 +51,12 @@ Two coherent positions exist.
   requirements, tools — and the harness enforces the declaration. The code implements behaviour
   *within* the declaration.
 
-Doc 20 §46 requires agent capability boundaries, and doc 20 §93 requires agent review. Both are
+20.PF-FT-AI-GOVERNANCE.md §46 requires agent capability boundaries, and 20.PF-FT-AI-GOVERNANCE.md §93 requires agent review. Both are
 hard to satisfy under a code-first model: reviewing an agent's capability boundary means reading
 its implementation and reasoning about what it *could* do, which is neither reliable nor
 repeatable. Under declaration-first, the review reads a configuration file.
 
-There is a second question. Doc 7 §16's lifecycle and §21's versioning imply agents have states
+There is a second question. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §16's lifecycle and §21's versioning imply agents have states
 and versions, but the interaction between them and the platform's release model (ADR-D5-06) is not
 stated. An agent in "draft" that can be routed to in production would be a governance hole; an
 agent whose version is independent of the release bundle would break the immutable-bundle rule.
@@ -72,19 +72,19 @@ candidate workflow before Phase 23 exit.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | An agent must declare its capabilities for registry-based selection | doc 7 §22–§24 |
-| DR-F-02 | Agent capability boundaries must be defined and reviewable | doc 20 §46, §93 |
-| DR-F-03 | The execution contract must be uniform across agents | doc 7 §17 |
-| DR-F-04 | Agents must be versioned | doc 7 §21 |
+| DR-F-01 | An agent must declare its capabilities for registry-based selection | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §22–§24 |
+| DR-F-02 | Agent capability boundaries must be defined and reviewable | 20.PF-FT-AI-GOVERNANCE.md §46, §93 |
+| DR-F-03 | The execution contract must be uniform across agents | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §17 |
+| DR-F-04 | Agents must be versioned | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §21 |
 | DR-F-05 | The contract must generalise beyond affiliation | ADR-D1-11 §7.3, AC-04 |
-| DR-F-06 | Agent result must be a defined shape | doc 7 §19 |
+| DR-F-06 | Agent result must be a defined shape | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §19 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Adding an agent must not change orchestration code | 0 orchestration changes | ADR-D1-11 §8.2 |
-| DR-N-02 | An agent's permitted reach must be determinable without reading its code | Reviewable from configuration | doc 20 §93 |
+| DR-N-02 | An agent's permitted reach must be determinable without reading its code | Reviewable from configuration | 20.PF-FT-AI-GOVERNANCE.md §93 |
 | DR-N-03 | Agent versions must compose with release bundles | Agent version is part of the bundle | ADR-D5-06 |
 
 ### 3.3 Constraints
@@ -92,7 +92,7 @@ candidate workflow before Phase 23 exit.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | Agents receive capabilities by injection, importing nothing | Platform | ADR-D2-09 §7.1 |
-| DR-C-02 | Agents may not execute business rules, bypass tools or override authorization | Platform | doc 7 §5 |
+| DR-C-02 | Agents may not execute business rules, bypass tools or override authorization | Platform | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5 |
 | DR-C-03 | One agent per turn; no delegation | Platform | ADR-D3-02 §7.1 |
 | DR-C-04 | Configuration is versioned and released as an immutable bundle | Platform | ADR-D5-06 |
 
@@ -108,7 +108,7 @@ candidate workflow before Phase 23 exit.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Reviewability of capability boundary | 30 | Doc 20 §46 and §93 require it; a boundary that needs code reading is not reviewable in practice | Can reach be determined from configuration alone? |
+| EC-01 | Reviewability of capability boundary | 30 | 20.PF-FT-AI-GOVERNANCE.md §46 and §93 require it; a boundary that needs code reading is not reviewable in practice | Can reach be determined from configuration alone? |
 | EC-02 | Enforceability of the declaration | 25 | A declaration nothing enforces is documentation | Does the harness constrain the agent to its declaration? |
 | EC-03 | Generality across workflows | 20 | ADR-D1-11's extensibility claim depends on it | Would a second workflow fit unchanged? |
 | EC-04 | Implementation ergonomics | 15 | A contract that fights the developer gets worked around | Effort to build an agent |
@@ -132,7 +132,7 @@ a name and description for routing. Capabilities are whatever the code exercises
 
 **Weaknesses.**
 - Capability boundary is not reviewable without reading the implementation and reasoning about
-  reachability, which doc 20 §93's review cannot do reliably (EC-01 fails).
+  reachability, which 20.PF-FT-AI-GOVERNANCE.md §93's review cannot do reliably (EC-01 fails).
 - Nothing constrains an agent to a declared scope, so the harness's per-agent allowlist would have
   to be maintained separately from the agent, and drift is invisible (EC-02).
 - Context requirements discovered at runtime prevent ADR-D2-08's execution planning, which needs
@@ -223,7 +223,7 @@ review, can a reviewer state which enterprise data and operations the agent can 
 **Sensitivity.** B leads D by 95 points and loses only on ergonomics, worth 15 points. C's score
 overstates it: its reviewability failure is qualitative rather than a matter of degree, since
 reviewing a generated description of current behaviour is not reviewing a boundary. A is excluded
-by doc 20 §46 and §93 in substance.
+by 20.PF-FT-AI-GOVERNANCE.md §46 and §93 in substance.
 
 ## 7. Decision
 
@@ -235,7 +235,7 @@ An agent declares, in versioned configuration:
 agent:
   id: affiliation_agent
   version: 1.0.0
-  status: active                      # doc 7 §16 lifecycle
+  status: active                      # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §16 lifecycle
   capability:
     intents: [club_affiliation, affiliation_status, affiliation_payment]
     description: >
@@ -265,7 +265,7 @@ agent:
   archetypes: [club_administrator, county_administrator]
 ```
 
-This is the agent's **permitted reach**, and it is what governance reviews under doc 20 §93. A
+This is the agent's **permitted reach**, and it is what governance reviews under 20.PF-FT-AI-GOVERNANCE.md §93. A
 reviewer can answer "what enterprise data can this agent see, and what can it do?" from this file
 alone, which is EC-01 satisfied concretely.
 
@@ -288,15 +288,15 @@ check — it has no means to attempt it, which is the ADR-D2-09 §7.1 property a
 
 ### 7.3 The execution contract in code
 
-Doc 7 §17–§19's contract, kept deliberately narrow:
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §17–§19's contract, kept deliberately narrow:
 
 ```python
 class Agent(Protocol):
     async def handle(
         self,
-        context: AgentExecutionContext,   # doc 7 §18
+        context: AgentExecutionContext,   # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §18
         capabilities: AgentCapabilities,  # ADR-D2-09 §7.1
-    ) -> AgentResult: ...                 # doc 7 §19
+    ) -> AgentResult: ...                 # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §19
 ```
 
 - `AgentExecutionContext` carries the graph state reference, workflow associations, claims
@@ -313,7 +313,7 @@ affiliation-specific.
 
 ### 7.4 Lifecycle and versioning
 
-Doc 7 §16's lifecycle and §21's versioning, composed with the release model:
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §16's lifecycle and §21's versioning, composed with the release model:
 
 | Status | Routable? | Meaning |
 |---|---|---|
@@ -329,7 +329,7 @@ closes the governance hole §2 identified.
 
 Agent version composes with the release bundle: the agent declaration, its graph version and its
 prompt versions are all part of one immutable release (ADR-D5-06). An agent version change is a
-release, and doc 20 §49's workflow-change governance applies.
+release, and 20.PF-FT-AI-GOVERNANCE.md §49's workflow-change governance applies.
 
 ### 7.5 When an agent needs something undeclared
 
@@ -337,11 +337,11 @@ DR-A-01's case, and the reason Option D was rejected. If an agent needs a tool o
 its declaration does not include:
 
 1. The need is a **design change**, not a runtime event.
-2. The declaration is amended, reviewed under doc 20 §93, and released.
+2. The declaration is amended, reviewed under 20.PF-FT-AI-GOVERNANCE.md §93, and released.
 3. Until then, the agent cannot do it — and the workflow step that needs it is blocked, visibly.
 
 This is friction by design. A runtime path to acquiring capability would make the reviewed
-declaration a floor rather than a boundary, and doc 20 §46's capability boundary would mean
+declaration a floor rather than a boundary, and 20.PF-FT-AI-GOVERNANCE.md §46's capability boundary would mean
 something weaker than it says.
 
 ### 7.6 Generality: the contract against a second workflow
@@ -363,7 +363,7 @@ Nothing in the declaration's *shape* is affiliation-specific. That is the design
 tests it rather than asserting it.
 
 **Status rationale.** Accepted. Tier 3 under ADR-D0-03 §7.1 — an internal contract design.
-Individual agent declarations are separately subject to doc 20 §93's agent review, which is where
+Individual agent declarations are separately subject to 20.PF-FT-AI-GOVERNANCE.md §93's agent review, which is where
 the capability boundary is approved.
 
 ## 8. Architecture Detail
@@ -379,7 +379,7 @@ flowchart TD
     C --> A[Agent code:<br/>node handlers]
     A --> RES[AgentResult]
 
-    D -.reviewed by.-> G[doc 20 §93<br/>agent review]
+    D -.reviewed by.-> G[20.PF-FT-AI-GOVERNANCE.md §93<br/>agent review]
 
     style D fill:#e8e8e8
     style G fill:#f5f5f5
@@ -390,7 +390,7 @@ which is why it is the right place to put the boundary.
 
 ### 8.2 What a reviewer sees
 
-Doc 20 §93's agent review, under this decision, reads one file and can state:
+20.PF-FT-AI-GOVERNANCE.md §93's agent review, under this decision, reads one file and can state:
 
 | Question | Answered by |
 |---|---|
@@ -417,7 +417,7 @@ mechanical.
 
 ### 9.1 Positive
 
-- An agent's permitted reach is one reviewable configuration file, satisfying doc 20 §46 and §93.
+- An agent's permitted reach is one reviewable configuration file, satisfying 20.PF-FT-AI-GOVERNANCE.md §46 and §93.
 - The declaration is enforced by the harness, so it constrains rather than describes.
 - Declared context requirements enable ADR-D2-08's execution planning.
 - Adding an agent changes no orchestration code (ADR-D1-11 §8.2).
@@ -449,7 +449,7 @@ mechanical.
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | The declaration bounds what an agent may reach; doc 7 §5's prohibitions are enforced by the harness resolving only declared capabilities. |
+| Enterprise decides; AI orchestrates | The declaration bounds what an agent may reach; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5's prohibitions are enforced by the harness resolving only declared capabilities. |
 | Authoritative-truth precedence | Declared context requirements resolve to ERC sections carrying provenance (ADR-D2-12). |
 | Four-state separation | The declaration is configuration; execution context carries references to the four state kinds without conflating them. |
 | Versioned artefacts, never mutated in place | §7.4: agent declaration, graph and prompts are versioned and released as an immutable bundle (ADR-D5-06). |
@@ -460,7 +460,7 @@ mechanical.
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | Declaration drifts from what the agent needs, blocking legitimate work | Medium | Medium | Medium | §7.5's amendment path; blocks are visible rather than silent; QM-03 | AI Engineering Lead | Medium |
-| RSK-02 | Declarations become permissive to avoid friction | Medium | High | High | Governance review of the declaration (doc 20 §93) is where over-permission is caught; QM-02 tracks allowlist size | Security Owner | Medium |
+| RSK-02 | Declarations become permissive to avoid friction | Medium | High | High | Governance review of the declaration (20.PF-FT-AI-GOVERNANCE.md §93) is where over-permission is caught; QM-02 tracks allowlist size | Security Owner | Medium |
 | RSK-03 | Contract proves affiliation-specific (DR-A-02) | Medium | High | High | ADR-D1-11 AC-04's paper-design review before Phase 23 exit; §7.6's element-by-element check | AI Solution Architect | Medium |
 | RSK-04 | A `draft` agent is routable in production | Low | High | Medium | §7.4: supervisor considers only `active` and `deprecated`; AC-04 | AI Engineering Lead | Low |
 | RSK-05 | Declaration granularity wrong (DR-A-03) | Medium | Low | Low | Reviewed at agent two; granularity is a configuration schema change, not a redesign | AI Solution Architect | Low |
@@ -547,7 +547,7 @@ appropriate, since reviewability is a property of what a human can do with the a
 | RT-02 | QM-02 shows over 30% of declared tools unused | Quarterly | Allowlists are wider than needed; tighten at review |
 | RT-03 | QM-03 shows blocked steps above 2 per quarter | Quarterly | Declaration granularity or amendment latency is wrong (DR-A-01) |
 | RT-04 | QM-01 records undeclared capability injection | Per build | Build failure; the harness resolved something the declaration did not permit |
-| RT-05 | Doc 20 §46 or §93 amended | Change notice | Re-derive what the declaration must carry |
+| RT-05 | 20.PF-FT-AI-GOVERNANCE.md §46 or §93 amended | Change notice | Re-derive what the declaration must carry |
 | RT-06 | Agent two requires contract amendment (DR-A-02) | Agent onboarding | Causal analysis; DR-N-01 has been breached |
 
 **Scheduled review:** 2027-08-21, or at Phase 23 exit.
@@ -557,7 +557,7 @@ appropriate, since reviewability is a property of what a human can do with the a
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-13 Agentic AI Architecture |
-| Specification sections | doc 7 §16 (Agent Lifecycle), §17 (Agent Execution Contract), §18 (Agent Execution Context), §19 (Agent Result), §20 (Agent Configuration), §21 (Agent Versioning), §22–§23 (Agent Capability Registry, Example), §24 (Agent Selection), §5 (agent prohibitions); doc 20 §45 (Agent Governance), §46 (Agent Capability Boundaries), §49 (Workflow Change), §93 (Agent Review) |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §16 (Agent Lifecycle), §17 (Agent Execution Contract), §18 (Agent Execution Context), §19 (Agent Result), §20 (Agent Configuration), §21 (Agent Versioning), §22–§23 (Agent Capability Registry, Example), §24 (Agent Selection), §5 (agent prohibitions); 20.PF-FT-AI-GOVERNANCE.md §45 (Agent Governance), §46 (Agent Capability Boundaries), §49 (Workflow Change), §93 (Agent Review) |
 | Requirement IDs | `FR-A39-03`, `FR-A39-20`, `NFR-A38-SEC` |
 | Build phases | 4 |
 | Code paths | `src/pf_ft_ai/orchestration/harness/`, `src/pf_ft_ai/agents/` |
@@ -570,4 +570,4 @@ appropriate, since reviewability is a property of what a human can do with the a
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Declaration-first: capability, context requirements, tools, prompts and limits declared in versioned configuration and enforced by the harness, so doc 20 §93's agent review reads one file rather than an implementation. Runtime capability negotiation rejected because it would make the reviewed declaration a floor rather than a boundary. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Declaration-first: capability, context requirements, tools, prompts and limits declared in versioned configuration and enforced by the harness, so 20.PF-FT-AI-GOVERNANCE.md §93's agent review reads one file rather than an implementation. Runtime capability negotiation rejected because it would make the reviewed declaration a floor rather than a boundary. |

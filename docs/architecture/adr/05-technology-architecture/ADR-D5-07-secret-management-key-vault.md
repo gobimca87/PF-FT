@@ -30,13 +30,13 @@ review_due: 2027-08-22
 PFF AI will store all secrets in **Azure Key Vault**, accessed at runtime via **Azure
 Managed Identity** (no secrets in images, env files or YAML), with configuration
 referencing secrets only through **`*_secret_ref` indirection** that resolves to a Key
-Vault secret at load time (doc 17 §6–§7, §10; doc 25 §28, §30–§32). Secrets are never
+Vault secret at load time (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §6–§7, §10; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §28, §30–§32). Secrets are never
 committed, logged or baked in.
 
 ## 2. Context and Problem Statement
 
-Doc 17 §6 separates configuration from secrets, §7 defines secret references, §10
-forbids YAML becoming the runtime secret source; doc 25 §28/§30–§32 define managed
+17.PF-FT-AI-CONFIGURATION-VERSIONING.md §6 separates configuration from secrets, §7 defines secret references, §10
+forbids YAML becoming the runtime secret source; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §28/§30–§32 define managed
 identity, Key Vault and secret management. Leaked secrets are among the highest-impact
 security failures. This ADR fixes where secrets live and how they are referenced and
 retrieved.
@@ -45,10 +45,10 @@ retrieved.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Secrets in Key Vault, referenced not embedded | doc 17 §6–§7; doc 25 §30–§31 |
-| DR-F-02 | Managed Identity access (no static creds) | doc 25 §28 |
-| DR-C-01 | No secrets in YAML/images/logs | doc 17 §10; ADR-D5-06 |
-| DR-N-01 | Rotation without redeploy | doc 25 §31; ADR-D6-05 |
+| DR-F-01 | Secrets in Key Vault, referenced not embedded | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §6–§7; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §30–§31 |
+| DR-F-02 | Managed Identity access (no static creds) | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §28 |
+| DR-C-01 | No secrets in YAML/images/logs | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §10; ADR-D5-06 |
+| DR-N-01 | Rotation without redeploy | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §31; ADR-D6-05 |
 
 ### 3.4 Assumptions
 
@@ -92,7 +92,7 @@ audit than KV; secrets in etcd.
 **Description.** Secrets via env vars.
 **Strengths.** Simplest.
 **Weaknesses.** Easily leaked (logs, crash dumps, process listings); no rotation/audit;
-violates doc 17 §10.
+violates 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §10.
 **Cost / effort.** Low; unsafe.
 
 ### 5.4 Option D — HashiCorp Vault (self-hosted)
@@ -115,12 +115,12 @@ extra driver to manage. A viable variant of A.
 
 | Option | Eliminated by |
 |---|---|
-| Secrets in Git (even encrypted-at-rest repo) | doc 17 §10 — never |
+| Secrets in Git (even encrypted-at-rest repo) | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §10 — never |
 | Baking secrets into the image | ADR-D5-09 image immutability + leakage |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 17 §6–§10 and doc 25 §28–§32.
+**Method.** Weighted scoring against §4, informed by 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §6–§10 and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §28–§32.
 
 | Criterion | Weight | A: KV+MI+ref | B: K8s Secrets | C: env/.env | D: Vault | E: KV+CSI |
 |---|---|---|---|---|---|---|
@@ -148,7 +148,7 @@ reached over a private endpoint (ADR-D6-04) and rotation is supported without re
 are required. K8s-Secrets-only (B), env/.env (C) and self-hosted Vault (D) are
 rejected. No secret is ever committed, baked, or logged.
 
-**Status rationale.** `Accepted` — doc 17 §6–§10 and doc 25 §30–§32 govern this.
+**Status rationale.** `Accepted` — 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §6–§10 and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §30–§32 govern this.
 
 ## 8. Architecture Detail
 
@@ -263,7 +263,7 @@ rejected. No secret is ever committed, baked, or logged.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | doc 17 §6–§7, §10; doc 25 §28, §30–§32 |
+| Specification sections | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §6–§7, §10; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §28, §30–§32 |
 | Requirement IDs | SEC-KV-* |
 | Build phases | 1, 7 |
 | Code paths | `src/pf_ft_ai/config/` |

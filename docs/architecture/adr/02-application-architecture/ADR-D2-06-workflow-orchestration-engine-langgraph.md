@@ -36,10 +36,10 @@ engine is replaceable at bounded cost.
 
 ## 2. Context and Problem Statement
 
-`CLAUDE.md` lists LangGraph under Confirmed Tech Stack. Doc 7 §9 assigns it responsibility, §25
+`CLAUDE.md` lists LangGraph under Confirmed Tech Stack. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §9 assigns it responsibility, §25
 gives an example `AffiliationGraph`, §28 lists twenty typical nodes, §29 classifies nodes as
-deterministic or AI, §30 gives edge types. Doc 1 §12 and §13 cover LangGraph and
-sequential/parallel/hybrid execution. Doc 1 §39 criterion 4 requires that *"LangGraph supports
+deterministic or AI, §30 gives edge types. 1 PF-FT-AI-ARCHITECTURE.md §12 and §13 cover LangGraph and
+sequential/parallel/hybrid execution. 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 4 requires that *"LangGraph supports
 sequential and parallel AI execution."*
 
 The engine choice is therefore settled, and an ADR that merely restated it would be recording a
@@ -57,9 +57,9 @@ real operational cost. Two positions are available:
   nodes and edges and traversing it, including conditional and parallel branches — and own
   everything else.
 
-The choice is consequential because of what the platform's requirements actually are. Doc 1 §39
-criterion 13 requires long-running workflows to survive request termination. Doc 2 §29 requires
-HIL suspension across days. Doc 11 §55 requires resume driven by Service Bus events. ADR-D2-03
+The choice is consequential because of what the platform's requirements actually are. 1 PF-FT-AI-ARCHITECTURE.md §39
+criterion 13 requires long-running workflows to survive request termination. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29 requires
+HIL suspension across days. 11 PF-FT-AI-SERVICE-BUS.md §55 requires resume driven by Service Bus events. ADR-D2-03
 §7.3 requires an event-triggered resume to run under a *captured authorization context* that is
 validated before use. ADR-D1-02 requires six invariants enforced at platform boundaries.
 
@@ -78,12 +78,12 @@ mechanisms, or use the framework for graph traversal and build the requirements 
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Sequential, parallel and hybrid AI execution must be supported | doc 1 §39 criterion 4; doc 1 §13 |
-| DR-F-02 | Long-running workflows must survive request termination | doc 1 §39 criterion 13; doc 2 §28 |
-| DR-F-03 | Nodes must be classifiable as deterministic or AI | doc 7 §29 |
-| DR-F-04 | Graph state must be strongly typed and reference-based | doc 7 §26–§27; ADR-D2-07 |
+| DR-F-01 | Sequential, parallel and hybrid AI execution must be supported | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 4; 1 PF-FT-AI-ARCHITECTURE.md §13 |
+| DR-F-02 | Long-running workflows must survive request termination | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §28 |
+| DR-F-03 | Nodes must be classifiable as deterministic or AI | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29 |
+| DR-F-04 | Graph state must be strongly typed and reference-based | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26–§27; ADR-D2-07 |
 | DR-F-05 | Resume must run under a captured, revalidated authorization context | ADR-D2-03 §7.3 |
-| DR-F-06 | Each agent may have its own graph | doc 7 §25 |
+| DR-F-06 | Each agent may have its own graph | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §25 |
 
 ### 3.2 Non-functional drivers
 
@@ -106,7 +106,7 @@ mechanisms, or use the framework for graph traversal and build the requirements 
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | LangGraph's graph model expresses the node and edge shapes doc 7 §28–§30 require | Some workflow shapes need bespoke traversal | Phase 4 spike against the affiliation graph |
+| DR-A-01 | LangGraph's graph model expresses the node and edge shapes 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §28–§30 require | Some workflow shapes need bespoke traversal | Phase 4 spike against the affiliation graph |
 | DR-A-02 | Framework churn is a real cost worth insulating against | Bounded adoption is unnecessary caution | Observed over the platform's life; QM-04 |
 | DR-A-03 | Platform-owned durability outperforms framework checkpointing for this workload | Reinventing a solved problem | Phase 12 resumption testing |
 
@@ -114,7 +114,7 @@ mechanisms, or use the framework for graph traversal and build the requirements 
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Fitness for the platform's actual durability and HIL requirements | 30 | Doc 1 §39 criterion 13 and ADR-D2-03 §7.3 are unusual requirements; a mechanism that half-fits is worse than none | Does the mechanism satisfy captured-context revalidation and multi-day, cross-workload resume? |
+| EC-01 | Fitness for the platform's actual durability and HIL requirements | 30 | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13 and ADR-D2-03 §7.3 are unusual requirements; a mechanism that half-fits is worse than none | Does the mechanism satisfy captured-context revalidation and multi-day, cross-workload resume? |
 | EC-02 | Replaceability of the engine | 25 | Frameworks churn; vendor lock-in is an ADR-D8-10 concern | Files needing change to swap engines |
 | EC-03 | Development effort | 20 | Building what a framework provides is waste, if it fits | Code written versus inherited |
 | EC-04 | Upgrade safety | 15 | A breaking framework change must not break platform semantics | Blast radius of a major version bump |
@@ -146,8 +146,8 @@ for merge semantics, built-in retry policies and its tracing integration.
   revalidation onto a checkpointer means reimplementing most of it anyway (EC-01).
 - Interrupts are designed for in-process human input, not for a workflow suspended for three days
   and resumed by a Service Bus message on a different workload.
-- Framework retry policies would compete with the platform's own retry hierarchy (doc 4 §56) and
-  its idempotency model (doc 10 §45–§47), producing two retry layers with different semantics.
+- Framework retry policies would compete with the platform's own retry hierarchy (4. PF-FT-AI-RUNTIME.md §56) and
+  its idempotency model (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47), producing two retry layers with different semantics.
 - Engine replacement becomes a rewrite of durability, HIL and retry (EC-02).
 - A breaking change to checkpointing is a breaking change to the platform's core guarantee
   (EC-04).
@@ -212,9 +212,9 @@ for cross-turn HIL suspension.
 - Temporal adds substantial operational surface — a cluster to run — for a platform whose
   durability needs are met by durable state plus event-driven resume.
 - A bespoke engine forfeits LangGraph's genuine strength: expressing conditional and parallel
-  graph traversal declaratively, which doc 7 §30 and doc 1 §13 both require.
+  graph traversal declaratively, which 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §30 and 1 PF-FT-AI-ARCHITECTURE.md §13 both require.
 - Recorded to show the confirmed choice is defensible: LangGraph's declarative graph model is a
-  good fit for doc 7 §25–§30's node and edge shapes, which is the part the platform actually
+  good fit for 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §25–§30's node and edge shapes, which is the part the platform actually
   needs.
 
 **Cost / effort.** Not pursued.
@@ -251,8 +251,8 @@ than C in any case.
 Within scope for LangGraph:
 
 - declaring nodes and their handlers;
-- declaring edges, including conditional edges (doc 7 §30);
-- fan-out and fan-in for parallel branches (doc 7 §34; doc 1 §13);
+- declaring edges, including conditional edges (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §30);
+- fan-out and fan-in for parallel branches (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §34; 1 PF-FT-AI-ARCHITECTURE.md §13);
 - traversing the graph and invoking node handlers in order;
 - carrying the typed state object between nodes (ADR-D2-07).
 
@@ -262,8 +262,8 @@ Within scope for LangGraph:
 |---|---|---|
 | Durability and workflow persistence | `application/workflows/` + ADR-D4-10 store | Must survive pod restart and workload change across days; must be readable by the event consumer, not just the API workload (ADR-D2-03) |
 | HIL suspension and resume | ADR-D2-10 | Resume is event-driven, cross-workload, and requires captured-context revalidation (ADR-D2-03 §7.3) |
-| Retry and timeout | ADR-D2-11; doc 4 §55–§56 | One hierarchy; framework retries would compete with tool-level and API-level retry and with the idempotency model |
-| Idempotency | doc 10 §45–§47 | Tied to enterprise operation semantics, not graph traversal |
+| Retry and timeout | ADR-D2-11; 4. PF-FT-AI-RUNTIME.md §55–§56 | One hierarchy; framework retries would compete with tool-level and API-level retry and with the idempotency model |
+| Idempotency | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47 | Tied to enterprise operation semantics, not graph traversal |
 | Guardrails | ADR-D1-02; `guardrails/` | Enforced at platform boundaries, applying identically on both runtime paths |
 | ERC assembly | `context/`; ADR-D2-12 | Platform concern; graph nodes invoke it |
 | Tool execution and authorization | `integration/tools/`; ADR-D6-10 | Allowlist and validation are security controls, not traversal |
@@ -282,10 +282,10 @@ work lives — portable.
 
 ### 7.4 Node classification
 
-Doc 7 §29's deterministic/AI classification is adopted and made structural. Every node declares
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29's deterministic/AI classification is adopted and made structural. Every node declares
 its class:
 
-| Class | Examples (doc 7 §28) | Property |
+| Class | Examples (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §28) | Property |
 |---|---|---|
 | **Deterministic** | `validate_request`, `authorize_tool`, `execute_tool`, `validate_tool_result`, `build_erc`, `validate_erc`, `validate_output` | No model inference. Reproducible. Testable without an SLM. |
 | **AI** | `identify_intent`, `identify_entities`, `reason`, `select_tool`, `generate_response` | Model inference. Non-deterministic above temperature 0. Requires evaluation, not only unit tests. |
@@ -297,15 +297,15 @@ significant change.
 
 ### 7.5 One graph per agent
 
-Per doc 7 §25, each agent declares its own graph. `AffiliationGraph` is built from doc 7 §28's
-node vocabulary, using the subset affiliation needs — doc 7 §28 notes explicitly that *"not every
+Per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §25, each agent declares its own graph. `AffiliationGraph` is built from 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §28's
+node vocabulary, using the subset affiliation needs — 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §28 notes explicitly that *"not every
 workflow requires every node."*
 
 Graphs are constructed from a declarative definition rather than assembled imperatively, so that
 graph structure is inspectable, diffable and versionable as a configuration artefact (ADR-D5-06),
 not buried in code.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — LangGraph architecture is a doc 2
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — LangGraph architecture is a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §52 category — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -398,7 +398,7 @@ concrete expression of ADR-D8-10's portability concern.
 
 - LangGraph remains the confirmed engine per `CLAUDE.md`; this decision sets its depth, not its
   identity.
-- Doc 7 §25–§30's node and edge model is adopted essentially unchanged.
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §25–§30's node and edge model is adopted essentially unchanged.
 
 ### 9.4 Trade-offs explicitly accepted
 
@@ -413,9 +413,9 @@ concrete expression of ADR-D8-10's portability concern.
 | Constraint | Conformance |
 |---|---|
 | Enterprise decides; AI orchestrates | The graph orchestrates AI execution only. Business decisions occur in enterprise systems reached through tool nodes; no graph node evaluates a business rule (ADR-D1-02 I-6). |
-| Authoritative-truth precedence | Graph state holds *references* to ERC rather than copies (doc 7 §27), so precedence and provenance stay with the ERC service and cannot be lost in a state transition. |
+| Authoritative-truth precedence | Graph state holds *references* to ERC rather than copies (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27), so precedence and provenance stay with the ERC service and cannot be lost in a state transition. |
 | Four-state separation | Graph state is Workflow/Agent State. It references conversation and session by identifier and holds no enterprise business state. ADR-D2-07 enforces this at the type level. |
-| Versioned artefacts, never mutated in place | Graph definitions are declarative and versioned per ADR-D5-06; agents are versioned per doc 7 §21. |
+| Versioned artefacts, never mutated in place | Graph definitions are declarative and versioned per ADR-D5-06; agents are versioned per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §21. |
 | Adam persona governs how, never what | `generate_response` is an AI node whose output passes the persona layer and then the output guardrail; the graph does not shape language. |
 
 ## 11. Risks and Mitigations
@@ -427,7 +427,7 @@ concrete expression of ADR-D8-10's portability concern.
 | RSK-03 | LangGraph's graph model cannot express a required shape (DR-A-01) | Low | Medium | Low | Phase 4 spike against the full `AffiliationGraph`; a shape it cannot express is handled in the handler, not by escaping the boundary | AI Solution Architect | Low |
 | RSK-04 | Breaking framework change forces significant rework despite the boundary | Low | Medium | Low | Version pinned (ADR-D5-04); upgrade tested against the affiliation graph; blast radius is one package | AI Engineering Lead | Low |
 | RSK-05 | Node classification (§7.4) treated as documentation rather than structure | Medium | Medium | Medium | Class declared on every node and asserted in tests; determines test strategy and output validation | AI Engineering Lead | Low |
-| RSK-06 | Graph state grows large, defeating doc 7 §27's reference rule | Medium | Medium | Medium | ADR-D2-07's reference-only rule with a size assertion in tests | AI Engineering Lead | Low |
+| RSK-06 | Graph state grows large, defeating 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27's reference rule | Medium | Medium | Medium | ADR-D2-07's reference-only rule with a size assertion in tests | AI Engineering Lead | Low |
 
 ## 12. Quantitative Targets and Measures
 
@@ -448,9 +448,9 @@ occurrence means the boundary leaked somewhere QM-02 did not catch.
 | Dimension | Impact |
 |---|---|
 | Attack surface change | Confining the framework to one package limits the code paths through which a framework vulnerability could be reached. Node handlers, where user-influenced data flows, contain no framework code. |
-| Data classification touched | Graph state references personal data in ERC rather than carrying it, per doc 7 §27 — which limits what is serialised at suspension. |
+| Data classification touched | Graph state references personal data in ERC rather than carrying it, per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27 — which limits what is serialised at suspension. |
 | Personal data / PII | Persisted workflow state carries references and identifiers, not personal data copies. A three-day suspension therefore does not park personal data in workflow storage. |
-| Children's data and safeguarding | Safeguarding facts stay in ERC behind a reference, so a suspended affiliation workflow does not persist a named individual's DBS status in workflow state. That is a direct consequence of doc 7 §27's reference rule and is worth the explicit note. |
+| Children's data and safeguarding | Safeguarding facts stay in ERC behind a reference, so a suspended affiliation workflow does not persist a named individual's DBS status in workflow state. That is a direct consequence of 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27's reference rule and is worth the explicit note. |
 | UK GDPR lawful basis and rights impact | Reference-based state supports minimisation (Art. 5(1)(c)) and simplifies erasure — deleting ERC removes the data, leaving a dangling reference rather than an orphaned copy. |
 | Audit and evidential requirements | Each node emits a span through the platform's Langfuse client (ADR-D7-02), giving a uniform trace across both runtime paths rather than a framework-specific one. |
 | Standards touched | ISO/IEC 27001 A.8.25–A.8.28 (secure development, architecture), A.8.29 (security testing); ISO/IEC 42001 (AI system components); NIST AI RMF MAP 2.1. |
@@ -521,7 +521,7 @@ framework types, a version bump would strand suspended workflows.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture |
-| Specification sections | doc 7 §9 (LangGraph Responsibility), §25 (LangGraph Graph Model), §26–§27 (Graph State, Graph State Rule), §28 (Graph Nodes), §29 (Deterministic vs AI Nodes), §30 (Graph Edge Types), §34 (Fan-Out/Fan-In); doc 1 §12 (LangGraph), §13 (Sequential/Parallel/Hybrid), §39 criteria 4, 13; doc 2 §11 (LangGraph Execution Architecture), §13 (Execution Pattern), §28 (Durable Workflow Architecture); doc 4 §19–§20, §55–§56; `CLAUDE.md` |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §9 (LangGraph Responsibility), §25 (LangGraph Graph Model), §26–§27 (Graph State, Graph State Rule), §28 (Graph Nodes), §29 (Deterministic vs AI Nodes), §30 (Graph Edge Types), §34 (Fan-Out/Fan-In); 1 PF-FT-AI-ARCHITECTURE.md §12 (LangGraph), §13 (Sequential/Parallel/Hybrid), §39 criteria 4, 13; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §11 (LangGraph Execution Architecture), §13 (Execution Pattern), §28 (Durable Workflow Architecture); 4. PF-FT-AI-RUNTIME.md §19–§20, §55–§56; `CLAUDE.md` |
 | Requirement IDs | `FR-A39-04`, `FR-A39-13`, `NFR-A38-MAINT` |
 | Build phases | 4 |
 | Code paths | `src/pf_ft_ai/orchestration/langgraph/` |

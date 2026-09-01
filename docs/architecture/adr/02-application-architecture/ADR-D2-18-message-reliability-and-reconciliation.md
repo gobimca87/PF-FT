@@ -36,9 +36,9 @@ backstop, and it is deliberately kept a backstop.
 
 ## 2. Context and Problem Statement
 
-Doc 11 §40–§44 cover idempotency, keys, store, states and concurrent duplicates. §45–§47 cover
+11 PF-FT-AI-SERVICE-BUS.md §40–§44 cover idempotency, keys, store, states and concurrent duplicates. §45–§47 cover
 ordering, sequence and stale events. §48–§49 cover eventual consistency and event-to-enterprise
-verification. §56 covers resume safety. Doc 3 §37 assigns idempotency responsibility. Doc 4 §47
+verification. §56 covers resume safety. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §37 assigns idempotency responsibility. 4. PF-FT-AI-RUNTIME.md §47
 covers the Service Bus runtime.
 
 Service Bus gives at-least-once delivery. Duplicates are normal — a lock expiring during a slow
@@ -61,7 +61,7 @@ for ordering. Both narrow the problem and neither eliminates it, and both add co
 duplicate-detection window has a finite duration; sessions serialise processing per session key,
 which limits throughput.
 
-**What idempotency key?** Doc 11 §41 requires one. Event ID is the obvious choice and catches only
+**What idempotency key?** 11 PF-FT-AI-SERVICE-BUS.md §41 requires one. Event ID is the obvious choice and catches only
 literal redelivery of the same message. Two distinct events describing the same enterprise
 transition — an approval published twice with different event IDs after a producer retry — would
 both process.
@@ -76,12 +76,12 @@ broken event path.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Event processing must be idempotent | doc 11 §40–§44; doc 3 §37 |
-| DR-F-02 | Concurrent duplicates must be handled | doc 11 §44 |
-| DR-F-03 | Ordering must not be assumed | doc 11 §45–§46 |
-| DR-F-04 | Stale events must be detected | doc 11 §47 |
-| DR-F-05 | Eventual consistency must be accommodated | doc 11 §48 |
-| DR-F-06 | Resume must be safe against duplicate and stale triggers | doc 11 §56; ADR-D2-10 §7.5 |
+| DR-F-01 | Event processing must be idempotent | 11 PF-FT-AI-SERVICE-BUS.md §40–§44; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §37 |
+| DR-F-02 | Concurrent duplicates must be handled | 11 PF-FT-AI-SERVICE-BUS.md §44 |
+| DR-F-03 | Ordering must not be assumed | 11 PF-FT-AI-SERVICE-BUS.md §45–§46 |
+| DR-F-04 | Stale events must be detected | 11 PF-FT-AI-SERVICE-BUS.md §47 |
+| DR-F-05 | Eventual consistency must be accommodated | 11 PF-FT-AI-SERVICE-BUS.md §48 |
+| DR-F-06 | Resume must be safe against duplicate and stale triggers | 11 PF-FT-AI-SERVICE-BUS.md §56; ADR-D2-10 §7.5 |
 
 ### 3.2 Non-functional drivers
 
@@ -96,7 +96,7 @@ broken event path.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | An event is a notification; authoritative values come from a refresh | Platform | ADR-D2-03 §7.4 |
-| DR-C-02 | Blind retry of enterprise transactions is forbidden | Platform | doc 2 §48; ADR-D2-11 |
+| DR-C-02 | Blind retry of enterprise transactions is forbidden | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48; ADR-D2-11 |
 | DR-C-03 | The platform is a pure consumer | Platform | ADR-D2-16 §7.1 |
 | DR-C-04 | Idempotency state must be separated by key namespace | Platform | ADR-D4-12 |
 
@@ -148,7 +148,7 @@ by workflow instance to guarantee ordered processing.
 
 ### 5.2 Option B — Application-level idempotency with state-based reconciliation, no ordering assumption
 
-**Description.** Deduplicate on event ID with a persisted idempotency store (doc 11 §42–§43).
+**Description.** Deduplicate on event ID with a persisted idempotency store (11 PF-FT-AI-SERVICE-BUS.md §42–§43).
 Additionally check workflow position before advancing. Do not assume ordering; instead, every
 event triggers a refresh and the workflow reacts to **current** enterprise state. Dead-letter
 anything unprocessable. Reconcile periodically as a backstop.
@@ -164,7 +164,7 @@ anything unprocessable. Reconcile periodically as a backstop.
 - Consistent with ADR-D2-03 §7.4's notification model — the refresh is doing the work.
 
 **Weaknesses.**
-- Idempotency store to operate and expire (doc 11 §42).
+- Idempotency store to operate and expire (11 PF-FT-AI-SERVICE-BUS.md §42).
 - Every event costs a refresh call, even where the payload would have sufficed.
 - Reconciliation is another moving part.
 - Relies on DR-A-01: state-based reaction genuinely covering ordering.
@@ -173,7 +173,7 @@ anything unprocessable. Reconcile periodically as a backstop.
 
 ### 5.3 Option C — Sequence-number ordering with buffering
 
-**Description.** Use doc 11 §46's event sequence to detect gaps, buffering out-of-order events
+**Description.** Use 11 PF-FT-AI-SERVICE-BUS.md §46's event sequence to detect gaps, buffering out-of-order events
 until predecessors arrive.
 
 **Strengths.**
@@ -240,12 +240,12 @@ numbers is unvalidated and its buffering converts a lost event into a blocked st
 
 | Level | Mechanism | Catches |
 |---|---|---|
-| **Event ID deduplication** | Persisted idempotency store keyed on `event_id` (doc 11 §41–§43), with states per doc 11 §43 | Literal redelivery of the same message, including after a consumer restart |
+| **Event ID deduplication** | Persisted idempotency store keyed on `event_id` (11 PF-FT-AI-SERVICE-BUS.md §41–§43), with states per 11 PF-FT-AI-SERVICE-BUS.md §43 | Literal redelivery of the same message, including after a consumer restart |
 | **Workflow position check** | Before advancing, compare the workflow's current position against what the event implies | Distinct events describing the same transition; late events for an already-advanced workflow |
 
 Neither alone is sufficient. Event ID misses a producer retry that generated a new ID; position
 checking misses a duplicate arriving before the first was processed. Together they cover both, and
-doc 11 §44's concurrent-duplicate case is handled by the idempotency store's in-progress state
+11 PF-FT-AI-SERVICE-BUS.md §44's concurrent-duplicate case is handled by the idempotency store's in-progress state
 plus single-flight resume (ADR-D2-10 §7.5).
 
 The idempotency store lives in its own key namespace (DR-C-04, ADR-D4-12), separate from cache and
@@ -270,7 +270,7 @@ The middle row is the important one and is why Option C's buffering is unnecessa
 does not need the approval to be processed before the cancellation, because it never trusts either
 event's content. It asks the enterprise, and the enterprise's answer is order-independent.
 
-Doc 11 §47's stale-event handling falls out of the same mechanism: an event describing a
+11 PF-FT-AI-SERVICE-BUS.md §47's stale-event handling falls out of the same mechanism: an event describing a
 transition the enterprise has already moved past produces a refresh showing current state, and the
 workflow acts on that.
 
@@ -322,7 +322,7 @@ worse than no backstop, because the breakage is never fixed.
 
 ### 7.6 Eventual consistency is accommodated, not fought
 
-Doc 11 §48 acknowledges eventual consistency. An event may arrive before the enterprise's own read
+11 PF-FT-AI-SERVICE-BUS.md §48 acknowledges eventual consistency. An event may arrive before the enterprise's own read
 model reflects the change, so a refresh immediately after an event can return pre-change state.
 
 Handling: the refresh compares the returned state against what the event implied. Where they
@@ -333,7 +333,7 @@ acts on what the enterprise returned — DR-C-01 and ADR-D1-03 give the API auth
 This is a bounded read-your-writes accommodation, not a general retry loop, and it is bounded
 precisely because the enterprise response is authoritative even when it looks stale.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — eventing is a named doc 2 §52
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — eventing is a named 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
 category — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -370,13 +370,13 @@ out-of-order straggler.
 
 | Property | Decision |
 |---|---|
-| Key | `event_id` from the envelope (doc 11 §41) |
-| States | `in_progress`, `completed`, `failed` (doc 11 §43) |
+| Key | `event_id` from the envelope (11 PF-FT-AI-SERVICE-BUS.md §41) |
+| States | `in_progress`, `completed`, `failed` (11 PF-FT-AI-SERVICE-BUS.md §43) |
 | Backing store | Azure Managed Redis (ADR-D4-10), own key namespace (ADR-D4-12) |
 | Retention | Longer than the maximum realistic redelivery interval, exceeding a broker window |
-| Concurrency | Atomic set-if-absent for the in-progress transition (doc 11 §44) |
+| Concurrency | Atomic set-if-absent for the in-progress transition (11 PF-FT-AI-SERVICE-BUS.md §44) |
 
-The atomic transition is what makes doc 11 §44's concurrent-duplicate case safe: two consumer
+The atomic transition is what makes 11 PF-FT-AI-SERVICE-BUS.md §44's concurrent-duplicate case safe: two consumer
 replicas receiving the same message race on the store, one proceeds, the other abandons.
 
 ### 8.3 Worked: the cancellation-before-approval case
@@ -421,7 +421,7 @@ of the truth.
 
 - Broker duplicate detection and sessions are deliberately unused; the platform's own mechanisms
   are stronger for multi-day suspensions.
-- Doc 11 §46's sequence numbers are not relied upon.
+- 11 PF-FT-AI-SERVICE-BUS.md §46's sequence numbers are not relied upon.
 
 ### 9.4 Trade-offs explicitly accepted
 
@@ -473,7 +473,7 @@ producer-side retries generating new IDs — useful to know and to raise.
 |---|---|
 | Attack surface change | The idempotency store holds event IDs and states, no personal data. Dead-lettered messages retain their payloads and are subject to the same retention and access controls as the subscription. |
 | Data classification touched | Event IDs and workflow positions — Internal. |
-| Personal data / PII | Idempotency entries hold identifiers only. Dead-lettered events hold whatever the event held, which is identifiers by design (doc 11 §24). |
+| Personal data / PII | Idempotency entries hold identifiers only. Dead-lettered events hold whatever the event held, which is identifiers by design (11 PF-FT-AI-SERVICE-BUS.md §24). |
 | Children's data and safeguarding | A duplicate or out-of-order compliance event could otherwise cause a stale safeguarding status to be applied. §7.2's state-based reaction means the status always comes from a current refresh, regardless of what arrived when. |
 | UK GDPR lawful basis and rights impact | Idempotency retention is bounded and holds no personal data; dead-letter retention follows the subscription's policy. |
 | Audit and evidential requirements | Every event's processing outcome — completed, duplicate, dead-lettered with reason — is recorded, giving a complete account of what the platform did with each notification. |
@@ -496,7 +496,7 @@ producer-side retries generating new IDs — useful to know and to raise.
 | ID | Acceptance criterion | Verification method |
 |---|---|---|
 | AC-01 | A duplicate event produces no second effect | Duplicate delivery test; QM-01 |
-| AC-02 | Two concurrent deliveries of one event result in one processing | Concurrency test per doc 11 §44 |
+| AC-02 | Two concurrent deliveries of one event result in one processing | Concurrency test per 11 PF-FT-AI-SERVICE-BUS.md §44 |
 | AC-03 | A cancellation followed by a superseded approval leaves the workflow cancelled | §8.3 out-of-order test |
 | AC-04 | A handler exception dead-letters after bounded retries, without blocking the subscription | Failure injection test |
 | AC-05 | Message redelivery triggers no enterprise write | Redelivery test with a write-bearing workflow; QM-07 |
@@ -543,7 +543,7 @@ AC-07 is the specific check on why broker duplicate detection was not relied upo
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-11 Event Notification & Real-Time Synchronization |
-| Specification sections | doc 11 §40 (Idempotency), §41 (Idempotency Key), §42 (Idempotency Store), §43 (Idempotency States), §44 (Concurrent Duplicate Events), §45–§46 (Event Ordering, Sequence), §47 (Stale Event), §48 (Eventual Consistency), §49 (Event-to-Enterprise Verification), §56 (Workflow Resume Safety); doc 4 §47; doc 3 §37 (Idempotency Responsibility); doc 2 §48 |
+| Specification sections | 11 PF-FT-AI-SERVICE-BUS.md §40 (Idempotency), §41 (Idempotency Key), §42 (Idempotency Store), §43 (Idempotency States), §44 (Concurrent Duplicate Events), §45–§46 (Event Ordering, Sequence), §47 (Stale Event), §48 (Eventual Consistency), §49 (Event-to-Enterprise Verification), §56 (Workflow Resume Safety); 4. PF-FT-AI-RUNTIME.md §47; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §37 (Idempotency Responsibility); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-RECOV` |
 | Build phases | 12 |
 | Code paths | `src/pf_ft_ai/messaging/reliability/` |

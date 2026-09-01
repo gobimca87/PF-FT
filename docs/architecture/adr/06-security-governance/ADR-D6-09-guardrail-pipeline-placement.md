@@ -29,13 +29,13 @@ review_due: 2027-08-22
 PFF AI will run a **guardrail pipeline at six enforcement boundaries** — user input,
 pre-SLM prompt, SLM output, pre-tool-call, tool/API/RAG result ingestion, and
 user-facing output — each returning a structured guardrail result and **failing closed**
-on violation (doc 18 §3–§5, §9–§12, §51, §54–§55). Guardrails are a mandatory,
+on violation (18.PF-FT-AI-GUARDRAILS.md §3–§5, §9–§12, §51, §54–§55). Guardrails are a mandatory,
 versioned pipeline, not scattered checks; defense-in-depth means a bypass at one
 boundary is caught at another.
 
 ## 2. Context and Problem Statement
 
-Doc 18 §3–§5 define the guardrail architecture, layers and defense-in-depth; §9–§12 the
+18.PF-FT-AI-GUARDRAILS.md §3–§5 define the guardrail architecture, layers and defense-in-depth; §9–§12 the
 decision model, result, fail-closed handling and pipeline; §51/§54–§55 output validation,
 invalid-output and repair. Where guardrails run determines what they can catch. Ad-hoc
 placement leaves gaps. This ADR fixes the six boundaries and the fail-closed policy that
@@ -45,10 +45,10 @@ the injection (ADR-D6-08), tool (ADR-D6-10) and RAG (ADR-D6-12) rules plug into.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Guardrails at every trust boundary | doc 18 §4–§5 |
-| DR-F-02 | Structured result + fail-closed | doc 18 §10–§11 |
-| DR-F-03 | Defense-in-depth (multiple boundaries) | doc 18 §5 |
-| DR-C-01 | Mandatory, versioned pipeline | doc 18 §3; CLAUDE.md |
+| DR-F-01 | Guardrails at every trust boundary | 18.PF-FT-AI-GUARDRAILS.md §4–§5 |
+| DR-F-02 | Structured result + fail-closed | 18.PF-FT-AI-GUARDRAILS.md §10–§11 |
+| DR-F-03 | Defense-in-depth (multiple boundaries) | 18.PF-FT-AI-GUARDRAILS.md §5 |
+| DR-C-01 | Mandatory, versioned pipeline | 18.PF-FT-AI-GUARDRAILS.md §3; CLAUDE.md |
 
 ### 3.4 Assumptions
 
@@ -112,12 +112,12 @@ latency, while high-risk ones stay blocking.
 
 | Option | Eliminated by |
 |---|---|
-| Optional/per-call guardrails | doc 18 §3 — mandatory |
-| Fail-open on error | doc 18 §11 — fail closed |
+| Optional/per-call guardrails | 18.PF-FT-AI-GUARDRAILS.md §3 — mandatory |
+| Fail-open on error | 18.PF-FT-AI-GUARDRAILS.md §11 — fail closed |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 18 §3–§12/§51/§54–§55.
+**Method.** Weighted scoring against §4, informed by 18.PF-FT-AI-GUARDRAILS.md §3–§12/§51/§54–§55.
 
 | Criterion | Weight | A: Six-boundary | B: In/out only | C: Single central | D: Ad-hoc | E: Six + async |
 |---|---|---|---|---|---|---|
@@ -148,7 +148,7 @@ Reduced placements (B/C/D) are rejected.
 
 - `src/pf_ft_ai/guardrails/`: a `GuardrailPipeline` invoked at each boundary with a
   boundary-specific rule set; returns `GuardrailResult` (allow/block/transform + reason,
-  doc 18 §10); fail-closed on block or error (§11).
+  18.PF-FT-AI-GUARDRAILS.md §10); fail-closed on block or error (§11).
 - Boundaries wire into: API input, prompt composer (ADR-D3-12), SLM output (ADR-D3-19
   before streaming), harness pre-tool + tool-result (ADR-D3-04/D2-09), RAG ingestion
   (ADR-D6-12), final output (PII redaction ADR-D6-06, portal-link strip ADR-D2-19).
@@ -259,7 +259,7 @@ Reduced placements (B/C/D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | doc 18 §3–§12, §51, §54–§55 |
+| Specification sections | 18.PF-FT-AI-GUARDRAILS.md §3–§12, §51, §54–§55 |
 | Requirement IDs | SEC-GR-* |
 | Build phases | 9 |
 | Code paths | `src/pf_ft_ai/guardrails/` |

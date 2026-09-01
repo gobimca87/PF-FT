@@ -30,12 +30,12 @@ review_due: 2027-08-22
 PFF AI will be built in **Python** with **FastAPI** as the HTTP API framework. Python
 is the lingua franca of the AI/agent ecosystem (LangGraph, Hugging Face, embeddings,
 evaluation tooling), and FastAPI provides async-first, Pydantic-native, OpenAPI-typed
-endpoints that match the platform's boundary-typing and async-I/O conventions (doc 27
+endpoints that match the platform's boundary-typing and async-I/O conventions (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md
 §9, §27–§29; CLAUDE.md). This is a confirmed choice; the ADR records the reasoning.
 
 ## 2. Context and Problem Statement
 
-Doc 27 §9 fixes the Python version and §27–§29 the FastAPI standard, endpoint flow and
+27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9 fixes the Python version and §27–§29 the FastAPI standard, endpoint flow and
 API versioning; CLAUDE.md names Python + FastAPI as the confirmed stack. The AI
 orchestration layer must integrate LangGraph (ADR-D2-06), the Hugging Face SLM/
 embedding stack (ADR-D3-13/23) and Python-centric evaluation tooling. The language and
@@ -47,15 +47,15 @@ it prevents drift and documents why alternatives were not chosen.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | First-class AI/agent ecosystem (LangGraph, HF) | CLAUDE.md; ADR-D2-06 |
-| DR-F-02 | Async-first HTTP with typed boundaries | doc 27 §24, §27; CLAUDE.md |
-| DR-F-03 | OpenAPI/contract generation | doc 27 §29 |
-| DR-N-01 | Adequate performance for I/O-bound orchestration | doc 26 §13–§14 |
+| DR-F-02 | Async-first HTTP with typed boundaries | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §24, §27; CLAUDE.md |
+| DR-F-03 | OpenAPI/contract generation | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §29 |
+| DR-N-01 | Adequate performance for I/O-bound orchestration | 26.PF-FT-AI-PERFORMANCE-COST.md §13–§14 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | Workload is I/O-bound (network calls), not CPU-bound | Offload CPU work (doc 26 §23) | Perf profiling |
+| DR-A-01 | Workload is I/O-bound (network calls), not CPU-bound | Offload CPU work (26.PF-FT-AI-PERFORMANCE-COST.md §23) | Perf profiling |
 
 ## 4. Evaluation Criteria and Weights
 
@@ -74,7 +74,7 @@ it prevents drift and documents why alternatives were not chosen.
 
 **Description.** Python 3.11+ with FastAPI (Starlette/uvicorn), Pydantic v2, async I/O.
 **Strengths.** Best AI ecosystem; async; Pydantic-native; OpenAPI; large talent pool.
-**Weaknesses.** GIL/CPU-bound limits (mitigated: offload, doc 26 §23).
+**Weaknesses.** GIL/CPU-bound limits (mitigated: offload, 26.PF-FT-AI-PERFORMANCE-COST.md §23).
 **Cost / effort.** Low; aligns with all AI ADRs.
 
 ### 5.2 Option B — Python + Django REST Framework
@@ -117,7 +117,7 @@ iteration.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 27 §9/§27–§29 and the AI
+**Method.** Weighted scoring against §4, informed by 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9/§27–§29 and the AI
 ecosystem requirements of ADR-D2-06/D3-13.
 
 | Criterion | Weight | A: Python+FastAPI | B: Django | C: Node/TS | D: Go | E: Java/Spring |
@@ -142,15 +142,15 @@ ecosystem (LangGraph, Hugging Face); FastAPI provides the async-first, Pydantic-
 OpenAPI-typed API layer that matches the platform's conventions. Django (B) is a weaker
 async fit; non-Python options (C/D/E) fracture the AI stack.
 
-**Status rationale.** `Accepted` — confirmed in CLAUDE.md and doc 27.
+**Status rationale.** `Accepted` — confirmed in CLAUDE.md and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md.
 
 ## 8. Architecture Detail
 
-- FastAPI app in `src/pf_ft_ai/api/`; async endpoints (doc 27 §27–§28) returning the
-  standard envelope (ADR-D4-09); versioned paths `/api/v1/...` (doc 27 §29).
-- Uvicorn/gunicorn workers on the container runtime (doc 25 §8); dependency injection
-  (doc 27 §32); shared async HTTP client (ADR-D5-16).
-- CPU-bound work offloaded to avoid blocking the event loop (doc 26 §23; doc 27 §25).
+- FastAPI app in `src/pf_ft_ai/api/`; async endpoints (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §27–§28) returning the
+  standard envelope (ADR-D4-09); versioned paths `/api/v1/...` (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §29).
+- Uvicorn/gunicorn workers on the container runtime (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §8); dependency injection
+  (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §32); shared async HTTP client (ADR-D5-16).
+- CPU-bound work offloaded to avoid blocking the event loop (26.PF-FT-AI-PERFORMANCE-COST.md §23; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §25).
 
 ## 9. Consequences
 
@@ -180,7 +180,7 @@ async fit; non-Python options (C/D/E) fracture the AI stack.
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
-| RSK-01 | CPU-bound work blocks event loop | Med | Med | M | Offload (doc 26 §23); profile | Backend Lead | Low |
+| RSK-01 | CPU-bound work blocks event loop | Med | Med | M | Offload (26.PF-FT-AI-PERFORMANCE-COST.md §23); profile | Backend Lead | Low |
 | RSK-02 | Dependency sprawl in Python | Med | Low | L | Pinning/lock (ADR-D5-04) | Backend Lead | Low |
 
 ## 12. Quantitative Targets and Measures
@@ -194,7 +194,7 @@ async fit; non-Python options (C/D/E) fracture the AI stack.
 
 | Dimension | Impact |
 |---|---|
-| Attack surface change | Standard web framework; hardened per doc 25 §17–§18 |
+| Attack surface change | Standard web framework; hardened per 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §17–§18 |
 | Data classification touched | Internal |
 | Personal data / PII | Handled at app layer per ADR-D6-06 |
 | Children's data and safeguarding | N/A at framework layer |
@@ -252,7 +252,7 @@ async fit; non-Python options (C/D/E) fracture the AI stack.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 Technology |
-| Specification sections | doc 27 §9, §27–§29; doc 25 §8 |
+| Specification sections | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9, §27–§29; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §8 |
 | Requirement IDs | TECH-LANG-* |
 | Build phases | 1 |
 | Code paths | `src/pf_ft_ai/` |

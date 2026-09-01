@@ -94,7 +94,7 @@ character erodes release by release with nobody having decided to change it.
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Persona adherence must be evaluable separately from workflow correctness | Independent rubric | `CLAUDE.md` §Persona Quality Expectations |
-| DR-N-02 | The character must remain stable across releases | No unintentional drift between versions | doc 20 §92 (Prompt Review) |
+| DR-N-02 | The character must remain stable across releases | No unintentional drift between versions | 20.PF-FT-AI-GOVERNANCE.md §92 (Prompt Review) |
 | DR-N-03 | Persona must not increase response latency materially | ≤5% token overhead | ADR-D5-18 |
 
 ### 3.3 Constraints
@@ -425,7 +425,7 @@ X-1 treatment as a club secretary.
 | RSK-02 | Content class mis-derived from workflow state, applying the wrong register | Medium | High | High | Content class asserted by the agent step, not inferred; unit tests per affiliation phase; QM-03 | AI Engineering Lead | Medium |
 | RSK-03 | Suppressed turns read as a different assistant, breaking continuity | Medium | Medium | Medium | Suppression removes football framing, not warmth; evaluated as a transition case in the rubric | AI Product Owner | Medium |
 | RSK-04 | Over-correction: the register disappears in practice and Adam becomes generic | Medium | Medium | Medium | §7.3 states positively where the register belongs; QM-04 tracks register presence at permitted moments | AI Product Owner | Low |
-| RSK-05 | Charter and prompt layer diverge over successive tunings | Medium | Medium | Medium | Prompt review per doc 20 §92 checks against the charter; charter cited in the prompt layer's header | Prompt Owner | Low |
+| RSK-05 | Charter and prompt layer diverge over successive tunings | Medium | Medium | Medium | Prompt review per 20.PF-FT-AI-GOVERNANCE.md §92 checks against the charter; charter cited in the prompt layer's header | Prompt Owner | Low |
 | RSK-06 | DR-A-01 false — the register does not aid comprehension | Low | Medium | Low | Correlation of persona scores with BM-01; RT-04 leads toward Option D if falsified | AI Evaluation Owner | Low |
 
 ## 12. Quantitative Targets and Measures
@@ -519,7 +519,7 @@ framing, not character.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-04 Personas & User Journey Mapping |
-| Specification sections | `CLAUDE.md` §Adam AI Persona & Conversational Style (rules 1–12, response pattern, quality expectations, golden reference); `Examples/SampleWorkflowchat.md`; doc 3 §65 (Responsibility for User Communication); doc 16 (Prompt Engineering); doc 20 §92 (Prompt Review); affiliation flow Phases 1, 6, 10 |
+| Specification sections | `CLAUDE.md` §Adam AI Persona & Conversational Style (rules 1–12, response pattern, quality expectations, golden reference); `Examples/SampleWorkflowchat.md`; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §65 (Responsibility for User Communication); 16.PF-FT-AI-PROMPT-ENGINEERING.md (Prompt Engineering); 20.PF-FT-AI-GOVERNANCE.md §92 (Prompt Review); affiliation flow Phases 1, 6, 10 |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 10, 16, 23 |
 | Code paths | `prompts/persona/`, `src/pf_ft_ai/prompt_engineering/` |

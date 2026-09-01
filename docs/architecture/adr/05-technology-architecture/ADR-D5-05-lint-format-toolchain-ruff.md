@@ -27,14 +27,14 @@ review_due: 2027-08-22
 ## 1. Summary
 
 PFF AI will use **Ruff** as the single tool for both linting and formatting,
-replacing the traditional flake8 + isort + black (+ plugins) stack (CLAUDE.md; doc 27
+replacing the traditional flake8 + isort + black (+ plugins) stack (CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md
 §11–§12). One fast Rust-based tool, one config, one CI step — with `ruff format` for
 formatting and `ruff check` for linting including import sorting and magic-number
-rules (doc 27 §23).
+rules (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §23).
 
 ## 2. Context and Problem Statement
 
-CLAUDE.md fixes "Ruff" for lint/format; doc 27 §11 sets formatting, §12 linting, §23
+CLAUDE.md fixes "Ruff" for lint/format; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §11 sets formatting, §12 linting, §23
 the magic-numbers rule. A multi-tool stack (black + isort + flake8 + plugins) is slow,
 has overlapping/conflicting rules and multiple configs. This ADR records choosing Ruff
 as the consolidated tool.
@@ -43,9 +43,9 @@ as the consolidated tool.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Single lint+format tool | CLAUDE.md; doc 27 §11–§12 |
+| DR-F-01 | Single lint+format tool | CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §11–§12 |
 | DR-N-01 | Fast (pre-commit + CI) | operational |
-| DR-F-02 | Import sorting + rule coverage | doc 27 §12, §23 |
+| DR-F-02 | Import sorting + rule coverage | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §12, §23 |
 
 ### 3.4 Assumptions
 
@@ -99,7 +99,7 @@ as the consolidated tool.
 
 **Description.** Lint but leave formatting to devs.
 **Strengths.** Less tooling.
-**Weaknesses.** Inconsistent style; diff noise; doc 27 §11 wants formatting.
+**Weaknesses.** Inconsistent style; diff noise; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §11 wants formatting.
 **Cost / effort.** Low; inconsistent.
 
 ### 5.6 Options considered and eliminated before scoring
@@ -111,7 +111,7 @@ as the consolidated tool.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by CLAUDE.md and doc 27 §11–§12/§23.
+**Method.** Weighted scoring against §4, informed by CLAUDE.md and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §11–§12/§23.
 
 | Criterion | Weight | A: Ruff | B: black+isort+flake8 | C: black+Ruff | D: Pylint+black | E: lint-only |
 |---|---|---|---|---|---|---|
@@ -132,7 +132,7 @@ linter without dislodging Ruff as primary (RT-01).
 
 **PFF AI will use Ruff as the single lint + format tool (Option A):** `ruff format`
 for formatting (black-compatible) and `ruff check` for linting including import
-sorting and magic-number rules (doc 27 §23), configured in `pyproject.toml` and run in
+sorting and magic-number rules (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §23), configured in `pyproject.toml` and run in
 pre-commit and CI (ADR-D7-09). The multi-tool stack (B), redundant black+Ruff (C),
 Pylint (D) and lint-only (E) are rejected.
 
@@ -245,7 +245,7 @@ Pylint (D) and lint-only (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | doc 27 §11–§12, §23 |
+| Specification sections | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §11–§12, §23 |
 | Requirement IDs | TECH-LINT-* |
 | Build phases | 0 |
 | Code paths | `pyproject.toml` |

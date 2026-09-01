@@ -37,9 +37,9 @@ here so that later dashboards cannot quietly redefine what winning means.
 
 ## 2. Context and Problem Statement
 
-Doc 1 §39 gives twenty architecture success criteria. Every one is technical: the supervisor
+1 PF-FT-AI-ARCHITECTURE.md §39 gives twenty architecture success criteria. Every one is technical: the supervisor
 routes correctly, ERC aggregates multiple APIs, prompts are versioned, guardrails prevent
-injection. Doc 2 §50 defines "architecture complete" in the same terms. These are necessary
+injection. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §50 defines "architecture complete" in the same terms. These are necessary
 and they are not sufficient — a platform can satisfy all twenty and deliver nothing a county
 association would miss if it were switched off.
 
@@ -78,10 +78,10 @@ engine is not.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Success must be measurable from enterprise outcome data, not only from conversation data | doc 20 §87 (AI Governance Metrics) |
-| DR-F-02 | The definition must distinguish a completed workflow from a pleasant conversation | doc 21 §1 (technically successful ≠ AI-quality successful) |
+| DR-F-01 | Success must be measurable from enterprise outcome data, not only from conversation data | 20.PF-FT-AI-GOVERNANCE.md §87 (AI Governance Metrics) |
+| DR-F-02 | The definition must distinguish a completed workflow from a pleasant conversation | 21.PF-FT-AI-EVALUATION.md §1 (technically successful ≠ AI-quality successful) |
 | DR-F-03 | Measures must attribute outcomes to the platform, not merely correlate with it | ADR-D8-03 |
-| DR-F-04 | The framing must apply to workflows beyond affiliation | doc 2 §49 (Extension Model) |
+| DR-F-04 | The framing must apply to workflows beyond affiliation | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 (Extension Model) |
 
 ### 3.2 Non-functional drivers
 
@@ -96,7 +96,7 @@ engine is not.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | The platform decides no business outcome, so it cannot be measured on outcome favourability — only on completion and correctness | Platform | ADR-D1-01 §7.2 |
-| DR-C-02 | Doc 1 §39's twenty technical criteria remain mandatory and are not replaced by this framing | Organisational | doc 1 §39 |
+| DR-C-02 | 1 PF-FT-AI-ARCHITECTURE.md §39's twenty technical criteria remain mandatory and are not replaced by this framing | Organisational | 1 PF-FT-AI-ARCHITECTURE.md §39 |
 | DR-C-03 | Users include volunteers with low system familiarity and no training obligation | Organisational | Affiliation flow personas |
 
 ### 3.4 Assumptions
@@ -347,7 +347,7 @@ concrete form, and is why these six become the first golden-dataset cases in ADR
 
 ### 9.3 Neutral
 
-- Doc 1 §39's twenty technical criteria remain mandatory alongside these (DR-C-02); this
+- 1 PF-FT-AI-ARCHITECTURE.md §39's twenty technical criteria remain mandatory alongside these (DR-C-02); this
   framing sits above them, not instead of them.
 - Diagnostic metrics continue to be collected in full.
 
@@ -402,7 +402,7 @@ be invented, and inventing a number is how a measure becomes theatre.
 | Personal data / PII | Measurement uses application identifiers and correlation IDs, not personal attributes. Aggregates are reported without club or individual identification. No new personal data is collected for measurement (DR-N-02). |
 | Children's data and safeguarding | BM-04 touches safeguarding indirectly: an application rejected for a DBS or welfare-officer non-compliance is a correct rejection and must be classified as such under §7.2's qualifier, not as a platform failure. Misclassifying it would create pressure to help clubs past a safeguarding check, which is the opposite of intended. |
 | UK GDPR lawful basis and rights impact | Aggregate measurement on the existing service basis; no profiling of individuals and no automated decision-making about a person. |
-| Audit and evidential requirements | Provides the outcome evidence for doc 20 §87 (AI Governance Metrics) and the benefit realisation in ADR-D8-03. |
+| Audit and evidential requirements | Provides the outcome evidence for 20.PF-FT-AI-GOVERNANCE.md §87 (AI Governance Metrics) and the benefit realisation in ADR-D8-03. |
 | Standards touched | ISO/IEC 42001 (objectives and performance evaluation); ISO 9001 §9.1 (monitoring, measurement, analysis and evaluation); NIST AI RMF MEASURE 1.1, 2.1. |
 
 ## 14. Implementation Impact
@@ -464,7 +464,7 @@ be invented, and inventing a number is how a measure becomes theatre.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-02 Business Vision, Problem Statement & Objectives |
-| Specification sections | doc 1 §1 (Purpose), §38 (Non-Functional Requirements), §39 (Architecture Success Criteria); doc 2 §2 (Architectural Objective), §50 (Definition of Architecture Complete); doc 21 §1 (Purpose — technically successful ≠ AI-quality successful); doc 20 §87 (AI Governance Metrics); affiliation flow Scenarios 1, 2A, 6, 7, 10, 28, 29 |
+| Specification sections | 1 PF-FT-AI-ARCHITECTURE.md §1 (Purpose), §38 (Non-Functional Requirements), §39 (Architecture Success Criteria); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §2 (Architectural Objective), §50 (Definition of Architecture Complete); 21.PF-FT-AI-EVALUATION.md §1 (Purpose — technically successful ≠ AI-quality successful); 20.PF-FT-AI-GOVERNANCE.md §87 (AI Governance Metrics); affiliation flow Scenarios 1, 2A, 6, 7, 10, 28, 29 |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 16, 23 |
 | Code paths | Measurement pipeline in `src/pf_ft_ai/evaluation/` |

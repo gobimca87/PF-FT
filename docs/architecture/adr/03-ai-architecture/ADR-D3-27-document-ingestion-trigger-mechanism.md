@@ -29,7 +29,7 @@ review_due: 2027-08-23
 PFF AI will trigger document ingestion through **two complementary paths, matched to
 where a document actually lives**: (1) **enterprise-source documents** (policies
 tracked in an FA system of record) are re-ingested on a **Service Bus event**
-(`document updated` / `policy updated` / `source changed` — doc 13 §100); (2)
+(`document updated` / `policy updated` / `source changed` — 13.FP-FT-AI-RAG.md §100); (2)
 **platform-authored knowledge content** (FAQ/how-to material maintained as part of
 this repository) is ingested via **CI on merge**, the same governed pipeline that
 promotes prompts and config (ADR-D3-11, ADR-D5-06). No path polls or crawls — this
@@ -38,7 +38,7 @@ which fixed *how* a document is chunked but not *what starts* the ingest.
 
 ## 2. Context and Problem Statement
 
-Doc 13 §11 shows the sequence `Source → discovered → registered → identity assigned →
+13.FP-FT-AI-RAG.md §11 shows the sequence `Source → discovered → registered → identity assigned →
 ingestion` but never states what causes "discovered"; §12–§14 define document
 identity/version/change-detection (content hash + source-modified timestamp) but
 change detection presumes something already triggered a check. §100 is the one
@@ -55,9 +55,9 @@ reaches the index.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Enterprise-source document changes must reach RAG | doc 13 §100 |
+| DR-F-01 | Enterprise-source document changes must reach RAG | 13.FP-FT-AI-RAG.md §100 |
 | DR-F-02 | Platform-authored content ingested via a governed pipeline | ADR-D3-11, D5-06 |
-| DR-C-01 | No fabricated freshness — a stale index must be detectable | doc 13 §14; ADR-D4-03-style provenance |
+| DR-C-01 | No fabricated freshness — a stale index must be detectable | 13.FP-FT-AI-RAG.md §14; ADR-D4-03-style provenance |
 | DR-N-01 | Infrastructure proportionate to 5–20 changes/year | ADR-D3-21 corpus profile |
 
 ### 3.4 Assumptions
@@ -82,12 +82,12 @@ reaches the index.
 ### 5.1 Option A — Service Bus event-driven (enterprise-source) + CI-on-merge (repo-authored), no polling
 
 **Description.** Enterprise-source documents (e.g. an FA policy CMS) publish a
-`document updated`/`policy updated`/`source changed` event (doc 13 §100) consumed by
+`document updated`/`policy updated`/`source changed` event (13.FP-FT-AI-RAG.md §100) consumed by
 an idempotent Service Bus listener (ADR-D2-16/D2-18) that enqueues re-ingestion;
 platform-authored knowledge content lives in this repository and is ingested by the
 CI/CD pipeline on merge to main, gated the same way prompts and config are (ADR-D3-11,
 ADR-D5-06, ADR-D6-15).
-**Strengths.** Matches doc 13 §100 exactly for enterprise sources; git-native
+**Strengths.** Matches 13.FP-FT-AI-RAG.md §100 exactly for enterprise sources; git-native
 governance and audit trail for authored content; zero idle polling infrastructure;
 proportionate to a 5–20/year corpus.
 **Weaknesses.** Requires the enterprise source system to actually emit the event —
@@ -98,7 +98,7 @@ not guaranteed for every source (mitigated by DR-A-01's fallback).
 ### 5.2 Option B — Scheduled polling/scan (e.g. nightly job scans all sources for changes)
 
 **Description.** A timer-triggered job periodically re-checks every source's content
-hash/timestamp (doc 13 §14) and re-ingests on diff.
+hash/timestamp (13.FP-FT-AI-RAG.md §14) and re-ingests on diff.
 **Strengths.** Works even if a source can't emit events; simple mental model.
 **Weaknesses.** Runs hundreds of idle checks a year to catch 5–20 real changes —
 disproportionate infrastructure for the corpus profile (ADR-D3-21); freshness bounded
@@ -142,7 +142,7 @@ expected to be a small or empty set.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 13 §11–§17/§100 and the
+**Method.** Weighted scoring against §4, informed by 13.FP-FT-AI-RAG.md §11–§17/§100 and the
 corpus-churn profile established in ADR-D3-21.
 
 | Criterion | Weight | A: Event+CI | B: Scheduled poll | C: Manual only | D: Direct webhook | E: A + safety-net scan |
@@ -173,7 +173,7 @@ forbidden as a sole mechanism — it may still be used ad hoc for an out-of-band
 but is never relied on for routine freshness. Direct webhooks (D) and full-corpus
 scheduled polling (B) are rejected as the primary mechanism.
 
-**Status rationale.** `Accepted` — doc 13 §100 fixes Service Bus as the event
+**Status rationale.** `Accepted` — 13.FP-FT-AI-RAG.md §100 fixes Service Bus as the event
 mechanism for enterprise sources; the CI-on-merge path for repo-authored content
 follows directly from the platform's established config/prompt promotion pattern
 (ADR-D3-11, ADR-D5-06). This ADR records the full alternative set and the safety-net
@@ -184,19 +184,19 @@ refinement.
 - `src/pf_ft_ai/rag/ingestion/`: an idempotent Service Bus consumer (ADR-D2-16,
   reusing the dedup/DLQ/reconciliation model of ADR-D2-18) subscribes to
   `document.updated` / `policy.updated` / `source.changed` events (envelope per
-  ADR-D2-17); each event resolves to a `document_id` (doc 13 §12) and enqueues a
+  ADR-D2-17); each event resolves to a `document_id` (13.FP-FT-AI-RAG.md §12) and enqueues a
   re-ingest through the pipeline fixed in ADR-D3-21 (§15 discovery→…→published).
 - Platform-authored content lives under a versioned path in this repository; CI
   (ADR-D7-09) runs the same ingestion pipeline on merge to main, gated by change
   governance (ADR-D6-15) exactly as prompts (ADR-D3-11) and config (ADR-D5-06) are —
   no separate approval process invented for RAG content.
 - Change detection within either path still uses content hash + source-modified
-  timestamp (doc 13 §14) to avoid re-embedding unchanged content on a duplicate
+  timestamp (13.FP-FT-AI-RAG.md §14) to avoid re-embedding unchanged content on a duplicate
   event.
 - **Safety-net scan**: a low-frequency (monthly) job runs only against the explicit
   allowlist of sources marked "no event feed available"; this list is expected to be
   small or empty and is reviewed whenever a new source is onboarded.
-- Ingestion state model and staged-publish (doc 13 §16–§17 — a failed document never
+- Ingestion state model and staged-publish (13.FP-FT-AI-RAG.md §16–§17 — a failed document never
   partially becomes visible) apply identically regardless of which path triggered it.
 
 ## 9. Consequences
@@ -236,8 +236,8 @@ refinement.
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | A source changes without emitting an event and isn't on the safety-net list | Low | Med | M | Onboarding checklist requires declaring event-capability; default to safety-net list if unconfirmed | Integration Engineer | Low |
-| RSK-02 | Duplicate events cause redundant re-ingestion | Med | Low | L | Idempotent consumer + content-hash short-circuit (ADR-D2-18, doc 13 §14) | Backend Lead | Low |
-| RSK-03 | CI-on-merge ingest fails silently | Low | Med | M | Staged publish — failure never exposes a partial index (doc 13 §17) | Backend Lead | Low |
+| RSK-02 | Duplicate events cause redundant re-ingestion | Med | Low | L | Idempotent consumer + content-hash short-circuit (ADR-D2-18, 13.FP-FT-AI-RAG.md §14) | Backend Lead | Low |
+| RSK-03 | CI-on-merge ingest fails silently | Low | Med | M | Staged publish — failure never exposes a partial index (13.FP-FT-AI-RAG.md §17) | Backend Lead | Low |
 
 ## 12. Quantitative Targets and Measures
 
@@ -312,7 +312,7 @@ refinement.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-17 RAG & Retrieval |
-| Specification sections | doc 13 §11–§17, §100 |
+| Specification sections | 13.FP-FT-AI-RAG.md §11–§17, §100 |
 | Requirement IDs | RAG-INGEST-TRIGGER-* |
 | Build phases | 8 |
 | Code paths | `src/pf_ft_ai/rag/ingestion/` |

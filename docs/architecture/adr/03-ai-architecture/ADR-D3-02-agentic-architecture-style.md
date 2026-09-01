@@ -36,28 +36,28 @@ autonomously, or decide their own scope.
 
 ## 2. Context and Problem Statement
 
-Doc 7 §3 gives the agentic orchestration model, §4 names four core components, §5 the supervisor's
-responsibility, §6–§7 workflow-level agents and why. Doc 7 §11 gives the supervisor-to-agent flow.
-Doc 7 §67–§69 draw reasoning and deterministic control boundaries; §72–§73 cover the agent loop
-and its protection. Doc 1 §9–§11 place supervisor, agents and harness. Doc 2 §3.7 requires
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §3 gives the agentic orchestration model, §4 names four core components, §5 the supervisor's
+responsibility, §6–§7 workflow-level agents and why. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §11 gives the supervisor-to-agent flow.
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §67–§69 draw reasoning and deterministic control boundaries; §72–§73 cover the agent loop
+and its protection. 1 PF-FT-AI-ARCHITECTURE.md §9–§11 place supervisor, agents and harness. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.7 requires
 workflow-level agents.
 
 The term "agentic" carries a great deal of unstated variation, and the specification set uses it
 without pinning down which variant. The plausible readings differ enormously in risk:
 
 - **Supervisor-routed.** One supervisor selects one agent; that agent executes a bounded graph.
-  This is what doc 7 §11's flow diagram shows.
+  This is what 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §11's flow diagram shows.
 - **Hierarchical delegation.** An agent decomposes its task and delegates sub-tasks to other
   agents, which may delegate further.
 - **Peer collaboration.** Agents communicate directly, negotiating who handles what.
 - **Autonomous planning.** An agent forms a multi-step plan across capabilities and executes it,
   revising as it goes.
 
-Doc 7 §11's diagram implies the first. Nothing explicitly forecloses the others, and each is
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §11's diagram implies the first. Nothing explicitly forecloses the others, and each is
 something a competent engineer might build when asked for an "agentic AI platform" — the industry
 term is used for all four.
 
-The distinction matters for a specific reason that doc 7 §73's loop protection hints at without
+The distinction matters for a specific reason that 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73's loop protection hints at without
 naming. In a supervisor-routed model, the bound on a turn's work is a property of one graph, and
 it is enforceable: node count, tool calls, tokens, wall-clock. In a delegating model, an agent's
 sub-agent has its own budget, and the composition of budgets across an unbounded delegation depth
@@ -78,11 +78,11 @@ does not exist and cannot be tested.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | The supervisor routes to a workflow agent | doc 7 §5, §11; doc 1 §39 criterion 2 |
-| DR-F-02 | An agent owns one end-to-end workflow capability | doc 7 §6–§7; doc 2 §3.7 |
-| DR-F-03 | Agent execution must be bounded and loop-protected | doc 7 §72–§73; doc 4 §54 |
-| DR-F-04 | The reasoning boundary must be enforceable | doc 7 §67–§69 |
-| DR-F-05 | Agents must not bypass tools or override authorization | doc 7 §5 |
+| DR-F-01 | The supervisor routes to a workflow agent | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5, §11; 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 2 |
+| DR-F-02 | An agent owns one end-to-end workflow capability | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6–§7; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.7 |
+| DR-F-03 | Agent execution must be bounded and loop-protected | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72–§73; 4. PF-FT-AI-RUNTIME.md §54 |
+| DR-F-04 | The reasoning boundary must be enforceable | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §67–§69 |
+| DR-F-05 | Agents must not bypass tools or override authorization | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5 |
 
 ### 3.2 Non-functional drivers
 
@@ -99,7 +99,7 @@ does not exist and cannot be tested.
 | DR-C-01 | One agent exists in the first pass | Organisational | ADR-D1-11 |
 | DR-C-02 | Every model and tool interaction passes the harness | Platform | ADR-D2-09 §7.1 |
 | DR-C-03 | Agents are logical capabilities in one runtime | Platform | ADR-D2-02 |
-| DR-C-04 | Critical controls are deterministic | Platform | doc 2 §3.3 |
+| DR-C-04 | Critical controls are deterministic | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
 
 ### 3.4 Assumptions
 
@@ -113,7 +113,7 @@ does not exist and cannot be tested.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Boundedness of a turn's work | 30 | An unbounded turn is unbounded cost, latency and enterprise load; doc 7 §73 requires protection | Is there a deterministic ceiling? |
+| EC-01 | Boundedness of a turn's work | 30 | An unbounded turn is unbounded cost, latency and enterprise load; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73 requires protection | Is there a deterministic ceiling? |
 | EC-02 | Enforceability of the harness boundary | 30 | Five of six Golden Rule invariants depend on it (ADR-D1-02 §7.1) | Can any execution path avoid the harness? |
 | EC-03 | Traceability and reproducibility | 20 | Evaluation and audit both need a determinate execution path | One trace per turn; same path per input? |
 | EC-04 | Expressiveness for real requests | 15 | A style too restrictive cannot serve users | Can a real user request be served? |
@@ -138,7 +138,7 @@ harness-mediated capabilities. No agent-to-agent invocation exists.
   enforceable in one place (EC-01).
 - Every capability call is harness-mediated because there is no other call type (EC-02).
 - One trace per turn with a determinate path (EC-03).
-- Matches doc 7 §11's flow exactly.
+- Matches 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §11's flow exactly.
 - Nothing built for a topology that does not exist (EC-05).
 
 **Weaknesses.**
@@ -188,7 +188,7 @@ executes it, revising as results arrive.
 - Bounding requires cutting off mid-plan, which leaves work half-done — the affiliation submission
   case where an application is created but products are not attached.
 - Planning across capabilities means the model sequences enterprise operations, which ADR-D2-08
-  §5.2 rejected and doc 2 §3.3 forbids for critical controls.
+  §5.2 rejected and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 forbids for critical controls.
 - Under ADR-D3-01's taxonomy this is close to C4: the plan acts with the harness checking
   individual calls but nothing checking the plan.
 
@@ -264,7 +264,7 @@ often means elsewhere:
 | An agent handles a workflow end to end across turns and suspensions | An agent decomposes work and delegates it |
 | An agent reasons about how to explain an outcome | An agent reasons about whether an outcome is correct |
 
-Doc 7 §67–§69's reasoning boundary is the same distinction: the agent reasons about *interpretation
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §67–§69's reasoning boundary is the same distinction: the agent reasons about *interpretation
 and communication*, and does not reason about *business correctness or its own authority*.
 
 ### 7.3 Multi-workflow requests
@@ -272,13 +272,13 @@ and communication*, and does not reason about *business correctness or its own a
 DR-A-01's case: a user asks something spanning two workflows — "sort my affiliation and enter the
 county cup". Option A cannot compose them in one turn. The handling:
 
-1. The supervisor detects multiple candidate workflows and **clarifies** (ADR-D2-05 §7.4, doc 7
+1. The supervisor detects multiple candidate workflows and **clarifies** (ADR-D2-05 §7.4, 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md
    §14) rather than guessing or attempting both.
 2. The user's answer selects one; that workflow proceeds.
 3. The second remains available; the conversation may reach it in a later turn, with its own
-   workflow instance associated to the same conversation (doc 6 §23).
+   workflow instance associated to the same conversation (6 PF-FT-AI-CONVERSATION-SESSION.md §23).
 
-This is sequential rather than composed, and it is the honest handling: doc 7 §14 is explicit that
+This is sequential rather than composed, and it is the honest handling: 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 is explicit that
 the supervisor should not guess when the wrong workflow could trigger an incorrect enterprise
 operation, and attempting two workflows to satisfy an ambiguous request is a compound version of
 exactly that.
@@ -288,7 +288,7 @@ design must accommodate it from the start (ADR-D1-10 §7.5).
 
 ### 7.4 The agent loop and its bound
 
-Doc 7 §72's agent loop — gather context, reason, select a tool, execute, validate, check
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72's agent loop — gather context, reason, select a tool, execute, validate, check
 completion — is bounded by the harness's cumulative limits (ADR-D2-09 §7.3). Under Option A those
 limits are complete: there is no execution outside the graph, so the ceiling on a turn is the
 ceiling on one graph.
@@ -312,7 +312,7 @@ If a capability is genuinely reusable across workflows, it becomes a **tool** (A
 shared node, not an agent. The distinction: an agent owns a user-facing workflow; a tool or node
 performs a step within one.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — agent architecture is a named doc 2
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — agent architecture is a named 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §52 category — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -355,7 +355,7 @@ tree's height, not its work, and the work is what costs money, latency and enter
 
 ### 8.3 Reasoning boundary in practice
 
-Doc 7 §67–§69's boundary, applied to the affiliation agent:
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §67–§69's boundary, applied to the affiliation agent:
 
 | The agent reasons about | The agent does not reason about |
 |---|---|
@@ -392,7 +392,7 @@ must not.
 
 ### 9.3 Neutral
 
-- Matches doc 7 §11's flow, which is the specification's own diagram.
+- Matches 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §11's flow, which is the specification's own diagram.
 - With one agent (DR-C-01) most of this decision constrains what will be built later rather than
   what is built now.
 
@@ -411,7 +411,7 @@ must not.
 | Enterprise decides; AI orchestrates | §8.3's boundary is this rule at the agent level. The agent has no capability that would let it form a business view, and §7.1's absence of delegation prevents creating one indirectly. |
 | Authoritative-truth precedence | Agents receive resolved context from the harness; they do not select among sources. |
 | Four-state separation | One agent per turn means one workflow state per execution; no cross-agent state sharing exists to conflate. |
-| Versioned artefacts, never mutated in place | Agent definitions and graphs are versioned (doc 7 §21; ADR-D5-06). |
+| Versioned artefacts, never mutated in place | Agent definitions and graphs are versioned (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §21; ADR-D5-06). |
 | Adam persona governs how, never what | §7.2's table distinguishes reasoning about explanation from reasoning about correctness — the persona operates entirely in the former. |
 
 ## 11. Risks and Mitigations
@@ -509,7 +509,7 @@ execution path outside the single graph.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-13 Agentic AI Architecture |
-| Specification sections | doc 7 §2–§4 (Core Principle, Orchestration Model, Four Core Components), §5 (Supervisor Responsibility), §6–§7 (Workflow-Level Agents, Why), §10 (Enterprise Workflow Boundary), §11 (Supervisor-to-Agent Flow), §14 (Clarification), §67–§69 (Reasoning Boundary, Deterministic Control Boundary, AI Reasoning Boundary), §72–§73 (Agent Loop, Loop Protection); doc 1 §9–§11, §39 criterion 2; doc 2 §3.3, §3.7, §48; doc 6 §23 |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §2–§4 (Core Principle, Orchestration Model, Four Core Components), §5 (Supervisor Responsibility), §6–§7 (Workflow-Level Agents, Why), §10 (Enterprise Workflow Boundary), §11 (Supervisor-to-Agent Flow), §14 (Clarification), §67–§69 (Reasoning Boundary, Deterministic Control Boundary, AI Reasoning Boundary), §72–§73 (Agent Loop, Loop Protection); 1 PF-FT-AI-ARCHITECTURE.md §9–§11, §39 criterion 2; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3, §3.7, §48; 6 PF-FT-AI-CONVERSATION-SESSION.md §23 |
 | Requirement IDs | `FR-A39-02`, `FR-A39-03`, `NFR-A38-SEC` |
 | Build phases | 4 |
 | Code paths | `src/pf_ft_ai/orchestration/`, `src/pf_ft_ai/agents/` |

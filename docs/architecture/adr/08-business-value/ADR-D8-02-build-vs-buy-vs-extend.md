@@ -33,12 +33,12 @@ LangGraph) rather than buy a packaged conversational-AI/agent platform**, becaus
 and defensibility are in the enterprise-specific orchestration, the Golden-Rule boundary,
 and the ERC/guardrail architecture — none of which a generic product provides — while
 **buying/extending commodity components** (SLM via HF, observability via Langfuse, cloud
-PaaS) where they are not differentiating (DEVELOPMENT-GUIDE §1–§2; doc 1 §2).
+PaaS) where they are not differentiating (DEVELOPMENT-GUIDE §1–§2; 1 PF-FT-AI-ARCHITECTURE.md §2).
 
 ## 2. Context and Problem Statement
 
 DEVELOPMENT-GUIDE §1–§2 frame PFF AI as an orchestration layer over PFF with a specific
-Golden-Rule/ERC/guardrail architecture; doc 1 §2 the platform's purpose. A packaged
+Golden-Rule/ERC/guardrail architecture; 1 PF-FT-AI-ARCHITECTURE.md §2 the platform's purpose. A packaged
 conversational-AI product would impose its own control model, undermining the Golden Rule
 and enterprise-truth precedence, and would not know PFF's workflows. Yet building
 everything (SLM, observability, cloud) would be wasteful. This ADR fixes the build/buy/
@@ -48,7 +48,7 @@ extend split.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Preserve Golden-Rule/ERC control model | CLAUDE.md; doc 1 §2 |
+| DR-F-01 | Preserve Golden-Rule/ERC control model | CLAUDE.md; 1 PF-FT-AI-ARCHITECTURE.md §2 |
 | DR-F-02 | Enterprise-specific orchestration is the value | DEVELOPMENT-GUIDE §1 |
 | DR-C-01 | Buy commodity, build differentiating | FinOps/strategy |
 | DR-N-01 | Avoid lock-in on core | ADR-D8-10 |
@@ -263,7 +263,7 @@ the Golden Rule and ERC. Build-everything (C) and low-code (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-34 |
-| Specification sections | DEVELOPMENT-GUIDE §1–§2; doc 1 §2; doc 20 §95, §97 |
+| Specification sections | DEVELOPMENT-GUIDE §1–§2; 1 PF-FT-AI-ARCHITECTURE.md §2; 20.PF-FT-AI-GOVERNANCE.md §95, §97 |
 | Requirement IDs | BVE-BUILD-* |
 | Build phases | 0 → all |
 | Code paths | `src/pf_ft_ai/` |

@@ -38,21 +38,21 @@ broken somewhere.
 
 `CLAUDE.md` states the rule: *"Layering (enforced, not just conventional): API → Application →
 Orchestration → Domain → Infrastructure/Integrations. Domain code must never import FastAPI,
-Langfuse, Azure SDK, a provider SDK, or a DB driver directly."* Doc 4 §3 and §4 give the runtime
-components; doc 2 §6.1 assigns the API layer its boundary responsibility.
+Langfuse, Azure SDK, a provider SDK, or a DB driver directly."* 4. PF-FT-AI-RUNTIME.md §3 and §4 give the runtime
+components; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1 assigns the API layer its boundary responsibility.
 
 The parenthetical "enforced, not just conventional" is the whole decision, and it is asserted
 without a mechanism. That gap matters here more than in a typical application, for three
 specific reasons.
 
-**The domain must stay testable without infrastructure.** Doc 5's state model and doc 6's
+**The domain must stay testable without infrastructure.** 5. PF-FT-AI-STATE-MODEL.md's state model and 6 PF-FT-AI-CONVERSATION-SESSION.md's
 conversation and session entities carry the platform's core logic. If a domain entity imports
 `redis.asyncio` or `azure.servicebus`, testing it requires those services, and the fast test
 suite that makes iteration possible stops being fast.
 
-**Provider independence is a stated requirement, not a preference.** Doc 15 §6 requires an SLM
-provider abstraction so that, per doc 1 §39 criterion 9, *"SLM provider can change without
-rewriting agents"*. Doc 9 §137–§138 requires the same for memory and cache stores. Doc 14
+**Provider independence is a stated requirement, not a preference.** 15.PF-FT-AI-SLM.md §6 requires an SLM
+provider abstraction so that, per 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9, *"SLM provider can change without
+rewriting agents"*. 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 requires the same for memory and cache stores. 14.PF-FT-AI-EMBEDDING-VECTOR.md
 requires it for vector stores — a decision still open under ADR-D0-04. Every one of these
 guarantees is a layering guarantee: it holds if and only if no code above the infrastructure
 layer imports a provider SDK. There is no other mechanism that delivers it.
@@ -74,16 +74,16 @@ a property of the code, and restoring them is a refactor nobody has time for.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Domain code must not import FastAPI, Langfuse, Azure SDKs, provider SDKs or DB drivers | `CLAUDE.md` §Coding Conventions |
-| DR-F-02 | SLM provider must be changeable without rewriting agents | doc 1 §39 criterion 9; doc 15 §6 |
-| DR-F-03 | Memory, cache and vector stores must sit behind interfaces | doc 9 §137–§138; ADR-D0-04 §7.3 |
-| DR-F-04 | The API layer holds no business logic | doc 2 §6.1 |
+| DR-F-02 | SLM provider must be changeable without rewriting agents | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9; 15.PF-FT-AI-SLM.md §6 |
+| DR-F-03 | Memory, cache and vector stores must sit behind interfaces | 9 PF-FT-AI-MEMORY-CACHE.md §137–§138; ADR-D0-04 §7.3 |
+| DR-F-04 | The API layer holds no business logic | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1 |
 | DR-F-05 | The domain layer must be identifiable for ADR-D1-02's I-6 check | ADR-D1-02 §7.1 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Domain tests run without external services | 100% of domain tests are pure | doc 22 (Testing) |
+| DR-N-01 | Domain tests run without external services | 100% of domain tests are pure | 22.PF-FT-AI-TESTING.md (Testing) |
 | DR-N-02 | Violations detected before merge, not at review | Build fails on violation | `CLAUDE.md` |
 | DR-N-03 | The rule must be expressible without ambiguity | Every module maps to exactly one layer | Programme practice |
 
@@ -92,7 +92,7 @@ a property of the code, and restoring them is a refactor nobody has time for.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | The five layers and their order are fixed by `CLAUDE.md` | Organisational | `CLAUDE.md` |
-| DR-C-02 | The canonical package is `src/pf_ft_ai/` | Organisational | `CLAUDE.md`; doc 6 §102 |
+| DR-C-02 | The canonical package is `src/pf_ft_ai/` | Organisational | `CLAUDE.md`; 6 PF-FT-AI-CONVERSATION-SESSION.md §102 |
 | DR-C-03 | Pydantic at boundaries, TypedDict for LangGraph internal state | Platform | `CLAUDE.md`; ADR-D2-07 |
 | DR-C-04 | Agents are logical capabilities in one runtime, not services | Platform | ADR-D1-11 §8.3 |
 
@@ -227,7 +227,7 @@ in §7.4 as the response if DR-A-02 proves false.
 
 | Layer | Package roots | Responsibility | May import |
 |---|---|---|---|
-| **API** | `api/` | HTTP boundary only: routing, request/response models, status codes. No business logic (doc 2 §6.1). | Application, Domain |
+| **API** | `api/` | HTTP boundary only: routing, request/response models, status codes. No business logic (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1). | Application, Domain |
 | **Application** | `application/` | Use-case orchestration: commands, queries, DTOs, transaction scripts. No I/O detail. | Orchestration, Domain |
 | **Orchestration** | `orchestration/`, `agents/` | Supervisor, harness, LangGraph, agents. The AI execution machinery. | Domain, and infrastructure **interfaces** only |
 | **Domain** | `domain/` | Entities, value objects, state enums, domain rules about the platform's own concepts. | Nothing outside `domain/` and the standard library |
@@ -324,8 +324,8 @@ infrastructure layer changed:
 
 | Interface | Production implementation | Test substitution | Protects |
 |---|---|---|---|
-| `MemoryStore` / `CacheStore` | `RedisMemoryStore` (ADR-D4-10) | `fakeredis` async client | doc 9 §137–§138 |
-| `SLMProvider` | Hugging Face client (ADR-D3-13) | Deterministic mock provider | doc 1 §39 criterion 9 |
+| `MemoryStore` / `CacheStore` | `RedisMemoryStore` (ADR-D4-10) | `fakeredis` async client | 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 |
+| `SLMProvider` | Hugging Face client (ADR-D3-13) | Deterministic mock provider | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9 |
 | `VectorStore` | **Open** (ADR-D3-24) | In-memory stub | The open decision itself |
 
 The vector store row is the important one: the substitution passing is the evidence that
@@ -344,7 +344,7 @@ check.
 ### 9.1 Positive
 
 - `CLAUDE.md`'s "enforced, not just conventional" becomes true rather than aspirational.
-- Provider independence is verified by test, so doc 1 §39 criterion 9 and doc 9 §137–§138 are
+- Provider independence is verified by test, so 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9 and 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 are
   demonstrable rather than asserted.
 - The open vector store decision stays open, provably, until it is decided.
 - Domain tests run without external services, keeping the fast suite fast.
@@ -479,7 +479,7 @@ AC-07 is the check that the check works. A guard nobody has seen fail is not kno
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-07 Enterprise Reference Architecture |
-| Specification sections | doc 4 §3 (Runtime Architecture), §4 (Runtime Responsibilities); doc 2 §6.1 (API Layer), §48 (Anti-Patterns); doc 27 (Development Standards); doc 9 §137–§138 (Provider Independence); doc 1 §39 criterion 9; `CLAUDE.md` §Coding Conventions |
+| Specification sections | 4. PF-FT-AI-RUNTIME.md §3 (Runtime Architecture), §4 (Runtime Responsibilities); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1 (API Layer), §48 (Anti-Patterns); 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md (Development Standards); 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 (Provider Independence); 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9; `CLAUDE.md` §Coding Conventions |
 | Requirement IDs | `FR-A39-09`, `NFR-A38-MAINT`, `NFR-A38-TEST` |
 | Build phases | 0, 2, 3 |
 | Code paths | `src/pf_ft_ai/` |

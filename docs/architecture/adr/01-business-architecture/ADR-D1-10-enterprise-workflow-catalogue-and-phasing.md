@@ -35,13 +35,13 @@ workflow one, rather than a plan made before that evidence exists.
 
 ## 2. Context and Problem Statement
 
-Doc 7 §6 lists seven example agents — `AffiliationAgent`, `RegistrationAgent`,
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 lists seven example agents — `AffiliationAgent`, `RegistrationAgent`,
 `CompetitionAgent`, `DisciplineAgent`, `ClubAdministrationAgent`, `CourseAgent`,
 `OfficialManagementAgent` — and then says, in one sentence: *"The actual agent catalog will be
 finalized separately."*
 
 `DEVELOPMENT-GUIDE.md` §2 goes further and flags this as a genuine reconciliation item: the
-Foundation documents list a different set of eight capabilities, doc 7 lists these seven, and
+Foundation documents list a different set of eight capabilities, 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md lists these seven, and
 the guide's instruction is to *"treat this as genuinely unfinalized — build only
 `AffiliationAgent` first; defer the rest of the catalogue to a real product decision, don't
 invent it."*
@@ -63,7 +63,7 @@ very different behaviour, and the second is what tends to happen by default:
 There is also a real risk in the opposite direction. Writing a committed roadmap of seven
 workflows before the first one has shipped would be inventing exactly what
 `DEVELOPMENT-GUIDE.md` §2 forbids, and would create expectations the programme cannot support.
-The seven names in doc 7 §6 are *examples of workflow-level granularity*, offered to illustrate
+The seven names in 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 are *examples of workflow-level granularity*, offered to illustrate
 §7's "one agent = one business interaction" principle. They are not a product plan, and reading
 them as one would be a misreading of the source.
 
@@ -76,10 +76,10 @@ committing delivery.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Candidate workflows must be recorded so design can generalise appropriately | doc 2 §49 |
+| DR-F-01 | Candidate workflows must be recorded so design can generalise appropriately | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
 | DR-F-02 | The catalogue must not read as a delivery commitment | `DEVELOPMENT-GUIDE.md` §2 |
 | DR-F-03 | Prioritisation criteria must exist before the choice of workflow two is made | Programme practice |
-| DR-F-04 | Workflow granularity must follow "one agent = one business interaction" | doc 7 §7 |
+| DR-F-04 | Workflow granularity must follow "one agent = one business interaction" | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7 |
 | DR-F-05 | Each candidate must record what is unknown about it, not only what is known | Honest catalogue |
 
 ### 3.2 Non-functional drivers
@@ -87,7 +87,7 @@ committing delivery.
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | The catalogue must be cheap to maintain | ≤0.5 day per quarter | Programme practice |
-| DR-N-02 | Adding a candidate must not require redesign | Catalogue is data, not architecture | doc 2 §49 |
+| DR-N-02 | Adding a candidate must not require redesign | Catalogue is data, not architecture | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
 | DR-N-03 | Prioritisation must be reproducible | Two people scoring independently agree within one rank | Programme practice |
 
 ### 3.3 Constraints
@@ -95,7 +95,7 @@ committing delivery.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | Only `AffiliationAgent` is built in the first pass | Organisational | `DEVELOPMENT-GUIDE.md` §2; ADR-D1-11 |
-| DR-C-02 | The agent catalogue is genuinely unfinalised and must not be invented | Organisational | doc 7 §6; `DEVELOPMENT-GUIDE.md` §2 |
+| DR-C-02 | The agent catalogue is genuinely unfinalised and must not be invented | Organisational | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6; `DEVELOPMENT-GUIDE.md` §2 |
 | DR-C-03 | Every workflow's authority rests with the enterprise | Platform | ADR-D1-01 §7.2 |
 | DR-C-04 | A workflow requires enterprise API coverage to be orchestrable | Platform | ADR-D1-01 §9.2 |
 
@@ -138,14 +138,14 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
   all decided now, all better decided knowing the candidate set (EC-01).
 - When the question does arise, it arises with no criteria, so the choice is made ad hoc
   (EC-03).
-- Loses the specification's own information: doc 7 §6's seven examples and the Foundation
+- Loses the specification's own information: 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6's seven examples and the Foundation
   documents' eight are real signal about the domain even if not a plan.
 
 **Cost / effort.** Nil.
 
-### 5.2 Option B — Committed roadmap of the seven doc 7 agents
+### 5.2 Option B — Committed roadmap of the seven 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md agents
 
-**Description.** Adopt doc 7 §6's list as the delivery plan, sequenced across releases.
+**Description.** Adopt 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6's list as the delivery plan, sequenced across releases.
 
 **Strengths.**
 - Maximum clarity for design and for stakeholders.
@@ -153,7 +153,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 - Uses the specification's own list rather than inventing one.
 
 **Weaknesses.**
-- Directly contradicts DR-C-02. Doc 7 §6 says the catalogue will be finalised separately;
+- Directly contradicts DR-C-02. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 says the catalogue will be finalised separately;
   treating it as final is exactly the invention `DEVELOPMENT-GUIDE.md` §2 forbids (EC-02 fails).
 - Ignores the Foundation documents' different list, silently resolving a reconciliation item
   the guide flags as open.
@@ -165,7 +165,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 ### 5.3 Option C — Candidate catalogue with prioritisation criteria, no commitment
 
 **Description.** Record the candidates from both specification lists, reconciled to workflow
-granularity per doc 7 §7. For each, record what is known, what is unknown, and its enterprise
+granularity per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7. For each, record what is known, what is unknown, and its enterprise
 API dependency. State the prioritisation criteria. Commit to nothing beyond affiliation.
 
 **Strengths.**
@@ -235,8 +235,8 @@ choice of workflow two an evidenced decision.
 
 ### 7.2 Candidates
 
-Reconciled from doc 7 §6's seven examples and the Foundation documents' eight capabilities, at
-the granularity doc 7 §7 requires — one agent per business interaction, not per API.
+Reconciled from 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6's seven examples and the Foundation documents' eight capabilities, at
+the granularity 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7 requires — one agent per business interaction, not per API.
 
 | Candidate | Business interaction | Known | Unknown | API dependency |
 |---|---|---|---|---|
@@ -245,7 +245,7 @@ the granularity doc 7 §7 requires — one agent per business interaction, not p
 | **Discipline** | Case, sanction, fine, appeal | Referenced in affiliation's debt rule (discipline/GRF cases) | Case model, appeal workflow, sensitivity of content | Unassessed |
 | **County cups** | Cup entry and eligibility | Products configured in affiliation Phase 0; entry criteria by age, gender, step, day | Entry workflow, competition administration | Unassessed |
 | **Officials management** | Appoint officials, manage accreditation | Officials and DBS appear in affiliation pre-checks | Appointment workflow, availability model | Unassessed |
-| **Courses and accreditation** | Book and complete courses | `get_courses` appears in doc 7 §7's tool example | Course catalogue, booking, certification | Unassessed |
+| **Courses and accreditation** | Book and complete courses | `get_courses` appears in 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7's tool example | Course catalogue, booking, certification | Unassessed |
 | **Club administration** | General club record maintenance | Broad; may be several interactions rather than one | Whether it is one workflow or many | Unassessed |
 | **Insurance administration** | Cover selection and policy management | Partially covered within affiliation Phase 3 | Whether it is a standalone workflow at all | Partially covered |
 
@@ -302,7 +302,7 @@ retrofit.
 
 **Status rationale.** Accepted. Tier 2d under ADR-D0-03 §7.1 — it concerns what the platform
 supports — ratified by the AI Product Owner. Explicitly does **not** finalise the agent
-catalogue, which remains open per doc 7 §6 and is tracked in ADR-D1-11.
+catalogue, which remains open per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 and is tracked in ADR-D1-11.
 
 ## 8. Architecture Detail
 
@@ -317,14 +317,14 @@ change-log row, and touches no code.
 
 ### 8.2 Relationship to the agent catalogue
 
-Workflows and agents are not the same thing, and conflating them is how the doc 7 §6 list came
+Workflows and agents are not the same thing, and conflating them is how the 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 list came
 to look like a plan.
 
 | | Workflow | Agent |
 |---|---|---|
 | What it is | A business interaction a user completes | A logical capability in the AI runtime that orchestrates one |
 | Decided by | This ADR's candidate list plus §7.4's choice | ADR-D1-11 |
-| Granularity | One business interaction (doc 7 §7) | One workflow, per doc 7 §6 |
+| Granularity | One business interaction (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7) | One workflow, per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 |
 | Currently | One committed, seven candidates | One built |
 
 A candidate workflow does not imply a future agent of the same name. Club administration, for
@@ -332,11 +332,11 @@ instance, may prove to be several interactions and therefore several agents, or 
 
 ### 8.3 Reconciling the two specification lists
 
-`DEVELOPMENT-GUIDE.md` §2 flags that the Foundation documents and doc 7 list different sets.
+`DEVELOPMENT-GUIDE.md` §2 flags that the Foundation documents and 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md list different sets.
 §7.2 reconciles them by mapping to business interactions rather than choosing between the
 lists:
 
-| Foundation list | Doc 7 §6 list | §7.2 candidate |
+| Foundation list | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 list | §7.2 candidate |
 |---|---|---|
 | Affiliation | `AffiliationAgent` | Affiliation |
 | Player Registration | `RegistrationAgent` | Player and team registration |
@@ -427,7 +427,7 @@ of the open reconciliation without pre-empting the catalogue decision.
 | Personal data / PII | None in the catalogue. §7.3's sensitivity criterion is where personal-data exposure enters the prioritisation. |
 | Children's data and safeguarding | Two candidates carry material safeguarding exposure: officials management (DBS, welfare officers) and discipline (conduct cases, potentially involving minors). §7.3's inverse sensitivity scoring is intended to keep both from being chosen while the platform is young. Compliance/Legal is consulted on the choice per RSK-05. |
 | UK GDPR lawful basis and rights impact | None now. Each future workflow needs its own assessment before selection; that is part of the sensitivity criterion. |
-| Audit and evidential requirements | Records that the catalogue was deliberately left open per doc 7 §6, which is itself the evidence that it was not invented. |
+| Audit and evidential requirements | Records that the catalogue was deliberately left open per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6, which is itself the evidence that it was not invented. |
 | Standards touched | ISO/IEC 42001 (AI system planning and scope); ISO 9001 §6.2 (objectives and planning); CMMI-DEV PP. |
 
 ## 14. Implementation Impact
@@ -490,7 +490,7 @@ of the open reconciliation without pre-empting the catalogue decision.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-05 Enterprise Workflow Catalogue |
-| Specification sections | doc 7 §6 (Workflow-Level Agent Responsibility — the seven examples and the "finalized separately" note), §7 (Why Workflow-Level Agents); doc 2 §49 (Architecture Extension Model); `DEVELOPMENT-GUIDE.md` §2 (reconciliation item 2); affiliation flow |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 (Workflow-Level Agent Responsibility — the seven examples and the "finalized separately" note), §7 (Why Workflow-Level Agents); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 (Architecture Extension Model); `DEVELOPMENT-GUIDE.md` §2 (reconciliation item 2); affiliation flow |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 23; informs 4–11 |
 | Code paths | Workflow-parameterised components across `src/pf_ft_ai/` |

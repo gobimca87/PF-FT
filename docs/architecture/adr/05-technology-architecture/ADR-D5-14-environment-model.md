@@ -31,13 +31,13 @@ review_due: 2027-08-22
 PFF AI will use a **five-stage environment model — DEV → TEST → UAT → STAGE → PROD** —
 with strict isolation, per-environment configuration overlays and release-manifest
 promotion, so changes flow through progressively production-like stages before reaching
-users (doc 25 §33–§41; doc 17 §13). Each environment is isolated (network, data,
+users (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§41; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §13). Each environment is isolated (network, data,
 identity); promotion is by the immutable release manifest (ADR-D5-06).
 
 ## 2. Context and Problem Statement
 
-Doc 25 §33–§38 define the five environments, §39 environment isolation, §40–§41
-configuration; doc 17 §13/§16 environment configuration and isolation. CLAUDE.md/
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§38 define the five environments, §39 environment isolation, §40–§41
+configuration; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §13/§16 environment configuration and isolation. CLAUDE.md/
 DEVELOPMENT-GUIDE reference a 5-stage model. Without a defined ladder, changes reach
 production under-tested, environments leak data/config into each other, and "what's in
 UAT vs STAGE" is ambiguous. This ADR fixes the environment topology and promotion.
@@ -46,9 +46,9 @@ UAT vs STAGE" is ambiguous. This ADR fixes the environment topology and promotio
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Progressive stages to production | doc 25 §33–§38 |
-| DR-F-02 | Strict env isolation (net/data/identity) | doc 25 §39; doc 17 §16 |
-| DR-F-03 | Per-env config overlays | doc 25 §40; ADR-D5-06 |
+| DR-F-01 | Progressive stages to production | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§38 |
+| DR-F-02 | Strict env isolation (net/data/identity) | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §39; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §16 |
+| DR-F-03 | Per-env config overlays | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §40; ADR-D5-06 |
 | DR-C-01 | Promotion via release manifest | ADR-D5-06; ADR-D7-10 |
 
 ### 3.4 Assumptions
@@ -84,7 +84,7 @@ integrity via manifest.
 **Description.** Collapse TEST/UAT into STAGE.
 **Strengths.** Cheaper; faster.
 **Weaknesses.** No dedicated business UAT; less isolation of automated vs acceptance
-testing; doc 25 specifies five.
+testing; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md specifies five.
 **Cost / effort.** Lower; weaker assurance.
 
 ### 5.3 Option C — Two stages (DEV→PROD)
@@ -118,7 +118,7 @@ complexity; doesn't replace the ladder. A complement to DEV/TEST.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 25 §33–§41 and doc 17 §13/§16.
+**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§41 and 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §13/§16.
 
 | Criterion | Weight | A: 5-stage | B: 3-stage | C: 2-stage | D: Ephemeral+prod | E: 6+ stage |
 |---|---|---|---|---|---|---|
@@ -144,12 +144,12 @@ immutable release manifest and image digest (Option A);** ephemeral per-PR
 environments (D) may complement DEV/TEST. Fewer stages (B/C) are rejected for
 enterprise/safeguarding risk; six+ (E) is unnecessary now.
 
-**Status rationale.** `Accepted` — doc 25 §33–§38 define the five stages.
+**Status rationale.** `Accepted` — 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§38 define the five stages.
 
 ## 8. Architecture Detail
 
 - Environments: DEV (integration), TEST (automated QA), UAT (business sign-off), STAGE
-  (prod-mirror/perf/security window), PROD (doc 25 §34–§38).
+  (prod-mirror/perf/security window), PROD (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §34–§38).
 - Isolation (§39): separate networks, data, identities, namespaces; no shared secrets.
 - Config overlays per env (§40; ADR-D5-06); promotion applies the same manifest/digest
   up the chain via CD (ADR-D7-10) with governance gates (ADR-D6-15).
@@ -257,7 +257,7 @@ enterprise/safeguarding risk; six+ (E) is unnecessary now.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 |
-| Specification sections | doc 25 §33–§41; doc 17 §13, §16 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§41; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §13, §16 |
 | Requirement IDs | ENV-* |
 | Build phases | 1 |
 | Code paths | `config/`, `infra/` |

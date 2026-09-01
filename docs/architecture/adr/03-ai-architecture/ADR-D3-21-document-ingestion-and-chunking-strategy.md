@@ -36,7 +36,7 @@ documents that change.
 
 ## 2. Context and Problem Statement
 
-Doc 13 §40 requires semantic rather than blind N-character chunking. §41 states there is no
+13.FP-FT-AI-RAG.md §40 requires semantic rather than blind N-character chunking. §41 states there is no
 universal correct chunk size and that values must be determined through evaluation. §42 gives a
 baseline of 400 target tokens with 50 overlap, explicitly "not fixed platform requirements". §43
 requires different strategies per document type. §44 defines chunk quality. §45 covers
@@ -50,10 +50,10 @@ That profile has now been established with the business:
 | Property | Value | Source |
 |---|---|---|
 | Update frequency | **5–20 documents per year** | Business input, 2026-08-21 |
-| Corpus size | Low hundreds of documents (FA and county policy, safeguarding guidance, affiliation handbooks, insurance product documentation) | Doc 13 §9 source types; affiliation flow Phase 0 |
+| Corpus size | Low hundreds of documents (FA and county policy, safeguarding guidance, affiliation handbooks, insurance product documentation) | 13.FP-FT-AI-RAG.md §9 source types; affiliation flow Phase 0 |
 | Estimated chunk count | ~4,000–20,000 | Derived: 200–500 documents × 20–40 chunks |
 | Annual churn | **2–10% of the corpus** | 5–20 of a few hundred |
-| Document character | Long-form, heavily structured, authoritative policy | Doc 13 §10 `CONTROLLED_REFERENCE` and above |
+| Document character | Long-form, heavily structured, authoritative policy | 13.FP-FT-AI-RAG.md §10 `CONTROLLED_REFERENCE` and above |
 
 This profile inverts the usual chunking calculus. The standard argument against expensive
 preprocessing — contextual augmentation, LLM-assisted boundary detection, multi-representation
@@ -71,15 +71,15 @@ Three sub-problems follow.
 
 **Policy documents lose meaning when split.** A safeguarding clause reading "this requirement does
 not apply to teams in the categories listed in section 4.2" is actively misleading in isolation.
-Doc 13 §44 requires a chunk to "retain sufficient context", and for cross-referencing policy text
+13.FP-FT-AI-RAG.md §44 requires a chunk to "retain sufficient context", and for cross-referencing policy text
 that is not achievable by overlap alone.
 
 **Retrieval and generation want different chunk sizes.** Small chunks retrieve precisely; large
-chunks give the model enough to reason over. Doc 13 §45's parent-child addresses this and needs
+chunks give the model enough to reason over. 13.FP-FT-AI-RAG.md §45's parent-child addresses this and needs
 a decision on how it composes with the chunking strategy.
 
-**Heterogeneous formats need different treatment.** Doc 13 §43 lists five format families with
-different structural signals; doc 13 §19–§26 cover extraction per format including OCR (§20–§21)
+**Heterogeneous formats need different treatment.** 13.FP-FT-AI-RAG.md §43 lists five format families with
+different structural signals; 13.FP-FT-AI-RAG.md §19–§26 cover extraction per format including OCR (§20–§21)
 and table extraction (§22).
 
 ## 3. Decision Drivers
@@ -88,19 +88,19 @@ and table extraction (§22).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Chunking must be semantic/structural, not blind splitting | doc 13 §40 |
-| DR-F-02 | Chunk size must be evaluation-determined, not asserted | doc 13 §41 |
-| DR-F-03 | Strategy must vary by document type | doc 13 §43 |
-| DR-F-04 | Chunks must retain sufficient context and preserve identifiers | doc 13 §44 |
-| DR-F-05 | Parent-child retrieval must be supported | doc 13 §45 |
-| DR-F-06 | Chunk hashing must support change detection | doc 13 §14, §48 |
-| DR-F-07 | Chunk metadata must carry source, security and business fields | doc 13 §30, §31, §32 |
+| DR-F-01 | Chunking must be semantic/structural, not blind splitting | 13.FP-FT-AI-RAG.md §40 |
+| DR-F-02 | Chunk size must be evaluation-determined, not asserted | 13.FP-FT-AI-RAG.md §41 |
+| DR-F-03 | Strategy must vary by document type | 13.FP-FT-AI-RAG.md §43 |
+| DR-F-04 | Chunks must retain sufficient context and preserve identifiers | 13.FP-FT-AI-RAG.md §44 |
+| DR-F-05 | Parent-child retrieval must be supported | 13.FP-FT-AI-RAG.md §45 |
+| DR-F-06 | Chunk hashing must support change detection | 13.FP-FT-AI-RAG.md §14, §48 |
+| DR-F-07 | Chunk metadata must carry source, security and business fields | 13.FP-FT-AI-RAG.md §30, §31, §32 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Retrieval quality must meet the evaluation threshold | Set at Phase 8 by measurement | doc 13 §41 |
+| DR-N-01 | Retrieval quality must meet the evaluation threshold | Set at Phase 8 by measurement | 13.FP-FT-AI-RAG.md §41 |
 | DR-N-02 | Re-ingest of a changed document must complete quickly | ≤10 minutes per document | Operational |
 | DR-N-03 | Full corpus re-ingest must be feasible | ≤8 hours | Enables model changes (ADR-D3-23) |
 | DR-N-04 | Ingest cost must be proportionate | ≤£500/year at the §2 churn rate | ADR-D8-01 |
@@ -109,9 +109,9 @@ and table extraction (§22).
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | RAG carries knowledge only, never operational truth | Platform | ADR-D3-20; doc 13 §2 |
-| DR-C-02 | Chunk metadata must support ACL filtering before retrieval | Platform | doc 13 §33–§38, §62 |
-| DR-C-03 | Embedding dimension is an architecture constraint | Platform | doc 14 §18 |
+| DR-C-01 | RAG carries knowledge only, never operational truth | Platform | ADR-D3-20; 13.FP-FT-AI-RAG.md §2 |
+| DR-C-02 | Chunk metadata must support ACL filtering before retrieval | Platform | 13.FP-FT-AI-RAG.md §33–§38, §62 |
+| DR-C-03 | Embedding dimension is an architecture constraint | Platform | 14.PF-FT-AI-EMBEDDING-VECTOR.md §18 |
 | DR-C-04 | Corpus turns over at 5–20 documents per year | Organisational | Business input |
 
 ### 3.4 Assumptions
@@ -127,8 +127,8 @@ and table extraction (§22).
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Retrieval quality on policy text | 35 | The purpose; a chunk that retrieves well but misleads is worse than no answer | Recall@k and answer correctness on the golden set |
-| EC-02 | Context preservation across boundaries | 25 | Doc 13 §44; cross-referencing policy text is the corpus's defining characteristic | Does a retrieved chunk carry enough to be understood alone? |
-| EC-03 | Format coverage | 15 | Doc 13 §43's five families | Formats handled without a separate pipeline |
+| EC-02 | Context preservation across boundaries | 25 | 13.FP-FT-AI-RAG.md §44; cross-referencing policy text is the corpus's defining characteristic | Does a retrieved chunk carry enough to be understood alone? |
+| EC-03 | Format coverage | 15 | 13.FP-FT-AI-RAG.md §43's five families | Formats handled without a separate pipeline |
 | EC-04 | Ingest cost and time | 15 | Bounded by DR-N-02 to DR-N-04 — **and deliberately down-weighted given DR-C-04** | Cost per full ingest; time per document |
 | EC-05 | Implementation and maintenance complexity | 10 | Real but subordinate | Components to build and operate |
 | | **Total** | **100** | | |
@@ -145,7 +145,7 @@ and the recommendation may change — RT-01.
 ### 5.1 Option A — Fixed-size token splitting with overlap
 
 **Description.** Split every document into fixed windows of N tokens with a fixed overlap,
-ignoring structure. Doc 13 §42's baseline (400/50) applied uniformly.
+ignoring structure. 13.FP-FT-AI-RAG.md §42's baseline (400/50) applied uniformly.
 
 **Strengths.**
 - Trivial to implement and to reason about; one code path for every format.
@@ -157,10 +157,10 @@ ignoring structure. Doc 13 §42's baseline (400/50) applied uniformly.
 **Weaknesses.**
 - Splits mid-clause and mid-table routinely. A safeguarding requirement split across a boundary
   retrieves as two partial statements, neither correct.
-- Directly contradicts doc 13 §40's requirement for semantic chunking.
+- Directly contradicts 13.FP-FT-AI-RAG.md §40's requirement for semantic chunking.
 - Overlap is a crude substitute for context: 50 tokens does not carry "section 4.2 exempts youth
   teams" to a chunk 300 tokens later.
-- Fails doc 13 §44's context-retention criterion for cross-referencing text.
+- Fails 13.FP-FT-AI-RAG.md §44's context-retention criterion for cross-referencing text.
 
 **Cost / effort.** Lowest. ~£5 per full corpus ingest; hours to build.
 
@@ -179,8 +179,8 @@ recursing until chunks fit the size target. The common library default.
 - Respects *typographic* boundaries, not *semantic* ones. A section heading is just a short
   paragraph; the splitter has no notion that it governs what follows.
 - No cross-reference resolution: the same isolated-clause problem as Option A, slightly less often.
-- Tables and lists still fragment (doc 13 §22's table extraction requirement unmet).
-- Doc 13 §40's "rather than blindly splitting" is only partially satisfied.
+- Tables and lists still fragment (13.FP-FT-AI-RAG.md §22's table extraction requirement unmet).
+- 13.FP-FT-AI-RAG.md §40's "rather than blindly splitting" is only partially satisfied.
 
 **Cost / effort.** Low. ~£5 per full ingest.
 
@@ -188,13 +188,13 @@ recursing until chunks fit the size target. The common library default.
 
 **Description.** Parse each format's structural markup — PDF outline and heading styles, Word
 heading levels, PowerPoint slides, Excel sheets and tables, HTML DOM — and chunk on section and
-subsection boundaries per doc 13 §40's preferred hierarchy, splitting oversized sections at
+subsection boundaries per 13.FP-FT-AI-RAG.md §40's preferred hierarchy, splitting oversized sections at
 paragraph boundaries.
 
 **Strengths.**
 - Chunks align with the author's own semantic units, which for policy documents is exactly right.
-- Directly implements doc 13 §40 and §43.
-- Preserves tables and lists intact (doc 13 §22).
+- Directly implements 13.FP-FT-AI-RAG.md §40 and §43.
+- Preserves tables and lists intact (13.FP-FT-AI-RAG.md §22).
 - Section path is available as metadata, so a chunk knows where it sits.
 - Deterministic and reproducible; no model in the ingest path.
 
@@ -204,7 +204,7 @@ paragraph boundaries.
 - Section sizes vary wildly — a 3,000-token section and a 40-token one both become chunks.
 - **Does not solve cross-referencing.** A chunk from section 7 still does not know section 4.2
   exempts youth teams.
-- Per-format extractors to build and maintain (doc 13 §19–§26).
+- Per-format extractors to build and maintain (13.FP-FT-AI-RAG.md §19–§26).
 
 **Cost / effort.** Moderate to build; ~£5 per full ingest.
 
@@ -233,15 +233,15 @@ than structurally.
 ### 5.5 Option E — Structure-aware chunking with LLM contextual augmentation and parent-child retrieval
 
 **Description.** Option C's structural chunking, plus two additions. **Contextual augmentation**
-(doc 13 §46–§47): for each chunk, an LLM call generates a short prefix situating it in its
+(13.FP-FT-AI-RAG.md §46–§47): for each chunk, an LLM call generates a short prefix situating it in its
 document — what the document is, which section this is, what it depends on — which is prepended
-before embedding. **Parent-child** (doc 13 §45): the small chunk is indexed and retrieved; its
+before embedding. **Parent-child** (13.FP-FT-AI-RAG.md §45): the small chunk is indexed and retrieved; its
 parent section is what reaches the prompt.
 
 **Strengths.**
 - Solves cross-referencing directly: the augmented prefix carries "this section of the 2026
   Safeguarding Policy sets DBS requirements for youth teams; exemptions are in section 4.2".
-- Retrieval precision from small chunks; generation context from parent sections (doc 13 §45).
+- Retrieval precision from small chunks; generation context from parent sections (13.FP-FT-AI-RAG.md §45).
 - Retains Option C's structural alignment and its metadata.
 - Published evidence puts contextual retrieval's improvement in the tens of percent on
   retrieval-failure reduction, which at EC-01's weight dominates.
@@ -269,7 +269,7 @@ thereafter. Moderate to build.
 
 **Weaknesses.**
 - Non-deterministic: the same document chunks differently across runs, so re-ingest changes chunk
-  identity and breaks doc 13 §48's chunk hashing and change detection.
+  identity and breaks 13.FP-FT-AI-RAG.md §48's chunk hashing and change detection.
 - Substantially more expensive than Option E — the model processes full documents, not per-chunk
   prefixes.
 - No clear quality advantage over structural chunking for documents that *are* well structured,
@@ -283,7 +283,7 @@ thereafter. Moderate to build.
 | Option | Eliminated by |
 |---|---|
 | No chunking — index whole documents | DR-C-03 and context budget: a 40-page policy cannot enter a prompt; retrieval precision would be nil |
-| Sentence-level chunking | Fragments policy clauses below the level at which they carry meaning; fails doc 13 §44 |
+| Sentence-level chunking | Fragments policy clauses below the level at which they carry meaning; fails 13.FP-FT-AI-RAG.md §44 |
 | Late chunking (embed full document, pool per span) | Requires an embedding model with a context window exceeding this corpus's document lengths; revisit if DR-C-03's model changes (RT-05) |
 
 ## 6. Evaluation Method and Decision Matrix
@@ -332,7 +332,7 @@ constraint rather than background, why RT-01 watches it, and why §7.6 specifies
 
 Option E. Three composed mechanisms:
 
-| Mechanism | Doc 13 | What it does |
+| Mechanism | 13.FP-FT-AI-RAG.md | What it does |
 |---|---|---|
 | **Structural chunking** | §40, §43 | Chunk on the document's own section and subsection boundaries |
 | **Contextual augmentation** | §46–§47 | Prepend an LLM-generated context prefix to each chunk before embedding |
@@ -340,9 +340,9 @@ Option E. Three composed mechanisms:
 
 ### 7.2 Per-format extraction and structural signal
 
-Per doc 13 §43 and §19–§26:
+Per 13.FP-FT-AI-RAG.md §43 and §19–§26:
 
-| Format | Structural signal | Doc 13 | Fallback when absent |
+| Format | Structural signal | 13.FP-FT-AI-RAG.md | Fallback when absent |
 |---|---|---|---|
 | PDF (digital) | Outline bookmarks, heading font hierarchy | §24 | Semantic boundary detection (Option D) |
 | PDF (scanned) | OCR text, then layout analysis | §20, §21 | Semantic boundary detection; confidence recorded per §21 |
@@ -357,7 +357,7 @@ not by abandoning structure for those that have it.
 
 ### 7.3 Chunk sizing is set by evaluation, not by this ADR
 
-Per doc 13 §41 and DR-F-02, no chunk size is fixed here. Doc 13 §42's 400/50 is the **starting
+Per 13.FP-FT-AI-RAG.md §41 and DR-F-02, no chunk size is fixed here. 13.FP-FT-AI-RAG.md §42's 400/50 is the **starting
 point for evaluation**, not the decision. Phase 8 evaluates:
 
 | Parameter | Range to evaluate | Fixed by |
@@ -400,7 +400,7 @@ actually says.
 
 ### 7.5 Chunk identity and change detection
 
-Per doc 13 §14 and §48:
+Per 13.FP-FT-AI-RAG.md §14 and §48:
 
 ```
 chunk_id   = hash(document_id, document_version, section_path, ordinal)
@@ -437,7 +437,7 @@ measurement rather than an unresolved decision.
 
 ```mermaid
 flowchart TD
-    S[Registered source<br/>doc 13 §8] --> D[Document registration<br/>§11, identity §12, version §13]
+    S[Registered source<br/>13.FP-FT-AI-RAG.md §8] --> D[Document registration<br/>§11, identity §12, version §13]
     D --> CD{Changed since<br/>last ingest? §14}
     CD -- No --> SKIP[Skip]
     CD -- Yes --> EX[Extract per format<br/>§19-§26]
@@ -505,12 +505,12 @@ load — still affordable, but the quality-per-pound argument weakens as §6.1 s
 - Full re-ingest is hours rather than minutes, which slows the iteration loop when tuning §7.3's
   parameters.
 - Augmentation quality is a new failure mode: a bad prefix harms retrieval and is not obvious.
-- Per-format extractors are real work (doc 13 §19–§26), including OCR for scanned PDFs.
+- Per-format extractors are real work (13.FP-FT-AI-RAG.md §19–§26), including OCR for scanned PDFs.
 - The recommendation is churn-dependent and must be revisited if the corpus profile changes.
 
 ### 9.3 Neutral
 
-- Doc 13 §42's 400/50 baseline is a starting point for evaluation, as §42 itself says.
+- 13.FP-FT-AI-RAG.md §42's 400/50 baseline is a starting point for evaluation, as §42 itself says.
 - Semantic boundary detection is retained as an internal fallback rather than rejected.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -540,7 +540,7 @@ load — still affordable, but the quality-per-pound argument weakens as §6.1 s
 | RSK-03 | Augmentation shows no measurable benefit (DR-A-03) | Medium | Medium | Medium | A/B evaluation at Phase 8 before committing; if no benefit, drop to Option C | AI Evaluation Owner | Low |
 | RSK-04 | Documents lack usable structure (DR-A-02) | Medium | Medium | Medium | §7.2's per-format fallback to semantic detection; corpus survey at Phase 8 | RAG/Data Owner | Low |
 | RSK-05 | A citation quotes generated rather than source text | Low | High | Medium | §7.4 rule 2; ADR-D3-22's citation test; QM-04 | AI Engineering Lead | Low |
-| RSK-06 | OCR errors propagate into chunks and prefixes | Medium | Medium | Medium | Doc 13 §21's OCR confidence recorded; low-confidence documents flagged for review before indexing | RAG/Data Owner | Medium |
+| RSK-06 | OCR errors propagate into chunks and prefixes | Medium | Medium | Medium | 13.FP-FT-AI-RAG.md §21's OCR confidence recorded; low-confidence documents flagged for review before indexing | RAG/Data Owner | Medium |
 
 ## 12. Quantitative Targets and Measures
 
@@ -561,9 +561,9 @@ recommendation still holds.
 
 | Dimension | Impact |
 |---|---|
-| Attack surface change | Documents entering the index are untrusted content (ADR-D3-09 T3). File security applies at ingest (doc 13 §18). Contextual augmentation adds an LLM call over document content, so a document containing injected instructions could influence its own prefix — §7.4 rule 4's validation is the mitigation. |
-| Data classification touched | Policy and guidance documents, classified per doc 13 §39. Security metadata attaches per §32. |
-| Personal data / PII | Policy documents should not contain personal data. Where a source does (a named contact in a handbook), doc 13 §32's security metadata and ACL filtering apply, and the RAG/Data Owner assesses at source registration (doc 13 §8). |
+| Attack surface change | Documents entering the index are untrusted content (ADR-D3-09 T3). File security applies at ingest (13.FP-FT-AI-RAG.md §18). Contextual augmentation adds an LLM call over document content, so a document containing injected instructions could influence its own prefix — §7.4 rule 4's validation is the mitigation. |
+| Data classification touched | Policy and guidance documents, classified per 13.FP-FT-AI-RAG.md §39. Security metadata attaches per §32. |
+| Personal data / PII | Policy documents should not contain personal data. Where a source does (a named contact in a handbook), 13.FP-FT-AI-RAG.md §32's security metadata and ACL filtering apply, and the RAG/Data Owner assesses at source registration (13.FP-FT-AI-RAG.md §8). |
 | Children's data and safeguarding | The corpus includes safeguarding policy — guidance *about* children's protection rather than data about children. §8.2's worked example is why chunking quality is a safeguarding concern here: a DBS requirement retrieved without its exemption produces a confidently wrong answer about who may work with under-18s. This is the single strongest argument for Option E. |
 | UK GDPR lawful basis and rights impact | Minimal; the corpus is published guidance. Where personal data appears, source-level classification governs. |
 | Audit and evidential requirements | Chunk identity, document version and augmentation prompt version are recorded, so any retrieved chunk is traceable to a document version and a processing configuration. |
@@ -576,7 +576,7 @@ recommendation still holds.
 | Build phases | 8 (RAG + embedding/vector) |
 | Repository paths | `src/pf_ft_ai/rag/ingestion/`, `src/pf_ft_ai/rag/chunking/` |
 | Configuration | Chunking parameters, augmentation prompt reference and per-format strategy in `config/base/` |
-| Contracts / schemas | Chunk model with metadata per doc 13 §29–§32; parent-child linkage |
+| Contracts / schemas | Chunk model with metadata per 13.FP-FT-AI-RAG.md §29–§32; parent-child linkage |
 | Migration | None; first ingest |
 | Dependencies on other ADRs | ADR-D3-20 (RAG scope), ADR-D3-23 (embedding), ADR-D3-24 (vector store), ADR-D3-11 (prompt versioning) |
 | Effort estimate | Large — per-format extraction is the bulk |
@@ -604,7 +604,7 @@ instead and this ADR is amended.
 | Monitoring | Ingest success rate, chunks per document, prefix validation failures, ingest duration and cost |
 | Alerting | QM-02 and QM-03 breaches; ingest failures |
 | Runbook | `docs/runbooks/rag.md` — ingest failure and re-ingest procedure |
-| Failure mode and degradation | A chunk failing prefix validation is not indexed and is reported (doc 13 §17's ingestion failure state). The document's other chunks index normally, so a partial failure degrades coverage rather than blocking ingest. |
+| Failure mode and degradation | A chunk failing prefix validation is not indexed and is reported (13.FP-FT-AI-RAG.md §17's ingestion failure state). The document's other chunks index normally, so a partial failure degrades coverage rather than blocking ingest. |
 | Rollback | Index versions are immutable (ADR-D3-24); rollback repoints at the prior index version |
 | Support model impact | Retrieval quality complaints route to the RAG/Data Owner with chunk and document version |
 
@@ -627,7 +627,7 @@ instead and this ADR is amended.
 | RT-03 | QM-03 finds a prefix asserting absent content | Per ingest | Strengthen §7.4 rule 4 validation; review the augmentation prompt |
 | RT-04 | Corpus grows an order of magnitude | Quarterly | Re-evaluate; §8.3's costs scale linearly and EC-04 may bind |
 | RT-05 | An embedding model with a very large context window is adopted | ADR-D3-23 change | Reconsider late chunking, eliminated in §5.7 on context-window grounds |
-| RT-06 | Doc 13 §40–§48 amended | Change notice | Re-derive the strategy against the revised requirements |
+| RT-06 | 13.FP-FT-AI-RAG.md §40–§48 amended | Change notice | Re-derive the strategy against the revised requirements |
 
 **Scheduled review:** 2027-08-21, or on RT-01.
 
@@ -636,7 +636,7 @@ instead and this ADR is amended.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-17 RAG Architecture — Knowledge & FAQ Only |
-| Specification sections | doc 13 §8 (Source Registry), §9 (Supported Source Types), §10 (Source Authority), §11–§14 (Registration, Identity, Version, Change Detection), §15 (Ingestion Pipeline), §17 (Ingestion Failure), §18 (File Security), §19–§26 (Extraction, OCR, OCR Confidence, Table, Excel, PDF, Word, PowerPoint), §27 (Content Normalization), §28–§32 (Metadata Architecture, Required, Chunk, Business, Security), §39 (Document Classification), §40 (Chunking Strategy), §41 (Chunk Size), §42 (Chunk Overlap), §43 (Chunking by Document Type), §44 (Chunk Quality), §45 (Parent-Child Retrieval), §46 (Contextual Chunking), §47 (Contextual Retrieval), §48 (Chunk Hash); doc 14 §20–§21 (Chunk-to-Vector Mapping, Chunk Identity), §23–§24 (Chunk Content Storage, Recommended Separation) |
+| Specification sections | 13.FP-FT-AI-RAG.md §8 (Source Registry), §9 (Supported Source Types), §10 (Source Authority), §11–§14 (Registration, Identity, Version, Change Detection), §15 (Ingestion Pipeline), §17 (Ingestion Failure), §18 (File Security), §19–§26 (Extraction, OCR, OCR Confidence, Table, Excel, PDF, Word, PowerPoint), §27 (Content Normalization), §28–§32 (Metadata Architecture, Required, Chunk, Business, Security), §39 (Document Classification), §40 (Chunking Strategy), §41 (Chunk Size), §42 (Chunk Overlap), §43 (Chunking by Document Type), §44 (Chunk Quality), §45 (Parent-Child Retrieval), §46 (Contextual Chunking), §47 (Contextual Retrieval), §48 (Chunk Hash); 14.PF-FT-AI-EMBEDDING-VECTOR.md §20–§21 (Chunk-to-Vector Mapping, Chunk Identity), §23–§24 (Chunk Content Storage, Recommended Separation) |
 | Requirement IDs | `FR-A39-08`, `NFR-A38-PERF`, `NFR-A38-COST` |
 | Build phases | 8 |
 | Code paths | `src/pf_ft_ai/rag/ingestion/`, `src/pf_ft_ai/rag/chunking/` |

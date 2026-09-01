@@ -39,7 +39,7 @@ platform-team confirmation.
 
 ## 2. Context and Problem Statement
 
-Doc 25 §45–§46 define Kubernetes manifests and configuration, §47–§50 health probes,
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §45–§46 define Kubernetes manifests and configuration, §47–§50 health probes,
 §67 the CD pipeline; CLAUDE.md lists the manifest tool as unresolved (Helm vs
 Kustomize). The tool shapes how the API, workers and (later) SLM serving are deployed
 across five environments, how overlays differ, and how GitOps/CD applies them. This ADR
@@ -49,9 +49,9 @@ evaluates and recommends, pending team confirmation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Environment-specific manifest customisation | doc 25 §40, §46; ADR-D5-14 |
-| DR-F-02 | Health probes + resource config expressed cleanly | doc 25 §47–§50 |
-| DR-F-03 | Fits CD/GitOps apply | doc 25 §67; ADR-D7-10 |
+| DR-F-01 | Environment-specific manifest customisation | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §40, §46; ADR-D5-14 |
+| DR-F-02 | Health probes + resource config expressed cleanly | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50 |
+| DR-F-03 | Fits CD/GitOps apply | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §67; ADR-D7-10 |
 | DR-N-01 | Matches base+overlay config philosophy | ADR-D5-06 |
 | DR-F-04 | Ability to consume third-party charts | operational |
 
@@ -121,7 +121,7 @@ for first-party manifests (post-render or separate).
 
 | Option | Eliminated by |
 |---|---|
-| Manual portal/kubectl edits | doc 25 §45 — declarative manifests in Git |
+| Manual portal/kubectl edits | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §45 — declarative manifests in Git |
 | Config baked per-image only | No env overlay flexibility |
 
 ## 6. Evaluation Method and Decision Matrix
@@ -162,7 +162,7 @@ Listed in `_register/open-decisions.md`. Not Accepted.
 ## 8. Architecture Detail
 
 - `deploy/base/` + `deploy/overlays/<env>/` (Kustomize); manifests express Deployments,
-  Services, HPAs, health probes (doc 25 §47–§50), resource requests/limits (§19).
+  Services, HPAs, health probes (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50), resource requests/limits (§19).
 - CD (ADR-D7-10) renders + applies the overlay for the target environment; GitOps
   (Argo/Flux) optional.
 - Where a third-party chart is needed, Helm installs it (Option C); first-party stays
@@ -272,7 +272,7 @@ Listed in `_register/open-decisions.md`. Not Accepted.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 |
-| Specification sections | doc 25 §45–§50, §67 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §45–§50, §67 |
 | Requirement IDs | INFRA-K8S-* |
 | Build phases | 1 |
 | Code paths | `deploy/` |

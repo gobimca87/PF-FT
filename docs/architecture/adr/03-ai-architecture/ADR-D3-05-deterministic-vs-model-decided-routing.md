@@ -31,15 +31,15 @@ review_due: 2027-08-21
 Model decisions are confined to **interpretation** — what the user means, how to say something,
 which permitted option best fits. Every decision with a consequence outside the conversation is
 deterministic: execution order, tool eligibility, authorization, retry, batching, precedence.
-Doc 7 §29's deterministic/AI node classification is generalised into a test that can be applied to
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29's deterministic/AI node classification is generalised into a test that can be applied to
 any new decision point.
 
 ## 2. Context and Problem Statement
 
-Doc 7 §29 classifies graph nodes as deterministic or AI and gives examples of each. Doc 7 §30
-covers edge types. Doc 7 §68 gives a deterministic control boundary and §69 an AI reasoning
-boundary. Doc 2 §3.3 requires critical controls to be deterministic and states the SLM must not be
-the only enforcement mechanism. Doc 3 §46 marks certain decisions as authoritative AI decisions.
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29 classifies graph nodes as deterministic or AI and gives examples of each. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §30
+covers edge types. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §68 gives a deterministic control boundary and §69 an AI reasoning
+boundary. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 requires critical controls to be deterministic and states the SLM must not be
+the only enforcement mechanism. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 marks certain decisions as authoritative AI decisions.
 
 Between them these establish that some decisions are the model's and some are not. What they do
 not provide is a **test** — a way to decide, for a decision point that none of them anticipated,
@@ -51,9 +51,9 @@ is unclear are exactly the ones where getting it wrong is expensive:
 - **Should the model decide whether to refresh ERC?** It has context the refresh policy does not —
   it knows the user just asked about payment status. But freshness is a correctness property
   (ADR-D1-03 §7.3), and a model deciding not to refresh produces a stale answer.
-- **Should the model decide how many teams to batch?** Batch size is fixed at 20 (doc 8 §36), but
+- **Should the model decide how many teams to batch?** Batch size is fixed at 20 (8 PF-FT-AI-ERC-CONTEXT.md §36), but
   a model might reasonably propose fewer for a slow service.
-- **Should the model decide whether to clarify?** Doc 7 §13's confidence bands are computed, but
+- **Should the model decide whether to clarify?** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's confidence bands are computed, but
   the model could be asked directly.
 - **Should the model decide which persona variant applies?** ADR-D1-07 §7.4 derives it from the
   archetype, but a model could judge tone from the conversation.
@@ -62,7 +62,7 @@ Each has a plausible argument for model involvement, and in each case the argume
 has more context". That argument is always available and is not sufficient, because it says
 nothing about what happens when the model is wrong.
 
-Doc 2 §3.3's list — security, authorization enforcement, batching, retry, timeout, idempotency,
+2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's list — security, authorization enforcement, batching, retry, timeout, idempotency,
 schema validation, transaction protection — is a list of instances, not a principle. A new decision
 point not on that list has no guidance.
 
@@ -72,10 +72,10 @@ point not on that list has no guidance.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Critical controls must be deterministic | doc 2 §3.3 |
-| DR-F-02 | Nodes must be classified deterministic or AI | doc 7 §29 |
-| DR-F-03 | Doc 3 §46's authoritative AI decisions must remain the model's | doc 3 §46 |
-| DR-F-04 | The reasoning boundary must be enforceable, not advisory | doc 7 §68–§69 |
+| DR-F-01 | Critical controls must be deterministic | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-F-02 | Nodes must be classified deterministic or AI | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29 |
+| DR-F-03 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46's authoritative AI decisions must remain the model's | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 |
+| DR-F-04 | The reasoning boundary must be enforceable, not advisory | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §68–§69 |
 | DR-F-05 | A new decision point must be classifiable | Programme practice |
 
 ### 3.2 Non-functional drivers
@@ -90,10 +90,10 @@ point not on that list has no guidance.
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The SLM must not be the only enforcement mechanism for a critical control | Platform | doc 2 §3.3 |
+| DR-C-01 | The SLM must not be the only enforcement mechanism for a critical control | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
 | DR-C-02 | Model output is never authoritative for business truth | Platform | ADR-D1-03 |
 | DR-C-03 | No C4 (Model-Terminal) capability exists | Platform | ADR-D3-01 §7.1 |
-| DR-C-04 | Workflow and agent selection are authoritative AI decisions | Organisational | doc 3 §46 |
+| DR-C-04 | Workflow and agent selection are authoritative AI decisions | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 |
 
 ### 3.4 Assumptions
 
@@ -106,9 +106,9 @@ point not on that list has no guidance.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Containment of model influence over consequential decisions | 35 | Doc 2 §3.3 makes this categorical; the whole platform's controllability depends on it | Can a model decision cause an irreversible or incorrect outcome? |
+| EC-01 | Containment of model influence over consequential decisions | 35 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 makes this categorical; the whole platform's controllability depends on it | Can a model decision cause an irreversible or incorrect outcome? |
 | EC-02 | Applicability of the test to new decision points | 25 | The gap this ADR fills; a rule covering only known cases leaves the same gap | Can a novel decision be classified in one discussion? |
-| EC-03 | Preservation of genuine AI value | 20 | Over-restriction produces a platform that cannot interpret, which is its purpose | Are doc 3 §46's AI decisions preserved? |
+| EC-03 | Preservation of genuine AI value | 20 | Over-restriction produces a platform that cannot interpret, which is its purpose | Are 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46's AI decisions preserved? |
 | EC-04 | Reproducibility | 12 | Evaluation and audit both require it | Are deterministic paths reproducible? |
 | EC-05 | Implementation simplicity | 8 | Real but subordinate | Complexity of the classification |
 | | **Total** | **100** | | |
@@ -119,7 +119,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ### 5.1 Option A — Enumerate deterministic decisions; everything else is the model's
 
-**Description.** Adopt doc 2 §3.3's list and doc 7 §29's node examples as the definitive set of
+**Description.** Adopt 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's list and 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29's node examples as the definitive set of
 deterministic decisions. Any decision not listed defaults to the model.
 
 **Strengths.**
@@ -146,7 +146,7 @@ anything does, the decision is deterministic.
 - Applies to decisions nobody anticipated, because it reasons from consequence rather than from a
   list (EC-02).
 - Defaults toward deterministic, which is the safe default for an unexamined decision (EC-01).
-- Preserves doc 3 §46's AI decisions, all of which are interpretive — what the user means, which
+- Preserves 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46's AI decisions, all of which are interpretive — what the user means, which
   workflow applies, how to explain (EC-03).
 - Deterministic paths are reproducible by construction (EC-04).
 
@@ -166,7 +166,7 @@ high-cost ones are deterministic.
 - Proportionate: effort and restriction follow risk.
 - Intuitive to stakeholders and to governance.
 - Allows model involvement where it genuinely helps and costs little.
-- Aligns with doc 20 §15's risk classification.
+- Aligns with 20.PF-FT-AI-GOVERNANCE.md §15's risk classification.
 
 **Weaknesses.**
 - Cost of error is a judgement made before the error is understood, and it is systematically
@@ -194,7 +194,7 @@ every proposal.
   simply correct and the proposal adds nothing — batch size is 20, and asking the model first is
   latency and cost for no benefit (EC-05).
 - Where the deterministic layer would override every proposal, the proposal is theatre.
-- Blurs the boundary: a validator that mostly accepts becomes a rubber stamp, and doc 2 §3.3's
+- Blurs the boundary: a validator that mostly accepts becomes a rubber stamp, and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's
   "not the only mechanism" degrades toward "nominally not the only mechanism".
 
 **Cost / effort.** Moderate, with cost where no benefit exists.
@@ -233,7 +233,7 @@ gradually normalises a validator that mostly accepts.
 > conversation goes somewhere slightly different, it may be the model's.
 
 The default is deterministic. A decision nobody has classified is one whose consequences nobody
-has examined, and defaulting an unexamined decision to the model is how doc 2 §3.3's boundary
+has examined, and defaulting an unexamined decision to the model is how 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's boundary
 erodes without anyone deciding to move it.
 
 ### 7.2 Applying the test to the §2 cases
@@ -241,7 +241,7 @@ erodes without anyone deciding to move it.
 | Decision | Consequence if wrong | Class |
 |---|---|---|
 | Whether to refresh ERC | A stale answer about a user's application — a correctness failure outside the conversation | **Deterministic** — freshness policy (ADR-D1-03 §7.3) |
-| How many records to batch | Enterprise load, latency, partial-failure behaviour | **Deterministic** — fixed at 20 (doc 8 §36) |
+| How many records to batch | Enterprise load, latency, partial-failure behaviour | **Deterministic** — fixed at 20 (8 PF-FT-AI-ERC-CONTEXT.md §36) |
 | Whether to clarify | Only that the conversation asks a question — but a wrong *routing* decision has enterprise consequences | **Deterministic threshold** on a model-produced confidence (ADR-D2-05 §7.3) |
 | Which persona variant | Tone only; no consequence outside the conversation | **Deterministic anyway** — derived from archetype (ADR-D1-07 §7.4), because access-adjacent inputs must not be model-influenced |
 
@@ -262,7 +262,7 @@ a specific constraint can be stricter.
 | Decision | Bounded by |
 |---|---|
 | What the user means (intent) | The registered intent set (ADR-D3-06) |
-| Which workflow applies | The agent registry allowlist (doc 3 §46; ADR-D2-05) |
+| Which workflow applies | The agent registry allowlist (3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46; ADR-D2-05) |
 | Which tool best serves the stated need | The per-agent allowlist (ADR-D3-04 gate 1) |
 | What to ask when clarifying | The clarification pattern (ADR-D3-07) |
 | How to explain an outcome | The persona layer and output guardrail (ADR-D1-09) |
@@ -274,7 +274,7 @@ a specific constraint can be stricter.
 |---|---|
 | Execution order of enterprise calls | Dependency graph (ADR-D2-08 §7.1) |
 | Concurrency limits | Per-service bounds (ADR-D2-08 §7.3) |
-| Batch size | Fixed at 20 (doc 8 §36) |
+| Batch size | Fixed at 20 (8 PF-FT-AI-ERC-CONTEXT.md §36) |
 | Whether a tool may be called | Allowlist, claims, scope (ADR-D3-04) |
 | Whether to retry | Declared per operation (ADR-D2-11 §7.1) |
 | Whether an outcome is confirmed | Transaction state classification (ADR-D2-11 §7.4) |
@@ -302,7 +302,7 @@ Model produces a signal  →  Deterministic rule acts on the signal
 | Clarification | What to ask | Whether to ask (threshold), and that asking is permitted |
 | Context sufficiency | Whether more is needed | What may be fetched (declaration) |
 
-This is doc 2 §3.3's "not the only enforcement mechanism" as a design pattern rather than a
+This is 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's "not the only enforcement mechanism" as a design pattern rather than a
 prohibition: the model's signal is an input, and the rule that acts on it is the control.
 
 Note the difference from Option D. Here the deterministic part is a *rule*, and it applies where
@@ -312,7 +312,7 @@ size and then always using 20.
 
 ### 7.5 Node classification follows
 
-Doc 7 §29's deterministic/AI node classification is derived from §7.1 rather than being a separate
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29's deterministic/AI node classification is derived from §7.1 rather than being a separate
 judgement. A node is an AI node if it calls the model to produce a signal; otherwise it is
 deterministic. ADR-D2-06 §7.4 requires every node to declare its class, and this decision is the
 rule that determines it.
@@ -322,7 +322,7 @@ applying §7.1 to each, and the classification determines test strategy (ADR-D3-
 whether output validation applies (ADR-D3-17).
 
 **Status rationale.** Accepted. Tier 3 under ADR-D0-03 §7.1 — a design rule within the AI platform
-that implements doc 2 §3.3 rather than changing a boundary — ratified by the AI Solution Architect
+that implements 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 rather than changing a boundary — ratified by the AI Solution Architect
 with the Security Owner consulted on §7.1's default.
 
 ## 8. Architecture Detail
@@ -391,8 +391,8 @@ applies.
 
 - A novel decision point can be classified in one discussion, rather than argued case by case.
 - The default is deterministic, so an unexamined decision does not silently become the model's.
-- Doc 3 §46's authoritative AI decisions are preserved, all being interpretive.
-- Doc 7 §29's node classification follows from the rule rather than being independent judgement.
+- 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46's authoritative AI decisions are preserved, all being interpretive.
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §29's node classification follows from the rule rather than being independent judgement.
 - The decomposition pattern gives a constructive answer where a decision has both aspects.
 
 ### 9.2 Negative
@@ -404,7 +404,7 @@ applies.
 
 ### 9.3 Neutral
 
-- Doc 2 §3.3's list becomes instances of the rule rather than the rule itself.
+- 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's list becomes instances of the rule rather than the rule itself.
 - The test sets a default that a stronger constraint can override (§7.2's fourth row).
 
 ### 9.4 Trade-offs explicitly accepted
@@ -479,7 +479,7 @@ theatre and should be removed, which is a different fix from tuning the rule.
 | AC-01 | Every graph node declares deterministic or AI, derived from §7.1 | ADR-D2-06 AC-05; QM-01 |
 | AC-02 | No model-decided point has an external consequence without an intervening deterministic rule | Design audit; QM-02 |
 | AC-03 | Execution order, batching, retry and precedence are reproducible for identical inputs | Determinism tests |
-| AC-04 | Doc 3 §46's authoritative AI decisions remain model-decided | Classification audit |
+| AC-04 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46's authoritative AI decisions remain model-decided | Classification audit |
 | AC-05 | Every model-decided point has a golden-set measure | Evaluation coverage; QM-05 |
 | AC-06 | A novel decision point can be classified using §7.1 in a design review | Applied to at least one new decision at Phase 4 |
 
@@ -510,7 +510,7 @@ theatre and should be removed, which is a different fix from tuning the rule.
 | RT-02 | QM-04 shows a rule overriding above 95% | Quarterly | Remove the model step; it is theatre (Option D's failure) |
 | RT-03 | A decision genuinely resists the test (DR-A-01) | Design review | Default deterministic; record the case for a possible tie-break rule |
 | RT-04 | Determinism demonstrably produces worse outcomes at a point (DR-A-02) | Evaluation | Apply §7.4's decomposition to admit a model signal, not to move the decision |
-| RT-05 | Doc 2 §3.3 or doc 3 §46 amended | Change notice | Re-derive §7.3's tables |
+| RT-05 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 or 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 amended | Change notice | Re-derive §7.3's tables |
 
 **Scheduled review:** 2027-08-21.
 
@@ -519,7 +519,7 @@ theatre and should be removed, which is a different fix from tuning the rule.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-14 Conversation Decision Architecture |
-| Specification sections | doc 7 §12–§13 (Supervisor Decision Model, Confidence), §29 (Deterministic vs AI Nodes), §30 (Graph Edge Types), §68 (Deterministic Control Boundary), §69 (AI Reasoning Boundary); doc 2 §3.3 (Deterministic Control); doc 3 §46 (Decision Authority Matrix); doc 8 §36 |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12–§13 (Supervisor Decision Model, Confidence), §29 (Deterministic vs AI Nodes), §30 (Graph Edge Types), §68 (Deterministic Control Boundary), §69 (AI Reasoning Boundary); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 (Deterministic Control); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 (Decision Authority Matrix); 8 PF-FT-AI-ERC-CONTEXT.md §36 |
 | Requirement IDs | `NFR-A38-SEC`, `NFR-A38-REL` |
 | Build phases | 4 |
 | Code paths | `src/pf_ft_ai/orchestration/` |
@@ -532,4 +532,4 @@ theatre and should be removed, which is a different fix from tuning the rule.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. A consequence test replacing doc 2 §3.3's list of instances: deterministic unless the only effect is interpretive, defaulting to deterministic for unexamined decisions. Adds the decomposition pattern for composite decisions, and distinguishes it from uniform propose-and-dispose, which produces rubber-stamp validators where no genuine choice exists. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. A consequence test replacing 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's list of instances: deterministic unless the only effect is interpretive, defaulting to deterministic for unexamined decisions. Adds the decomposition pattern for composite decisions, and distinguishes it from uniform propose-and-dispose, which produces rubber-stamp validators where no genuine choice exists. |

@@ -29,7 +29,7 @@ review_due: 2027-02-21
 ## 1. Summary
 
 Ratification authority for an ADR is determined by what the decision touches, not by who
-wrote it. Decisions in the doc 2 §52 categories are ratified by the external ADF/ADR forum;
+wrote it. Decisions in the 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 categories are ratified by the external ADF/ADR forum;
 security, privacy and responsible-AI decisions require the Security Owner or Compliance
 role as co-approver; everything else is ratified by the AI Solution Architect. Architecture
 review runs monthly, with an out-of-band path for decisions blocking a build phase.
@@ -40,28 +40,28 @@ ADR-D0-02 defines a `Proposed → Accepted` transition and names the `approver` 
 gate. It does not say who fills that field, and an unratified decision library is a
 suggestion box.
 
-The specifications provide most of the answer but leave it distributed. Doc 20 §8 lists
-fourteen governance roles. Doc 20 §10 gives a RACI across eleven governance activities, of
+The specifications provide most of the answer but leave it distributed. 20.PF-FT-AI-GOVERNANCE.md §8 lists
+fourteen governance roles. 20.PF-FT-AI-GOVERNANCE.md §10 gives a RACI across eleven governance activities, of
 which "Architecture" is one row: Business consulted, AI Platform accountable and
-responsible, Security consulted, Data consulted, Governance consulted. Doc 3 §61 gives a
-different RACI across twenty-five delivery capabilities. Doc 3 §46 gives a decision
+responsible, Security consulted, Data consulted, Governance consulted. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §61 gives a
+different RACI across twenty-five delivery capabilities. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 gives a decision
 authority matrix, but for *runtime* decisions — who decides whether a club is eligible —
-not for architecture decisions. Doc 2 §52 names twelve categories requiring external
+not for architecture decisions. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 names twelve categories requiring external
 architecture governance review without saying what "review" concludes with.
 
 Three specific gaps follow:
 
-- **No mapping from decision content to approver.** Doc 20 §10 makes AI Platform
+- **No mapping from decision content to approver.** 20.PF-FT-AI-GOVERNANCE.md §10 makes AI Platform
   accountable for "Architecture" as a single undifferentiated row, which cannot be right
-  for a decision that changes the external SLM data boundary — doc 20 §10's own Security
+  for a decision that changes the external SLM data boundary — 20.PF-FT-AI-GOVERNANCE.md §10's own Security
   row makes Security accountable there.
-- **No cadence.** Doc 20 §90 requires periodic AI governance review but does not set a
+- **No cadence.** 20.PF-FT-AI-GOVERNANCE.md §90 requires periodic AI governance review but does not set a
   frequency for architecture decisions, and `DEVELOPMENT-GUIDE.md` §4 sequences 24 build
   phases that will each surface decisions. A quarterly forum would stall the build.
-- **No path for a decision that blocks work now.** Doc 20 §79 provides for emergency
+- **No path for a decision that blocks work now.** 20.PF-FT-AI-GOVERNANCE.md §79 provides for emergency
   changes; nothing equivalent exists for a decision needed before the next scheduled review.
 
-Doc 20 §9 states the governing constraint plainly: no production AI component should be
+20.PF-FT-AI-GOVERNANCE.md §9 states the governing constraint plainly: no production AI component should be
 ownerless. The same must hold for decisions.
 
 ## 3. Decision Drivers
@@ -70,11 +70,11 @@ ownerless. The same must hold for decisions.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every ADR must have a determinable approver, derivable from its content | doc 20 §9 (Accountability Principle) |
-| DR-F-02 | Doc 2 §52 categories must route to the external architecture governance process | doc 2 §52 |
-| DR-F-03 | Security, privacy and responsible-AI decisions must not be ratified by delivery alone | doc 20 §10 (Security row: Security accountable) |
-| DR-F-04 | A decision blocking a build phase must be resolvable without waiting for the next scheduled review | `DEVELOPMENT-GUIDE.md` §4; doc 20 §79 |
-| DR-F-05 | Ratification must leave evidence | doc 20 §81 (Approval Evidence) |
+| DR-F-01 | Every ADR must have a determinable approver, derivable from its content | 20.PF-FT-AI-GOVERNANCE.md §9 (Accountability Principle) |
+| DR-F-02 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 categories must route to the external architecture governance process | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 |
+| DR-F-03 | Security, privacy and responsible-AI decisions must not be ratified by delivery alone | 20.PF-FT-AI-GOVERNANCE.md §10 (Security row: Security accountable) |
+| DR-F-04 | A decision blocking a build phase must be resolvable without waiting for the next scheduled review | `DEVELOPMENT-GUIDE.md` §4; 20.PF-FT-AI-GOVERNANCE.md §79 |
+| DR-F-05 | Ratification must leave evidence | 20.PF-FT-AI-GOVERNANCE.md §81 (Approval Evidence) |
 
 ### 3.2 Non-functional drivers
 
@@ -88,33 +88,33 @@ ownerless. The same must hold for decisions.
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | An external ADF/ADR forum exists and holds authority over the doc 2 §52 categories | Organisational | doc 2 §52; ADR-D0-01 §7 |
-| DR-C-02 | Doc 20 §8's fourteen governance roles are the available role vocabulary | Organisational | doc 20 §8 |
-| DR-C-03 | Doc 20 §10 makes Security accountable for security and Governance accountable for compliance | Organisational | doc 20 §10 |
-| DR-C-04 | Production release approval is Business-accountable, AI Platform-responsible | Organisational | doc 20 §10; doc 3 §70 |
+| DR-C-01 | An external ADF/ADR forum exists and holds authority over the 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 categories | Organisational | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52; ADR-D0-01 §7 |
+| DR-C-02 | 20.PF-FT-AI-GOVERNANCE.md §8's fourteen governance roles are the available role vocabulary | Organisational | 20.PF-FT-AI-GOVERNANCE.md §8 |
+| DR-C-03 | 20.PF-FT-AI-GOVERNANCE.md §10 makes Security accountable for security and Governance accountable for compliance | Organisational | 20.PF-FT-AI-GOVERNANCE.md §10 |
+| DR-C-04 | Production release approval is Business-accountable, AI Platform-responsible | Organisational | 20.PF-FT-AI-GOVERNANCE.md §10; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §70 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | The external forum meets at least monthly, or will accept asynchronous ratification | Doc 2 §52 decisions become the delivery bottleneck; §7.4's out-of-band path is used routinely rather than exceptionally | Confirm at first forum engagement; QM-02 |
+| DR-A-01 | The external forum meets at least monthly, or will accept asynchronous ratification | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 decisions become the delivery bottleneck; §7.4's out-of-band path is used routinely rather than exceptionally | Confirm at first forum engagement; QM-02 |
 | DR-A-02 | One named individual can hold the AI Solution Architect role for the programme's duration | Ratification stalls on absence; the deputising rule in §7.5 applies | Reviewed at each governance review |
-| DR-A-03 | Most ADRs fall outside the doc 2 §52 categories | The external forum is overloaded and the model needs rebalancing | QM-01 |
+| DR-A-03 | Most ADRs fall outside the 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 categories | The external forum is overloaded and the model needs rebalancing | QM-01 |
 
 ## 4. Evaluation Criteria and Weights
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Correct authority for the decision's risk | 30 | A security decision ratified by delivery alone is a governance failure, not a process inefficiency; doc 20 §10 makes this explicit | Does the model route each decision class to the role doc 20 §10 makes accountable? |
+| EC-01 | Correct authority for the decision's risk | 30 | A security decision ratified by delivery alone is a governance failure, not a process inefficiency; 20.PF-FT-AI-GOVERNANCE.md §10 makes this explicit | Does the model route each decision class to the role 20.PF-FT-AI-GOVERNANCE.md §10 makes accountable? |
 | EC-02 | Decision latency | 25 | 24 sequenced build phases; a model that stalls delivery will be bypassed, which is worse than a weaker model that is followed | Working days from `Proposed` to ratified |
 | EC-03 | Unambiguous routing | 20 | Ambiguity produces both misrouting and forum-shopping | Can an author determine the approver from the ADR's content alone? |
 | EC-04 | Review load sustainability | 15 | The architecture function is small; unsustainable load produces rubber-stamping | Standing hours per month |
-| EC-05 | Evidence quality | 10 | Doc 20 §81 requires approval evidence | Is ratification recorded durably and attributably? |
+| EC-05 | Evidence quality | 10 | 20.PF-FT-AI-GOVERNANCE.md §81 requires approval evidence | Is ratification recorded durably and attributably? |
 | | **Total** | **100** | | |
 
 Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good · **5** excellent.
 
-EC-01 at 30 is the highest weight in this record and is justified by DR-C-03: doc 20 §10
+EC-01 at 30 is the highest weight in this record and is justified by DR-C-03: 20.PF-FT-AI-GOVERNANCE.md §10
 assigns accountability for security to Security and for compliance to Governance. A model
 that gets this wrong is not suboptimal, it is non-conformant.
 
@@ -130,18 +130,18 @@ that gets this wrong is not suboptimal, it is non-conformant.
 - Minimal review load.
 
 **Weaknesses.**
-- Violates DR-C-03 directly: doc 20 §10 makes Security accountable for security decisions
+- Violates DR-C-03 directly: 20.PF-FT-AI-GOVERNANCE.md §10 makes Security accountable for security decisions
   and Governance accountable for compliance. A single delivery-side approver cannot
   discharge either.
-- Ignores doc 2 §52's external review requirement entirely.
-- Concentrates authority in one person with no structural check — the failure mode doc 20
+- Ignores 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52's external review requirement entirely.
+- Concentrates authority in one person with no structural check — the failure mode 20.PF-FT-AI-GOVERNANCE.md
   §9's accountability principle exists to prevent.
 
 **Cost / effort.** Nil.
 
 ### 5.2 Option B — Full board: every ADR ratified by a standing architecture review board
 
-**Description.** A board comprising the roles in doc 20 §8 meets on a fixed cadence and
+**Description.** A board comprising the roles in 20.PF-FT-AI-GOVERNANCE.md §8 meets on a fixed cadence and
 ratifies every ADR.
 
 **Strengths.**
@@ -152,7 +152,7 @@ ratifies every ADR.
 **Weaknesses.**
 - Latency is bounded below by the cadence. At 136 decisions, a monthly board handling ten
   per session takes over a year — `DEVELOPMENT-GUIDE.md` §4's phases would stall.
-- Review load is unsustainable: doc 20 §8's fourteen roles, monthly, on decisions most of
+- Review load is unsustainable: 20.PF-FT-AI-GOVERNANCE.md §8's fourteen roles, monthly, on decisions most of
   them have no stake in.
 - Predictable outcome is rubber-stamping, which produces evidence of review without review.
 
@@ -161,12 +161,12 @@ ratifies every ADR.
 ### 5.3 Option C — Content-routed authority with a monthly review and an out-of-band path
 
 **Description.** The approver is derived from what the decision touches. Three tiers:
-external forum for doc 2 §52 categories; co-approval by Security or Compliance for
+external forum for 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 categories; co-approval by Security or Compliance for
 decisions in their accountability; AI Solution Architect otherwise. A monthly review
 handles the queue; a defined out-of-band path handles decisions blocking a phase.
 
 **Strengths.**
-- Routes each decision to the role doc 20 §10 makes accountable (EC-01).
+- Routes each decision to the role 20.PF-FT-AI-GOVERNANCE.md §10 makes accountable (EC-01).
 - Most decisions take the fast path, so latency stays low where risk is low (EC-02).
 - Routing derives from ADR content, which is already written down (EC-03).
 - Review load proportionate to risk (EC-04).
@@ -188,7 +188,7 @@ handles the queue; a defined out-of-band path handles decisions blocking a phase
 - No scheduling dependency.
 
 **Weaknesses.**
-- Fails doc 20 §9 outright — a consensus is not an owner, and "the team decided" names
+- Fails 20.PF-FT-AI-GOVERNANCE.md §9 outright — a consensus is not an owner, and "the team decided" names
   nobody accountable.
 - No evidence of who approved what (EC-05 fails).
 - Under-weights Security and Compliance, who are not on the delivery team.
@@ -199,8 +199,8 @@ handles the queue; a defined out-of-band path handles decisions blocking a phase
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4. EC-01 is assessed against doc 20 §10's
-accountability assignments and doc 2 §52's category list. EC-02 is estimated from the
+**Method.** Weighted scoring against §4. EC-01 is assessed against 20.PF-FT-AI-GOVERNANCE.md §10's
+accountability assignments and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52's category list. EC-02 is estimated from the
 library's known size (136 decisions) against `DEVELOPMENT-GUIDE.md` §4's 24 phases.
 
 | Criterion | Weight | A: Single approver | B: Full board | C: Content-routed | D: Consensus |
@@ -219,7 +219,7 @@ library's known size (136 decisions) against `DEVELOPMENT-GUIDE.md` §4's 24 pha
 criteria where a full board's cost falls. For B to overtake C, EC-02 and EC-04's combined
 weight would have to fall below about 12 (from 40), which would amount to asserting that
 delivery latency does not matter across a 24-phase build. A and D are both eliminated on
-EC-01 independent of weighting: neither can discharge the accountability doc 20 §10 assigns
+EC-01 independent of weighting: neither can discharge the accountability 20.PF-FT-AI-GOVERNANCE.md §10 assigns
 to Security and Governance, and no reweighting repairs a non-conformance.
 
 ## 7. Decision
@@ -231,7 +231,7 @@ tier governs:
 
 | Tier | Condition | Approver | Co-approver |
 |---|---|---|---|
-| **1** | Touches any doc 2 §52 category: system boundaries, data ownership, agent architecture, LangGraph architecture, ERC, SLM, security, tool/MCP, eventing, state, AI evaluation, deployment boundaries | External ADF/ADR governance forum | AI Solution Architect records the outcome |
+| **1** | Touches any 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 category: system boundaries, data ownership, agent architecture, LangGraph architecture, ERC, SLM, security, tool/MCP, eventing, state, AI evaluation, deployment boundaries | External ADF/ADR governance forum | AI Solution Architect records the outcome |
 | **2a** | Material security consequence (attack surface, trust boundary, secret handling, data egress) | Security Owner | AI Solution Architect |
 | **2b** | Material privacy, safeguarding, regulatory or responsible-AI consequence | Compliance/Legal | AI Solution Architect |
 | **2c** | Commits recurring cost above the programme's delegated threshold, or a vendor dependency | AI Platform Owner | AI Solution Architect |
@@ -247,16 +247,16 @@ Tier 1 does not bypass the library. The ADR is drafted here, ratified externally
 
 ### 7.2 Roles
 
-Drawn from doc 20 §8; no new roles are introduced.
+Drawn from 20.PF-FT-AI-GOVERNANCE.md §8; no new roles are introduced.
 
 | Role | Architecture-decision responsibility |
 |---|---|
 | AI Solution Architect | Owns the library. Ratifies tier 3, co-approves tiers 2a–2d, drafts and routes tier 1. |
-| AI Platform Owner | Ratifies tier 2c. Accountable for the library's health per doc 20 §10's Architecture row. |
+| AI Platform Owner | Ratifies tier 2c. Accountable for the library's health per 20.PF-FT-AI-GOVERNANCE.md §10's Architecture row. |
 | AI Product Owner | Ratifies tier 2d. |
-| Security Owner | Ratifies tier 2a per doc 20 §10's Security row. |
-| Compliance/Legal | Ratifies tier 2b per doc 20 §10's Compliance row. |
-| Business Owner | Consulted on tier 2d. Accountable for production release per doc 20 §10, which is a separate gate from architecture ratification. |
+| Security Owner | Ratifies tier 2a per 20.PF-FT-AI-GOVERNANCE.md §10's Security row. |
+| Compliance/Legal | Ratifies tier 2b per 20.PF-FT-AI-GOVERNANCE.md §10's Compliance row. |
+| Business Owner | Consulted on tier 2d. Accountable for production release per 20.PF-FT-AI-GOVERNANCE.md §10, which is a separate gate from architecture ratification. |
 | AI Engineering Lead | Consulted throughout; responsible for implementation conformance. |
 | Data Owner, Model Owner, Prompt Owner, Agent Owner, RAG/Data Owner, Operations/SRE, AI Evaluation Owner | Consulted within their domain. |
 
@@ -265,7 +265,7 @@ Drawn from doc 20 §8; no new roles are introduced.
 | Forum | Frequency | Scope | Duration |
 |---|---|---|---|
 | **Architecture decision review** | Monthly | Ratify queued tier 2 and tier 3 ADRs; route ambiguous ones; review the open-decisions list per ADR-D0-04 | ≤2 hours |
-| **Governance review** | Quarterly | Library health (QM-01 to QM-05 of ADR-D0-01 and ADR-D0-02); overdue `review_due`; supersession integrity. Aligns with doc 20 §90. | ≤2 hours |
+| **Governance review** | Quarterly | Library health (QM-01 to QM-05 of ADR-D0-01 and ADR-D0-02); overdue `review_due`; supersession integrity. Aligns with 20.PF-FT-AI-GOVERNANCE.md §90. | ≤2 hours |
 | **External ADF/ADR forum** | Per its own schedule | Tier 1 ratification | — |
 
 Tier 3 decisions do not wait for the monthly review. The AI Solution Architect ratifies
@@ -284,7 +284,7 @@ unavailable within DR-N-01's ten working days:
    provisional record is **not** rewritten.
 
 This path is **not available for tier 2a or 2b.** A security, privacy or safeguarding
-decision waits for its accountable role. Doc 20 §79's emergency-change provision covers
+decision waits for its accountable role. 20.PF-FT-AI-GOVERNANCE.md §79's emergency-change provision covers
 genuine production emergencies; it is not a route around security review for a decision
 that is merely inconvenient to delay.
 
@@ -293,7 +293,7 @@ that is merely inconvenient to delay.
 If an approver role is vacant or unavailable beyond ten working days, authority passes
 upward: AI Solution Architect → AI Platform Owner → Business Owner. Security Owner and
 Compliance/Legal do **not** deputise to delivery roles; their decisions wait, per §7.4.
-Escalation beyond this follows doc 20 §104.
+Escalation beyond this follows 20.PF-FT-AI-GOVERNANCE.md §104.
 
 **Status rationale.** Accepted, approved by the AI Platform Owner rather than the AI
 Solution Architect — this record defines the architect's own authority, and self-ratifying
@@ -305,7 +305,7 @@ that would be circular.
 
 ```mermaid
 flowchart TD
-    A[ADR drafted, status: Proposed] --> B{doc 2 §52 category?}
+    A[ADR drafted, status: Proposed] --> B{2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 category?}
     B -- Yes --> C[Tier 1: external ADF/ADR forum]
     B -- No --> D{Security consequence?}
     D -- Yes --> E[Tier 2a: Security Owner]
@@ -326,7 +326,7 @@ flowchart TD
 
 ### 8.2 Approval evidence
 
-Doc 20 §81 requires approval evidence. Three artefacts constitute it, and no separate
+20.PF-FT-AI-GOVERNANCE.md §81 requires approval evidence. Three artefacts constitute it, and no separate
 approval system is introduced:
 
 1. The `approver` front-matter field naming the ratifying role.
@@ -337,21 +337,21 @@ Where ratification happened in a forum, the §20 row cites the forum and meeting
 
 ### 8.3 Relationship to runtime decision authority
 
-Doc 3 §46 defines who decides things *at runtime* — whether a club is eligible, whether a
+3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 defines who decides things *at runtime* — whether a club is eligible, whether a
 user is authorised. That matrix is not affected by this record and is captured as a
-decision in ADR-D1-03. The two are distinct: doc 3 §46 governs the platform's behaviour;
+decision in ADR-D1-03. The two are distinct: 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 governs the platform's behaviour;
 this record governs who may change the platform's architecture.
 
 ## 9. Consequences
 
 ### 9.1 Positive
 
-- Every ADR has a determinable approver, satisfying doc 20 §9 for decisions as well as
+- Every ADR has a determinable approver, satisfying 20.PF-FT-AI-GOVERNANCE.md §9 for decisions as well as
   components.
 - Security and compliance decisions reach their accountable role by routing, not by an
   author's judgement about whether to consult.
 - Most decisions take the fast path, so the model does not gate a 24-phase build.
-- Doc 2 §52's external review requirement is honoured through tier 1 rather than ignored.
+- 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52's external review requirement is honoured through tier 1 rather than ignored.
 - Approval evidence falls out of the existing artefacts; no approval tooling is needed.
 
 ### 9.2 Negative
@@ -366,7 +366,7 @@ this record governs who may change the platform's architecture.
 
 ### 9.3 Neutral
 
-- Introduces no new roles; uses doc 20 §8's vocabulary unchanged.
+- Introduces no new roles; uses 20.PF-FT-AI-GOVERNANCE.md §8's vocabulary unchanged.
 - Monthly cadence is a starting point, revisable through RT-03.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -374,15 +374,15 @@ this record governs who may change the platform's architecture.
 | Given up | In exchange for | Accepted by |
 |---|---|---|
 | Uniform review of every decision by every role | Delivery latency proportionate to risk | AI Platform Owner |
-| Simplicity of a single approver | Conformance with doc 20 §10's accountability assignments | AI Platform Owner |
-| Full control of decision latency | Doc 2 §52 conformance for boundary decisions | AI Solution Architect |
+| Simplicity of a single approver | Conformance with 20.PF-FT-AI-GOVERNANCE.md §10's accountability assignments | AI Platform Owner |
+| Full control of decision latency | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 conformance for boundary decisions | AI Solution Architect |
 
 ## 10. Golden-Rule and Precedence Conformance
 
 | Constraint | Conformance |
 |---|---|
 | Enterprise decides; AI orchestrates | Upheld structurally: tier 1 routes every decision touching a system boundary or data ownership to the enterprise's own architecture forum, so the AI programme cannot unilaterally move the boundary it is subordinate to. |
-| Authoritative-truth precedence | Not applicable — governs who ratifies decisions, not a runtime data path. Distinct from doc 3 §46's runtime authority matrix, as §8.3 notes. |
+| Authoritative-truth precedence | Not applicable — governs who ratifies decisions, not a runtime data path. Distinct from 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46's runtime authority matrix, as §8.3 notes. |
 | Four-state separation | Not applicable. |
 | Versioned artefacts, never mutated in place | Upheld: §7.4 requires a dissented provisional ratification to be resolved by a superseding ADR, never by rewriting the provisional record. |
 | Adam persona governs how, never what | Not applicable. |
@@ -409,7 +409,7 @@ this record governs who may change the platform's architecture.
 | QM-06 | Tier 2a/2b decisions ratified without their accountable role | 0 | ≥1 | Governance review audit | Quarterly |
 
 QM-06 has a zero threshold deliberately: a single occurrence is a governance
-non-conformance under doc 20 §10, not a trend to watch.
+non-conformance under 20.PF-FT-AI-GOVERNANCE.md §10, not a trend to watch.
 
 ## 13. Security, Privacy and Compliance Impact
 
@@ -420,7 +420,7 @@ non-conformance under doc 20 §10, not a trend to watch.
 | Personal data / PII | None. Approvers are recorded by role, not by named individual. |
 | Children's data and safeguarding | Tier 2b routes safeguarding-relevant decisions to Compliance/Legal, and §7.4 explicitly denies them the out-of-band path. Given FA football data includes minors, this is a substantive control, not a formality. |
 | UK GDPR lawful basis and rights impact | None from this record; tier 2b ensures downstream privacy decisions reach the accountable role. |
-| Audit and evidential requirements | Satisfies doc 20 §81 (Approval Evidence) through the three artefacts in §8.2, with no separate approval system to maintain or audit. |
+| Audit and evidential requirements | Satisfies 20.PF-FT-AI-GOVERNANCE.md §81 (Approval Evidence) through the three artefacts in §8.2, with no separate approval system to maintain or audit. |
 | Standards touched | ISO/IEC 42001 (AI management system — roles, responsibilities, authority); ISO/IEC 27001 A.5.2 (information security roles and responsibilities), A.5.4 (management responsibilities); ISO 9001 §5.3 (organisational roles, responsibilities and authorities); CMMI-DEV DAR, OPD, GP 2.4. |
 
 ## 14. Implementation Impact
@@ -430,7 +430,7 @@ non-conformance under doc 20 §10, not a trend to watch.
 | Build phases | 0, 21 |
 | Repository paths | `docs/architecture/adr/` — the `approver` field and register |
 | Configuration | None |
-| Contracts / schemas | `approver` and `contributors` front-matter fields draw from doc 20 §8's role vocabulary |
+| Contracts / schemas | `approver` and `contributors` front-matter fields draw from 20.PF-FT-AI-GOVERNANCE.md §8's role vocabulary |
 | Migration | None. The four `docs/adr/` records predate this model and are not retrospectively ratified. |
 | Dependencies on other ADRs | ADR-D0-01 (hybrid ratification model), ADR-D0-02 (status lifecycle) |
 | Effort estimate | Small one-off; ~4 hours per month recurring across all roles combined |
@@ -439,8 +439,8 @@ non-conformance under doc 20 §10, not a trend to watch.
 
 | ID | Acceptance criterion | Verification method |
 |---|---|---|
-| AC-01 | Every Accepted ADR names an approver drawn from doc 20 §8's roles | Front-matter lint against the role list |
-| AC-02 | Every ADR touching a doc 2 §52 category names the external forum as approver | Governance review audit of tier 1 records |
+| AC-01 | Every Accepted ADR names an approver drawn from 20.PF-FT-AI-GOVERNANCE.md §8's roles | Front-matter lint against the role list |
+| AC-02 | Every ADR touching a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 category names the external forum as approver | Governance review audit of tier 1 records |
 | AC-03 | Every ADR with a material security consequence in §13 names the Security Owner as approver or co-approver | Cross-check §13 against `approver`; QM-06 |
 | AC-04 | Every ADR with a privacy or safeguarding consequence in §13 names Compliance/Legal | As AC-03 |
 | AC-05 | Every provisional ratification is recorded in §20 with date and reason, and appears in a subsequent review's minutes | §20 grep against review minutes |
@@ -464,8 +464,8 @@ non-conformance under doc 20 §10, not a trend to watch.
 |---|---|---|---|
 | Model definition | ~0.5 architect-day | — | This record |
 | Monthly architecture decision review | — | ~2 hours × 3 attendees | §7.3 |
-| Quarterly governance review | — | ~2 hours × 5 attendees per quarter | §7.3, aligned to doc 20 §90 |
-| External forum engagement | — | Absorbed by the existing forum | doc 2 §52 process already exists |
+| Quarterly governance review | — | ~2 hours × 5 attendees per quarter | §7.3, aligned to 20.PF-FT-AI-GOVERNANCE.md §90 |
+| External forum engagement | — | Absorbed by the existing forum | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 process already exists |
 
 ## 18. Revisit Triggers and Causal Analysis Hooks
 
@@ -474,8 +474,8 @@ non-conformance under doc 20 §10, not a trend to watch.
 | RT-01 | QM-02 exceeds 40 working days for two consecutive quarters | Quarterly review | Renegotiate the tier 1 boundary with the external forum, or agree asynchronous ratification — testing DR-A-01 |
 | RT-02 | QM-03 exceeds 25% | Quarterly review | Causal analysis: is the cadence too slow, or is the path being misused? |
 | RT-03 | QM-01 exceeds 15 working days for two consecutive months | Monthly review | Increase cadence to fortnightly, or widen tier 3 |
-| RT-04 | QM-06 records any occurrence | Governance review | Immediate causal analysis and governance incident per doc 20 §105 |
-| RT-05 | Doc 20 §8 or §10 is amended | Change notice on `MD files/` | Re-derive the role mapping in §7.2 |
+| RT-04 | QM-06 records any occurrence | Governance review | Immediate causal analysis and governance incident per 20.PF-FT-AI-GOVERNANCE.md §105 |
+| RT-05 | 20.PF-FT-AI-GOVERNANCE.md §8 or §10 is amended | Change notice on `MD files/` | Re-derive the role mapping in §7.2 |
 | RT-06 | Programme scales beyond one architect | Staffing change | Re-evaluate tier 3 concentration; consider splitting by domain |
 
 **Scheduled review:** 2027-02-21.
@@ -485,7 +485,7 @@ non-conformance under doc 20 §10, not a trend to watch.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-36 Risks, Assumptions & Decision Register |
-| Specification sections | doc 20 §8 (Governance Roles), §9 (Accountability Principle), §10 (RACI Model), §76–§81 (Change Management, Classification, High-Risk, Emergency, Approval Workflow, Approval Evidence), §90 (AI Governance Review), §104 (Governance Escalation), §105 (Governance Incident); doc 3 §46 (Decision Authority Matrix), §61 (Responsibility RACI), §70 (Production Approval); doc 2 §52 (Architecture Governance) |
+| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §8 (Governance Roles), §9 (Accountability Principle), §10 (RACI Model), §76–§81 (Change Management, Classification, High-Risk, Emergency, Approval Workflow, Approval Evidence), §90 (AI Governance Review), §104 (Governance Escalation), §105 (Governance Incident); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 (Decision Authority Matrix), §61 (Responsibility RACI), §70 (Production Approval); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 (Architecture Governance) |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 21 |
 | Code paths | None |

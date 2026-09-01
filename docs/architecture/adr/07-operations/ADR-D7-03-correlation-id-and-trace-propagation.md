@@ -30,13 +30,13 @@ review_due: 2027-08-22
 Every request carries a **correlation ID** propagated via **W3C Trace Context** across
 API, orchestration, tools, enterprise calls and Service Bus events, so one conversation/
 workflow is traceable end-to-end across platform logs, Langfuse traces and the audit
-record (doc 24 §7–§10, §41; doc 10 §84). The correlation ID appears in the response
+record (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §7–§10, §41; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §84). The correlation ID appears in the response
 envelope (ADR-D4-09) and every telemetry/audit record.
 
 ## 2. Context and Problem Statement
 
-Doc 24 §7–§9 define the correlation model/flow/requirements, §10 trace-context
-propagation, §41 event correlation; doc 10 §84 the correlation id. Without a single
+24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §7–§9 define the correlation model/flow/requirements, §10 trace-context
+propagation, §41 event correlation; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §84 the correlation id. Without a single
 propagated id, telemetry across hops (sync + async events) can't be stitched into one
 story, crippling incident response. This ADR fixes the correlation-id and propagation
 standard.
@@ -45,10 +45,10 @@ standard.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | One correlation id per request/workflow | doc 24 §7–§9 |
-| DR-F-02 | Propagate across sync + async (events) | doc 24 §10, §41; ADR-D2-16 |
-| DR-F-03 | Present in logs/traces/audit/envelope | doc 24 §9; ADR-D4-09, D6-17 |
-| DR-N-01 | Standard format (W3C Trace Context) | doc 24 §10 |
+| DR-F-01 | One correlation id per request/workflow | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §7–§9 |
+| DR-F-02 | Propagate across sync + async (events) | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §10, §41; ADR-D2-16 |
+| DR-F-03 | Present in logs/traces/audit/envelope | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §9; ADR-D4-09, D6-17 |
+| DR-N-01 | Standard format (W3C Trace Context) | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §10 |
 
 ### 3.4 Assumptions
 
@@ -111,12 +111,12 @@ id) alongside the trace id for cross-session correlation.
 
 | Option | Eliminated by |
 |---|---|
-| No correlation id | doc 24 §7 |
+| No correlation id | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §7 |
 | Correlation only in Langfuse | Needs to span logs/audit too |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 24 §7–§10/§41 and doc 10 §84.
+**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §7–§10/§41 and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §84.
 
 | Criterion | Weight | A: W3C sync+async | B: Custom header | C: Per-service | D: Sync-only | E: W3C+business keys |
 |---|---|---|---|---|---|---|
@@ -250,7 +250,7 @@ and sync-only propagation (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | doc 24 §7–§10, §41; doc 10 §84 |
+| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §7–§10, §41; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §84 |
 | Requirement IDs | OBS-CORR-* |
 | Build phases | 2 |
 | Code paths | middleware/observability |

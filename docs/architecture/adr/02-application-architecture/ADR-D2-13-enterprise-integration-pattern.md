@@ -28,7 +28,7 @@ review_due: 2027-08-21
 
 ## 1. Summary
 
-Three layers with distinct jobs, per doc 10 §4: the **API catalogue** describes what enterprise
+Three layers with distinct jobs, per 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §4: the **API catalogue** describes what enterprise
 operations exist; the **tool registry** describes what the AI may do, in business terms; **MCP** is
 adopted selectively where a capability is already exposed that way. The layers are not
 interchangeable and the mapping between catalogue and registry is deliberately **not** one-to-one
@@ -36,34 +36,34 @@ interchangeable and the mapping between catalogue and registry is deliberately *
 
 ## 2. Context and Problem Statement
 
-Doc 10 §4 distinguishes API, tool and MCP. §5–§7 cover the enterprise API and its catalogue.
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §4 distinguishes API, tool and MCP. §5–§7 cover the enterprise API and its catalogue.
 §25–§33 cover tool abstraction, definition, contract, registry, registry responsibilities,
-selection, selection boundary, executor and what the executor must not do. Doc 1 §16–§17 and doc 2
+selection, selection boundary, executor and what the executor must not do. 1 PF-FT-AI-ARCHITECTURE.md §16–§17 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §18–§20 give the architecture.
 
 The specification is clear that three concepts exist and less clear about why, which invites the
 most common integration failure in agent platforms: **one tool per API endpoint**.
 
 That design is seductive. It is mechanical to generate, it gives complete coverage, and it needs
-no design work. It also produces exactly the wrong thing. Doc 7 §7 rejects its agent-level
+no design work. It also produces exactly the wrong thing. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §7 rejects its agent-level
 equivalent — "one agent = one API" — for the same reason it should be rejected here: an API is an
 implementation of an enterprise service's contract, and a tool is a capability the AI is
 permitted to exercise. Those are different vocabularies serving different purposes.
 
 Concretely: `submit_affiliation` as a business capability may involve validating the application,
 creating it, attaching products, and returning a status — several API calls. Exposing four tools
-and expecting the model to sequence them correctly puts orchestration in the model, which doc 2
+and expecting the model to sequence them correctly puts orchestration in the model, which 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §3.3 forbids for critical controls and which ADR-D2-08 already assigned to a deterministic
 planner. Conversely, a single enterprise endpoint that both reads and writes depending on a
 parameter should be two tools, because the AI's permission to read is not permission to write.
 
-There is a second question the specification leaves open. Doc 1 §17 and doc 10 §4 both include
-MCP, and doc 2 §20 gives an MCP architecture, but doc 1 §2.2 describes it as *"selective MCP
+There is a second question the specification leaves open. 1 PF-FT-AI-ARCHITECTURE.md §17 and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §4 both include
+MCP, and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §20 gives an MCP architecture, but 1 PF-FT-AI-ARCHITECTURE.md §2.2 describes it as *"selective MCP
 integration"*. Selective on what basis is not stated — and MCP introduces a trust boundary that
 direct API integration does not, since an MCP server describes its own tools and returns its own
 results.
 
-Third: doc 10 §33 lists what the tool executor must not do, which implies the boundary between
+Third: 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 lists what the tool executor must not do, which implies the boundary between
 "tool selection" and "tool execution" carries security weight. Where that boundary sits determines
 whether a model can influence execution.
 
@@ -73,29 +73,29 @@ whether a model can influence execution.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | A controlled API catalogue must exist | doc 10 §7–§10 |
-| DR-F-02 | Tools abstract enterprise operations for AI use | doc 10 §25–§27 |
-| DR-F-03 | A tool registry with defined responsibilities | doc 10 §28–§29 |
-| DR-F-04 | Tool selection has a boundary distinct from execution | doc 10 §30–§31, §33 |
-| DR-F-05 | MCP is adopted selectively | doc 1 §2.2, §17 |
-| DR-F-06 | Tools safely invoke enterprise APIs | doc 1 §39 criterion 7 |
+| DR-F-01 | A controlled API catalogue must exist | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §7–§10 |
+| DR-F-02 | Tools abstract enterprise operations for AI use | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §25–§27 |
+| DR-F-03 | A tool registry with defined responsibilities | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §28–§29 |
+| DR-F-04 | Tool selection has a boundary distinct from execution | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §30–§31, §33 |
+| DR-F-05 | MCP is adopted selectively | 1 PF-FT-AI-ARCHITECTURE.md §2.2, §17 |
+| DR-F-06 | Tools safely invoke enterprise APIs | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 7 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | The tool surface must stay small enough for reliable model selection | Tools per agent bounded | ADR-D3-04 |
-| DR-N-02 | Adding an enterprise integration must not require agent changes | Catalogue and registry are configuration | doc 2 §49 |
+| DR-N-02 | Adding an enterprise integration must not require agent changes | Catalogue and registry are configuration | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
 | DR-N-03 | Every enterprise call must be attributable to a registered tool | 100% | ADR-D1-01 AC-03 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The SLM never receives unrestricted API access | Platform | doc 2 §3.4; ADR-D1-01 §7.3 |
-| DR-C-02 | Integration is only through APIM-protected APIs, tools, MCP, events and portal links | Platform | doc 2 §5.3 |
-| DR-C-03 | The tool executor must not perform the actions doc 10 §33 forbids | Platform | doc 10 §33 |
-| DR-C-04 | Enterprise APIs remain authoritative | Platform | doc 10 §6 |
+| DR-C-01 | The SLM never receives unrestricted API access | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4; ADR-D1-01 §7.3 |
+| DR-C-02 | Integration is only through APIM-protected APIs, tools, MCP, events and portal links | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.3 |
+| DR-C-03 | The tool executor must not perform the actions 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 forbids | Platform | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 |
+| DR-C-04 | Enterprise APIs remain authoritative | Platform | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §6 |
 
 ### 3.4 Assumptions
 
@@ -109,9 +109,9 @@ whether a model can influence execution.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Containment of model authority | 30 | Doc 2 §3.4 and DR-C-01 make unrestricted access categorical; the tool surface *is* the model's reach | Can the model reach an operation it should not? |
+| EC-01 | Containment of model authority | 30 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4 and DR-C-01 make unrestricted access categorical; the tool surface *is* the model's reach | Can the model reach an operation it should not? |
 | EC-02 | Reliability of tool selection | 25 | A model choosing among many similar tools selects badly, and a wrong tool is a wrong enterprise operation | Selection accuracy against the golden set |
-| EC-03 | Orchestration kept out of the model | 20 | Doc 2 §3.3; sequencing is a deterministic control | Does the model sequence multi-call operations? |
+| EC-03 | Orchestration kept out of the model | 20 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3; sequencing is a deterministic control | Does the model sequence multi-call operations? |
 | EC-04 | Maintainability as integrations grow | 15 | The catalogue will grow with each workflow | Effort per new integration |
 | EC-05 | Coverage of enterprise capability | 10 | A tool surface too narrow blocks workflows | Workflows blocked by missing tools |
 | | **Total** | **100** | | |
@@ -132,10 +132,10 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 **Weaknesses.**
 - The tool surface becomes the entire API surface, so the model's reach is the enterprise's reach
-  (EC-01 fails). Doc 2 §3.4 forbids exactly this.
+  (EC-01 fails). 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4 forbids exactly this.
 - Selection accuracy collapses as tool count grows; twenty similar-sounding endpoints produce
   confident wrong choices (EC-02).
-- Multi-call business operations must be sequenced by the model, putting orchestration where doc 2
+- Multi-call business operations must be sequenced by the model, putting orchestration where 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
   §3.3 forbids it (EC-03 fails).
 - Read and write on one endpoint become one tool, so permission granularity is lost.
 
@@ -203,7 +203,7 @@ the exception.
 - Server-described tools mean the tool surface is defined outside the platform's control, which
   is a significant EC-01 weakening: a server could describe a tool the platform never intended to
   expose.
-- MCP responses come from a server whose trust the platform must establish separately (doc 19
+- MCP responses come from a server whose trust the platform must establish separately (19.PF-FT-AI-SECURITY.md
   §61–§64); direct API integration inherits APIM's trust boundary.
 - DR-A-02 is unvalidated — no evidence the enterprise exposes MCP servers today.
 - Dynamic discovery conflicts with per-agent allowlists being versioned configuration.
@@ -228,7 +228,7 @@ each option. EC-03 tested against `submit_affiliation`, which spans several ente
 
 **Sensitivity.** B leads C by 145 points and wins the three highest-weighted criteria outright.
 Its weaknesses are on maintainability and coverage, worth 25 points combined — B would still lead
-C if it scored 1 on both. A is excluded by doc 2 §3.4. D's premise (DR-A-02) is unvalidated, and
+C if it scored 1 on both. A is excluded by 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4. D's premise (DR-A-02) is unvalidated, and
 its EC-01 weakness is structural: a tool surface defined by an external server is not a curated
 one.
 
@@ -251,7 +251,7 @@ The mapping between catalogue and registry is deliberately many-to-many:
 
 | Relationship | Example | Why |
 |---|---|---|
-| **One tool, several APIs** | `submit_affiliation` → validate, create, attach products, return status | Sequencing is deterministic and belongs in the tool, not the model (doc 2 §3.3) |
+| **One tool, several APIs** | `submit_affiliation` → validate, create, attach products, return status | Sequencing is deterministic and belongs in the tool, not the model (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3) |
 | **Several tools, one API** | `get_club_summary` and `get_club_full` over one endpoint with different projections | Different capabilities with different data exposure warrant different permissions |
 | **One tool, one API** | `get_club_debt` | Where the capability genuinely is the operation |
 | **API with no tool** | Administrative or internal endpoints | Not everything the enterprise exposes is something the AI should do |
@@ -263,7 +263,7 @@ normal and expected state — the catalogue documents what exists so the platfor
 ### 7.3 Tool authoring discipline
 
 Because tools are authored rather than generated, they need a standard. A tool definition
-(doc 10 §26–§27) carries:
+(10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §26–§27) carries:
 
 - **A business-intent name and description.** Written for a model reasoning about affiliation, not
   for an engineer reading an API spec. This is what makes selection reliable.
@@ -278,32 +278,32 @@ reliably, the answer is consolidation into higher-level capabilities, not a bigg
 
 ### 7.4 Selection versus execution — the boundary that carries security weight
 
-Doc 10 §30–§31 separate tool selection from execution, and doc 10 §33 constrains the executor.
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §30–§31 separate tool selection from execution, and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33 constrains the executor.
 The division:
 
 | Concern | Who | Constraint |
 |---|---|---|
 | **Which tool to call, with what business parameters** | The model, within its allowlist | A model output — never authoritative for anything but this choice |
 | **Whether that tool may be called** | The executor, from the allowlist and claims | Deterministic; model output is not an input (ADR-D1-02 I-2) |
-| **Whether the parameters are valid** | The executor, from the tool's schema | Deterministic; doc 10 §35 |
+| **Whether the parameters are valid** | The executor, from the tool's schema | Deterministic; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §35 |
 | **Which APIs to call and in what order** | The tool implementation | Deterministic; never the model |
 | **How to authenticate** | The client, from configuration | Never from tool parameters |
-| **What the result means** | The tool's response contract, validated | doc 10 §36 |
+| **What the result means** | The tool's response contract, validated | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36 |
 
-The model proposes; the executor disposes. Doc 10 §33's prohibitions on the executor — which
+The model proposes; the executor disposes. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §33's prohibitions on the executor — which
 include not bypassing validation and not constructing arbitrary requests — are what keep the
 proposal from becoming an instruction.
 
 ### 7.5 MCP is selective, and the criterion is stated
 
-Doc 1 §2.2 says "selective MCP integration" without a criterion. It is stated here:
+1 PF-FT-AI-ARCHITECTURE.md §2.2 says "selective MCP integration" without a criterion. It is stated here:
 
 > MCP is adopted for a capability when the enterprise **already exposes it over MCP** and the
 > server passes a trust assessment. MCP is never adopted as a way to reach a capability that a
 > direct API already provides.
 
 The reasoning: MCP's value is consuming something that already exists in that form. Where a
-direct API exists, going through MCP adds a trust boundary and a hop for no gain. Doc 19 §61–§64
+direct API exists, going through MCP adds a trust boundary and a hop for no gain. 19.PF-FT-AI-SECURITY.md §61–§64
 govern MCP server trust, tool security and response validation; ADR-D6-11 carries the assessment.
 
 Two rules regardless of source:
@@ -311,7 +311,7 @@ Two rules regardless of source:
 - **MCP tools enter the same registry and the same allowlists.** A tool from an MCP server is not
   privileged over a native one, and it is subject to the same per-agent allowlisting.
 - **MCP responses are validated like any other.** A server's self-description is a claim, not a
-  contract; the platform validates responses against its own expectations (doc 19 §64).
+  contract; the platform validates responses against its own expectations (19.PF-FT-AI-SECURITY.md §64).
 
 At the time of this decision no enterprise MCP server is in use (DR-A-02 unvalidated). The
 architecture accommodates one; nothing depends on it.
@@ -323,7 +323,7 @@ tool. The shared HTTP client (ADR-D5-16) is reachable only from the tool executo
 collection path, both of which resolve from the catalogue. An agent has no HTTP client
 (ADR-D2-09 §7.1).
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — tool/MCP is a named doc 2 §52
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — tool/MCP is a named 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
 category — ratified by the external ADF/ADR governance forum, with the Security Owner
 co-approving §7.4 and §7.5.
 
@@ -344,7 +344,7 @@ flowchart TD
     CL --> APIM[APIM-protected<br/>enterprise API]
     IMPL -.MCP-sourced tool.-> MCPC[MCP client<br/>ADR-D6-11]
     MCPC --> MCPS[(MCP server)]
-    APIM --> RV[Response validation<br/>doc 10 §36]
+    APIM --> RV[Response validation<br/>10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36]
     MCPS --> RV
     RV --> ERC[ERC update<br/>ADR-D2-12 §7.2]
 
@@ -387,7 +387,7 @@ which is stronger evidence than an absence.
 
 - The model's reach is a curated set of business capabilities rather than the enterprise API
   surface.
-- Multi-call sequencing is deterministic, keeping orchestration out of the model per doc 2 §3.3.
+- Multi-call sequencing is deterministic, keeping orchestration out of the model per 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3.
 - A small, semantically distinct tool surface makes selection reliable.
 - Read and write capabilities can carry different permissions even over one endpoint.
 - MCP is accommodated without being depended on, and MCP tools get no privilege over native ones.
@@ -527,7 +527,7 @@ ratio at or above 1 means the registry has become a mirror of the catalogue, whi
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-10 Integration & 18-Microservice Matrix |
-| Specification sections | doc 10 §2 (Core Principle), §4 (API vs Tool vs MCP), §5–§6 (Enterprise API, Authority), §7–§10 (API Catalog, Purpose, Metadata), §25–§27 (Tool Abstraction, Definition, Contract), §28–§29 (Tool Registry, Responsibilities), §30–§31 (Tool Selection, Selection Boundary), §32–§33 (Tool Executor, Must Not), §35–§36 (Input/Output Validation); doc 1 §16–§17, §39 criterion 7, §2.2; doc 2 §3.4 (Controlled Tool Access), §18–§20; doc 19 §61–§64 (MCP Security) |
+| Specification sections | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §2 (Core Principle), §4 (API vs Tool vs MCP), §5–§6 (Enterprise API, Authority), §7–§10 (API Catalog, Purpose, Metadata), §25–§27 (Tool Abstraction, Definition, Contract), §28–§29 (Tool Registry, Responsibilities), §30–§31 (Tool Selection, Selection Boundary), §32–§33 (Tool Executor, Must Not), §35–§36 (Input/Output Validation); 1 PF-FT-AI-ARCHITECTURE.md §16–§17, §39 criterion 7, §2.2; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4 (Controlled Tool Access), §18–§20; 19.PF-FT-AI-SECURITY.md §61–§64 (MCP Security) |
 | Requirement IDs | `FR-A39-07`, `NFR-A38-SEC` |
 | Build phases | 6 |
 | Code paths | `src/pf_ft_ai/integration/` |

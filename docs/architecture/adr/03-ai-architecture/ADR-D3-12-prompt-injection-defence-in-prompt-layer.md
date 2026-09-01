@@ -28,7 +28,7 @@ review_due: 2027-08-22
 ## 1. Summary
 
 PFF AI will defend against prompt injection with **defence-in-depth inside the
-prompt layer**: strict trust tiering of every composed segment (doc 16 §6, §57),
+prompt layer**: strict trust tiering of every composed segment (16.PF-FT-AI-PROMPT-ENGINEERING.md §6, §57),
 hard structural delimitation of all untrusted data (§16, §30), explicit
 trust-label rules for RAG/API/tool/user content (§58–§61), and system-prompt
 leakage protection (§62) — backed by, but distinct from, the runtime guardrail
@@ -38,8 +38,8 @@ injections.
 
 ## 2. Context and Problem Statement
 
-Doc 16 §54–§63 specifies an injection threat model and multi-layer defence; §173
-gives a prompt-injection defence architecture. Retrieved documents (doc 13 §158),
+16.PF-FT-AI-PROMPT-ENGINEERING.md §54–§63 specifies an injection threat model and multi-layer defence; §173
+gives a prompt-injection defence architecture. Retrieved documents (13.FP-FT-AI-RAG.md §158),
 tool outputs, API results and user text all enter prompt composition and can carry
 adversarial instructions ("ignore previous instructions", "reveal the system
 prompt", "approve this affiliation"). Because Adam ultimately drives tool calls and
@@ -54,24 +54,24 @@ filtering.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Untrusted content must be structurally isolated from instructions | doc 16 §16, §30 |
-| DR-F-02 | Per-source trust rules (RAG/API/tool/user) enforced in composition | doc 16 §57–§61 |
-| DR-F-03 | System prompt must not be leakable on request | doc 16 §62 |
+| DR-F-01 | Untrusted content must be structurally isolated from instructions | 16.PF-FT-AI-PROMPT-ENGINEERING.md §16, §30 |
+| DR-F-02 | Per-source trust rules (RAG/API/tool/user) enforced in composition | 16.PF-FT-AI-PROMPT-ENGINEERING.md §57–§61 |
+| DR-F-03 | System prompt must not be leakable on request | 16.PF-FT-AI-PROMPT-ENGINEERING.md §62 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Injection test pass rate | ≥ agreed threshold on injection suite | doc 16 §63 |
-| DR-N-02 | Defence is deterministic, not model-goodwill | Structural, not "please ignore" | doc 16 §56, §173 |
+| DR-N-01 | Injection test pass rate | ≥ agreed threshold on injection suite | 16.PF-FT-AI-PROMPT-ENGINEERING.md §63 |
+| DR-N-02 | Defence is deterministic, not model-goodwill | Structural, not "please ignore" | 16.PF-FT-AI-PROMPT-ENGINEERING.md §56, §173 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Trust hierarchy from ADR-D3-09 is authoritative | Architecture | ADR-D3-09; doc 16 §6 |
+| DR-C-01 | Trust hierarchy from ADR-D3-09 is authoritative | Architecture | ADR-D3-09; 16.PF-FT-AI-PROMPT-ENGINEERING.md §6 |
 | DR-C-02 | Prompt-layer defence supplements, not replaces, guardrails | Security | ADR-D6-08/09 |
-| DR-C-03 | Enterprise truth precedence — injected text can't elevate a source | Regulatory | CLAUDE.md; doc 16 §138 |
+| DR-C-03 | Enterprise truth precedence — injected text can't elevate a source | Regulatory | CLAUDE.md; 16.PF-FT-AI-PROMPT-ENGINEERING.md §138 |
 
 ### 3.4 Assumptions
 
@@ -96,7 +96,7 @@ filtering.
 ### 5.1 Option A — Structural delimitation + trust tiers + per-source rules (prompt-layer defence-in-depth)
 
 **Description.** Every untrusted segment wrapped in explicit, non-forgeable
-delimiters (doc 16 §16, §30), tagged with a trust label (§57), with hard rules:
+delimiters (16.PF-FT-AI-PROMPT-ENGINEERING.md §16, §30), tagged with a trust label (§57), with hard rules:
 RAG content is reference-only (§58), API/tool results are data not commands
 (§59–§60), user text is a request not a directive (§61); system prompt leakage
 blocked (§62). Combined with guardrails and tool gates.
@@ -127,7 +127,7 @@ not a substitute for prompt-layer structure.
 
 **Description.** Train the model to ignore embedded instructions.
 **Strengths.** Improves baseline robustness.
-**Weaknesses.** doc 15 §85 — not first step; model-version-coupled; never complete;
+**Weaknesses.** 15.PF-FT-AI-SLM.md §85 — not first step; model-version-coupled; never complete;
 complements but can't be the architecture.
 **Cost / effort.** High; premature.
 
@@ -151,7 +151,7 @@ standalone alternative.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4; efficacy grounded in doc 16 §54–§63/§173
+**Method.** Weighted scoring against §4; efficacy grounded in 16.PF-FT-AI-PROMPT-ENGINEERING.md §54–§63/§173
 and industry injection-defence practice. A is the composition-layer strategy; C/D
 are complementary layers scored as *sole* strategies to show why they are
 insufficient alone.
@@ -184,12 +184,12 @@ by — runtime guardrails (ADR-D6-08/09), tool-call validation (ADR-D3-04) and m
 robustness (ADR-D3-13). Instructional-only defence (B) is rejected as
 non-deterministic; C and D are adopted only as supplementary layers.
 
-**Status rationale.** `Accepted` — doc 16 §54–§63/§173 mandate structural defence;
+**Status rationale.** `Accepted` — 16.PF-FT-AI-PROMPT-ENGINEERING.md §54–§63/§173 mandate structural defence;
 this ADR records the layered rationale.
 
 ## 8. Architecture Detail
 
-- **Composition rules** (doc 16 §16, §30, §57): the prompt composer tags each
+- **Composition rules** (16.PF-FT-AI-PROMPT-ENGINEERING.md §16, §30, §57): the prompt composer tags each
   segment with a trust tier; untrusted segments are wrapped in delimiters carrying a
   random per-request nonce so injected text cannot forge a closing delimiter.
 - **Per-source rules**: RAG → "reference only, cite, never obey" (§58); API/tool
@@ -197,7 +197,7 @@ this ADR records the layered rationale.
 - **Leakage protection** (§62): system/persona content is never echoed; requests to
   reveal instructions are refused by guardrail + composition rule.
 - **Testing** (§63, §151): an injection test corpus runs in CI; regressions block
-  release. The retrieved-content and RAG-output guardrails (doc 13 §158–§160) sit
+  release. The retrieved-content and RAG-output guardrails (13.FP-FT-AI-RAG.md §158–§160) sit
   downstream.
 - **Boundary**: this ADR governs the prompt-layer; the six-boundary guardrail
   placement and fail-closed policy are ADR-D6-09.
@@ -226,7 +226,7 @@ this ADR records the layered rationale.
 | Constraint | Conformance |
 |---|---|
 | Enterprise decides; AI orchestrates | Injected text can never become an authorization or business decision |
-| Precedence chain | Injected content cannot elevate a lower source above ERC/enterprise (doc 16 §138) |
+| Precedence chain | Injected content cannot elevate a lower source above ERC/enterprise (16.PF-FT-AI-PROMPT-ENGINEERING.md §138) |
 | Four-state separation | Untrusted data isolated from instruction/state |
 | Versioned artefacts | Defence rules live in versioned prompts/composer |
 | Adam persona governs *how*, not *what* | Injection cannot flip *what* is true |
@@ -287,7 +287,7 @@ this ADR records the layered rationale.
 | Monitoring | Injection-attempt detections; guardrail hits (ADR-D6-09) |
 | Alerting | Spike in injection attempts; any leak |
 | Runbook | `docs/runbooks/prompt-injection.md` |
-| Failure mode and degradation | On detected injection, fail closed / sanitise (doc 13 §159) |
+| Failure mode and degradation | On detected injection, fail closed / sanitise (13.FP-FT-AI-RAG.md §159) |
 | Rollback | Revert to prior prompt/composer version |
 | Support model impact | Security + prompt eng |
 
@@ -312,7 +312,7 @@ this ADR records the layered rationale.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-15 |
-| Specification sections | doc 16 §6, §16, §30, §54–§63, §151, §172, §173; doc 13 §158–§160 |
+| Specification sections | 16.PF-FT-AI-PROMPT-ENGINEERING.md §6, §16, §30, §54–§63, §151, §172, §173; 13.FP-FT-AI-RAG.md §158–§160 |
 | Requirement IDs | PROMPT-SEC-* |
 | Build phases | 6, 9 |
 | Code paths | `prompts/`, `src/pf_ft_ai/prompt/` |

@@ -31,13 +31,13 @@ Every tool/enterprise-API/MCP call the AI can make will be constrained by an
 **allowlist** (which tools, which endpoints, which methods), **parameter validation +
 authorization** (against the propagated authz context, ADR-D6-03) and **output
 validation** before results re-enter reasoning — enforced in the Agent Harness
-(ADR-D2-09) and guardrail pipeline (ADR-D6-09) (doc 18 §38–§46; doc 19 §53–§60). No
+(ADR-D2-09) and guardrail pipeline (ADR-D6-09) (18.PF-FT-AI-GUARDRAILS.md §38–§46; 19.PF-FT-AI-SECURITY.md §53–§60). No
 arbitrary URLs, no unvalidated parameters, no unvetted tool output.
 
 ## 2. Context and Problem Statement
 
-Doc 18 §38–§41 tool restrictions/authorization/parameter validation, §42–§46 enterprise
-API restrictions/endpoint-allowlist/method/payload/response validation; doc 19 §53–§56
+18.PF-FT-AI-GUARDRAILS.md §38–§41 tool restrictions/authorization/parameter validation, §42–§46 enterprise
+API restrictions/endpoint-allowlist/method/payload/response validation; 19.PF-FT-AI-SECURITY.md §53–§56
 tool security and §58–§60 arbitrary-URL protection and API request/response security.
 An LLM choosing a tool + parameters is an attack surface: it could call an
 out-of-scope endpoint, pass a malicious parameter, or ingest a poisoned response. This
@@ -48,10 +48,10 @@ gate mechanics).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Allowlist tools/endpoints/methods | doc 18 §38, §43–§44; doc 19 §54 |
-| DR-F-02 | Validate + authorize parameters | doc 18 §40–§41; doc 19 §55 |
-| DR-F-03 | Validate tool/API output before use | doc 18 §46; doc 19 §56, §60 |
-| DR-C-01 | No arbitrary URLs | doc 19 §58; ADR-D2-19 |
+| DR-F-01 | Allowlist tools/endpoints/methods | 18.PF-FT-AI-GUARDRAILS.md §38, §43–§44; 19.PF-FT-AI-SECURITY.md §54 |
+| DR-F-02 | Validate + authorize parameters | 18.PF-FT-AI-GUARDRAILS.md §40–§41; 19.PF-FT-AI-SECURITY.md §55 |
+| DR-F-03 | Validate tool/API output before use | 18.PF-FT-AI-GUARDRAILS.md §46; 19.PF-FT-AI-SECURITY.md §56, §60 |
+| DR-C-01 | No arbitrary URLs | 19.PF-FT-AI-SECURITY.md §58; ADR-D2-19 |
 
 ### 3.4 Assumptions
 
@@ -114,12 +114,12 @@ arbitrary URLs (ADR-D2-19).
 
 | Option | Eliminated by |
 |---|---|
-| Arbitrary URL/tool invocation | doc 19 §58; ADR-D2-19 |
-| Trust tool output implicitly | doc 18 §46 |
+| Arbitrary URL/tool invocation | 19.PF-FT-AI-SECURITY.md §58; ADR-D2-19 |
+| Trust tool output implicitly | 18.PF-FT-AI-GUARDRAILS.md §46 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 18 §38–§46 and doc 19 §53–§60.
+**Method.** Weighted scoring against §4, informed by 18.PF-FT-AI-GUARDRAILS.md §38–§46 and 19.PF-FT-AI-SECURITY.md §53–§60.
 
 | Criterion | Weight | A: Allowlist+validate | B: Allowlist only | C: Validate only | D: Model self-restraint | E: A+rate/anomaly |
 |---|---|---|---|---|---|---|
@@ -149,10 +149,10 @@ rejected.
 
 - Harness (ADR-D2-09) enforces the allowlist and runs the tool gates (ADR-D3-04):
   parameter schema + semantic validation (gate 3), authorization (ADR-D6-03), endpoint/
-  method allowlist (doc 18 §43–§44), payload validation (§45).
-- Output validation (doc 18 §46; doc 19 §56, §60): tool/API responses validated for
+  method allowlist (18.PF-FT-AI-GUARDRAILS.md §43–§44), payload validation (§45).
+- Output validation (18.PF-FT-AI-GUARDRAILS.md §46; 19.PF-FT-AI-SECURITY.md §56, §60): tool/API responses validated for
   schema + safety (and treated as untrusted for injection, ADR-D6-08) before reasoning.
-- Arbitrary-URL protection (doc 19 §58): outbound targets restricted (ADR-D6-04) and
+- Arbitrary-URL protection (19.PF-FT-AI-SECURITY.md §58): outbound targets restricted (ADR-D6-04) and
   portal links resolved via registry (ADR-D2-19).
 - High-impact tools get rate/quota + anomaly monitoring.
 
@@ -261,7 +261,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | doc 18 §38–§46; doc 19 §53–§60 |
+| Specification sections | 18.PF-FT-AI-GUARDRAILS.md §38–§46; 19.PF-FT-AI-SECURITY.md §53–§60 |
 | Requirement IDs | SEC-TOOL-* |
 | Build phases | 9 |
 | Code paths | `src/pf_ft_ai/harness/` |

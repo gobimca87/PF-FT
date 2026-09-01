@@ -29,12 +29,12 @@ review_due: 2027-08-22
 PFF AI will run a **tiered support model with clear operational boundaries, owned runbooks
 and an on-call rota** — the AI platform team operates the AI layer within defined
 boundaries; PFF/enterprise owns business systems; every operational procedure has a
-maintained runbook and an owner (doc 28 §2–§4, §7, §16–§17, §29–§30, §161). Support tiers
+maintained runbook and an owner (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §2–§4, §7, §16–§17, §29–§30, §161). Support tiers
 and escalation are explicit.
 
 ## 2. Context and Problem Statement
 
-Doc 28 §2–§4 operational principle/boundaries/responsibilities, §7 production access, §16
+28.PF-FT-AI-OPERATIONS-RUNBOOK.md §2–§4 operational principle/boundaries/responsibilities, §7 production access, §16
 operational golden path, §17 startup, §29–§30 health verification, §161 operational
 runbook. Without a defined support model, ownership is ambiguous, runbooks rot, and
 incidents stall on "who handles this". This ADR fixes the support model, runbook ownership
@@ -44,10 +44,10 @@ and service tiers.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Clear operational boundaries (AI vs enterprise) | doc 28 §3 |
-| DR-F-02 | Owned, maintained runbooks | doc 28 §161 |
-| DR-F-03 | Tiered support + on-call | doc 28 §4 |
-| DR-C-01 | Controlled production access | doc 28 §7 |
+| DR-F-01 | Clear operational boundaries (AI vs enterprise) | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §3 |
+| DR-F-02 | Owned, maintained runbooks | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §161 |
+| DR-F-03 | Tiered support + on-call | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §4 |
+| DR-C-01 | Controlled production access | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §7 |
 
 ### 3.4 Assumptions
 
@@ -71,8 +71,8 @@ and service tiers.
 ### 5.1 Option A — Tiered support (L1→L3) + owned runbooks + on-call rota + controlled prod access
 
 **Description.** Defined tiers (triage→platform→engineering), each AI-platform procedure
-with an owned runbook (doc 28 §161), an on-call rota with escalation (ADR-D7-08), and
-controlled/audited production access (doc 28 §7); boundaries with PFF explicit (§3).
+with an owned runbook (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §161), an on-call rota with escalation (ADR-D7-08), and
+controlled/audited production access (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §7); boundaries with PFF explicit (§3).
 **Strengths.** Clear, resolvable, secure, sustainable.
 **Weaknesses.** Staffing/runbook upkeep.
 **Cost / effort.** Medium.
@@ -110,12 +110,12 @@ controlled/audited production access (doc 28 §7); boundaries with PFF explicit 
 
 | Option | Eliminated by |
 |---|---|
-| No runbooks | doc 28 §161 |
-| Uncontrolled prod access | doc 28 §7 |
+| No runbooks | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §161 |
+| Uncontrolled prod access | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §7 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 28 §2–§4/§7/§16–§17/§161.
+**Method.** Weighted scoring against §4, informed by 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §2–§4/§7/§16–§17/§161.
 
 | Criterion | Weight | A: Tiered | B: Single on-call | C: Outsourced | D: Dev-owns | E: Tiered+dev-escalation |
 |---|---|---|---|---|---|---|
@@ -142,11 +142,11 @@ rejected.
 
 ## 8. Architecture Detail
 
-- Operational boundaries (doc 28 §3): AI-platform team operates the AI layer; PFF owns
+- Operational boundaries (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §3): AI-platform team operates the AI layer; PFF owns
   business systems; hand-offs defined. Runbooks in `docs/runbooks/` (one per procedure,
   §161) with named owners; golden path (§16), startup (§17), health checks (§29–§39).
 - On-call rota + escalation tied to severity (ADR-D7-08); production access is
-  least-privilege, time-bound and audited (doc 28 §7; ADR-D6-17). L3 escalation follows
+  least-privilege, time-bound and audited (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §7; ADR-D6-17). L3 escalation follows
   you-build-it-you-run-it for code issues.
 
 ## 9. Consequences
@@ -253,7 +253,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-33 Operations |
-| Specification sections | doc 28 §2–§4, §7, §16–§17, §29–§30, §161 |
+| Specification sections | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §2–§4, §7, §16–§17, §29–§30, §161 |
 | Requirement IDs | OPS-SUP-* |
 | Build phases | 10 |
 | Code paths | `docs/runbooks/` |

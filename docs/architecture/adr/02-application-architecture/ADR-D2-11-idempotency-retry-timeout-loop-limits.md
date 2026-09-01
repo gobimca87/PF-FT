@@ -31,18 +31,18 @@ review_due: 2027-08-21
 ## 1. Summary
 
 Retry eligibility is a **declared property of each enterprise operation**, not a runtime judgement,
-and a write is retried only when it carries an idempotency key. Doc 2 §48's "blind transaction
+and a write is retried only when it carries an idempotency key. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48's "blind transaction
 retry — never" is enforced by making the unknown outcome a first-class state: an operation whose
 result is genuinely unknown is **verified**, never re-attempted. Timeouts and retries form one
 nested hierarchy so that no inner layer can outlive its outer budget.
 
 ## 2. Context and Problem Statement
 
-Doc 10 §41–§44 cover retry policy, retryable and non-retryable examples, and retry configuration.
-Doc 10 §45–§47 cover idempotency, keys and lifecycle. Doc 10 §48–§49 cover unknown transaction
-state and transaction verification. Doc 4 §55 gives a timeout hierarchy and §56 a retry hierarchy.
-Doc 7 §72–§73 give the agent loop and loop protection. Doc 3 §36–§37 assign transaction and
-idempotency responsibility. Doc 2 §48 lists blind transaction retry among the anti-patterns.
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §41–§44 cover retry policy, retryable and non-retryable examples, and retry configuration.
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47 cover idempotency, keys and lifecycle. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48–§49 cover unknown transaction
+state and transaction verification. 4. PF-FT-AI-RUNTIME.md §55 gives a timeout hierarchy and §56 a retry hierarchy.
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72–§73 give the agent loop and loop protection. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36–§37 assign transaction and
+idempotency responsibility. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists blind transaction retry among the anti-patterns.
 
 The material is comprehensive and leaves the hardest question open, which the affiliation flow
 poses directly. Scenarios 21 through 27 are payment and submission failures where the outcome is
@@ -66,11 +66,11 @@ Three sub-questions follow.
 eligibility becomes a judgement about business semantics — is creating a second application
 harmful? — which is a business question the platform must not answer (ADR-D1-01 §7.3).
 
-**What makes a write safely retryable?** Doc 10 §45–§47 give idempotency keys. But an idempotency
+**What makes a write safely retryable?** 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47 give idempotency keys. But an idempotency
 key only helps if the enterprise operation honours it, and whether it does is enterprise
 knowledge, not something the platform can assume.
 
-**How do the timeout and retry hierarchies compose?** Doc 4 §55 and §56 give both without stating
+**How do the timeout and retry hierarchies compose?** 4. PF-FT-AI-RUNTIME.md §55 and §56 give both without stating
 the invariant that must hold between them. If a tool's retry budget can exceed the agent run's
 timeout, the run dies mid-retry, leaving an operation in flight with no one waiting for the
 result — which manufactures the unknown-outcome case rather than handling it.
@@ -81,12 +81,12 @@ result — which manufactures the unknown-outcome case rather than handling it.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Blind transaction retry must never occur | doc 2 §48 |
-| DR-F-02 | Retryable and non-retryable operations must be distinguished | doc 10 §41–§43 |
-| DR-F-03 | Idempotency keys must be used for write operations | doc 10 §45–§46 |
-| DR-F-04 | Unknown transaction state must be handled explicitly | doc 10 §48–§49 |
-| DR-F-05 | Loop protection must terminate runaway agent runs | doc 7 §73; doc 4 §54 |
-| DR-F-06 | Timeout and retry hierarchies must be defined | doc 4 §55–§56 |
+| DR-F-01 | Blind transaction retry must never occur | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 |
+| DR-F-02 | Retryable and non-retryable operations must be distinguished | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §41–§43 |
+| DR-F-03 | Idempotency keys must be used for write operations | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§46 |
+| DR-F-04 | Unknown transaction state must be handled explicitly | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48–§49 |
+| DR-F-05 | Loop protection must terminate runaway agent runs | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73; 4. PF-FT-AI-RUNTIME.md §54 |
+| DR-F-06 | Timeout and retry hierarchies must be defined | 4. PF-FT-AI-RUNTIME.md §55–§56 |
 
 ### 3.2 Non-functional drivers
 
@@ -94,16 +94,16 @@ result — which manufactures the unknown-outcome case rather than handling it.
 |---|---|---|---|
 | DR-N-01 | Total retry time must fit within the turn budget | Inner budgets strictly less than outer | ADR-D5-18 |
 | DR-N-02 | Retries must not amplify load on a struggling service | Backoff with jitter; circuit breaking | ADR-D7-06 |
-| DR-N-03 | Duplicate enterprise operations must not occur | 0 duplicates | doc 3 §37 |
+| DR-N-03 | Duplicate enterprise operations must not occur | 0 duplicates | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §37 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Transaction authority is enterprise-owned | Platform | ADR-D1-01 §7.2; doc 3 §36 |
-| DR-C-02 | The platform must not guess at ambiguous transaction outcomes | Platform | `CLAUDE.md`; doc 8 §66 |
-| DR-C-03 | Retry configuration is declared, not inferred | Platform | doc 10 §10, §44 |
-| DR-C-04 | Critical controls are deterministic | Platform | doc 2 §3.3 |
+| DR-C-01 | Transaction authority is enterprise-owned | Platform | ADR-D1-01 §7.2; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36 |
+| DR-C-02 | The platform must not guess at ambiguous transaction outcomes | Platform | `CLAUDE.md`; 8 PF-FT-AI-ERC-CONTEXT.md §66 |
+| DR-C-03 | Retry configuration is declared, not inferred | Platform | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §10, §44 |
+| DR-C-04 | Critical controls are deterministic | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
 
 ### 3.4 Assumptions
 
@@ -117,7 +117,7 @@ result — which manufactures the unknown-outcome case rather than handling it.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Prevention of duplicate enterprise operations | 35 | A duplicate affiliation application or a double payment is the worst outcome the platform can cause; doc 2 §48 makes it categorical | Can a retry create a duplicate? |
+| EC-01 | Prevention of duplicate enterprise operations | 35 | A duplicate affiliation application or a double payment is the worst outcome the platform can cause; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 makes it categorical | Can a retry create a duplicate? |
 | EC-02 | Correct handling of unknown outcomes | 25 | Affiliation Scenarios 21–27 are the platform's hardest real cases | Is unknown a distinct state, or collapsed into success or failure? |
 | EC-03 | Resilience to transient failure | 20 | Without retry, ordinary network blips become user-visible failures | Transient failures absorbed |
 | EC-04 | Budget composition | 12 | An inner budget exceeding its outer manufactures unknown outcomes | Can an inner layer outlive its outer? |
@@ -140,7 +140,7 @@ enterprise call regardless of type.
 - Consistent behaviour, easy to reason about.
 
 **Weaknesses.**
-- Retries writes blindly, which is doc 2 §48's named anti-pattern. A retried `submit_affiliation`
+- Retries writes blindly, which is 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48's named anti-pattern. A retried `submit_affiliation`
   after a 500 may create a second application (EC-01 fails).
 - Cannot distinguish a timeout — where the operation may have succeeded — from a connection
   refusal, where it certainly did not.
@@ -159,7 +159,7 @@ layers.
 
 **Strengths.**
 - A non-idempotent write is never retried, so duplicates are structurally prevented (EC-01).
-- Unknown is a first-class outcome resolved by verification, matching doc 10 §48–§49 (EC-02).
+- Unknown is a first-class outcome resolved by verification, matching 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48–§49 (EC-02).
 - Reads retry freely, absorbing transient failure where it is safe (EC-03).
 - Nested budgets guarantee no inner layer outlives its outer (EC-04).
 - Eligibility is declared, so no runtime business judgement is made (DR-C-04).
@@ -207,7 +207,7 @@ layers.
   it breaches ADR-D1-01 §7.3 and DR-C-04.
 - Non-deterministic: the same failure could retry once and not the next time, so duplicate risk
   becomes probabilistic (EC-01 fails).
-- Doc 2 §3.3 requires deterministic critical controls; transaction safety is as critical as it
+- 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 requires deterministic critical controls; transaction safety is as critical as it
   gets.
 - Adds an inference to the failure path, which is the worst time for latency.
 
@@ -231,7 +231,7 @@ option, what happens after a 500 on `submit_affiliation`?
 
 **Sensitivity.** B leads by 174 points and loses only on configuration simplicity. That gap is
 worth 16 points against a 174-point margin. A and D both score 1 or 2 on duplicate prevention,
-the criterion carrying 35 points and reflecting a doc 2 §48 categorical prohibition — no
+the criterion carrying 35 points and reflecting a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 categorical prohibition — no
 reweighting rescues either. C prevents platform-caused duplicates but relocates the risk to
 users, who are less equipped to judge it.
 
@@ -239,7 +239,7 @@ users, who are less equipped to judge it.
 
 ### 7.1 Retry eligibility is declared, per operation
 
-Each catalogue entry declares, per doc 10 §10 and §44:
+Each catalogue entry declares, per 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §10 and §44:
 
 ```yaml
 execution:
@@ -272,12 +272,12 @@ default, since an undeclared operation is one whose semantics the platform does 
 | Any | Circuit open | No attempt; surface as unavailable |
 
 The row that carries the decision's weight is *non-idempotent write, transient failure*. The
-intuitive response — retry, since it was only a timeout — is exactly the blind retry doc 2 §48
+intuitive response — retry, since it was only a timeout — is exactly the blind retry 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48
 forbids, because a timeout means the request may have been processed.
 
 ### 7.3 Idempotency keys
 
-Per doc 10 §45–§47, a write declared `idempotency_key_required` carries a key derived
+Per 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47, a write declared `idempotency_key_required` carries a key derived
 deterministically from the operation and its business parameters — not randomly generated, so
 that a retry after a process restart produces the same key.
 
@@ -295,7 +295,7 @@ integration mapping (ADR-D2-14), not an assumption the platform makes.
 
 ### 7.4 Unknown outcome: verify, never re-attempt
 
-Doc 10 §48–§49 and doc 8 §66 identify the unknown state. The handling:
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48–§49 and 8 PF-FT-AI-ERC-CONTEXT.md §66 identify the unknown state. The handling:
 
 ```mermaid
 flowchart TD
@@ -334,7 +334,7 @@ check — which is honest and actionable, where "it failed" would be neither.
 
 ### 7.5 The nested budget hierarchy
 
-Doc 4 §55 and §56 give timeout and retry hierarchies. The invariant between them is stated here
+4. PF-FT-AI-RUNTIME.md §55 and §56 give timeout and retry hierarchies. The invariant between them is stated here
 because without it the hierarchies do not compose:
 
 > **Every inner budget must be strictly less than the remaining outer budget at the moment the
@@ -358,7 +358,7 @@ first call cannot leave a later one with an impossible budget.
 
 ### 7.6 Loop protection
 
-Doc 7 §73 requires loop protection. The harness enforces cumulative limits per run (ADR-D2-09
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §73 requires loop protection. The harness enforces cumulative limits per run (ADR-D2-09
 §7.3), of which two are specific to loops:
 
 - **Repeated identical tool call** — the same tool with the same parameters, twice in a run, is a
@@ -459,7 +459,7 @@ payment unreconciled), where the truth becomes knowable later than the moment of
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | §7.4's verification asks the enterprise what happened rather than the platform deciding what probably happened. Transaction authority stays with the enterprise per doc 3 §36. |
+| Enterprise decides; AI orchestrates | §7.4's verification asks the enterprise what happened rather than the platform deciding what probably happened. Transaction authority stays with the enterprise per 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36. |
 | Authoritative-truth precedence | The verification read is an authority-5 enterprise response and settles the question. The platform's own record of what it attempted never overrides it. |
 | Four-state separation | Retry and idempotency state is Workflow/Agent State; the transaction outcome is Enterprise Business State, read not inferred. |
 | Versioned artefacts, never mutated in place | Retry declarations live in the versioned API catalogue (ADR-D5-06). |
@@ -488,7 +488,7 @@ payment unreconciled), where the truth becomes knowable later than the moment of
 | QM-06 | Success language emitted for an UNKNOWN outcome | 0 | ≥1 | ADR-D1-02 I-4 audit | Weekly |
 | QM-07 | Catalogue operations without retry declarations | 0 | ≥1 | Catalogue completeness check | Per build |
 
-QM-01, QM-02, QM-04 and QM-06 carry zero thresholds — each is a categorical breach of a doc 2
+QM-01, QM-02, QM-04 and QM-06 carry zero thresholds — each is a categorical breach of a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §48 prohibition or of a stated invariant.
 
 ## 13. Security, Privacy and Compliance Impact
@@ -565,7 +565,7 @@ QM-01, QM-02, QM-04 and QM-06 carry zero thresholds — each is a categorical br
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture |
-| Specification sections | doc 10 §41–§44 (Retry Policy, Retryable/Non-Retryable Examples, Retry Configuration), §45–§47 (Idempotency, Key, Lifecycle), §48 (Unknown Transaction State), §49 (Transaction Verification), §10 (Extended Metadata); doc 4 §37 (Transaction Safety), §54 (Runtime Limits), §55 (Timeout Hierarchy), §56 (Retry Hierarchy); doc 7 §72–§73 (Agent Loop, Loop Protection); doc 3 §36 (Transaction Responsibility), §37 (Idempotency Responsibility); doc 2 §48 (Anti-Patterns — blind transaction retry); doc 8 §66 (Transaction Uncertainty); affiliation flow Scenarios 21–27 |
+| Specification sections | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §41–§44 (Retry Policy, Retryable/Non-Retryable Examples, Retry Configuration), §45–§47 (Idempotency, Key, Lifecycle), §48 (Unknown Transaction State), §49 (Transaction Verification), §10 (Extended Metadata); 4. PF-FT-AI-RUNTIME.md §37 (Transaction Safety), §54 (Runtime Limits), §55 (Timeout Hierarchy), §56 (Retry Hierarchy); 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §72–§73 (Agent Loop, Loop Protection); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36 (Transaction Responsibility), §37 (Idempotency Responsibility); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 (Anti-Patterns — blind transaction retry); 8 PF-FT-AI-ERC-CONTEXT.md §66 (Transaction Uncertainty); affiliation flow Scenarios 21–27 |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-RECOV` |
 | Build phases | 4, 6 |
 | Code paths | `src/pf_ft_ai/integration/execution/` |

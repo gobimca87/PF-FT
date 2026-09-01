@@ -30,12 +30,12 @@ PFF AI will apply a **standard resilience toolkit — bounded retry with backoff
 retryable errors), circuit breakers per dependency, bulkhead isolation, timeouts and
 fallback** — uniformly across all external dependencies (enterprise APIs, SLM, RAG, MCP,
 Service Bus), driven by the error taxonomy (ADR-D7-05) and shared HTTP client (ADR-D5-16)
-(doc 24 §54–§59). Retries never amplify incidents; a failing dependency is isolated, not
+(24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59). Retries never amplify incidents; a failing dependency is isolated, not
 propagated.
 
 ## 2. Context and Problem Statement
 
-Doc 24 §54–§58 retry classification/strategy/retryable/non-retryable/anti-pattern, §59
+24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§58 retry classification/strategy/retryable/non-retryable/anti-pattern, §59
 timeout strategy. Distributed dependencies fail; without disciplined resilience, failures
 cascade (retry storms, thread exhaustion, timeouts stacking). This ADR fixes the
 resilience patterns applied consistently (SLM-specific resilience is ADR-D3-18; workflow
@@ -45,10 +45,10 @@ idempotency/retry is ADR-D2-11 — this ADR is the shared toolkit).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Bounded retry only on retryable errors | doc 24 §54–§57; ADR-D7-05 |
-| DR-F-02 | Circuit breakers per dependency | doc 24 (breaker); ADR-D3-18 |
-| DR-F-03 | Bulkhead isolation + timeouts | doc 24 §59 |
-| DR-C-01 | No retry amplification | doc 24 §58; ADR-D5-17 |
+| DR-F-01 | Bounded retry only on retryable errors | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§57; ADR-D7-05 |
+| DR-F-02 | Circuit breakers per dependency | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md (breaker); ADR-D3-18 |
+| DR-F-03 | Bulkhead isolation + timeouts | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §59 |
+| DR-C-01 | No retry amplification | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §58; ADR-D5-17 |
 
 ### 3.4 Assumptions
 
@@ -111,12 +111,12 @@ retries can conflict with app retries.
 
 | Option | Eliminated by |
 |---|---|
-| No resilience patterns | doc 24 §54–§59 |
-| Unbounded retries | doc 24 §58 |
+| No resilience patterns | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59 |
+| Unbounded retries | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §58 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 24 §54–§59 and ADR-D3-18/D5-16.
+**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59 and ADR-D3-18/D5-16.
 
 | Criterion | Weight | A: Full toolkit | B: Retry-only | C: Timeout+breaker | D: Mesh | E: Full+adaptive |
 |---|---|---|---|---|---|---|
@@ -255,7 +255,7 @@ complements in-cluster only.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | doc 24 §54–§59 |
+| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59 |
 | Requirement IDs | RESIL-* |
 | Build phases | 2 |
 | Code paths | `src/pf_ft_ai/infrastructure/` |

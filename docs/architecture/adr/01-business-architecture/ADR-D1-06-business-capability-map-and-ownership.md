@@ -35,7 +35,7 @@ platform owns the *abstraction over it*, with authority always resting on the en
 
 ## 2. Context and Problem Statement
 
-Doc 3 §4 provides an executive responsibility matrix across forty capabilities. It is the most
+3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 provides an executive responsibility matrix across forty capabilities. It is the most
 useful single table in the specification set, and it contains an ambiguity that matters.
 
 Nine of its rows are marked **Shared**: Enterprise API Integration, Tools, RAG, Cache, Service
@@ -54,11 +54,11 @@ work in each case:
 Four different meanings under one label. That is tolerable in an executive summary and
 corrosive in an operating model, because "shared" is where accountability goes to die. When a
 tool call to an enterprise API returns a malformed payload at 2am, "shared" does not tell
-anyone whose incident it is. Doc 20 §9 is explicit that no production AI component should be
+anyone whose incident it is. 20.PF-FT-AI-GOVERNANCE.md §9 is explicit that no production AI component should be
 ownerless, and a jointly-owned capability with no boundary definition is functionally
 ownerless.
 
-There is a second problem. Doc 3 §4 is a *responsibility* matrix organised by technical
+There is a second problem. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 is a *responsibility* matrix organised by technical
 capability — LangGraph, ERC, Vector Store. A *business* capability map (WS-03) should be
 organised by what the organisation does for its members: affiliate a club, register a player,
 process a discipline case. The two are different views and both are needed. Without the
@@ -72,33 +72,33 @@ board will ask.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every capability must have a single accountable owner | doc 20 §9 |
-| DR-F-02 | "Shared" must have an operational definition, not just a label | doc 3 §4 |
+| DR-F-01 | Every capability must have a single accountable owner | 20.PF-FT-AI-GOVERNANCE.md §9 |
+| DR-F-02 | "Shared" must have an operational definition, not just a label | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 |
 | DR-F-03 | A business-capability view must exist alongside the technical view | WS-03 |
 | DR-F-04 | The map must show which business capabilities the AI touches and which it does not | ADR-D1-01 §7 |
-| DR-F-05 | Ownership must map to real teams | doc 3 §62 |
+| DR-F-05 | Ownership must map to real teams | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Incident routing must be derivable from the map | 0 ownership disputes during incidents | ADR-D7-16 |
-| DR-N-02 | The map must remain stable as workflows are added | New workflow adds a business capability, not a new ownership class | doc 2 §49 |
+| DR-N-02 | The map must remain stable as workflows are added | New workflow adds a business capability, not a new ownership class | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
 | DR-N-03 | The map must be small enough to be read | ≤3 ownership classes; ≤10 business capability groups | Programme practice |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Doc 3 §4's authority column is binding and not open to reinterpretation | Organisational | doc 3 §4 |
+| DR-C-01 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's authority column is binding and not open to reinterpretation | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 |
 | DR-C-02 | Enterprise owns every business capability's authority; the AI owns none | Platform | ADR-D1-01 §7.2 |
-| DR-C-03 | Doc 3 §62's five-team logical model is the ownership vocabulary | Organisational | doc 3 §62 |
+| DR-C-03 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62's five-team logical model is the ownership vocabulary | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | Doc 3 §62's logical teams map onto real organisational teams | Ownership is nominal and incidents route badly | Confirmed with the Business Owner before Phase 23 |
+| DR-A-01 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62's logical teams map onto real organisational teams | Ownership is nominal and incidents route badly | Confirmed with the Business Owner before Phase 23 |
 | DR-A-02 | Business capabilities are stable even as workflows change | The business view needs revision per workflow, which would defeat its purpose | Reviewed at each workflow onboarding |
 
 ## 4. Evaluation Criteria and Weights
@@ -106,7 +106,7 @@ board will ask.
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Accountability clarity | 35 | The map's purpose is answering "whose is this?"; ambiguity here defeats it entirely | Can a single owner be named for every capability? |
-| EC-02 | Fidelity to doc 3 §4 | 25 | The specification's authority assignments are binding (DR-C-01) | Does the model preserve every authority assignment? |
+| EC-02 | Fidelity to 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 | 25 | The specification's authority assignments are binding (DR-C-01) | Does the model preserve every authority assignment? |
 | EC-03 | Usability during an incident | 20 | The map is consulted under pressure or not at all | Can routing be determined in under a minute? |
 | EC-04 | Business legibility | 12 | WS-03 is a business artefact; a purely technical map fails its purpose | Would a county association recognise the capabilities? |
 | EC-05 | Stability under change | 8 | A map needing revision per workflow is not a map | Revisions required per new workflow |
@@ -116,7 +116,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ## 5. Alternatives Considered
 
-### 5.1 Option A — Adopt doc 3 §4 unchanged
+### 5.1 Option A — Adopt 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 unchanged
 
 **Description.** Use the forty-row responsibility matrix as the capability map, with "Shared"
 as-is.
@@ -148,7 +148,7 @@ authority sits.
 - Misrepresents reality. Enterprise API Integration genuinely has two owners of two layers;
   forcing it to one side means either the AI team owns enterprise APIs it cannot change, or
   the enterprise team owns tool abstractions it did not write.
-- Loses doc 3 §4's authority nuance (EC-02) — the matrix distinguishes owning an operation
+- Loses 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's authority nuance (EC-02) — the matrix distinguishes owning an operation
   from owning an abstraction, and that distinction is load-bearing.
 - Would put Security wholly on one side, which no organisation actually operates.
 
@@ -162,7 +162,7 @@ over it and holds no authority. Each shared capability names its layer boundary 
 Paired with a business-capability view for WS-03.
 
 **Strengths.**
-- Preserves doc 3 §4's authority assignments exactly (EC-02).
+- Preserves 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's authority assignments exactly (EC-02).
 - Every capability has one accountable owner per layer, so accountability is complete even
   where two teams are involved (EC-01).
 - Incident routing follows from which layer failed (EC-03).
@@ -178,7 +178,7 @@ Paired with a business-capability view for WS-03.
 
 ### 5.4 Option D — RACI per capability
 
-**Description.** Extend doc 3 §61's RACI across all forty capabilities and use that as the map.
+**Description.** Extend 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §61's RACI across all forty capabilities and use that as the map.
 
 **Strengths.**
 - Accountability explicit by construction — every row has an A.
@@ -190,7 +190,7 @@ Paired with a business-capability view for WS-03.
 - Does not describe *what* is shared, only *who* is involved — the operation/abstraction
   boundary remains undefined.
 - Still technical rather than business (EC-04).
-- Duplicates doc 3 §61, which already exists for delivery capabilities.
+- Duplicates 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §61, which already exists for delivery capabilities.
 
 **Cost / effort.** Moderate, with high maintenance.
 
@@ -203,7 +203,7 @@ cache returning stale club data — and asking whether each option names an owne
 | Criterion | Weight | A: §4 as-is | B: Binary | C: Three classes defined | D: RACI |
 |---|---|---|---|---|---|
 | EC-01 Accountability clarity | 35 | 2 | 5 | 5 | 4 |
-| EC-02 Fidelity to doc 3 §4 | 25 | 5 | 2 | 5 | 4 |
+| EC-02 Fidelity to 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 | 25 | 5 | 2 | 5 | 4 |
 | EC-03 Incident usability | 20 | 3 | 5 | 5 | 2 |
 | EC-04 Business legibility | 12 | 1 | 2 | 5 | 1 |
 | EC-05 Stability | 8 | 4 | 4 | 5 | 3 |
@@ -214,7 +214,7 @@ cache returning stale club data — and asking whether each option names an owne
 **Sensitivity.** C scores maximum throughout and cannot be overtaken. That is unusual and
 reflects that C is essentially A with its one defect repaired and its missing view added — it
 inherits A's fidelity while fixing A's ambiguity, so it dominates rather than trades off. B's
-382 is respectable and fails on EC-02: it would require overriding doc 3 §4's authority
+382 is respectable and fails on EC-02: it would require overriding 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's authority
 column, which DR-C-01 forbids.
 
 ## 7. Decision
@@ -229,7 +229,7 @@ column, which DR-C-01 forbids.
 
 The third class's definition is the substance of this decision. "Shared" never means shared
 authority. It means two owners of two layers, with authority unambiguously on the enterprise
-side. Doc 3 §4's authority column already says this; §7.1 makes it operative.
+side. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's authority column already says this; §7.1 makes it operative.
 
 ### 7.2 The nine shared capabilities, with their layer boundaries
 
@@ -272,9 +272,9 @@ describes conversational reach, never decision rights.
 
 ### 7.4 Team mapping
 
-Doc 3 §62's five logical teams map to the three classes:
+3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62's five logical teams map to the three classes:
 
-| Class | Doc 3 §62 team |
+| Class | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62 team |
 |---|---|
 | Enterprise-owned | Enterprise Application Team |
 | AI-owned | AI Platform Team; AI/ML Platform Team for model hosting, GPU, embeddings, vector |
@@ -283,7 +283,7 @@ Doc 3 §62's five logical teams map to the three classes:
 DR-A-01 flags that these are logical teams and their mapping to real ones is confirmed
 separately.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — data ownership is one of doc 2
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — data ownership is one of 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §52's categories — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -324,9 +324,9 @@ satisfied concretely rather than asserted.
 
 ### 9.1 Positive
 
-- Every capability has an accountable owner, satisfying doc 20 §9 for capabilities as well as
+- Every capability has an accountable owner, satisfying 20.PF-FT-AI-GOVERNANCE.md §9 for capabilities as well as
   components.
-- "Shared" is operationally defined, so a quarter of doc 3 §4's map stops being ambiguous.
+- "Shared" is operationally defined, so a quarter of 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's map stops being ambiguous.
 - Incident routing follows from a named artefact rather than a negotiation.
 - The business view answers what the AI touches — the question governance will ask.
 - Adding a workflow extends the business view without changing the ownership model.
@@ -341,8 +341,8 @@ satisfied concretely rather than asserted.
 
 ### 9.3 Neutral
 
-- Preserves doc 3 §4's authority column unchanged; this is a clarification, not a revision.
-- Doc 3 §62's team model is adopted as-is, including its own caveat about mapping to real
+- Preserves 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's authority column unchanged; this is a clarification, not a revision.
+- 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §62's team model is adopted as-is, including its own caveat about mapping to real
   teams.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -351,7 +351,7 @@ satisfied concretely rather than asserted.
 |---|---|---|
 | Simplicity of binary ownership | Fidelity to how the layers actually divide | External ADF/ADR forum |
 | A single view | Both technical routing and business legibility | Business Owner |
-| Self-evident labels | Precision in the one place doc 3 §4 was ambiguous | AI Platform Owner |
+| Self-evident labels | Precision in the one place 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 was ambiguous | AI Platform Owner |
 
 ## 10. Golden-Rule and Precedence Conformance
 
@@ -392,7 +392,7 @@ satisfied concretely rather than asserted.
 | Personal data / PII | None in the map itself. §7.3 identifies which business capabilities involve personal data, which informs ADR-D6-06's data-flow policy. |
 | Children's data and safeguarding | The Officials and safeguarding capability in §7.3 is enterprise-authoritative with AI read-and-explain involvement only. The map is where that limitation is visible to a governance reviewer at a glance. |
 | UK GDPR lawful basis and rights impact | Clarifies controller/processor reality: the enterprise controls all nine business capabilities' data; the AI platform processes in transit. |
-| Audit and evidential requirements | Provides the ownership evidence doc 20 §9 requires and the accountability basis for §60 (Data Lineage). |
+| Audit and evidential requirements | Provides the ownership evidence 20.PF-FT-AI-GOVERNANCE.md §9 requires and the accountability basis for §60 (Data Lineage). |
 | Standards touched | ISO/IEC 42001 (roles and responsibilities); ISO/IEC 27001 A.5.2 (roles), A.5.19–A.5.22 (supplier and interface relationships); ISO 9001 §5.3; CMMI-DEV OPD, GP 2.4. |
 
 ## 14. Implementation Impact
@@ -411,7 +411,7 @@ satisfied concretely rather than asserted.
 
 | ID | Acceptance criterion | Verification method |
 |---|---|---|
-| AC-01 | Every capability in doc 3 §4 appears in exactly one class in §7.1 | Cross-check against doc 3 §4 |
+| AC-01 | Every capability in 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 appears in exactly one class in §7.1 | Cross-check against 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 |
 | AC-02 | Every shared capability names a concrete boundary artefact | §7.2 audit; QM-03 |
 | AC-03 | Authority for every business capability in §7.3 is enterprise | Map audit against ADR-D1-01 §7.2 |
 | AC-04 | Each §8.2 incident scenario routes to one owner in a single step | Tabletop exercise with the support function |
@@ -444,7 +444,7 @@ satisfied concretely rather than asserted.
 | RT-01 | QM-01 records a disputed-ownership incident | Quarterly review | Causal analysis; the boundary artefact was unclear or absent |
 | RT-02 | QM-05 records an escalation asserting shared authority | Quarterly review | Correct and reinforce §7.1's definition; a repeat suggests the model is not understood |
 | RT-03 | A new business capability is brought into scope | Workflow onboarding | Extend §7.3; a new capability with no owner blocks onboarding |
-| RT-04 | Doc 3 §4 or §62 amended | Change notice | Re-derive §7.1 and §7.4 |
+| RT-04 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 or §62 amended | Change notice | Re-derive §7.1 and §7.4 |
 | RT-05 | Real team structure diverges from §7.4 | Organisational change | Re-map; ownership must follow the real structure, not the logical one |
 
 **Scheduled review:** 2027-08-21.
@@ -454,7 +454,7 @@ satisfied concretely rather than asserted.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-03 Business Capability Map |
-| Specification sections | doc 3 §4 (Executive Responsibility Matrix), §61 (Responsibility RACI), §62 (Team Boundary Model); doc 1 §2.1–§2.2; doc 2 §5.1–§5.3 |
+| Specification sections | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 (Executive Responsibility Matrix), §61 (Responsibility RACI), §62 (Team Boundary Model); 1 PF-FT-AI-ARCHITECTURE.md §2.1–§2.2; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §5.1–§5.3 |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 21 |
 | Code paths | Package structure of `src/pf_ft_ai/` |

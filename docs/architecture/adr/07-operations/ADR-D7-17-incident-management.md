@@ -31,13 +31,13 @@ PFF AI will run a **standard incident lifecycle (detect → triage → mitigate 
 review) with P1–P4 severity and evidence capture**, extended with **AI-specific incident
 classes** — hallucination/wrong-answer, guardrail bypass/injection, model/prompt
 regression, RAG/ACL leak, persona/RAI breach — each with defined handling and a blameless
-post-incident review feeding causal analysis (doc 28 §8–§15, §105–§106; doc 20 §105–§106).
+post-incident review feeding causal analysis (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§15, §105–§106; 20.PF-FT-AI-GOVERNANCE.md §105–§106).
 AI incidents are first-class, not shoehorned into infra categories.
 
 ## 2. Context and Problem Statement
 
-Doc 28 §8–§12 severity (P1–P4), §13 incident lifecycle, §14 first-response checklist, §15
-incident evidence, §105–§106 governance incident/process; doc 20 §105–§106 AI governance
+28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§12 severity (P1–P4), §13 incident lifecycle, §14 first-response checklist, §15
+incident evidence, §105–§106 governance incident/process; 20.PF-FT-AI-GOVERNANCE.md §105–§106 AI governance
 incident/process. A hallucinated affiliation status or a guardrail bypass is a real
 incident type that classic infra incident management misses. This ADR fixes incident
 management and AI-specific classification.
@@ -46,10 +46,10 @@ management and AI-specific classification.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Standard lifecycle + P1–P4 + evidence | doc 28 §8–§15 |
-| DR-F-02 | AI-specific incident classes | doc 20 §105–§106; doc 28 §105–§106 |
-| DR-F-03 | Blameless review → causal analysis | doc 28 §13; ADR-D6-13 (CAR) |
-| DR-C-01 | Evidence capture (audit) | doc 28 §15; ADR-D6-17 |
+| DR-F-01 | Standard lifecycle + P1–P4 + evidence | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§15 |
+| DR-F-02 | AI-specific incident classes | 20.PF-FT-AI-GOVERNANCE.md §105–§106; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §105–§106 |
+| DR-F-03 | Blameless review → causal analysis | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §13; ADR-D6-13 (CAR) |
+| DR-C-01 | Evidence capture (audit) | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §15; ADR-D6-17 |
 
 ### 3.4 Assumptions
 
@@ -72,7 +72,7 @@ management and AI-specific classification.
 
 ### 5.1 Option A — Standard lifecycle + P1–P4 + AI-specific classes + evidence + blameless review/CAR
 
-**Description.** The doc 28 lifecycle with P1–P4; add AI incident classes (hallucination,
+**Description.** The 28.PF-FT-AI-OPERATIONS-RUNBOOK.md lifecycle with P1–P4; add AI incident classes (hallucination,
 guardrail bypass, regression, RAG/ACL leak, RAI breach) each with handling; evidence
 captured (§15; ADR-D6-17); blameless post-incident review feeds causal analysis
 (ADR-D6-13/CAR) and superseding ADRs.
@@ -98,7 +98,7 @@ captured (§15; ADR-D6-17); blameless post-incident review feeds causal analysis
 
 **Description.** Handle + resolve, skip structured review.
 **Strengths.** Faster close.
-**Weaknesses.** Recurrence; no causal learning (doc 20 §106).
+**Weaknesses.** Recurrence; no causal learning (20.PF-FT-AI-GOVERNANCE.md §106).
 **Cost / effort.** Low; repeats incidents.
 
 ### 5.5 Option E — A + automated AI-incident detection hooks (from evals/guardrails/SLOs)
@@ -113,12 +113,12 @@ burn, ACL-leak signals auto-open incidents with severity.
 
 | Option | Eliminated by |
 |---|---|
-| No incident process | doc 28 §13 |
-| No evidence capture | doc 28 §15 |
+| No incident process | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §13 |
+| No evidence capture | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §15 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 28 §8–§15/§105–§106 and doc 20
+**Method.** Weighted scoring against §4, informed by 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§15/§105–§106 and 20.PF-FT-AI-GOVERNANCE.md
 §105–§106.
 
 | Criterion | Weight | A: Lifecycle+AI classes | B: Generic IT | C: Ad-hoc | D: No review | E: A+auto-detect |
@@ -148,7 +148,7 @@ rejected.
 
 ## 8. Architecture Detail
 
-- Lifecycle (doc 28 §13): detect→triage→mitigate→resolve→review; first-response checklist
+- Lifecycle (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §13): detect→triage→mitigate→resolve→review; first-response checklist
   (§14); P1–P4 (§9–§12); evidence captured to the audit store (§15; ADR-D6-17).
 - AI incident classes with handling: hallucination (roll back prompt/model, ADR-D7-12;
   strengthen eval), guardrail bypass/injection (patch guardrail ADR-D6-08, add case),
@@ -238,7 +238,7 @@ rejected.
 | Alerting | Auto-open on AI signals (ADR-D7-08) |
 | Runbook | `docs/runbooks/incident.md` |
 | Failure mode and degradation | Defined per class + severity |
-| Rollback | AI rollback (ADR-D7-12; doc 28 §44–§47) |
+| Rollback | AI rollback (ADR-D7-12; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §44–§47) |
 | Support model impact | On-call (ADR-D7-16) |
 
 ## 17. Cost Impact
@@ -261,7 +261,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-33 |
-| Specification sections | doc 28 §8–§15, §105–§106; doc 20 §105–§106 |
+| Specification sections | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§15, §105–§106; 20.PF-FT-AI-GOVERNANCE.md §105–§106 |
 | Requirement IDs | INC-* |
 | Build phases | 10 |
 | Code paths | `docs/runbooks/` |

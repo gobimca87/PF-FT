@@ -31,12 +31,12 @@ PFF AI will make adding a new workflow/agent a **declarative, contract-driven, g
 extension** — implement the agent contract (ADR-D3-03), register it with the supervisor
 (ADR-D2-05), declare its tools/ERC needs/prompts as versioned artefacts, pass evaluation
 (ADR-D7-13) and change governance (ADR-D6-15) — with **no changes to core orchestration
-required** (doc 7 orchestration; doc 20 §45–§46, §49). Extensibility is by declaration +
+required** (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md orchestration; 20.PF-FT-AI-GOVERNANCE.md §45–§46, §49). Extensibility is by declaration +
 registration, not core edits.
 
 ## 2. Context and Problem Statement
 
-Doc 7 defines the agentic orchestration; doc 20 §45–§46 agent governance/capability
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md defines the agentic orchestration; 20.PF-FT-AI-GOVERNANCE.md §45–§46 agent governance/capability
 boundaries, §49 workflow change. The platform starts with AffiliationAgent (ADR-D1-11) but a
 catalogue of workflows is planned (ADR-D1-10). If adding an agent required core changes, growth
 would be slow and risky. This ADR fixes the extension model.
@@ -46,9 +46,9 @@ would be slow and risky. This ADR fixes the extension model.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Add agent via contract + registration, no core edit | ADR-D3-03, D2-05 |
-| DR-F-02 | Declarative tools/ERC/prompts as artefacts | doc 20 §45 |
+| DR-F-02 | Declarative tools/ERC/prompts as artefacts | 20.PF-FT-AI-GOVERNANCE.md §45 |
 | DR-F-03 | Gated by eval + governance | ADR-D7-13, D6-15 |
-| DR-C-01 | Capability boundaries respected | doc 20 §46 |
+| DR-C-01 | Capability boundaries respected | 20.PF-FT-AI-GOVERNANCE.md §46 |
 
 ### 3.4 Assumptions
 
@@ -74,7 +74,7 @@ would be slow and risky. This ADR fixes the extension model.
 **Description.** A new agent implements the agent contract (ADR-D3-03), declares tools/ERC
 requirements/prompts as versioned artefacts, and registers with the supervisor (ADR-D2-05);
 the core (harness, ERC, guardrails, graph engine) is unchanged; eval (ADR-D7-13) + governance
-(ADR-D6-15) gate it; capability boundaries enforced (doc 20 §46).
+(ADR-D6-15) gate it; capability boundaries enforced (20.PF-FT-AI-GOVERNANCE.md §46).
 **Strengths.** Safe, consistent, governed, fast.
 **Weaknesses.** Contract must be expressive.
 **Cost / effort.** Low per agent (after core exists).
@@ -113,12 +113,12 @@ stub, prompt/tool declarations, tests) to standardise and speed new agents.
 
 | Option | Eliminated by |
 |---|---|
-| Ungoverned agent addition | doc 20 §45–§46 |
+| Ungoverned agent addition | 20.PF-FT-AI-GOVERNANCE.md §45–§46 |
 | One microservice per agent | ADR-D2-02 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 7 and doc 20 §45–§49.
+**Method.** Weighted scoring against §4, informed by 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md and 20.PF-FT-AI-GOVERNANCE.md §45–§49.
 
 | Criterion | Weight | A: Contract+register | B: Core edits | C: Config-DSL | D: Microservice/agent | E: A+scaffolding |
 |---|---|---|---|---|---|---|
@@ -151,7 +151,7 @@ pure-config-DSL (C) and microservice-per-agent (D) are rejected.
   prompts (ADR-D3-11); registers with the supervisor (ADR-D2-05); reuses harness/guardrails/
   ERC/persona unchanged.
 - A scaffolding generator produces the skeleton + declarations + test stubs; eval (ADR-D7-13)
-  + governance (ADR-D6-15) gate go-live; capability boundaries (doc 20 §46) enforced. Fits the
+  + governance (ADR-D6-15) gate go-live; capability boundaries (20.PF-FT-AI-GOVERNANCE.md §46) enforced. Fits the
   workflow catalogue/phasing (ADR-D1-10) — one agent (AffiliationAgent) first (ADR-D1-11).
 
 ## 9. Consequences
@@ -259,7 +259,7 @@ pure-config-DSL (C) and microservice-per-agent (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-37 Evolution |
-| Specification sections | doc 7; doc 20 §45–§46, §49 |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md; 20.PF-FT-AI-GOVERNANCE.md §45–§46, §49 |
 | Requirement IDs | EXT-AGENT-* |
 | Build phases | 23 → ongoing |
 | Code paths | `src/pf_ft_ai/agents/` |

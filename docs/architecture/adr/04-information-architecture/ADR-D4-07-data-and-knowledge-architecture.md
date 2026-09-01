@@ -36,14 +36,14 @@ Confidential / Personal / Special-category) and an **owner**, and will apply
 handling rules (retention, access, minimisation) by classification — never mixing a
 higher-classification datum into a lower-controlled store. Enterprise business data is
 owned by PFF and only referenced; the AI platform owns only its derived/operational
-data (doc 5 §56; doc 9 §5, §32, §76–§78; doc 13 §10, §31–§32).
+data (5. PF-FT-AI-STATE-MODEL.md §56; 9 PF-FT-AI-MEMORY-CACHE.md §5, §32, §76–§78; 13.FP-FT-AI-RAG.md §10, §31–§32).
 
 ## 2. Context and Problem Statement
 
-Data classification and ownership appear across the spec — doc 5 §56 (state security
-classification), doc 9 §32/§76–§78 (memory retention and cross-user/club isolation),
-doc 13 §10/§31–§32/§39 (RAG source authority, business/security metadata, document
-classification), doc 20 (governance). But there is no single ADR that names the data
+Data classification and ownership appear across the spec — 5. PF-FT-AI-STATE-MODEL.md §56 (state security
+classification), 9 PF-FT-AI-MEMORY-CACHE.md §32/§76–§78 (memory retention and cross-user/club isolation),
+13.FP-FT-AI-RAG.md §10/§31–§32/§39 (RAG source authority, business/security metadata, document
+classification), 20.PF-FT-AI-GOVERNANCE.md (governance). But there is no single ADR that names the data
 domains, their classifications and owners. Without it, classification is applied
 inconsistently per component, retention and access controls diverge, and
 special-category/children's data (pervasive in FA football data) can end up in a
@@ -54,10 +54,10 @@ architecture references.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every datum has a domain, classification and owner | doc 5 §56; doc 20 |
-| DR-F-02 | Handling rules (retention/access/minimisation) by classification | doc 9 §32; doc 6 §58–§59 |
-| DR-C-01 | Enterprise business data owned by PFF; AI only references | doc 5 §5; ADR-D4-01 |
-| DR-C-02 | Cross-user/club isolation | doc 9 §77–§78 |
+| DR-F-01 | Every datum has a domain, classification and owner | 5. PF-FT-AI-STATE-MODEL.md §56; 20.PF-FT-AI-GOVERNANCE.md |
+| DR-F-02 | Handling rules (retention/access/minimisation) by classification | 9 PF-FT-AI-MEMORY-CACHE.md §32; 6 PF-FT-AI-CONVERSATION-SESSION.md §58–§59 |
+| DR-C-01 | Enterprise business data owned by PFF; AI only references | 5. PF-FT-AI-STATE-MODEL.md §5; ADR-D4-01 |
+| DR-C-02 | Cross-user/club isolation | 9 PF-FT-AI-MEMORY-CACHE.md §77–§78 |
 | DR-C-03 | Children's/special-category data specially protected | ADR-D6-16 |
 
 ### 3.4 Assumptions
@@ -129,8 +129,8 @@ remains.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 5 §56, doc 9 §32/§76–§78,
-doc 13 §31–§32, doc 20 and UK GDPR/safeguarding requirements.
+**Method.** Weighted scoring against §4, informed by 5. PF-FT-AI-STATE-MODEL.md §56, 9 PF-FT-AI-MEMORY-CACHE.md §32/§76–§78,
+13.FP-FT-AI-RAG.md §31–§32, 20.PF-FT-AI-GOVERNANCE.md and UK GDPR/safeguarding requirements.
 
 | Criterion | Weight | A: Domains+5-band+owned | B: Binary | C: By store | D: External catalog | E: Taxonomy no-enforce |
 |---|---|---|---|---|---|---|
@@ -158,7 +158,7 @@ Special-category and children's data receive the strictest controls (ADR-D6-16).
 Binary (B), by-store (C) and unenforced (E) options are rejected; an external catalog
 (D) is a future scale option.
 
-**Status rationale.** `Accepted` — doc 20 and UK GDPR govern this; ADR sets the map.
+**Status rationale.** `Accepted` — 20.PF-FT-AI-GOVERNANCE.md and UK GDPR govern this; ADR sets the map.
 
 ## 8. Architecture Detail
 
@@ -168,10 +168,10 @@ Binary (B), by-store (C) and unenforced (E) options are rejected; an external ca
 - **Classification bands** applied per dataset; stores tagged with the maximum band
   they may hold; a fitness test prevents writing a higher-band datum to a lower-band
   store (complements ADR-D4-01).
-- **Controls by band**: retention/TTL (doc 9 §32), access (ADR-D6-06), minimisation
-  (ADR-D6-07), isolation (doc 9 §77–§78), audit (ADR-D6-17).
+- **Controls by band**: retention/TTL (9 PF-FT-AI-MEMORY-CACHE.md §32), access (ADR-D6-06), minimisation
+  (ADR-D6-07), isolation (9 PF-FT-AI-MEMORY-CACHE.md §77–§78), audit (ADR-D6-17).
 - **Ownership**: each domain has an accountable owner recorded in the register;
-  knowledge sources carry authority classification (doc 13 §10).
+  knowledge sources carry authority classification (13.FP-FT-AI-RAG.md §10).
 
 ## 9. Consequences
 
@@ -277,7 +277,7 @@ Binary (B), by-store (C) and unenforced (E) options are rejected; an external ca
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-20 Data & Knowledge |
-| Specification sections | doc 5 §56; doc 9 §5, §32, §76–§78; doc 13 §10, §28, §31–§32, §39; doc 20 |
+| Specification sections | 5. PF-FT-AI-STATE-MODEL.md §56; 9 PF-FT-AI-MEMORY-CACHE.md §5, §32, §76–§78; 13.FP-FT-AI-RAG.md §10, §28, §31–§32, §39; 20.PF-FT-AI-GOVERNANCE.md |
 | Requirement IDs | DATA-* |
 | Build phases | 3, 8 |
 | Code paths | platform-wide |

@@ -37,8 +37,8 @@ versus optional classification, decided before execution rather than after it.
 
 ## 2. Context and Problem Statement
 
-Doc 1 §39 criterion 4 requires sequential and parallel AI execution. Doc 7 §31–§34 cover
-sequential and parallel API execution, parallel execution controls, and fan-out/fan-in. Doc 10
+1 PF-FT-AI-ARCHITECTURE.md §39 criterion 4 requires sequential and parallel AI execution. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §31–§34 cover
+sequential and parallel API execution, parallel execution controls, and fan-out/fan-in. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md
 §50–§57 cover the same ground from the integration side, adding an execution planner (§53), an
 API dependency graph (§52), bounded parallelism (§55) and parallel failure handling (§56).
 
@@ -55,19 +55,19 @@ genuine dependency graph, and it is not obvious from the call names.
 
 Three questions follow, and the specifications leave each of them partly open.
 
-**Who decides execution order?** Doc 10 §53 names an execution planner. It does not say what the
+**Who decides execution order?** 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §53 names an execution planner. It does not say what the
 planner reads. If the agent decides, order becomes agent-specific and untestable. If the model
 decides, execution order becomes a model output — and a model that gets the dependency graph
 wrong produces either an error or, worse, a call made with a placeholder identifier.
 
-**What bounds parallelism, and why?** Doc 10 §55 requires bounded parallelism without saying what
+**What bounds parallelism, and why?** 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §55 requires bounded parallelism without saying what
 the bound protects. This matters: a bound sized to protect the platform's event loop is a
-different number from one sized to protect an enterprise service's connection pool. Doc 25 §64
+different number from one sized to protect an enterprise service's connection pool. 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §64
 notes API rate limits exist. A club with forty officials fanned out at full width could look like
 a denial-of-service attempt to a service sized for portal traffic.
 
-**What happens when one parallel branch fails?** Doc 10 §56 covers parallel failure handling and
-doc 8 §49–§50 distinguish mandatory from optional collection failure. The distinction is
+**What happens when one parallel branch fails?** 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §56 covers parallel failure handling and
+8 PF-FT-AI-ERC-CONTEXT.md §49–§50 distinguish mandatory from optional collection failure. The distinction is
 essential — a failed debt check blocks affiliation, a failed course-history fetch does not — but
 *when* that classification is made determines whether the system can behave correctly. Deciding
 after a failure invites the model to reason about whether the missing data mattered, which is a
@@ -79,29 +79,29 @@ business judgement it must not make.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Sequential, parallel and hybrid execution must all be supported | doc 1 §39 criterion 4; doc 1 §13 |
-| DR-F-02 | An execution planner must derive the order | doc 10 §53 |
-| DR-F-03 | API dependencies must be declared | doc 10 §52; doc 8 §25 |
-| DR-F-04 | Parallelism must be bounded | doc 10 §55; doc 7 §33 |
-| DR-F-05 | Mandatory and optional context must be distinguished | doc 8 §24, §49, §50 |
-| DR-F-06 | Fan-out/fan-in must be supported for collections | doc 7 §34; doc 10 §54 |
+| DR-F-01 | Sequential, parallel and hybrid execution must all be supported | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 4; 1 PF-FT-AI-ARCHITECTURE.md §13 |
+| DR-F-02 | An execution planner must derive the order | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §53 |
+| DR-F-03 | API dependencies must be declared | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §52; 8 PF-FT-AI-ERC-CONTEXT.md §25 |
+| DR-F-04 | Parallelism must be bounded | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §55; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §33 |
+| DR-F-05 | Mandatory and optional context must be distinguished | 8 PF-FT-AI-ERC-CONTEXT.md §24, §49, §50 |
+| DR-F-06 | Fan-out/fan-in must be supported for collections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §34; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §54 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Context collection must fit the turn latency budget | Within ADR-D5-18's allocation | ADR-D5-18 |
-| DR-N-02 | Enterprise services must not be overloaded by fan-out | Within published rate limits | doc 25 §64 |
-| DR-N-03 | Execution order must be deterministic and testable | Same requirements, same plan | doc 10 §22 |
+| DR-N-02 | Enterprise services must not be overloaded by fan-out | Within published rate limits | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §64 |
+| DR-N-03 | Execution order must be deterministic and testable | Same requirements, same plan | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §22 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | All external I/O is async; no blocking call in an async path | Platform | `CLAUDE.md` |
-| DR-C-02 | ERC batch size is 20 | Platform | doc 8 §36; ADR-D4-04 |
-| DR-C-03 | The model must not decide execution order | Platform | ADR-D1-02 §7.1 I-6; doc 2 §3.3 |
-| DR-C-04 | Enterprise APIs declare whether they are parallelisable | Platform | doc 10 §10 |
+| DR-C-02 | ERC batch size is 20 | Platform | 8 PF-FT-AI-ERC-CONTEXT.md §36; ADR-D4-04 |
+| DR-C-03 | The model must not decide execution order | Platform | ADR-D1-02 §7.1 I-6; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-C-04 | Enterprise APIs declare whether they are parallelisable | Platform | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §10 |
 
 ### 3.4 Assumptions
 
@@ -137,7 +137,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 - Deterministic (EC-04).
 
 **Weaknesses.**
-- Fails doc 1 §39 criterion 4, which requires parallel execution.
+- Fails 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 4, which requires parallel execution.
 - The Phase 1 pre-check becomes seven sequential round trips; at 200 ms each, 1.4 seconds before
   the conversation begins, against a turn budget that also has to accommodate inference (EC-03).
 - A club with forty officials batched at 20 per call becomes two more sequential calls.
@@ -158,7 +158,7 @@ including which calls can run in parallel.
 **Weaknesses.**
 - Execution order becomes a model output. A wrong plan calls a dependent API before its
   prerequisite, which either errors or executes with a placeholder (EC-01 fails).
-- Violates DR-C-03 and doc 2 §3.3: this is a critical control, and the SLM must not be the only
+- Violates DR-C-03 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3: this is a critical control, and the SLM must not be the only
   enforcement — here it would be the only mechanism at all.
 - Non-deterministic, so the same requirements can produce different plans and different
   enterprise load (EC-04 fails).
@@ -169,7 +169,7 @@ including which calls can run in parallel.
 ### 5.3 Option C — Planner over a declared dependency graph, bounded parallelism
 
 **Description.** Each API in the catalogue declares its dependencies and whether it is
-parallelisable (doc 10 §10). The execution planner topologically sorts the required calls into
+parallelisable (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §10). The execution planner topologically sorts the required calls into
 stages: within a stage, calls run concurrently under a bound; stages run sequentially.
 Mandatory/optional classification is declared per context requirement before execution.
 
@@ -182,7 +182,7 @@ Mandatory/optional classification is declared per context requirement before exe
 - Fully deterministic: same requirements produce the same plan (EC-04).
 - Mandatory/optional decided before execution, so partial failure resolves without judgement
   (EC-05).
-- Directly implements doc 10 §52–§56.
+- Directly implements 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §52–§56.
 
 **Weaknesses.**
 - Dependency declarations must be maintained as the API catalogue evolves; a wrong declaration
@@ -240,7 +240,7 @@ more than latency; that is RT-04. B is excluded by DR-C-03 regardless of score.
 
 ### 7.1 Execution is planned from declared dependencies
 
-Each API in the catalogue declares, per doc 10 §10:
+Each API in the catalogue declares, per 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §10:
 
 ```yaml
 execution:
@@ -251,15 +251,15 @@ depends_on:
   - enterprise.team.list      # must complete before this call can be planned
 ```
 
-The execution planner (doc 10 §53):
+The execution planner (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §53):
 
-1. Takes the context requirements for the current workflow step (doc 8 §22–§23).
+1. Takes the context requirements for the current workflow step (8 PF-FT-AI-ERC-CONTEXT.md §22–§23).
 2. Resolves each to its catalogue entry.
-3. Builds the dependency graph (doc 10 §52).
+3. Builds the dependency graph (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §52).
 4. Topologically sorts into **stages**: all calls in a stage are mutually independent.
 5. Executes stages sequentially; within a stage, executes concurrently under the bound.
 
-This is hybrid execution as doc 1 §13 describes it: sequential between stages, parallel within
+This is hybrid execution as 1 PF-FT-AI-ARCHITECTURE.md §13 describes it: sequential between stages, parallel within
 them. Neither the agent nor the model participates in producing the plan.
 
 ### 7.2 A wrong declaration must fail loudly
@@ -272,7 +272,7 @@ Two mitigations, because a silent wrong plan is worse than a loud failure:
   `teamId` and no completed stage produced one, the plan is rejected. This catches a missing
   `depends_on` declaration structurally.
 - **No placeholder substitution.** The planner never substitutes a default, empty or synthesised
-  identifier to make a call executable. Doc 10 §35's input validation rejects it.
+  identifier to make a call executable. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §35's input validation rejects it.
 
 Together these mean a missing dependency declaration surfaces as a plan-time error rather than
 as a call made with the wrong identifier — which is the failure mode that would otherwise
@@ -280,11 +280,11 @@ corrupt ERC quietly.
 
 ### 7.3 The concurrency bound protects the enterprise, not the platform
 
-Doc 10 §55 requires bounded parallelism without stating what the bound is for. It is stated here
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §55 requires bounded parallelism without stating what the bound is for. It is stated here
 because it determines how the number is chosen:
 
 > The bound exists to keep the platform within what enterprise services can absorb. It is sized
-> from enterprise capacity and rate limits (doc 25 §64), not from the platform's own throughput.
+> from enterprise capacity and rate limits (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §64), not from the platform's own throughput.
 
 Consequences:
 
@@ -295,21 +295,21 @@ Consequences:
 - Where an enterprise service publishes a rate limit, the bound is derived from it. Where it
   does not, a conservative default applies and is revised from load testing (DR-A-02).
 - The bound is *not* a platform protection mechanism. Platform-side protection — connection pool
-  limits, event loop health — is ADR-D5-16's and doc 4 §57–§58's concern, and uses separate
+  limits, event loop health — is ADR-D5-16's and 4. PF-FT-AI-RUNTIME.md §57–§58's concern, and uses separate
   controls.
 
 Conflating the two would produce a single number that protects neither well.
 
 ### 7.4 Mandatory versus optional is declared before execution
 
-Per doc 8 §24, every context requirement declares whether it is mandatory or optional for the
+Per 8 PF-FT-AI-ERC-CONTEXT.md §24, every context requirement declares whether it is mandatory or optional for the
 current workflow step. The classification is **in the workflow definition**, not decided after a
 failure.
 
 | Classification | On failure |
 |---|---|
-| **Mandatory** | The step cannot proceed. Retry per policy (doc 10 §41–§44); on exhaustion, the workflow reports it cannot continue and states what is unavailable (doc 8 §49). |
-| **Optional** | Execution continues. ERC records the section as incomplete with a reason (doc 8 §50–§51). Downstream reasoning is told the section is absent, not given a silent gap. |
+| **Mandatory** | The step cannot proceed. Retry per policy (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §41–§44); on exhaustion, the workflow reports it cannot continue and states what is unavailable (8 PF-FT-AI-ERC-CONTEXT.md §49). |
+| **Optional** | Execution continues. ERC records the section as incomplete with a reason (8 PF-FT-AI-ERC-CONTEXT.md §50–§51). Downstream reasoning is told the section is absent, not given a silent gap. |
 
 Deciding this before execution matters for a specific reason: after a failure, "did we need
 that?" is a business question. A model asked to judge whether a missing debt check mattered would
@@ -322,13 +322,13 @@ their absence as blocking. Context that enriches explanation without gating anyt
 
 ### 7.5 Fan-out and fan-in for collections
 
-Doc 7 §34 and doc 10 §54 require fan-out/fan-in. Applied to collections, it composes with
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §34 and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §54 require fan-out/fan-in. Applied to collections, it composes with
 batching (ADR-D4-04):
 
-1. A collection is partitioned into batches of at most 20 (doc 8 §36, DR-C-02).
+1. A collection is partitioned into batches of at most 20 (8 PF-FT-AI-ERC-CONTEXT.md §36, DR-C-02).
 2. Batches fan out under the §7.3 per-service bound.
-3. Results fan in and are aggregated in a deterministic order (doc 8 §58).
-4. Per-batch failures are handled per doc 8 §48's partial batch failure rules.
+3. Results fan in and are aggregated in a deterministic order (8 PF-FT-AI-ERC-CONTEXT.md §58).
+4. Per-batch failures are handled per 8 PF-FT-AI-ERC-CONTEXT.md §48's partial batch failure rules.
 
 Deterministic aggregation ordering matters beyond tidiness: without it, the same club's officials
 could appear in different orders across turns, producing different prompt content and
@@ -388,15 +388,15 @@ or overwhelm a slow one.
 
 ### 8.3 Partial failure in a stage
 
-Doc 10 §56 and doc 8 §48–§50 combine:
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §56 and 8 PF-FT-AI-ERC-CONTEXT.md §48–§50 combine:
 
 1. All calls in the stage run to completion or failure; a failure does not cancel siblings, since
    their results may still be needed.
 2. Mandatory failures are collected. If any mandatory call failed after retries, the step fails
    with a complete list of what was unavailable — not the first failure encountered, which would
    send the user back repeatedly for one problem at a time.
-3. Optional failures are recorded in ERC completeness tracking (doc 8 §51–§52).
-4. Dependent stages are not executed if a mandatory prerequisite failed (doc 10 §57).
+3. Optional failures are recorded in ERC completeness tracking (8 PF-FT-AI-ERC-CONTEXT.md §51–§52).
+4. Dependent stages are not executed if a mandatory prerequisite failed (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §57).
 
 Point 2 matters for the affiliation user experience specifically. A club failing three pre-checks
 should be told all three, which is what the portal's own banner does. Failing fast on the first
@@ -427,7 +427,7 @@ improve on.
 
 ### 9.3 Neutral
 
-- Hybrid execution is the specification's own model (doc 1 §13); this decision fixes how the plan
+- Hybrid execution is the specification's own model (1 PF-FT-AI-ARCHITECTURE.md §13); this decision fixes how the plan
   is produced.
 - Batching composes with fan-out rather than replacing it.
 
@@ -458,7 +458,7 @@ improve on.
 | RSK-02 | Concurrency bound too high for an enterprise service (DR-A-02) | Medium | High | High | Per-service bounds from published limits where available, conservative default otherwise; load testing at Phase 20; QM-03 | AI Platform Owner | Medium |
 | RSK-03 | Bound too low, making context collection exceed the latency budget | Medium | Medium | Medium | Measured against ADR-D5-18's allocation; QM-01; bounds are per-environment configuration | AI Engineering Lead | Medium |
 | RSK-04 | Mandatory/optional classification proves contextual (DR-A-03) | Low | Medium | Low | Classification is per workflow *step*, not per workflow, which gives the needed granularity | AI Solution Architect | Low |
-| RSK-05 | Aggregation ordering non-deterministic, producing varying prompt content | Low | Medium | Low | Deterministic ordering per doc 8 §58; AC-06 | AI Engineering Lead | Low |
+| RSK-05 | Aggregation ordering non-deterministic, producing varying prompt content | Low | Medium | Low | Deterministic ordering per 8 PF-FT-AI-ERC-CONTEXT.md §58; AC-06 | AI Engineering Lead | Low |
 | RSK-06 | Data-dependent dependencies not expressible in the catalogue (DR-A-01) | Medium | Medium | Medium | Handled by staging: the dependent call is planned in a later stage once the value exists. A genuinely undeclarable dependency is escalated as an integration gap. | AI Solution Architect | Medium |
 
 ## 12. Quantitative Targets and Measures
@@ -506,7 +506,7 @@ the bound was wrong.
 | AC-01 | A dependent call never executes before its prerequisite | Planner test across the affiliation dependency graph |
 | AC-02 | A call with an unresolvable path parameter is rejected at plan time | Planner test with a missing `depends_on`; QM-02 |
 | AC-03 | Concurrent in-flight calls per service never exceed the configured bound | Concurrency test under load; QM-04 |
-| AC-04 | A mandatory failure blocks the step; an optional failure records incompleteness | Failure injection per doc 8 §49–§50 |
+| AC-04 | A mandatory failure blocks the step; an optional failure records incompleteness | Failure injection per 8 PF-FT-AI-ERC-CONTEXT.md §49–§50 |
 | AC-05 | All mandatory failures in a stage are reported together | Multi-failure scenario test; QM-05 |
 | AC-06 | Aggregation ordering is deterministic across runs | Repeated-run comparison |
 | AC-07 | Identical context requirements produce identical plans | Determinism test; QM-06 |
@@ -549,7 +549,7 @@ the bound was wrong.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture |
-| Specification sections | doc 7 §31 (Sequential API Execution), §32 (Parallel API Execution), §33 (Parallel Execution Controls), §34 (Fan-Out/Fan-In); doc 10 §50–§57 (Sequential, Parallel, Dependency Graph, Execution Planner, Fan-Out/Fan-In, Bounded Parallelism, Parallel Failure Handling, Tool Dependency Failure), §10 (Extended Metadata), §35 (Tool Input Validation); doc 8 §22–§25 (Context Requirements, Dependency Graph), §36 (Agreed Batch Size), §48–§52 (Partial Batch Failure, Mandatory/Optional Failure, Completeness), §58 (Aggregation Ordering); doc 1 §13, §39 criterion 4; doc 4 §23–§24, §57–§58; doc 25 §64 |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §31 (Sequential API Execution), §32 (Parallel API Execution), §33 (Parallel Execution Controls), §34 (Fan-Out/Fan-In); 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §50–§57 (Sequential, Parallel, Dependency Graph, Execution Planner, Fan-Out/Fan-In, Bounded Parallelism, Parallel Failure Handling, Tool Dependency Failure), §10 (Extended Metadata), §35 (Tool Input Validation); 8 PF-FT-AI-ERC-CONTEXT.md §22–§25 (Context Requirements, Dependency Graph), §36 (Agreed Batch Size), §48–§52 (Partial Batch Failure, Mandatory/Optional Failure, Completeness), §58 (Aggregation Ordering); 1 PF-FT-AI-ARCHITECTURE.md §13, §39 criterion 4; 4. PF-FT-AI-RUNTIME.md §23–§24, §57–§58; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §64 |
 | Requirement IDs | `FR-A39-04`, `FR-A39-05`, `NFR-A38-PERF`, `NFR-A38-SCALE` |
 | Build phases | 5, 6 |
 | Code paths | `src/pf_ft_ai/integration/execution/`, `src/pf_ft_ai/context/collection/` |

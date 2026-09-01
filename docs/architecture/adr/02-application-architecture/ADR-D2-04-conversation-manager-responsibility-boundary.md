@@ -37,13 +37,13 @@ should happen next?"
 
 ## 2. Context and Problem Statement
 
-Doc 6 §4 lists the Conversation Manager's responsibilities and §5 its non-responsibilities. Doc 2
-§7 gives it a layer. Doc 4 §10–§12 place conversation resolution, session resolution and existing
-workflow detection in the request lifecycle. Doc 7 §15 places existing-workflow detection
+6 PF-FT-AI-CONVERSATION-SESSION.md §4 lists the Conversation Manager's responsibilities and §5 its non-responsibilities. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
+§7 gives it a layer. 4. PF-FT-AI-RUNTIME.md §10–§12 place conversation resolution, session resolution and existing
+workflow detection in the request lifecycle. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 places existing-workflow detection
 *before* the Supervisor.
 
 That last placement is the crux, and it is easy to get wrong in a way that quietly relocates
-routing authority. Doc 7 §15 says:
+routing authority. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 says:
 
 ```
 Conversation → Active Workflow? → YES: Resume / NO: Supervisor
@@ -52,7 +52,7 @@ Conversation → Active Workflow? → YES: Resume / NO: Supervisor
 Read as an implementation instruction, this appears to give the Conversation Manager a routing
 decision: it decides whether to resume or to route. If that reading is taken, the Conversation
 Manager starts asking questions it has no business asking — is this message a continuation of
-the affiliation workflow, or a new intent? Doc 6 §25 is a whole section on exactly that
+the affiliation workflow, or a new intent? 6 PF-FT-AI-CONVERSATION-SESSION.md §25 is a whole section on exactly that
 distinction ("Workflow Resume vs New Intent"), and it is a *semantic* judgement about what the
 user meant.
 
@@ -63,12 +63,12 @@ Supervisor. And the platform has two components that route, with no clear rule a
 
 The opposite error is equally available: making the Conversation Manager a thin persistence
 shim, and pushing session lifecycle, concurrency and workflow association into the Supervisor or
-the harness. Doc 6 §39–§40 require concurrency control over concurrent requests on one
-conversation; doc 6 §48 requires handling session expiry *during* a workflow. These are lifecycle
+the harness. 6 PF-FT-AI-CONVERSATION-SESSION.md §39–§40 require concurrency control over concurrent requests on one
+conversation; 6 PF-FT-AI-CONVERSATION-SESSION.md §48 requires handling session expiry *during* a workflow. These are lifecycle
 concerns with real complexity, and scattering them across components that are focused on routing
 and execution would leave them under-owned.
 
-There is also a four-state question. Doc 6 §6 distinguishes conversation, session and workflow.
+There is also a four-state question. 6 PF-FT-AI-CONVERSATION-SESSION.md §6 distinguishes conversation, session and workflow.
 `CLAUDE.md` adds enterprise business state as the fourth. The Conversation Manager touches three
 of the four and must not touch the fourth. Where exactly it stops is worth stating, because
 "active workflow association" sounds like workflow ownership and is not.
@@ -79,28 +79,28 @@ of the four and must not touch the fourth. Where exactly it stops is worth stati
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Conversation and session lifecycle must be owned in one place | doc 6 §4 |
-| DR-F-02 | Existing workflow detection must precede supervisor invocation | doc 7 §15; doc 4 §12 |
-| DR-F-03 | Concurrent requests on one conversation must be controlled | doc 6 §39, §40 |
-| DR-F-04 | Session expiry during a workflow must not lose the workflow | doc 6 §48 |
-| DR-F-05 | A conversation may host several workflows | doc 6 §23 |
-| DR-F-06 | Conversation ownership and tenant boundary must be enforced | doc 6 §37, §38 |
+| DR-F-01 | Conversation and session lifecycle must be owned in one place | 6 PF-FT-AI-CONVERSATION-SESSION.md §4 |
+| DR-F-02 | Existing workflow detection must precede supervisor invocation | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15; 4. PF-FT-AI-RUNTIME.md §12 |
+| DR-F-03 | Concurrent requests on one conversation must be controlled | 6 PF-FT-AI-CONVERSATION-SESSION.md §39, §40 |
+| DR-F-04 | Session expiry during a workflow must not lose the workflow | 6 PF-FT-AI-CONVERSATION-SESSION.md §48 |
+| DR-F-05 | A conversation may host several workflows | 6 PF-FT-AI-CONVERSATION-SESSION.md §23 |
+| DR-F-06 | Conversation ownership and tenant boundary must be enforced | 6 PF-FT-AI-CONVERSATION-SESSION.md §37, §38 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Conversation resolution must not add material latency | ≤20 ms | ADR-D5-18 |
-| DR-N-02 | Message persistence must not lose messages on failure | 0 lost messages | doc 6 §21 |
-| DR-N-03 | Concurrency control must not serialise unrelated conversations | Per-conversation scope only | doc 6 §40 |
+| DR-N-02 | Message persistence must not lose messages on failure | 0 lost messages | 6 PF-FT-AI-CONVERSATION-SESSION.md §21 |
+| DR-N-03 | Concurrency control must not serialise unrelated conversations | Per-conversation scope only | 6 PF-FT-AI-CONVERSATION-SESSION.md §40 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Conversation, session, workflow and enterprise state are strictly separate | Platform | `CLAUDE.md`; doc 6 §6 |
-| DR-C-02 | The Conversation Manager performs no intent classification or routing | Platform | doc 6 §5 |
-| DR-C-03 | Claims come from APIM and are consumed, never derived | Platform | doc 6 §36; ADR-D1-07 |
+| DR-C-01 | Conversation, session, workflow and enterprise state are strictly separate | Platform | `CLAUDE.md`; 6 PF-FT-AI-CONVERSATION-SESSION.md §6 |
+| DR-C-02 | The Conversation Manager performs no intent classification or routing | Platform | 6 PF-FT-AI-CONVERSATION-SESSION.md §5 |
+| DR-C-03 | Claims come from APIM and are consumed, never derived | Platform | 6 PF-FT-AI-CONVERSATION-SESSION.md §36; ADR-D1-07 |
 | DR-C-04 | The application layer holds no I/O detail | Platform | ADR-D2-01 §7.1 |
 
 ### 3.4 Assumptions
@@ -108,7 +108,7 @@ of the four and must not touch the fourth. Where exactly it stops is worth stati
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
 | DR-A-01 | Active-workflow detection can be answered from state alone, without message semantics | The boundary in §7.2 is unworkable and detection must move to the Supervisor | Phase 3 design review |
-| DR-A-02 | Conversations rarely host more than a few concurrent workflows | Concurrency control needs a richer model than per-conversation locking | doc 6 §41; measured post-launch |
+| DR-A-02 | Conversations rarely host more than a few concurrent workflows | Concurrency control needs a richer model than per-conversation locking | 6 PF-FT-AI-CONVERSATION-SESSION.md §41; measured post-launch |
 | DR-A-03 | Session TTL is long enough that expiry during a workflow is uncommon | §7.4's handling becomes a frequent path rather than an edge case | QM-04 |
 
 ## 4. Evaluation Criteria and Weights
@@ -132,13 +132,13 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 active workflow or starts something new, and either resumes or calls the Supervisor.
 
 **Strengths.**
-- Matches a literal reading of doc 7 §15's flowchart.
+- Matches a literal reading of 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15's flowchart.
 - Avoids invoking the Supervisor when a workflow is plainly continuing, saving an inference.
 - One component sees the whole picture — state and message together.
 
 **Weaknesses.**
-- Puts semantic judgement in a lifecycle component. Doc 6 §25's resume-versus-new-intent
-  question is intent classification by another name, and doc 6 §5 lists intent classification as
+- Puts semantic judgement in a lifecycle component. 6 PF-FT-AI-CONVERSATION-SESSION.md §25's resume-versus-new-intent
+  question is intent classification by another name, and 6 PF-FT-AI-CONVERSATION-SESSION.md §5 lists intent classification as
   a non-responsibility (EC-01 fails).
 - Two components now interpret user intent, with no rule for which is authoritative.
 - The Conversation Manager needs message content and probably model inference, which pulls it
@@ -157,8 +157,8 @@ the message.
 - Exactly one component makes routing and semantic decisions (EC-01).
 - The Conversation Manager stays a lifecycle component, needing no message understanding
   (EC-02).
-- Doc 7 §15's ordering is honoured: detection precedes the Supervisor and feeds it.
-- Doc 6 §25's distinction lands where doc 6 §5 says it belongs — outside the Conversation
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15's ordering is honoured: detection precedes the Supervisor and feeds it.
+- 6 PF-FT-AI-CONVERSATION-SESSION.md §25's distinction lands where 6 PF-FT-AI-CONVERSATION-SESSION.md §5 says it belongs — outside the Conversation
   Manager.
 - Detection is a state lookup, so latency is trivial (EC-04).
 
@@ -166,8 +166,8 @@ the message.
 - The Supervisor is invoked even when a workflow is obviously continuing, costing an inference
   per turn that Option A would sometimes skip.
 - Requires the Supervisor's decision model to accept active-workflow state as an input, which
-  doc 7 §12's example schema does not show.
-- The reading of doc 7 §15 is interpretive rather than literal.
+  7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's example schema does not show.
+- The reading of 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 is interpretive rather than literal.
 
 **Cost / effort.** Low.
 
@@ -183,7 +183,7 @@ routing.
 
 **Weaknesses.**
 - Collapses lifecycle and routing into one component, which is the opposite of the separation
-  doc 2 §7 and doc 6 §3 describe.
+  2. PF-FT-AI-ARCHITECTURE-DETAILED.md §7 and 6 PF-FT-AI-CONVERSATION-SESSION.md §3 describe.
 - Conversation and session state would sit in the same component as routing logic, weakening
   the four-state separation `CLAUDE.md` requires (EC-02 fails).
 - The merged component spans two layers — application and orchestration — breaching ADR-D2-01.
@@ -202,12 +202,12 @@ Session lifecycle, concurrency and workflow association move to the harness or S
 - Easy to test.
 
 **Weaknesses.**
-- Session lifecycle (doc 6 §14–§16), concurrency control (§39–§40), expiry during workflow
+- Session lifecycle (6 PF-FT-AI-CONVERSATION-SESSION.md §14–§16), concurrency control (§39–§40), expiry during workflow
   (§48) and ownership enforcement (§37–§38) become homeless. Distributing them across the
   harness and Supervisor means each is partially owned (EC-03 fails).
 - Concurrency control in the Supervisor would serialise routing, not conversation state, which
   is the wrong scope.
-- Doc 6 §4 explicitly assigns these to the Conversation Manager.
+- 6 PF-FT-AI-CONVERSATION-SESSION.md §4 explicitly assigns these to the Conversation Manager.
 
 **Cost / effort.** Low, with concerns under-owned.
 
@@ -231,7 +231,7 @@ the four state kinds to its owning component under each option.
 **Sensitivity.** B leads by 115 points and loses only on EC-04, by one point, against options
 that skip a Supervisor invocation. That inference cost is the price of EC-01, and EC-04's weight
 would need to exceed 45 — three times EC-01's margin — for A to overtake. A's real defect is not
-its score but its boundary violation: it places intent classification in a component doc 6 §5
+its score but its boundary violation: it places intent classification in a component 6 PF-FT-AI-CONVERSATION-SESSION.md §5
 forbids it in.
 
 ## 7. Decision
@@ -240,25 +240,25 @@ forbids it in.
 
 | Responsibility | Detail | Source |
 |---|---|---|
-| Conversation lifecycle | Creation, status, state transitions, closure, reopening | doc 6 §10–§13, §49–§50 |
-| Session lifecycle | Session identity, status, TTL, termination | doc 6 §8, §14–§15, §51 |
-| Message persistence | Model, sequence, idempotency, persistence, failure handling | doc 6 §17–§21 |
-| Active workflow **association** | Which workflow instances are attached to this conversation and their status | doc 6 §22–§23 |
-| Concurrency control | Per-conversation serialisation of concurrent requests | doc 6 §39–§41 |
-| Ownership and tenant boundary | The conversation belongs to this user in this tenant | doc 6 §37–§38 |
-| Conversation context projection | Selecting which prior messages and summary are available downstream | doc 6 §26–§28 |
+| Conversation lifecycle | Creation, status, state transitions, closure, reopening | 6 PF-FT-AI-CONVERSATION-SESSION.md §10–§13, §49–§50 |
+| Session lifecycle | Session identity, status, TTL, termination | 6 PF-FT-AI-CONVERSATION-SESSION.md §8, §14–§15, §51 |
+| Message persistence | Model, sequence, idempotency, persistence, failure handling | 6 PF-FT-AI-CONVERSATION-SESSION.md §17–§21 |
+| Active workflow **association** | Which workflow instances are attached to this conversation and their status | 6 PF-FT-AI-CONVERSATION-SESSION.md §22–§23 |
+| Concurrency control | Per-conversation serialisation of concurrent requests | 6 PF-FT-AI-CONVERSATION-SESSION.md §39–§41 |
+| Ownership and tenant boundary | The conversation belongs to this user in this tenant | 6 PF-FT-AI-CONVERSATION-SESSION.md §37–§38 |
+| Conversation context projection | Selecting which prior messages and summary are available downstream | 6 PF-FT-AI-CONVERSATION-SESSION.md §26–§28 |
 
 ### 7.2 What it does not own — and the exact line
 
 | Not owned | Owner | Why |
 |---|---|---|
-| Intent classification | Supervisor | doc 6 §5; it is semantic |
-| Routing and agent selection | Supervisor | doc 7 §12 |
-| **Resume versus new intent** | Supervisor | doc 6 §25 — a semantic judgement about what the user meant |
-| Workflow **execution** | Agent, via harness | doc 6 §5 |
+| Intent classification | Supervisor | 6 PF-FT-AI-CONVERSATION-SESSION.md §5; it is semantic |
+| Routing and agent selection | Supervisor | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12 |
+| **Resume versus new intent** | Supervisor | 6 PF-FT-AI-CONVERSATION-SESSION.md §25 — a semantic judgement about what the user meant |
+| Workflow **execution** | Agent, via harness | 6 PF-FT-AI-CONVERSATION-SESSION.md §5 |
 | Workflow business state | Enterprise | ADR-D1-01 §7.2 |
-| Context assembly (ERC) | ERC service | doc 8 |
-| Memory retrieval | Memory service | doc 9 |
+| Context assembly (ERC) | ERC service | 8 PF-FT-AI-ERC-CONTEXT.md |
+| Memory retrieval | Memory service | 9 PF-FT-AI-MEMORY-CACHE.md |
 
 The line runs between **association** and **execution**, and between **fact** and **judgement**:
 
@@ -266,12 +266,12 @@ The line runs between **association** and **execution**, and between **fact** an
 > one?"* — a factual question answerable from state alone. The Supervisor answers *"given that
 > fact and this message, what should happen?"* — a semantic question requiring the message.
 
-This is the reading of doc 7 §15 adopted here: its flowchart shows a *sequence*, not an
+This is the reading of 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 adopted here: its flowchart shows a *sequence*, not an
 allocation of decision authority. Detection precedes the Supervisor and feeds it.
 
 ### 7.3 Multiple workflows in one conversation
 
-Doc 6 §23 permits several workflows per conversation. The Conversation Manager therefore holds a
+6 PF-FT-AI-CONVERSATION-SESSION.md §23 permits several workflows per conversation. The Conversation Manager therefore holds a
 *set* of workflow associations with statuses, not a single "current workflow" pointer. The
 Supervisor receives the set and decides which — if any — the message relates to.
 
@@ -281,7 +281,7 @@ Manager reports both associations; the Supervisor decides.
 
 ### 7.4 Session expiry during a workflow
 
-Doc 6 §48 requires this case be handled. The rule follows from the four-state separation:
+6 PF-FT-AI-CONVERSATION-SESSION.md §48 requires this case be handled. The rule follows from the four-state separation:
 
 - **Session** expiry ends the session. It does not end the conversation and does not end the
   workflow.
@@ -296,13 +296,13 @@ indefinite authorization. Entitlement is re-established on re-entry.
 
 ### 7.5 Concurrency control scope
 
-Doc 6 §39–§40 require control over concurrent requests on one conversation. The scope is **per
+6 PF-FT-AI-CONVERSATION-SESSION.md §39–§40 require control over concurrent requests on one conversation. The scope is **per
 conversation**, never global and never per user: a user with two conversations open may act on
 both concurrently (DR-N-03). Within one conversation, requests are serialised so that message
-sequence (doc 6 §18) and workflow association remain consistent.
+sequence (6 PF-FT-AI-CONVERSATION-SESSION.md §18) and workflow association remain consistent.
 
 **Status rationale.** Accepted. Tier 3 under ADR-D0-03 §7.1 — a component boundary within the AI
-platform, not a doc 2 §52 category — ratified by the AI Solution Architect.
+platform, not a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 category — ratified by the AI Solution Architect.
 
 ## 8. Architecture Detail
 
@@ -310,11 +310,11 @@ platform, not a doc 2 §52 category — ratified by the AI Solution Architect.
 
 ```mermaid
 flowchart TD
-    A[Request with APIM claims] --> B[Resolve conversation<br/>doc 4 §10]
-    B --> C[Verify ownership + tenant<br/>doc 6 §37-§38]
-    C --> D[Resolve session<br/>doc 4 §11]
-    D --> E[Acquire per-conversation lock<br/>doc 6 §40]
-    E --> F[Persist inbound message<br/>doc 6 §17-§20]
+    A[Request with APIM claims] --> B[Resolve conversation<br/>4. PF-FT-AI-RUNTIME.md §10]
+    B --> C[Verify ownership + tenant<br/>6 PF-FT-AI-CONVERSATION-SESSION.md §37-§38]
+    C --> D[Resolve session<br/>4. PF-FT-AI-RUNTIME.md §11]
+    D --> E[Acquire per-conversation lock<br/>6 PF-FT-AI-CONVERSATION-SESSION.md §40]
+    E --> F[Persist inbound message<br/>6 PF-FT-AI-CONVERSATION-SESSION.md §17-§20]
     F --> G[Read active workflow associations<br/>FACT, from state]
     G --> H[Supervisor:<br/>message + associations + claims]
     H --> I{Resume, new workflow,<br/>clarify, or out of scope?}
@@ -330,8 +330,8 @@ inspects message content for meaning.
 
 | State kind | Owner | Store | Lifetime |
 |---|---|---|---|
-| Conversation State | Conversation Manager | Redis (ADR-D4-10) | Until closed; reopenable (doc 6 §50) |
-| Session State | Conversation Manager | Redis, with TTL (doc 6 §15) | TTL-bounded |
+| Conversation State | Conversation Manager | Redis (ADR-D4-10) | Until closed; reopenable (6 PF-FT-AI-CONVERSATION-SESSION.md §50) |
+| Session State | Conversation Manager | Redis, with TTL (6 PF-FT-AI-CONVERSATION-SESSION.md §15) | TTL-bounded |
 | Workflow/Agent State | Workflow service, associated by the Conversation Manager | Durable store (ADR-D2-10) | Until the workflow terminates |
 | Enterprise Business State | **PFF** | Enterprise database | Owned entirely by the enterprise |
 
@@ -344,10 +344,10 @@ Option A's efficiency argument is real: many turns plainly continue an active wo
 invoking the Supervisor costs an inference. It is rejected because "plainly" is a semantic
 judgement, and the cases where it is wrong are the expensive ones.
 
-Doc 7 §14's own example makes the point — *"I need help with registration"* is ambiguous when
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14's own example makes the point — *"I need help with registration"* is ambiguous when
 several registration workflows exist. Its affiliation analogue: a user with a suspended
 PENDING CFA workflow types *"can I add another team?"*. That could be a question about the
-suspended application, a new affiliation for a different team, or a general enquiry. Doc 7 §14
+suspended application, a new affiliation for a different team, or a general enquiry. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14
 is explicit that the Supervisor *"should not guess when the wrong workflow could trigger an
 incorrect enterprise operation"*. A Conversation Manager applying a heuristic would be guessing,
 in a component with no confidence model and no clarification path.
@@ -372,14 +372,14 @@ inside the Supervisor — which is a Supervisor optimisation, not a relocation o
 
 - The Supervisor is invoked on every turn, including obvious continuations, costing an
   inference per turn.
-- Doc 7 §15's flowchart is read interpretively rather than literally; a reader coming from that
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15's flowchart is read interpretively rather than literally; a reader coming from that
   diagram may expect Option A.
-- The Supervisor's decision model must accept workflow associations as an input, extending doc 7
+- The Supervisor's decision model must accept workflow associations as an input, extending 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md
   §12's example schema.
 
 ### 9.3 Neutral
 
-- Doc 6 §4 and §5's responsibility lists are adopted essentially unchanged; this decision
+- 6 PF-FT-AI-CONVERSATION-SESSION.md §4 and §5's responsibility lists are adopted essentially unchanged; this decision
   resolves where §25's resume-versus-new-intent question sits.
 - Concurrency scope is per conversation, which is the natural granularity.
 
@@ -388,17 +388,17 @@ inside the Supervisor — which is a Supervisor optimisation, not a relocation o
 | Given up | In exchange for | Accepted by |
 |---|---|---|
 | An inference saved on obvious continuations | One component that judges intent, with a confidence model and a clarification path | AI Solution Architect |
-| A literal reading of doc 7 §15 | Conformance with doc 6 §5's non-responsibilities | AI Solution Architect |
-| A single "current workflow" pointer | Correct support for doc 6 §23's multiple workflows | AI Engineering Lead |
+| A literal reading of 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 | Conformance with 6 PF-FT-AI-CONVERSATION-SESSION.md §5's non-responsibilities | AI Solution Architect |
+| A single "current workflow" pointer | Correct support for 6 PF-FT-AI-CONVERSATION-SESSION.md §23's multiple workflows | AI Engineering Lead |
 
 ## 10. Golden-Rule and Precedence Conformance
 
 | Constraint | Conformance |
 |---|---|
 | Enterprise decides; AI orchestrates | The Conversation Manager holds no business state and makes no business decision. Workflow association is a pointer to an AI workflow instance, never to enterprise state. |
-| Authoritative-truth precedence | Conversation history is Conversation State, not operational truth. Doc 6 §54 and ADR-D1-03 keep conversation content out of the operational precedence chain; a fact stated three turns ago is not a source. |
+| Authoritative-truth precedence | Conversation history is Conversation State, not operational truth. 6 PF-FT-AI-CONVERSATION-SESSION.md §54 and ADR-D1-03 keep conversation content out of the operational precedence chain; a fact stated three turns ago is not a source. |
 | Four-state separation | This ADR is where the separation is operationalised. §8.2 assigns every state kind an owner; the Conversation Manager owns two, associates one, and never touches Enterprise Business State. |
-| Versioned artefacts, never mutated in place | Conversation summaries are versioned per doc 6 §31. |
+| Versioned artefacts, never mutated in place | Conversation summaries are versioned per 6 PF-FT-AI-CONVERSATION-SESSION.md §31. |
 | Adam persona governs how, never what | Not applicable — the Conversation Manager produces no user-facing language. |
 
 ## 11. Risks and Mitigations
@@ -406,9 +406,9 @@ inside the Supervisor — which is a Supervisor optimisation, not a relocation o
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | A heuristic for resume-versus-new-intent creeps into the Conversation Manager as an optimisation | Medium | High | High | §7.2's fact-versus-judgement line; AC-01 asserts no message-content inspection; code review | AI Solution Architect | Medium |
-| RSK-02 | Per-conversation locking causes contention or deadlock | Low | High | Medium | Lock scoped to conversation with a timeout; doc 6 §40; QM-03 | AI Engineering Lead | Low |
+| RSK-02 | Per-conversation locking causes contention or deadlock | Low | High | Medium | Lock scoped to conversation with a timeout; 6 PF-FT-AI-CONVERSATION-SESSION.md §40; QM-03 | AI Engineering Lead | Low |
 | RSK-03 | Session expiry loses workflow association | Low | High | Medium | §7.4: workflow state is durable and independent of session; AC-04 | AI Engineering Lead | Low |
-| RSK-04 | Conversation state grows unbounded across a long affiliation | Medium | Medium | Medium | Summarisation per doc 6 §28–§30; retention per ADR-D4-11 | AI Engineering Lead | Low |
+| RSK-04 | Conversation state grows unbounded across a long affiliation | Medium | Medium | Medium | Summarisation per 6 PF-FT-AI-CONVERSATION-SESSION.md §28–§30; retention per ADR-D4-11 | AI Engineering Lead | Low |
 | RSK-05 | Ownership check bypassed on a resumed conversation | Low | Very High | High | Ownership verified on every entry (§8.1 node C), not only on creation; AC-03 | Security Owner | Low |
 | RSK-06 | Multiple workflow associations confuse the Supervisor | Medium | Medium | Medium | Associations passed as a typed set with statuses; ADR-D3-07 clarification path | AI Engineering Lead | Medium |
 
@@ -432,10 +432,10 @@ which is a session-TTL question for ADR-D4-11 rather than a defect here.
 |---|---|
 | Attack surface change | Ownership and tenant verification on every entry (§8.1 node C) is the platform's conversation-level access control. Verifying on entry rather than only on creation closes the resumed-conversation bypass. |
 | Data classification touched | Conversation history contains whatever the user and platform discussed, including personal and safeguarding data surfaced during affiliation pre-checks. |
-| Personal data / PII | Conversation and session state hold personal data. Retention and redaction per ADR-D4-11; conversation closure and reopening (doc 6 §49–§50) bound the lifetime. |
-| Children's data and safeguarding | Affiliation pre-check conversations will contain officials' DBS and safeguarding outcomes in message history. Retention policy for conversations containing safeguarding fields is the shortest available (ADR-D4-11), and summarisation (doc 6 §28) must not carry a named individual's clearance status into a long-lived summary. |
+| Personal data / PII | Conversation and session state hold personal data. Retention and redaction per ADR-D4-11; conversation closure and reopening (6 PF-FT-AI-CONVERSATION-SESSION.md §49–§50) bound the lifetime. |
+| Children's data and safeguarding | Affiliation pre-check conversations will contain officials' DBS and safeguarding outcomes in message history. Retention policy for conversations containing safeguarding fields is the shortest available (ADR-D4-11), and summarisation (6 PF-FT-AI-CONVERSATION-SESSION.md §28) must not carry a named individual's clearance status into a long-lived summary. |
 | UK GDPR lawful basis and rights impact | Conversation records are personal data processed on the enterprise's basis. Ownership enforcement supports access control; retention supports storage limitation (Art. 5(1)(e)). |
-| Audit and evidential requirements | Message sequence and idempotency (doc 6 §18–§19) give a reliable record of what was said and when. |
+| Audit and evidential requirements | Message sequence and idempotency (6 PF-FT-AI-CONVERSATION-SESSION.md §18–§19) give a reliable record of what was said and when. |
 | Standards touched | ISO/IEC 27001 A.5.15 (access control), A.5.33 (protection of records), A.8.10 (information deletion); ISO/IEC 42001; UK GDPR Art. 5(1)(c), 5(1)(e). |
 
 ## 14. Implementation Impact
@@ -470,7 +470,7 @@ which is a session-TTL question for ADR-D4-11 rather than a defect here.
 | Alerting | QM-05 and QM-06 on any occurrence; QM-03 on contention |
 | Runbook | None specific; state store issues covered by Redis operations |
 | Failure mode and degradation | If conversation state is unavailable, no turn can proceed — the platform cannot establish who is speaking or about what. This is a hard dependency and correctly so; degrading to an unidentified conversation would breach ownership enforcement. |
-| Rollback | Standard deployment rollback; conversation state is compatible across versions per doc 6 §31's summary versioning |
+| Rollback | Standard deployment rollback; conversation state is compatible across versions per 6 PF-FT-AI-CONVERSATION-SESSION.md §31's summary versioning |
 | Support model impact | Support needs conversation lookup by ID for investigation, within the same ownership rules |
 
 ## 17. Cost Impact
@@ -498,7 +498,7 @@ which is a session-TTL question for ADR-D4-11 rather than a defect here.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-07 Enterprise Reference Architecture; WS-08 Workflow Orchestration Architecture |
-| Specification sections | doc 6 §3 (Boundary), §4 (Responsibilities), §5 (Non-Responsibilities), §6 (Conversation vs Session vs Workflow), §17–§21 (Messages), §22–§23 (Workflow Association, Multiple Workflows), §25 (Workflow Resume vs New Intent), §26–§31 (Context Projection, Summary), §37–§38 (Ownership, Tenant), §39–§41 (Concurrency), §48 (Session Expiration During Workflow), §49–§51 (Closure, Reopening, Termination); doc 2 §7 (Conversation Layer); doc 4 §10–§12; doc 7 §15 (Existing Workflow Detection) |
+| Specification sections | 6 PF-FT-AI-CONVERSATION-SESSION.md §3 (Boundary), §4 (Responsibilities), §5 (Non-Responsibilities), §6 (Conversation vs Session vs Workflow), §17–§21 (Messages), §22–§23 (Workflow Association, Multiple Workflows), §25 (Workflow Resume vs New Intent), §26–§31 (Context Projection, Summary), §37–§38 (Ownership, Tenant), §39–§41 (Concurrency), §48 (Session Expiration During Workflow), §49–§51 (Closure, Reopening, Termination); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §7 (Conversation Layer); 4. PF-FT-AI-RUNTIME.md §10–§12; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 (Existing Workflow Detection) |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-SEC` |
 | Build phases | 3 |
 | Code paths | `src/pf_ft_ai/application/conversation/`, `src/pf_ft_ai/application/session/`, `src/pf_ft_ai/domain/conversation/` |
@@ -511,4 +511,4 @@ which is a session-TTL question for ADR-D4-11 rather than a defect here.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Boundary drawn between factual workflow detection (Conversation Manager) and semantic resume-versus-new-intent judgement (Supervisor); doc 7 §15 read as a sequence rather than an allocation of decision authority; session expiry does not extend workflow authorization. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Boundary drawn between factual workflow detection (Conversation Manager) and semantic resume-versus-new-intent judgement (Supervisor); 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15 read as a sequence rather than an allocation of decision authority; session expiry does not extend workflow authorization. |

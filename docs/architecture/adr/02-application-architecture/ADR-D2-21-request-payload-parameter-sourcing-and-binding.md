@@ -34,19 +34,19 @@ Every field in an enterprise API request contract is declared with an explicit
 sequence), or `platform_bound` — resolved deterministically by the tool implementation
 from ERC, workflow state, or the caller's claims, and never exposed to the model at all.
 This is the request-side counterpart of ADR-D2-15's deterministic response-to-ERC
-mapping: doc 10 §17's `source: request_context` example implies exactly this mechanism,
+mapping: 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17's `source: request_context` example implies exactly this mechanism,
 but no ADR had made it a decision.
 
 ## 2. Context and Problem Statement
 
-Doc 10 §16 defines the API contract's fields (method, endpoint, parameters, headers,
+10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16 defines the API contract's fields (method, endpoint, parameters, headers,
 body, auth, and more); §17's request-contract example is specific in one place and
 silent everywhere else — the `Authorization` header carries `source: request_context`,
 but the `clubId` path parameter carries only a type and `required: true`, with no
 statement of where its value comes from. §18's "Request Payload" gives a bare JSON
 example with no sourcing information at all.
 
-Doc 8 §22–§25 show the other half of the picture from the ERC side: a workflow declares
+8 PF-FT-AI-ERC-CONTEXT.md §22–§25 show the other half of the picture from the ERC side: a workflow declares
 its context requirements (§22–§23), and a dependency graph (§25) states that some APIs
 "require `club_id` before they can be called" — i.e., an identifier obtained from one
 call, or from ERC, must feed a later call's request. What §25 does not say is **how**
@@ -83,25 +83,25 @@ first place.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every request field must have a declared source | doc 10 §17 (implied by the `source:` attribute shown) |
-| DR-F-02 | Fields not supplied by the model must be resolved from an authoritative platform source (ERC, workflow state, claims) | doc 8 §22–§25; ADR-D2-12 |
+| DR-F-01 | Every request field must have a declared source | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17 (implied by the `source:` attribute shown) |
+| DR-F-02 | Fields not supplied by the model must be resolved from an authoritative platform source (ERC, workflow state, claims) | 8 PF-FT-AI-ERC-CONTEXT.md §22–§25; ADR-D2-12 |
 | DR-F-03 | Fields supplied by the model remain subject to ADR-D3-04's full gate sequence | ADR-D3-04 |
-| DR-F-04 | An identifier a dependency graph requires (doc 8 §25) must bind deterministically into the dependent request | doc 8 §25 |
-| DR-F-05 | Every platform-bound value must be attributable for audit | doc 3 §67 (transformation must preserve authoritative meaning, applied symmetrically) |
+| DR-F-04 | An identifier a dependency graph requires (8 PF-FT-AI-ERC-CONTEXT.md §25) must bind deterministically into the dependent request | 8 PF-FT-AI-ERC-CONTEXT.md §25 |
+| DR-F-05 | Every platform-bound value must be attributable for audit | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67 (transformation must preserve authoritative meaning, applied symmetrically) |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Binding adds no material latency | ≤2 ms per field | ADR-D5-18 |
-| DR-N-02 | No security-sensitive field (claims, authorization) is ever model-suppliable | 0 occurrences | doc 10 §17 example |
+| DR-N-02 | No security-sensitive field (claims, authorization) is ever model-suppliable | 0 occurrences | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17 example |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | ERC is the exclusive path for enterprise operational data | Platform | ADR-D2-12 |
-| DR-C-02 | Authorization claims must not be modified downstream | Platform | doc 10 §74 |
+| DR-C-02 | Authorization claims must not be modified downstream | Platform | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §74 |
 | DR-C-03 | A tool call the model proposes still passes all five ADR-D3-04 gates | Platform | ADR-D3-04 |
 
 ### 3.4 Assumptions
@@ -153,7 +153,7 @@ logged with their resolved source for audit.
 **Strengths.** Security-sensitive fields are structurally unreachable by the model
 (EC-01); every field's provenance is declared, not inferred (EC-02); one binder used by
 every tool (EC-03); adding a field is a contract declaration, not new code (EC-04, EC-05);
-directly implements doc 10 §17's `source:` example and doc 8 §25's dependency-graph need.
+directly implements 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17's `source:` example and 8 PF-FT-AI-ERC-CONTEXT.md §25's dependency-graph need.
 
 **Weaknesses.** A small, fixed vocabulary of sources must be agreed and may need
 extension over time; a field genuinely needing a source outside the initial set (DR-A-01)
@@ -245,7 +245,7 @@ when the first already has room for the mechanism.
 
 ### 7.1 Every request field declares its source
 
-The request contract (doc 10 §17) is extended so every field carries a `source`:
+The request contract (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17) is extended so every field carries a `source`:
 
 ```yaml
 request:
@@ -257,7 +257,7 @@ request:
 
   headers:
     Authorization:
-      source: request_context  # doc 10 §17's existing example
+      source: request_context  # 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17's existing example
 
   body:
     team_ids:
@@ -286,7 +286,7 @@ source immediately before dispatch:
 
 - `erc` — read from the named ERC section/field (ADR-D2-12's exclusive path).
 - `workflow_state` — read from the current workflow instance's state (ADR-D2-07).
-- `claims` — read from the caller's validated claims (doc 10 §73–§74; never modified,
+- `claims` — read from the caller's validated claims (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §73–§74; never modified,
   per DR-C-02).
 - `fixed` — the literal value declared in the contract.
 
@@ -305,14 +305,14 @@ trail ADR-D2-15 §13 gives the response side.
 
 ### 7.5 The dependency graph identifies the need; the binder satisfies it
 
-Doc 8 §25's dependency graph (an API needing `club_id` before it can run) is unchanged —
+8 PF-FT-AI-ERC-CONTEXT.md §25's dependency graph (an API needing `club_id` before it can run) is unchanged —
 ADR-D4-04 still owns collection ordering. What this ADR adds is the mechanism by which,
 once that identifier exists (in ERC or workflow state), it is bound into the dependent
 request's `source: erc` or `source: workflow_state` field, deterministically, rather
 than left to per-tool code to fetch however it likes.
 
 **Status rationale.** Accepted. Closes a gap identified in a post-completion review: the
-mechanism doc 10 §17 gestures at (a `source:` attribute) was never generalised into a
+mechanism 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17 gestures at (a `source:` attribute) was never generalised into a
 decision, and no ADR stated how a request field not supplied by the model gets filled.
 
 ## 8. Architecture Detail
@@ -349,7 +349,7 @@ a model-influenced one.
 | `team_ids` | `model_argument` | The user's selection, expressed through the conversation; ADR-D3-04 validates it against the caller's own teams. |
 | `insurance_selections` | `model_argument` | Same — a user choice, gated. |
 | `product_selections` | `model_argument` | Same. |
-| `clubId` (implicit, used by the validate/submit/get sequence) | `claims` | The caller's own club, from validated claims — never something the model states, matching doc 10 §17's `Authorization` treatment. |
+| `clubId` (implicit, used by the validate/submit/get sequence) | `claims` | The caller's own club, from validated claims — never something the model states, matching 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17's `Authorization` treatment. |
 
 This resolves ADR-D2-13 §8.2's original silence on field origin: three of five fields
 are model-supplied and gated; two are platform-bound and structurally unreachable by the
@@ -480,7 +480,7 @@ model.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-10 Integration & 18-Microservice Matrix |
-| Specification sections | doc 10 §16 (API Contract), §17 (Request Contract), §18 (Request Payload); doc 8 §22 (Context Requirement Identification), §23 (Context Requirement Model), §24 (Mandatory vs Optional Context), §25 (Context Dependency Graph); doc 3 §67 (Responsibility for API Payload Transformation) |
+| Specification sections | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16 (API Contract), §17 (Request Contract), §18 (Request Payload); 8 PF-FT-AI-ERC-CONTEXT.md §22 (Context Requirement Identification), §23 (Context Requirement Model), §24 (Mandatory vs Optional Context), §25 (Context Dependency Graph); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67 (Responsibility for API Payload Transformation) |
 | Requirement IDs | `FR-P-05` |
 | Build phases | 6 |
 | Code paths | `src/pf_ft_ai/integration/api/`, `src/pf_ft_ai/integration/tools/` |
@@ -493,4 +493,4 @@ model.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-23 | AI Solution Architect | Initial decision recorded, closing a gap found in a post-completion review: doc 10 §17's `source:` attribute was never generalised into a decision governing how non-model-supplied request fields are sourced, leaving claims/ERC/workflow-state fields with no declared, auditable binding mechanism distinct from ADR-D3-04's model-argument gates. |
+| 1.0.0 | 2026-08-23 | AI Solution Architect | Initial decision recorded, closing a gap found in a post-completion review: 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17's `source:` attribute was never generalised into a decision governing how non-model-supplied request fields are sourced, leaving claims/ERC/workflow-state fields with no declared, auditable binding mechanism distinct from ADR-D3-04's model-argument gates. |

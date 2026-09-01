@@ -31,7 +31,7 @@ review_due: 2027-08-21
 ## 1. Summary
 
 LangGraph internal state is a `TypedDict`, as `CLAUDE.md` requires; everything crossing a
-boundary is a Pydantic model. The consequential part is doc 7 §27's rule: graph state carries
+boundary is a Pydantic model. The consequential part is 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27's rule: graph state carries
 **references** to large data, never copies. This is not only a serialisation optimisation — it is
 what keeps provenance authoritative, keeps personal data out of suspended workflow storage, and
 keeps a three-day suspension from freezing a stale copy of enterprise state.
@@ -39,13 +39,13 @@ keeps a three-day suspension from freezing a stale copy of enterprise state.
 ## 2. Context and Problem Statement
 
 `CLAUDE.md` states the representation split: *"Boundary models: Pydantic everywhere data crosses
-a boundary... LangGraph internal state: TypedDict."* Doc 7 §26 gives a conceptual
-`AgentGraphState` with fourteen fields. Doc 7 §27 adds the rule that matters most:
+a boundary... LangGraph internal state: TypedDict."* 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26 gives a conceptual
+`AgentGraphState` with fourteen fields. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27 adds the rule that matters most:
 
 > Do not put large raw datasets into every graph transition. Prefer: Graph State → Reference →
 > ERC / Store → Large Dataset. This reduces serialization and token overhead.
 
-Doc 7 §27 justifies the rule on serialisation and token cost. Those are real, and they are the
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27 justifies the rule on serialisation and token cost. Those are real, and they are the
 least important reasons. Three others are more consequential and are not stated anywhere in the
 specification set.
 
@@ -63,7 +63,7 @@ copy in workflow state has no freshness policy attached — it is simply a value
 A reference forces the resumed workflow to consult ERC, which applies the freshness policy and
 refreshes.
 
-**Personal data in workflow storage.** Doc 7 §26's state includes `erc`, `rag_context`,
+**Personal data in workflow storage.** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26's state includes `erc`, `rag_context`,
 `memory_context` and `tool_results`. If those were copies, a suspended affiliation workflow would
 persist officials' names, DBS statuses and safeguarding outcomes into workflow storage for
 three days. As references, workflow storage holds identifiers. That difference is material for
@@ -84,17 +84,17 @@ malformed data actually enters.
 |---|---|---|
 | DR-F-01 | LangGraph internal state is `TypedDict` | `CLAUDE.md` |
 | DR-F-02 | Pydantic everywhere data crosses a boundary | `CLAUDE.md`; ADR-D5-03 |
-| DR-F-03 | Graph state must reference large data, not copy it | doc 7 §27, §40 |
-| DR-F-04 | Graph state must be strongly typed | doc 7 §26 |
+| DR-F-03 | Graph state must reference large data, not copy it | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27, §40 |
+| DR-F-04 | Graph state must be strongly typed | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26 |
 | DR-F-05 | State must be serialisable for suspension and resume | ADR-D2-10 |
-| DR-F-06 | The four state concepts must not be conflated in graph state | `CLAUDE.md`; doc 5 |
+| DR-F-06 | The four state concepts must not be conflated in graph state | `CLAUDE.md`; 5. PF-FT-AI-STATE-MODEL.md |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | State transition overhead must be negligible | ≤1 ms per transition | ADR-D5-18 |
-| DR-N-02 | Persisted state must stay small | ≤ configured ceiling | doc 7 §27 |
+| DR-N-02 | Persisted state must stay small | ≤ configured ceiling | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27 |
 | DR-N-03 | Persisted state must survive a framework upgrade | No framework types serialised | ADR-D2-06 AC-07 |
 
 ### 3.3 Constraints
@@ -147,7 +147,7 @@ tool results are embedded as values.
 - Suspended workflow state would persist officials' personal and safeguarding data for the
   duration of a CFA review (EC-02).
 - Revalidating the whole state at every node is repeated work on the hottest path (EC-04).
-- Doc 7 §27's rule is directly violated.
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27's rule is directly violated.
 
 **Cost / effort.** Low, with three significant defects.
 
@@ -163,7 +163,7 @@ validated at the boundary.
 - Persisted state holds identifiers, not personal data (EC-02).
 - `TypedDict` with mypy strict gives build-time type safety at zero runtime cost (EC-03, EC-04).
 - Validation happens where data actually enters, not repeatedly on trusted internal transitions.
-- Satisfies `CLAUDE.md` and doc 7 §26–§27 directly.
+- Satisfies `CLAUDE.md` and 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26–§27 directly.
 - Suspended state is small and free of framework types (EC-05).
 
 **Weaknesses.**
@@ -248,7 +248,7 @@ so the analysis confirms the constraint rather than testing it.
 | Enterprise API response | Pydantic | At the integration boundary |
 | Event envelope and payload | Pydantic | At the consumer boundary (ADR-D2-17) |
 | Persisted workflow state | Pydantic | On write and on read (ADR-D2-10) |
-| ERC sections | Pydantic | At construction and on validation (doc 8 §67) |
+| ERC sections | Pydantic | At construction and on validation (8 PF-FT-AI-ERC-CONTEXT.md §67) |
 | Configuration | Pydantic | At load (ADR-D5-06) |
 
 The principle behind the split: **validate where trust changes**. Internal transitions between
@@ -288,7 +288,7 @@ control live.
 
 ### 7.3 What the reference rule buys, beyond serialisation cost
 
-Doc 7 §27 justifies references on serialisation and token overhead. Three further consequences
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27 justifies references on serialisation and token overhead. Three further consequences
 follow, and they are the reasons the rule is treated as binding rather than advisory:
 
 | Consequence | Mechanism |
@@ -303,7 +303,7 @@ safeguarding records. AC-04 tests it directly.
 
 ### 7.4 Four-state separation in the state object
 
-Doc 7 §26's conceptual state mixes references to all four state concepts. The typing keeps them
+7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26's conceptual state mixes references to all four state concepts. The typing keeps them
 distinct:
 
 | Field group | State concept | Rule |
@@ -378,7 +378,7 @@ For a club with thirty teams and forty officials:
 
 Order of kilobytes rather than megabytes, and containing no special-category personal data. This
 table is the practical answer to "what is sitting in storage for three days?", and it is the
-reason §7.3 treats doc 7 §27 as binding.
+reason §7.3 treats 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27 as binding.
 
 ### 8.3 The dereference failure mode
 
@@ -388,8 +388,8 @@ flag it, and the handling is explicit:
 | Situation | Handling |
 |---|---|
 | ERC expired or invalidated during suspension | Rebuild ERC from its context requirements before resuming. This is the correct behaviour: a three-day-old ERC should not be restored (ADR-D1-03 §7.3). |
-| Tool result no longer stored | Status is retained on the reference itself, so completion logic works. The payload is refetched or the step re-run under idempotency (doc 10 §45–§47). |
-| Conversation closed | Workflow continues; the outcome reaches the user through a new conversation (doc 6 §50). |
+| Tool result no longer stored | Status is retained on the reference itself, so completion logic works. The payload is refetched or the step re-run under idempotency (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45–§47). |
+| Conversation closed | Workflow continues; the outcome reaches the user through a new conversation (6 PF-FT-AI-CONVERSATION-SESSION.md §50). |
 
 In each case the reference's *metadata* — version, status — is sufficient to decide what to do,
 which is why references carry decision-relevant fields and not just an identifier.
@@ -419,7 +419,7 @@ which is why references carry decision-relevant fields and not just an identifie
 
 - The split is `CLAUDE.md`'s; this decision records why and adds the reference rule's fuller
   rationale.
-- Doc 7 §26's conceptual state is adopted with typing that enforces §7.4's separation.
+- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26's conceptual state is adopted with typing that enforces §7.4's separation.
 
 ### 9.4 Trade-offs explicitly accepted
 
@@ -538,7 +538,7 @@ in the persisted model is a defect whether or not it is currently populated.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture |
-| Specification sections | doc 7 §26 (Graph State), §27 (Graph State Rule), §40 (ERC as Graph State Reference); doc 2 §12 (LangGraph State); doc 4 §20 (LangGraph Runtime State); doc 5 (State Model); `CLAUDE.md` §Coding Conventions |
+| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §26 (Graph State), §27 (Graph State Rule), §40 (ERC as Graph State Reference); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §12 (LangGraph State); 4. PF-FT-AI-RUNTIME.md §20 (LangGraph Runtime State); 5. PF-FT-AI-STATE-MODEL.md (State Model); `CLAUDE.md` §Coding Conventions |
 | Requirement IDs | `NFR-A38-MAINT`, `NFR-A38-SEC`, `NFR-A38-PERF` |
 | Build phases | 2, 4 |
 | Code paths | `src/pf_ft_ai/orchestration/langgraph/state.py`, `src/pf_ft_ai/domain/workflow/` |
@@ -551,4 +551,4 @@ in the persisted model is a defect whether or not it is currently populated.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. `CLAUDE.md`'s representation split confirmed with the "validate where trust changes" principle; doc 7 §27's reference rule treated as binding on provenance, freshness and personal-data grounds rather than only serialisation cost; `claims` made read-only by type. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. `CLAUDE.md`'s representation split confirmed with the "validate where trust changes" principle; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §27's reference rule treated as binding on provenance, freshness and personal-data grounds rather than only serialisation cost; `claims` made read-only by type. |

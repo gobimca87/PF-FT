@@ -30,15 +30,15 @@ review_due: 2027-08-21
 ## 1. Summary
 
 Agents are modules inside one deployable runtime. One microservice per agent is an
-anti-pattern under doc 2 §48 unless independent deployment or scaling is specifically
+anti-pattern under 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 unless independent deployment or scaling is specifically
 justified, and no such justification exists. The runtime does, however, separate **workload
 classes** — synchronous request handling, event consumption, and any future GPU-bound
 inference — because those have genuinely different scaling characteristics, which agents do not.
 
 ## 2. Context and Problem Statement
 
-Doc 2 §48 lists "one microservice per agent" first among its architectural anti-patterns,
-qualified: *"Unless independent deployment/scaling is justified."* Doc 7 §6 says the platform
+2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists "one microservice per agent" first among its architectural anti-patterns,
+qualified: *"Unless independent deployment/scaling is justified."* 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 says the platform
 uses workflow-level agents, not one microservice per agent. `CLAUDE.md` repeats it: *"Agents are
 logical capabilities inside one AI runtime, not one microservice per agent. Don't create a
 separate deployable per agent without a clear, justified operational/scaling reason."*
@@ -56,11 +56,11 @@ GPU-bound agent has different resource needs from a CPU-bound one. The last of t
 argument, and it is the one this decision must handle honestly rather than dismiss.
 
 There is a related conflation to untangle. "One runtime" and "one process type" are not the same
-claim. Doc 25 §12 covers workload separation and §13 states the agent deployment principle;
-doc 4 §47 describes a Service Bus runtime consuming events. A synchronous HTTP worker and an
+claim. 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12 covers workload separation and §13 states the agent deployment principle;
+4. PF-FT-AI-RUNTIME.md §47 describes a Service Bus runtime consuming events. A synchronous HTTP worker and an
 event consumer have different scaling triggers — request rate versus queue depth — and different
-failure modes. Separating those is workload separation, which doc 25 §12 endorses; it is not
-agent decomposition, which doc 2 §48 prohibits. Collapsing the distinction would either produce
+failure modes. Separating those is workload separation, which 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12 endorses; it is not
+agent decomposition, which 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 prohibits. Collapsing the distinction would either produce
 a monolith that scales badly or an agent-per-service architecture justified by the wrong
 argument.
 
@@ -70,11 +70,11 @@ argument.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Agents are logical capabilities in one runtime | doc 7 §6; `CLAUDE.md` |
-| DR-F-02 | A separate deployable per agent requires specific operational justification | doc 2 §48; `CLAUDE.md` |
-| DR-F-03 | Adding an agent must not require a deployment topology change | doc 1 §39 criterion 20; ADR-D1-11 |
-| DR-F-04 | Event consumption must scale on queue depth, independently of request rate | doc 25 §53; doc 4 §47 |
-| DR-F-05 | GPU workloads must be separable from CPU workloads | doc 25 §20; doc 2 §39 |
+| DR-F-01 | Agents are logical capabilities in one runtime | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6; `CLAUDE.md` |
+| DR-F-02 | A separate deployable per agent requires specific operational justification | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48; `CLAUDE.md` |
+| DR-F-03 | Adding an agent must not require a deployment topology change | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 20; ADR-D1-11 |
+| DR-F-04 | Event consumption must scale on queue depth, independently of request rate | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §53; 4. PF-FT-AI-RUNTIME.md §47 |
+| DR-F-05 | GPU workloads must be separable from CPU workloads | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §20; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §39 |
 
 ### 3.2 Non-functional drivers
 
@@ -82,13 +82,13 @@ argument.
 |---|---|---|---|
 | DR-N-01 | Agent invocation must not incur network latency | In-process call | ADR-D5-18 |
 | DR-N-02 | Operational surface must stay proportionate to the team | ≤3 workload types | Programme staffing |
-| DR-N-03 | A failure in one agent must not take down unrelated conversations | Bounded blast radius | doc 24 (Resilience) |
+| DR-N-03 | A failure in one agent must not take down unrelated conversations | Bounded blast radius | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md (Resilience) |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | One microservice per agent is an anti-pattern absent justification | Platform | doc 2 §48 |
+| DR-C-01 | One microservice per agent is an anti-pattern absent justification | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 |
 | DR-C-02 | Only one agent exists in the first pass | Organisational | ADR-D1-11 |
 | DR-C-03 | Deployment is to AKS | Platform | ADR-D5-08 |
 | DR-C-04 | Layering is enforced within the runtime | Platform | ADR-D2-01 |
@@ -106,7 +106,7 @@ argument.
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Operational simplicity | 30 | A small team operating many services is the failure mode that sinks platforms of this size | Number of deployables, pipelines, dashboards, on-call surfaces |
-| EC-02 | Cost of adding an agent | 25 | Doc 1 §39 criterion 20; extensibility is a stated success criterion | Deployment changes required per new agent |
+| EC-02 | Cost of adding an agent | 25 | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 20; extensibility is a stated success criterion | Deployment changes required per new agent |
 | EC-03 | Scaling fitness | 20 | Different workload classes genuinely differ; ignoring that wastes money or degrades service | Can each workload class scale on its own trigger? |
 | EC-04 | Failure isolation | 15 | One workflow's failure should not affect another | Blast radius of an agent-level fault |
 | EC-05 | Latency | 10 | Inter-agent network hops would be pure overhead | Agent invocation latency |
@@ -130,7 +130,7 @@ running all agents.
 **Weaknesses.**
 - Event consumption and request handling share a scaling trigger. A queue backlog cannot be
   absorbed without scaling HTTP capacity nobody needs, and a request spike starves event
-  consumers (EC-03) — the failure doc 25 §53 anticipates with worker scaling.
+  consumers (EC-03) — the failure 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §53 anticipates with worker scaling.
 - Long-running event processing competes with request latency in the same process.
 - A poison-message loop in event consumption degrades the request path (EC-04).
 
@@ -144,12 +144,12 @@ and — when self-hosted inference arrives — a GPU-backed inference deployment
 present in every replica.
 
 **Strengths.**
-- Each workload class scales on its own trigger, per doc 25 §51–§53 (EC-03).
+- Each workload class scales on its own trigger, per 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53 (EC-03).
 - One image and one pipeline, so operational surface stays small (EC-01).
 - Adding an agent changes no deployment topology (EC-02).
 - Event-path faults are isolated from the request path (EC-04).
 - In-process agent invocation (EC-05).
-- Matches doc 25 §12's workload separation without agent decomposition.
+- Matches 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12's workload separation without agent decomposition.
 
 **Weaknesses.**
 - One image containing code that some replicas never execute — the API deployment carries the
@@ -175,7 +175,7 @@ deployment, coordinated by a supervisor service.
   similar resource profiles.
 - Multiplies operational surface by agent count — pipelines, dashboards, alerts, on-call
   runbooks, version skew between supervisor and agents (EC-01).
-- Adding an agent becomes an infrastructure project, directly contradicting doc 1 §39 criterion
+- Adding an agent becomes an infrastructure project, directly contradicting 1 PF-FT-AI-ARCHITECTURE.md §39 criterion
   20 (EC-02).
 - Supervisor-to-agent invocation becomes a network call, adding latency and a failure mode to
   every conversation (EC-05).
@@ -206,7 +206,7 @@ communicating over local IPC.
 ## 6. Evaluation Method and Decision Matrix
 
 **Method.** Weighted scoring against §4. EC-01 counted as deployables, pipelines and alert
-surfaces. EC-03 assessed against doc 25 §51–§53's scaling model. EC-02 assessed by listing the
+surfaces. EC-03 assessed against 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§53's scaling model. EC-02 assessed by listing the
 deployment artefacts a second agent would require under each option.
 
 | Criterion | Weight | A: One deployable | B: Workload-separated | C: Per-agent service | D: In-pod processes |
@@ -222,7 +222,7 @@ deployment artefacts a second agent would require under each option.
 - **Option A:** (30×5) + (25×5) + (20×2) + (15×2) + (10×5) = 150 + 125 + 40 + 30 + 50 = **395**
 
 **Sensitivity.** B leads A by 65 points, on scaling fitness and failure isolation. The margin
-would close if event volumes were low enough that shared scaling never bit — but doc 25 §53
+would close if event volumes were low enough that shared scaling never bit — but 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §53
 provides for Service Bus worker scaling specifically, and affiliation's seasonal window means
 event bursts (approval, payment, the 31 May timer cancellation across a county) are expected.
 C scores lowest despite winning two criteria, because its operational and extensibility costs
@@ -247,8 +247,8 @@ One image, deployed as distinct workloads:
 | Workload | Scales on | Contains | Justification |
 |---|---|---|---|
 | **API** | Request rate / concurrency | FastAPI, supervisor, harness, all agents | Synchronous conversational path |
-| **Event consumer** | Service Bus queue depth | Event consumer, handlers, harness, all agents | doc 25 §53; independent scaling trigger, and isolation of poison-message loops from the request path |
-| **Inference** (future) | GPU utilisation | Self-hosted SLM serving | doc 25 §20–§21; GPU nodes are a different node pool with different cost characteristics (ADR-D5-11) |
+| **Event consumer** | Service Bus queue depth | Event consumer, handlers, harness, all agents | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §53; independent scaling trigger, and isolation of poison-message loops from the request path |
+| **Inference** (future) | GPU utilisation | Self-hosted SLM serving | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §20–§21; GPU nodes are a different node pool with different cost characteristics (ADR-D5-11) |
 
 All three run the same image. Which workload a replica is, is a startup argument. This keeps one
 build, one artefact and one version, while giving each class its own scaling policy — which is
@@ -260,7 +260,7 @@ agent.
 
 ### 7.3 The justification test
 
-Doc 2 §48 permits a separate deployable where independent deployment or scaling is justified.
+2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 permits a separate deployable where independent deployment or scaling is justified.
 A proposal must demonstrate, with evidence:
 
 1. **A materially different resource profile** — GPU dependence, memory footprint an order of
@@ -271,7 +271,7 @@ A proposal must demonstrate, with evidence:
    evidenced by organisational structure, not by preference.
 
 Meeting one of these is necessary; none of them is sufficient on its own, because the cost side
-must also be weighed. A proposal meeting none is the anti-pattern doc 2 §48 names, and is
+must also be weighed. A proposal meeting none is the anti-pattern 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 names, and is
 refused.
 
 Note what is *not* on the list: an agent being complex, an agent being important, an agent
@@ -288,13 +288,13 @@ bounded failure domains rather than by process boundaries:
 | Per-agent timeout and loop limits | A runaway agent run terminates without consuming the replica | ADR-D2-11 |
 | Circuit breakers per enterprise dependency | A failing enterprise API fails fast rather than exhausting connections | ADR-D7-06 |
 | Bounded parallelism | Concurrent context collection cannot saturate the event loop | ADR-D2-08 |
-| Per-request resource ceilings | One conversation cannot starve others | doc 4 §54, §57 |
+| Per-request resource ceilings | One conversation cannot starve others | 4. PF-FT-AI-RUNTIME.md §54, §57 |
 | Workload separation | Event-path faults do not reach the request path | §7.2 |
 
 DR-A-03 assumes these suffice. Chaos testing at Phase 20 tests that assumption; RT-03 is the
 response if it fails.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — deployment boundaries are a doc 2
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — deployment boundaries are a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
 §52 category — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -338,7 +338,7 @@ modules, and modules are wherever the image is.
 | Dashboards | Agent dimension already present |
 | On-call runbooks | No new deployable to operate |
 
-This table is the practical content of doc 1 §39 criterion 20, and it is why the criterion is
+This table is the practical content of 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 20, and it is why the criterion is
 satisfiable at all.
 
 ### 8.3 Observability across a shared runtime
@@ -354,7 +354,7 @@ Option C's separation would have provided, at none of its cost.
 
 - Operational surface stays proportionate: one image, one pipeline, three workload
   configurations regardless of agent count.
-- Adding an agent is a code and configuration change, satisfying doc 1 §39 criterion 20.
+- Adding an agent is a code and configuration change, satisfying 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 20.
 - Event consumption scales on queue depth independently, which matters during affiliation's
   seasonal bursts.
 - No network hop between supervisor and agent, so no latency and no distributed failure mode in
@@ -392,14 +392,14 @@ Option C's separation would have provided, at none of its cost.
 | Enterprise decides; AI orchestrates | Unaffected by topology. All five enterprise crossings (ADR-D1-01 §8.1) exist identically in every workload. |
 | Authoritative-truth precedence | Shared in-process context means one provenance model, not one per service — a real benefit over Option C, where provenance would have to survive serialisation between agents. |
 | Four-state separation | Preserved within the runtime by ADR-D2-01's layering; a shared process does not imply shared state, and the four state concepts remain separate modules. |
-| Versioned artefacts, never mutated in place | One image, one version, immutable per ADR-D5-09. Agents are versioned within it per doc 7 §21. |
+| Versioned artefacts, never mutated in place | One image, one version, immutable per ADR-D5-09. Agents are versioned within it per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §21. |
 | Adam persona governs how, never what | Not affected by topology. |
 
 ## 11. Risks and Mitigations
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
-| RSK-01 | Pressure to split agents into services as the catalogue grows | Medium | High | High | §7.3's evidence-based justification test; a split requires a tier 1 ADR; doc 2 §48 cited | AI Solution Architect | Medium |
+| RSK-01 | Pressure to split agents into services as the catalogue grows | Medium | High | High | §7.3's evidence-based justification test; a split requires a tier 1 ADR; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 cited | AI Solution Architect | Medium |
 | RSK-02 | In-process isolation proves insufficient; one agent degrades others (DR-A-03) | Medium | High | High | §7.4's five bounded failure domains; chaos testing at Phase 20; RT-03 adds process isolation if needed | Operations/SRE | Medium |
 | RSK-03 | Shared image means unrelated redeploys, increasing change risk | Medium | Low | Low | Immutable images and rolling deployment (ADR-D7-10); the same image already runs all workloads, so a redeploy is not a new risk class | AI Engineering Lead | Low |
 | RSK-04 | Per-agent resource contention invisible until it bites | Medium | Medium | Medium | Agent dimension on all metrics (§8.3); per-agent latency and token budgets tracked from Phase 14 | Operations/SRE | Medium |
@@ -426,7 +426,7 @@ Option C's separation would have provided, at none of its cost.
 | Children's data and safeguarding | Safeguarding data stays in one process boundary from ingress to response, which simplifies the data-flow assessment materially. |
 | UK GDPR lawful basis and rights impact | Fewer processing locations; simpler records of processing. |
 | Audit and evidential requirements | One trace per conversation with agent as a dimension, rather than a distributed trace across services — simpler and less lossy. |
-| Standards touched | ISO/IEC 27001 A.8.27 (secure architecture), A.8.31 (separation of environments); ISO/IEC 42001 (AI system architecture); doc 25 §12–§13. |
+| Standards touched | ISO/IEC 27001 A.8.27 (secure architecture), A.8.31 (separation of environments); ISO/IEC 42001 (AI system architecture); 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12–§13. |
 
 ## 14. Implementation Impact
 
@@ -480,7 +480,7 @@ Option C's separation would have provided, at none of its cost.
 | RT-03 | QM-05 shows cross-conversation impact from an agent fault (DR-A-03 false) | Chaos testing | Add in-pod process isolation (Option D) for the affected class |
 | RT-04 | QM-03 shows workload types exceeding three | Release audit | Check whether a workload split is really an agent split in disguise |
 | RT-05 | Self-hosted inference is adopted (ADR-D3-13) | Roadmap | Add the inference workload per §7.2; confirm it is a workload, not an agent |
-| RT-06 | Doc 2 §48 amended | Change notice | Re-derive §7.3's justification test |
+| RT-06 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 amended | Change notice | Re-derive §7.3's justification test |
 
 **Scheduled review:** 2027-08-21.
 
@@ -489,7 +489,7 @@ Option C's separation would have provided, at none of its cost.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-07 Enterprise Reference Architecture |
-| Specification sections | doc 2 §48 (Anti-Patterns — one microservice per agent), §39 (Scaling Architecture); doc 7 §6 (Workflow-Level Agent Responsibility), §7 (Why Workflow-Level Agents), §21 (Agent Versioning); doc 25 §12 (Workload Separation), §13 (Agent Deployment Principle), §20 (CPU/GPU Strategy), §51–§53 (Scaling); doc 4 §47 (Service Bus Runtime), §54, §57 (Runtime Limits, Concurrency); `CLAUDE.md` |
+| Specification sections | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 (Anti-Patterns — one microservice per agent), §39 (Scaling Architecture); 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §6 (Workflow-Level Agent Responsibility), §7 (Why Workflow-Level Agents), §21 (Agent Versioning); 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12 (Workload Separation), §13 (Agent Deployment Principle), §20 (CPU/GPU Strategy), §51–§53 (Scaling); 4. PF-FT-AI-RUNTIME.md §47 (Service Bus Runtime), §54, §57 (Runtime Limits, Concurrency); `CLAUDE.md` |
 | Requirement IDs | `FR-A39-20`, `NFR-A38-SCALE`, `NFR-A38-MAINT` |
 | Build phases | 4, 19 |
 | Code paths | `src/pf_ft_ai/agents/`, `src/pf_ft_ai/orchestration/` |

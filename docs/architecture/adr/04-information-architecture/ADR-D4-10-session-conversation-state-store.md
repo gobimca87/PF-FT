@@ -38,18 +38,17 @@ review_due: 2027-08-22
 
 PFF AI will use **Azure Managed Redis** as the backing store for conversation,
 session, memory and cache state, behind the `MemoryStore`/`CacheStore` abstractions
-(doc 9 §22), with memory and cache logically separated by key namespace on the same
-instance (doc 9 §37, §77–§78). Redis's low-latency key/value + TTL model fits
+(9 PF-FT-AI-MEMORY-CACHE.md §22), with memory and cache logically separated by key namespace on the same
+instance (9 PF-FT-AI-MEMORY-CACHE.md §37, §77–§78). Redis's low-latency key/value + TTL model fits
 short-lived conversational/session state and cache; Azure-managed operation, private
-networking and Entra integration meet the enterprise bar (doc 6 §68–§71; doc 5
+networking and Entra integration meet the enterprise bar (6 PF-FT-AI-CONVERSATION-SESSION.md §68–§71; 5. PF-FT-AI-STATE-MODEL.md
 §53–§55).
 
 ## 2. Context and Problem Statement
 
-The memory/session/cache store was deliberately left open (DEVELOPMENT-GUIDE §2, doc
-9 §21) to be resolved by ADR. Doc 6 §68–§71 require a stateless API with session
-affinity backed by an external store; doc 5 §53–§55 require state persistence with
-store separation; doc 9 §22 requires provider-independent `MemoryStore`/`CacheStore`
+The memory/session/cache store was deliberately left open (DEVELOPMENT-GUIDE §2, 9 PF-FT-AI-MEMORY-CACHE.md §21) to be resolved by ADR. 6 PF-FT-AI-CONVERSATION-SESSION.md §68–§71 require a stateless API with session
+affinity backed by an external store; 5. PF-FT-AI-STATE-MODEL.md §53–§55 require state persistence with
+store separation; 9 PF-FT-AI-MEMORY-CACHE.md §22 requires provider-independent `MemoryStore`/`CacheStore`
 interfaces. The state to hold is mostly **ephemeral, key-addressable and TTL-bound**
 (conversations, sessions, working memory, caches) — not relational analytics. The
 choice must be Azure-native, private-networkable, low-latency and operationally light.
@@ -60,12 +59,12 @@ alternatives and evaluation that justify it to enterprise-review standard.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Low-latency key/value with TTL for session/cache | doc 9 §37–§38; doc 6 §15 |
-| DR-F-02 | Provider-independent behind MemoryStore/CacheStore | doc 9 §22 |
-| DR-F-03 | Session recovery / affinity support | doc 6 §55, §69 |
+| DR-F-01 | Low-latency key/value with TTL for session/cache | 9 PF-FT-AI-MEMORY-CACHE.md §37–§38; 6 PF-FT-AI-CONVERSATION-SESSION.md §15 |
+| DR-F-02 | Provider-independent behind MemoryStore/CacheStore | 9 PF-FT-AI-MEMORY-CACHE.md §22 |
+| DR-F-03 | Session recovery / affinity support | 6 PF-FT-AI-CONVERSATION-SESSION.md §55, §69 |
 | DR-N-01 | Azure-native, private endpoint, Entra/Key Vault | ADR-D5-08, D5-07, D6-04 |
 | DR-N-02 | Managed operation (small team) | operational |
-| DR-C-01 | Memory/cache logically separated | doc 9 §77–§78; ADR-D4-01 |
+| DR-C-01 | Memory/cache logically separated | 9 PF-FT-AI-MEMORY-CACHE.md §77–§78; ADR-D4-01 |
 
 ### 3.4 Assumptions
 
@@ -133,12 +132,12 @@ is small.
 
 | Option | Eliminated by |
 |---|---|
-| In-process memory only | doc 6 §68 — stateless API needs external store |
+| In-process memory only | 6 PF-FT-AI-CONVERSATION-SESSION.md §68 — stateless API needs external store |
 | Blob storage for state | Wrong access pattern; no TTL/low-latency reads |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 9 §21–§22/§37/§77–§78, doc 6
+**Method.** Weighted scoring against §4, informed by 9 PF-FT-AI-MEMORY-CACHE.md §21–§22/§37/§77–§78, 6 PF-FT-AI-CONVERSATION-SESSION.md
 §68–§71 and Azure service characteristics.
 
 | Criterion | Weight | A: Managed Redis | B: Cosmos DB | C: Postgres | D: Self-host Redis | E: Split stores |
@@ -157,7 +156,7 @@ Totals (×20): **A = 468**, **E = 452**, **D = 384**, **B = 372**, **C = 366**.
 store is deferred: while long-term memory volume is small, Redis with persistence +
 backup suffices, and ADR-D4-11 keeps the memory abstraction store-agnostic so the
 split (E) can be adopted later (RT-01) without a rewrite. A honours the "one physical
-store, namespaced" model of `docs/adr/0004` and doc 9 §37.
+store, namespaced" model of `docs/adr/0004` and 9 PF-FT-AI-MEMORY-CACHE.md §37.
 
 ## 7. Decision
 
@@ -175,15 +174,15 @@ for ephemeral state; self-host (D) imposes undue ops. This confirms and supersed
 
 ## 8. Architecture Detail
 
-- `MemoryStore`/`CacheStore` protocols (doc 9 §22) with a `RedisMemoryStore` /
+- `MemoryStore`/`CacheStore` protocols (9 PF-FT-AI-MEMORY-CACHE.md §22) with a `RedisMemoryStore` /
   `RedisCacheStore` using `redis.asyncio`; no Azure-specific SDK at app layer.
-- Namespaces (doc 9 §37, §77–§78): `pf-ft:<env>:memory:...` and
+- Namespaces (9 PF-FT-AI-MEMORY-CACHE.md §37, §77–§78): `pf-ft:<env>:memory:...` and
   `pf-ft:<env>:cache:...`; cross-user/club isolation enforced in key design.
-- TTLs per state class (doc 5 §55; doc 6 §15 session TTL; ADR-D4-12 cache TTL).
+- TTLs per state class (5. PF-FT-AI-STATE-MODEL.md §55; 6 PF-FT-AI-CONVERSATION-SESSION.md §15 session TTL; ADR-D4-12 cache TTL).
 - Config `config/base/redis.yaml` with `*_secret_ref` (ADR-D5-07); private endpoint
   (ADR-D6-04); persistence + backup enabled for memory namespace.
-- Session recovery/affinity (doc 6 §55, §69) via session keys; stateless API
-  (doc 6 §68).
+- Session recovery/affinity (6 PF-FT-AI-CONVERSATION-SESSION.md §55, §69) via session keys; stateless API
+  (6 PF-FT-AI-CONVERSATION-SESSION.md §68).
 
 ## 9. Consequences
 
@@ -214,8 +213,8 @@ for ephemeral state; self-host (D) imposes undue ops. This confirms and supersed
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | Long-term memory lost on eviction | Med | Med | M | Persistence+backup for memory ns; split later (E) | Platform Eng | Low |
-| RSK-02 | Cross-user/club key leakage | Low | High | M | Namespace + isolation tests (doc 9 §77–§78) | Security Architect | Low |
-| RSK-03 | Redis outage drops sessions | Low | Med | M | HA tier; graceful re-auth/recovery (doc 6 §55) | SRE | Low |
+| RSK-02 | Cross-user/club key leakage | Low | High | M | Namespace + isolation tests (9 PF-FT-AI-MEMORY-CACHE.md §77–§78) | Security Architect | Low |
+| RSK-03 | Redis outage drops sessions | Low | Med | M | HA tier; graceful re-auth/recovery (6 PF-FT-AI-CONVERSATION-SESSION.md §55) | SRE | Low |
 
 ## 12. Quantitative Targets and Measures
 
@@ -233,7 +232,7 @@ for ephemeral state; self-host (D) imposes undue ops. This confirms and supersed
 | Data classification touched | Conversation/session/memory may be Personal |
 | Personal data / PII | TTL + retention per ADR-D4-07; encrypted |
 | Children's data and safeguarding | Safeguarding context not persisted as truth; TTL-bound |
-| UK GDPR lawful basis and rights impact | Retention/erasure via TTL + deletion (doc 9 §75) |
+| UK GDPR lawful basis and rights impact | Retention/erasure via TTL + deletion (9 PF-FT-AI-MEMORY-CACHE.md §75) |
 | Audit and evidential requirements | Access via Entra logged |
 | Standards touched | ISO/IEC 27001, 42001 |
 
@@ -265,7 +264,7 @@ for ephemeral state; self-host (D) imposes undue ops. This confirms and supersed
 | Monitoring | Latency, memory, evictions, hit rate |
 | Alerting | Latency/availability/eviction spikes |
 | Runbook | `docs/runbooks/redis.md` |
-| Failure mode and degradation | Store down → session recovery / degrade (doc 6 §55) |
+| Failure mode and degradation | Store down → session recovery / degrade (6 PF-FT-AI-CONVERSATION-SESSION.md §55) |
 | Rollback | Config revert |
 | Support model impact | Managed → low on-call |
 
@@ -290,7 +289,7 @@ for ephemeral state; self-host (D) imposes undue ops. This confirms and supersed
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-22 Memory/Cache/Store |
-| Specification sections | doc 9 §21–§22, §37, §54–§55, §77–§78; doc 6 §15, §68–§71; doc 5 §53–§55 |
+| Specification sections | 9 PF-FT-AI-MEMORY-CACHE.md §21–§22, §37, §54–§55, §77–§78; 6 PF-FT-AI-CONVERSATION-SESSION.md §15, §68–§71; 5. PF-FT-AI-STATE-MODEL.md §53–§55 |
 | Requirement IDs | STORE-* |
 | Build phases | 7 |
 | Code paths | `src/pf_ft_ai/memory/`, `src/pf_ft_ai/cache/` |

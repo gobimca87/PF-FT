@@ -55,7 +55,7 @@ recognise when it has been done.
 the Payments tab. These are not failures of the conversation; they are steps the conversation
 cannot perform and should not try to.
 
-Doc 2 §29 covers HIL architecture and doc 20 §68–§71 covers HIL governance, but both address
+2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29 covers HIL architecture and 20.PF-FT-AI-GOVERNANCE.md §68–§71 covers HIL governance, but both address
 the enterprise-decision case — the CFA review. Neither addresses user-action waits or portal
 handoffs, which in the affiliation flow are more frequent.
 
@@ -78,12 +78,12 @@ rather than its wording.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | The user must always know who or what the workflow is waiting for | `CLAUDE.md` persona rule 8; doc 20 §68 |
+| DR-F-01 | The user must always know who or what the workflow is waiting for | `CLAUDE.md` persona rule 8; 20.PF-FT-AI-GOVERNANCE.md §68 |
 | DR-F-02 | Blockers must be surfaced with the action that resolves each | Affiliation Phase 1 |
-| DR-F-03 | Portal handoffs must use registered links, never generated ones | doc 12; ADR-D2-19 |
-| DR-F-04 | Every wait must be resumable across sessions and runtime restarts | doc 2 §29; ADR-D2-10 |
-| DR-F-05 | Handoff to a human must be a deliberate action, not a fallback from failure | doc 20 §69 |
-| DR-F-06 | The platform must not predict or pre-empt an enterprise human decision | doc 20 §70; `CLAUDE.md` persona rule 9 |
+| DR-F-03 | Portal handoffs must use registered links, never generated ones | 12 PF-FT-AI-PORTAL-LINKS.md; ADR-D2-19 |
+| DR-F-04 | Every wait must be resumable across sessions and runtime restarts | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29; ADR-D2-10 |
+| DR-F-05 | Handoff to a human must be a deliberate action, not a fallback from failure | 20.PF-FT-AI-GOVERNANCE.md §69 |
+| DR-F-06 | The platform must not predict or pre-empt an enterprise human decision | 20.PF-FT-AI-GOVERNANCE.md §70; `CLAUDE.md` persona rule 9 |
 
 ### 3.2 Non-functional drivers
 
@@ -99,7 +99,7 @@ rather than its wording.
 |---|---|---|---|
 | DR-C-01 | The platform decides no enterprise outcome and must not anticipate one | Platform | ADR-D1-01 §7.2 |
 | DR-C-02 | Portal URLs come only from the registry | Platform | ADR-D2-19 |
-| DR-C-03 | Human decision authority is enterprise-owned | Organisational | doc 20 §70 |
+| DR-C-03 | Human decision authority is enterprise-owned | Organisational | 20.PF-FT-AI-GOVERNANCE.md §70 |
 | DR-C-04 | Some required actions occur entirely outside the platform's visibility | Platform | Affiliation Phase 1 (DBS applications, ground agreements) |
 
 ### 3.4 Assumptions
@@ -284,7 +284,7 @@ For an enterprise decision wait, the platform states:
 - what the user should do meanwhile, which is usually nothing.
 
 It does not state, imply, or allow the persona's optimism to suggest a likely outcome. This
-follows from DR-C-01 and doc 20 §70, and it has a persona consequence recorded in ADR-D1-09:
+follows from DR-C-01 and 20.PF-FT-AI-GOVERNANCE.md §70, and it has a persona consequence recorded in ADR-D1-09:
 the football register is available for the *waiting*, not for the *outcome*. "The referee's
 having a look at this one" is acceptable. "Should be a formality" is not, because the platform
 does not know that and the CFA has not decided.
@@ -516,7 +516,7 @@ The user-visible consequence: the platform picks up where the *workflow* is, not
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-04 Personas & User Journey Mapping |
-| Specification sections | affiliation flow Phases 1, 3, 5, 6, 10, Scenario 12, Notification Summary; doc 2 §29 (HIL Architecture); doc 20 §68 (Human Oversight), §69 (HIL Boundary), §70 (Human Decision Authority), §71 (HIL Evidence); doc 12 (Portal Links); `Examples/SampleWorkflowchat.md` |
+| Specification sections | affiliation flow Phases 1, 3, 5, 6, 10, Scenario 12, Notification Summary; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29 (HIL Architecture); 20.PF-FT-AI-GOVERNANCE.md §68 (Human Oversight), §69 (HIL Boundary), §70 (Human Decision Authority), §71 (HIL Evidence); 12 PF-FT-AI-PORTAL-LINKS.md (Portal Links); `Examples/SampleWorkflowchat.md` |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 13, 23 |
 | Code paths | `src/pf_ft_ai/agents/affiliation/`, `src/pf_ft_ai/portal_links/`, `src/pf_ft_ai/application/workflows/` |

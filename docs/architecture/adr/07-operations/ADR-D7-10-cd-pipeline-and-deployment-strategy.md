@@ -31,12 +31,12 @@ review_due: 2027-08-22
 PFF AI will deploy via a **CD pipeline promoting an immutable release manifest/image
 digest through the environment ladder (ADR-D5-14)** using **rolling updates with health
 probes and automated post-deployment smoke tests**, with fast rollback to the previous
-digest (doc 25 §47–§50, §67; doc 28 §23, §40–§43). AI artefacts (prompts/models/index)
+digest (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50, §67; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §23, §40–§43). AI artefacts (prompts/models/index)
 promote through the same manifest (ADR-D5-06) under change governance (ADR-D6-15).
 
 ## 2. Context and Problem Statement
 
-Doc 25 §67 CD pipeline, §47–§50 health/liveness/readiness/startup probes; doc 28 §23
+25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §67 CD pipeline, §47–§50 health/liveness/readiness/startup probes; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §23
 post-deployment smoke test, §40–§43 deployment/version validation and rollback. Without a
 defined deployment strategy, releases risk downtime, bad versions and slow recovery. This
 ADR fixes the CD strategy (D5-14 = env ladder; D5-13 = manifests; D6-15 = gates).
@@ -46,9 +46,9 @@ ADR fixes the CD strategy (D5-14 = env ladder; D5-13 = manifests; D6-15 = gates)
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Promote immutable manifest/digest through ladder | ADR-D5-06/D5-14 |
-| DR-F-02 | Rolling update with health probes | doc 25 §47–§50, §67 |
-| DR-F-03 | Post-deploy smoke test | doc 28 §23 |
-| DR-F-04 | Fast rollback to prior digest | doc 28 §42–§43 |
+| DR-F-02 | Rolling update with health probes | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50, §67 |
+| DR-F-03 | Post-deploy smoke test | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §23 |
+| DR-F-04 | Fast rollback to prior digest | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §42–§43 |
 
 ### 3.4 Assumptions
 
@@ -72,8 +72,8 @@ ADR fixes the CD strategy (D5-14 = env ladder; D5-13 = manifests; D6-15 = gates)
 ### 5.1 Option A — Rolling updates + health probes + smoke test + digest promotion + fast rollback
 
 **Description.** CD promotes the manifest/digest per environment (ADR-D5-14); rolling
-update with readiness/liveness/startup probes (doc 25 §47–§50); automated smoke test
-post-deploy (doc 28 §23); rollback to previous digest (doc 28 §42–§43).
+update with readiness/liveness/startup probes (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50); automated smoke test
+post-deploy (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §23); rollback to previous digest (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §42–§43).
 **Strengths.** Low-downtime, safe, integrity-preserving, quick recovery.
 **Weaknesses.** Rolling mixes versions briefly.
 **Cost / effort.** Low-medium.
@@ -103,7 +103,7 @@ post-deploy (doc 28 §23); rollback to previous digest (doc 28 §42–§43).
 ### 5.5 Option E — Rolling by default + canary for AI-artefact/high-risk changes + blue/green for GPU/index
 
 **Description.** Option A as default, with canary (C) for model/prompt/high-risk changes
-(shadow/canary per doc 15 §157–§158) and blue/green (B) for GPU serving and vector-index
+(shadow/canary per 15.PF-FT-AI-SLM.md §157–§158) and blue/green (B) for GPU serving and vector-index
 cutovers (ADR-D3-24/D5-10).
 **Strengths.** Right strategy per change type; safe + economical.
 **Weaknesses.** Multiple strategies to operate.
@@ -113,12 +113,12 @@ cutovers (ADR-D3-24/D5-10).
 
 | Option | Eliminated by |
 |---|---|
-| Manual deploys | doc 25 §67 (automated CD) |
+| Manual deploys | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §67 (automated CD) |
 | Mutable-tag deploys | ADR-D5-09 (digest) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by doc 25 §47–§50/§67 and doc 28
+**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50/§67 and 28.PF-FT-AI-OPERATIONS-RUNBOOK.md
 §23/§40–§43.
 
 | Criterion | Weight | A: Rolling | B: Blue/green | C: Canary | D: Recreate | E: Rolling+canary+B/G |
@@ -150,9 +150,9 @@ model/prompt/high-risk changes and blue/green for GPU serving and vector-index c
 - CD (`.github/workflows/`) promotes the release manifest (ADR-D5-06) + image digest
   (ADR-D5-09) per environment (ADR-D5-14) after gates (ADR-D7-09) and governance approval
   (ADR-D6-15); manifests applied via ADR-D5-13.
-- Rolling update honours readiness/liveness/startup probes (doc 25 §47–§50); smoke test
-  (doc 28 §23–§24) verifies post-deploy; failure → auto-rollback to prior digest (doc 28
-  §42–§43). Canary/shadow for models (doc 15 §157–§158); blue/green for index (doc 14
+- Rolling update honours readiness/liveness/startup probes (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50); smoke test
+  (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §23–§24) verifies post-deploy; failure → auto-rollback to prior digest (28.PF-FT-AI-OPERATIONS-RUNBOOK.md
+  §42–§43). Canary/shadow for models (15.PF-FT-AI-SLM.md §157–§158); blue/green for index (14.PF-FT-AI-EMBEDDING-VECTOR.md
   §77) and GPU serving (ADR-D5-10).
 
 ## 9. Consequences
@@ -234,7 +234,7 @@ model/prompt/high-risk changes and blue/green for GPU serving and vector-index c
 |---|---|
 | Monitoring | Deploy status; rollout health; smoke results |
 | Alerting | Failed rollout/smoke |
-| Runbook | `docs/runbooks/deploy.md` (doc 28 §40–§47) |
+| Runbook | `docs/runbooks/deploy.md` (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §40–§47) |
 | Failure mode and degradation | Rollout failure → auto-rollback |
 | Rollback | Previous digest re-promoted |
 | Support model impact | SRE |
@@ -259,7 +259,7 @@ model/prompt/high-risk changes and blue/green for GPU serving and vector-index c
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 |
-| Specification sections | doc 25 §47–§50, §67; doc 28 §23, §40–§43 |
+| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50, §67; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §23, §40–§43 |
 | Requirement IDs | CD-* |
 | Build phases | 1 |
 | Code paths | `.github/workflows/`, `deploy/` |
