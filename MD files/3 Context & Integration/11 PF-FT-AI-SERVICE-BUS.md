@@ -3039,7 +3039,7 @@ Rolling deployment
 Canary
 ```
 
-The selected strategy must account for:
+Resolved: rolling deployment by default — see ADR-D7-10. The strategy must account for:
 
 ```text
 duplicate delivery

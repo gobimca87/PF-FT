@@ -2014,7 +2014,7 @@ ERC should be persisted outside application process memory when required for:
 - Audit
 - Evaluation
 
-The concrete persistence technology is an ADR decision.
+Resolved: Azure Managed Redis, the same external store as conversation/session/memory/cache — see ADR-D4-10 and ADR-D2-10.
 
 ---
 

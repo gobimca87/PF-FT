@@ -365,6 +365,10 @@ Only `ACTIVE` APIs should normally be available for runtime tool execution.
 
 # 15. API Versioning
 
+How the physical endpoint location resolves per environment — separately from this
+version — is fixed in §184 and ADR-D2-20, extending 17.PF-FT-AI-CONFIGURATION-VERSIONING.md
+§33's `endpoint_ref` indirection to every catalogued operation.
+
 API versions must be explicit.
 
 Example:
@@ -426,6 +430,10 @@ request:
 
   body: null
 ```
+
+`Authorization`'s `source: request_context` is one instance of a general rule: every
+field declares where its value comes from. The full source vocabulary and the binder
+mechanism are in §185 and ADR-D2-21.
 
 ---
 
@@ -3780,3 +3788,70 @@ The implementation must satisfy:
 28. **Contract drift must be detected.**
 29. **Tool and API changes require regression testing.**
 30. **The integration layer remains a controlled bridge between AI reasoning and authoritative PF-FT enterprise capabilities.**
+
+---
+
+# 184. Enterprise API Endpoint Declaration and Per-Environment Resolution (ADR-D2-20)
+
+The API catalogue declares each operation's business contract — `api_id`, version,
+operation, purpose — against a logical `endpoint_ref`, never a physical URL:
+
+```yaml
+api:
+  api_id: enterprise.club.get
+  version: v1
+  endpoint_ref: CLUB_DETAILS_API
+```
+
+The physical `base_url` each `endpoint_ref` resolves to is layered, environment-scoped
+configuration (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33), resolved once at process
+start into the immutable runtime configuration object — never looked up per call, and
+never hard-coded in the catalogue, a tool implementation, or agent code:
+
+```yaml
+endpoints:
+  CLUB_DETAILS_API:
+    base_url: https://...   # per environment
+```
+
+An `endpoint_ref` with no matching environment entry is a fail-fast startup error, never
+a runtime 404. This keeps the release-manifest-pinned catalogue (§8–§10) identical across
+every environment — the same tested artefact reaches DEV through PROD unchanged — and
+extends the environment-resolution treatment §7–§10 of the Portal Links document already
+give portal URLs to enterprise API endpoints. Full alternatives analysis is in ADR-D2-20.
+
+---
+
+# 185. Request Payload Parameter Sourcing and Binding (ADR-D2-21)
+
+Every field in a request contract declares an explicit source:
+
+```yaml
+request:
+  path:
+    clubId:
+      source: claims            # the caller's own club, never model-suppliable
+  headers:
+    Authorization:
+      source: request_context   # §17's existing example
+  body:
+    team_ids:
+      source: model_argument    # the model proposes this; full tool-call gating applies
+    application_id:
+      source: workflow_state
+```
+
+The source vocabulary is: `model_argument`, `erc`, `workflow_state`, `claims`, `fixed`.
+
+- **`model_argument`** fields are exposed in the tool's schema to the model and pass the
+  full tool-call gate sequence (allowlist, schema, semantic validation, authorization,
+  idempotency) unchanged.
+- **`erc`**, **`workflow_state`**, **`claims`** and **`fixed`** fields are never exposed
+  to the model's schema at all. The tool implementation's binder resolves each from its
+  declared source immediately before dispatch — they are authoritative by construction,
+  because there is no model proposal to validate.
+
+Binding happens only after the model's fields have separately cleared the tool-call
+gates, so a platform-bound field can never be mistaken for, or substituted by, a
+model-influenced one. Every dispatched request's field provenance is logged for audit.
+Full alternatives analysis and the worked `submit_affiliation` example are in ADR-D2-21.

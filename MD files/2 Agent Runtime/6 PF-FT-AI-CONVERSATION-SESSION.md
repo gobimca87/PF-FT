@@ -1479,7 +1479,7 @@ class MessageStore:
     async def get_by_sequence(...)
 ```
 
-Concrete technology is an ADR decision.
+Resolved: Azure Managed Redis, behind these store interfaces — see ADR-D4-10.
 
 ---
 

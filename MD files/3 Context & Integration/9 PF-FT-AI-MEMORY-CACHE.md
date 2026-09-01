@@ -473,7 +473,7 @@ Memory Service
     └── Reference Store
 ```
 
-The physical technology is an architecture/ADR decision.
+Resolved: Azure Managed Redis, one instance namespaced per store — see ADR-D4-10.
 
 ---
 
@@ -811,6 +811,11 @@ parameters
 +
 version
 ```
+
+This scheme is the default (`scope: tenant`) for every cache and memory entry. A small,
+reviewed set of genuinely tenant-invariant reference data (leagues, seasons, competition
+structures) may instead declare `scope: platform` and key without the tenant/organization
+segments — see §151 and ADR-D4-13.
 
 ---
 
@@ -1827,7 +1832,7 @@ Context projections
 Rate/concurrency coordination
 ```
 
-The specific technology will be decided separately.
+Resolved: Azure Managed Redis, same instance as memory, separated by cache key namespace — see ADR-D4-10.
 
 ---
 
@@ -2642,9 +2647,10 @@ Checkpoint
 Cache
 ```
 
-should be selected through the platform's technology decision process.
+are resolved: Azure Managed Redis for Memory, Session, Cache; workflow state and checkpoints
+persist through LangGraph's checkpoint store on the same platform — see ADR-D4-10 and ADR-D2-06.
 
-This document defines the required behavior, not the final infrastructure product choice.
+This document defines the required behavior; ADR-D4-10 records the infrastructure product choice.
 
 ---
 
@@ -2883,3 +2889,38 @@ ERC
 The platform therefore follows the fundamental rule:
 
 > **Memory remembers, cache accelerates, ERC represents current workflow context, and enterprise systems remain authoritative.**
+
+---
+
+# 151. Cache and Memory Scope — Tenant vs Platform-Global (ADR-D4-13)
+
+§37's key scheme and the ten memory categories in §5 are both written as tenant-scoped by
+default. Some reference data is genuinely tenant-invariant instead — the same for every
+club and county that reads it (leagues, seasons, competition structures, other canonical
+reference data governed by the identifier strategy). Caching or remembering this kind of
+data with a tenant/organization key produces one entry per tenant for identical content,
+and makes the cross-tenant isolation test unable to tell a legitimate shared entry from an
+isolation defect.
+
+Every cache and memory entry therefore declares an explicit scope:
+
+```text
+scope: tenant      # default — full key scheme in §37 applies
+scope: platform    # reviewed, tenant-invariant data only
+```
+
+A `platform`-scoped key omits the tenant/organization segments entirely:
+
+```text
+pf-ft:<env>:cache:platform:<resource>:<operation>:<parameters>:<version>
+```
+
+`scope: platform` is a reviewed declaration made when a cache-backed operation or memory
+category is catalogued, never a per-call-site choice by a tool implementation — it requires
+confirming the value is genuinely identical for every tenant, not merely identical today.
+"Organizational Context Memory" (§15) is club/county-specific by definition and is never
+eligible. Cross-tenant isolation tests apply to `tenant`-scoped keys as before; a
+`platform`-scoped key is excluded from that check by construction, because there is no
+tenant segment to leak.
+
+Full alternatives analysis, decision matrix, and the review-gate design are in ADR-D4-13.
