@@ -1,7 +1,7 @@
 import asyncio
 
-from pf_ft_ai.integration.execution.states import IdempotencyStatus
-from pf_ft_ai.messaging.reliability.idempotency import (
+from pff_fa_ai.integration.execution.states import IdempotencyStatus
+from pff_fa_ai.messaging.reliability.idempotency import (
     InMemoryEventIdempotencyStore,
     build_event_idempotency_key,
 )

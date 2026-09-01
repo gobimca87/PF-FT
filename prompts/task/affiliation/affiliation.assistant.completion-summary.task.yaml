@@ -7,7 +7,7 @@ description: Task instructions for closing out the affiliation workflow with an 
 risk: LOW
 compatibility:
   model:
-    - pf-ft-slm-primary: ">=1.0.0"
+    - pff-fa-slm-primary: ">=1.0.0"
 variables:
   - completed_items
   - outstanding_items

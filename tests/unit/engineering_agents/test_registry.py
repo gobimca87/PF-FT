@@ -1,9 +1,9 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.engineering_agents.models import EngineeringAgentDefinition
-from pf_ft_ai.engineering_agents.registry import EngineeringAgentRegistry, build_default_registry
-from pf_ft_ai.engineering_agents.states import (
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.engineering_agents.models import EngineeringAgentDefinition
+from pff_fa_ai.engineering_agents.registry import EngineeringAgentRegistry, build_default_registry
+from pff_fa_ai.engineering_agents.states import (
     AgentLifecycleStatus,
     EngineeringAgentRisk,
     ExecutionMode,

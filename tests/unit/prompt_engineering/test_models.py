@@ -1,14 +1,14 @@
 import pytest
 from pydantic import ValidationError as PydanticValidationError
 
-from pf_ft_ai.prompt_engineering.models import (
+from pff_fa_ai.prompt_engineering.models import (
     ComposedPrompt,
     DialogueTurn,
     FewShotExample,
     PromptArtifact,
     PromptSection,
 )
-from pf_ft_ai.prompt_engineering.states import (
+from pff_fa_ai.prompt_engineering.states import (
     PromptCategory,
     PromptRiskLevel,
     PromptSectionRole,

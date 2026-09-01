@@ -3,14 +3,14 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from fakeredis import FakeAsyncRedis
 
-from pf_ft_ai.memory.models import MemoryQuery, MemoryRecord, MemoryScope, MemorySource
-from pf_ft_ai.memory.states import (
+from pff_fa_ai.memory.models import MemoryQuery, MemoryRecord, MemoryScope, MemorySource
+from pff_fa_ai.memory.states import (
     MemoryCategory,
     MemoryConfidence,
     MemoryLifecycleStatus,
     MemorySourceType,
 )
-from pf_ft_ai.memory.store import RedisMemoryStore
+from pff_fa_ai.memory.store import RedisMemoryStore
 
 
 def _record(

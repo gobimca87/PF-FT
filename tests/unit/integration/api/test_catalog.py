@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.integration.api.catalog import (
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.integration.api.catalog import (
     ApiAuthorization,
     ApiCatalog,
     ApiCatalogEntry,

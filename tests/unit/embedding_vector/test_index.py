@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.embedding_vector.index import IndexAliasRegistry
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.embedding_vector.index import IndexAliasRegistry
 
 
 def test_should_resolve_the_active_index_version() -> None:

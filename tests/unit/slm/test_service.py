@@ -2,12 +2,12 @@ from collections.abc import AsyncIterator
 
 import pytest
 
-from pf_ft_ai.common.exceptions import IntegrationError, ModelError
-from pf_ft_ai.configuration.models import CircuitBreakerSettings, RetrySettings
-from pf_ft_ai.slm.models import SlmMessage, SlmRequest, SlmResponse, SlmUsage
-from pf_ft_ai.slm.providers import MockSLMProvider
-from pf_ft_ai.slm.service import SlmService, _is_transient
-from pf_ft_ai.slm.states import ProviderHealthStatus, SlmStatus
+from pff_fa_ai.common.exceptions import IntegrationError, ModelError
+from pff_fa_ai.configuration.models import CircuitBreakerSettings, RetrySettings
+from pff_fa_ai.slm.models import SlmMessage, SlmRequest, SlmResponse, SlmUsage
+from pff_fa_ai.slm.providers import MockSLMProvider
+from pff_fa_ai.slm.service import SlmService, _is_transient
+from pff_fa_ai.slm.states import ProviderHealthStatus, SlmStatus
 
 _RETRY = RetrySettings(max_attempts=3, backoff="exponential", initial_ms=1, max_ms=5, jitter=False)
 _CIRCUIT = CircuitBreakerSettings(failure_threshold=2, cooldown_seconds=60, half_open_max_calls=1)

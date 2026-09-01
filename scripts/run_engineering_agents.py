@@ -2,7 +2,7 @@
 """doc 23 (Engineering Agents) / DEVELOPMENT-GUIDE Phase 19's "Engineering Agents" CI
 stage: runs the real, deterministic engineering agents built in Phase 18 against this
 checkout and applies the quality gate, failing CI on a blocking outcome. Lives in
-scripts/ (dev/CI helper scripts per DEVELOPMENT-GUIDE §3), not src/pf_ft_ai/, because
+scripts/ (dev/CI helper scripts per DEVELOPMENT-GUIDE §3), not src/pff_fa_ai/, because
 it's a CLI entrypoint, not an importable platform capability.
 
 `UnitTestAgent` is deliberately not wired in here — the pipeline's own "Unit Tests"
@@ -18,15 +18,15 @@ import asyncio
 import sys
 from pathlib import Path
 
-from pf_ft_ai.engineering_agents.agents import (
+from pff_fa_ai.engineering_agents.agents import (
     ArchitectureComplianceAgent,
     ConfigurationValidationAgent,
     DependencyVulnerabilityAgent,
     SecurityScanAgent,
 )
-from pf_ft_ai.engineering_agents.gate import QualityGateConfig, evaluate_quality_gate
-from pf_ft_ai.engineering_agents.models import EngineeringAgentResult
-from pf_ft_ai.engineering_agents.states import GateStatus
+from pff_fa_ai.engineering_agents.gate import QualityGateConfig, evaluate_quality_gate
+from pff_fa_ai.engineering_agents.models import EngineeringAgentResult
+from pff_fa_ai.engineering_agents.states import GateStatus
 
 
 def _read_json_output(path: Path | None, *, default: str) -> str:

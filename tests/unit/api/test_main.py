@@ -1,8 +1,8 @@
 import pytest
 from fastapi import FastAPI
 
-from pf_ft_ai.api.main import _ENVIRONMENT_VAR, _environment_from_env, app
-from pf_ft_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.api.main import _ENVIRONMENT_VAR, _environment_from_env, app
+from pff_fa_ai.common.exceptions import ConfigurationError
 
 
 def test_should_default_to_dev_when_the_environment_variable_is_unset(

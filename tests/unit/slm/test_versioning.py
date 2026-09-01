@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.slm.versioning import assert_pinned_model_version
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.slm.versioning import assert_pinned_model_version
 
 
 def test_should_reject_latest_in_production() -> None:

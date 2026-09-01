@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import GuardrailError
-from pf_ft_ai.guardrails.trust import (
+from pff_fa_ai.common.exceptions import GuardrailError
+from pff_fa_ai.guardrails.trust import (
     PromptTrustTier,
     assert_no_privilege_escalation,
     is_more_trusted,

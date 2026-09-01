@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import GuardrailError
-from pf_ft_ai.evaluation.judge import MockJudge, assert_judge_not_sole_evaluator, calibrate_judge
-from pf_ft_ai.evaluation.states import JudgeDimension, NonJudgeableDimension
+from pff_fa_ai.common.exceptions import GuardrailError
+from pff_fa_ai.evaluation.judge import MockJudge, assert_judge_not_sole_evaluator, calibrate_judge
+from pff_fa_ai.evaluation.states import JudgeDimension, NonJudgeableDimension
 
 
 @pytest.mark.parametrize("dimension", list(NonJudgeableDimension))

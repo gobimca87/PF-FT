@@ -1,8 +1,8 @@
 import pytest
 from fastapi import Request, status
 
-from pf_ft_ai.api.errors import _status_code_for, platform_error_handler
-from pf_ft_ai.common.exceptions import PlatformError, ValidationError
+from pff_fa_ai.api.errors import _status_code_for, platform_error_handler
+from pff_fa_ai.common.exceptions import PlatformError, ValidationError
 
 
 def test_should_map_a_known_subclass_to_its_status_code() -> None:

@@ -1,11 +1,11 @@
-from pf_ft_ai.performance.benchmark import (
+from pff_fa_ai.performance.benchmark import (
     run_erc_batching_benchmark,
     run_slm_heavy_benchmark,
     run_tool_heavy_benchmark,
 )
-from pf_ft_ai.performance.states import LoadTestProfile
-from pf_ft_ai.slm.models import SlmRequest, SlmResponse
-from pf_ft_ai.slm.providers import MockSLMProvider
+from pff_fa_ai.performance.states import LoadTestProfile
+from pff_fa_ai.slm.models import SlmRequest, SlmResponse
+from pff_fa_ai.slm.providers import MockSLMProvider
 
 
 class _FlakySlmProvider(MockSLMProvider):

@@ -2,22 +2,22 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.configuration.loader import load_service_bus_configuration
-from pf_ft_ai.configuration.models import ALLOWED_ENVIRONMENTS
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.configuration.loader import load_service_bus_configuration
+from pff_fa_ai.configuration.models import ALLOWED_ENVIRONMENTS
 
 
 class _StubResolver:
     def resolve(self, secret_ref: str) -> str:
         assert secret_ref == "AZURE_SERVICE_BUS_CONNECTION_STRING"
-        return "Endpoint=sb://pf-ft-example.servicebus.windows.net/;SharedAccessKeyName=x;SharedAccessKey=y"
+        return "Endpoint=sb://pff-fa-example.servicebus.windows.net/;SharedAccessKeyName=x;SharedAccessKey=y"
 
 
 def test_should_load_service_bus_configuration_from_the_real_config_repository() -> None:
     config = load_service_bus_configuration("dev", secret_resolver=_StubResolver())
 
-    assert config.topic.name == "pf-ft-enterprise-events-dev"
-    assert config.topic.subscription_name == "pf-ft-ai-runtime-dev"
+    assert config.topic.name == "pff-fa-enterprise-events-dev"
+    assert config.topic.subscription_name == "pff-fa-ai-runtime-dev"
     assert "HIL_TASK_COMPLETED" in config.topic.event_type_filters
     assert config.connection.connection_string.startswith("Endpoint=")
     assert config.consumer.max_concurrent_messages == 10
@@ -31,8 +31,8 @@ def test_should_load_service_bus_configuration_from_the_real_config_repository()
 def test_should_load_a_distinct_topic_name_per_environment(environment: str) -> None:
     config = load_service_bus_configuration(environment, secret_resolver=_StubResolver())  # type: ignore[arg-type]
 
-    assert config.topic.name == f"pf-ft-enterprise-events-{environment}"
-    assert config.topic.subscription_name == f"pf-ft-ai-runtime-{environment}"
+    assert config.topic.name == f"pff-fa-enterprise-events-{environment}"
+    assert config.topic.subscription_name == f"pff-fa-ai-runtime-{environment}"
     assert config.topic.description
     assert config.topic.subscription_description
 

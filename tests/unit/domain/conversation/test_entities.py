@@ -3,9 +3,9 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from pf_ft_ai.domain.conversation.entities import Conversation
-from pf_ft_ai.domain.conversation.states import ConversationStatus
-from pf_ft_ai.domain.conversation.value_objects import Message, MessageRole
+from pff_fa_ai.domain.conversation.entities import Conversation
+from pff_fa_ai.domain.conversation.states import ConversationStatus
+from pff_fa_ai.domain.conversation.value_objects import Message, MessageRole
 
 
 def test_should_create_a_new_conversation_at_version_one() -> None:

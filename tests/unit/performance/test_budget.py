@@ -1,4 +1,8 @@
-from pf_ft_ai.performance.budget import PerformanceBudget, WorkflowActuals, check_performance_budget
+from pff_fa_ai.performance.budget import (
+    PerformanceBudget,
+    WorkflowActuals,
+    check_performance_budget,
+)
 
 
 def _budget(**overrides: object) -> PerformanceBudget:

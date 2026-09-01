@@ -1,14 +1,14 @@
 import pytest
 
-from pf_ft_ai.application.conversation.service import ConversationService
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.common.exceptions import ValidationError, WorkflowError
-from pf_ft_ai.configuration.models import ConversationSecuritySettings, ConversationSettings
-from pf_ft_ai.domain.conversation.states import ConversationStatus
-from pf_ft_ai.infrastructure.persistence.in_memory_conversation_repository import (
+from pff_fa_ai.application.conversation.service import ConversationService
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.common.exceptions import ValidationError, WorkflowError
+from pff_fa_ai.configuration.models import ConversationSecuritySettings, ConversationSettings
+from pff_fa_ai.domain.conversation.states import ConversationStatus
+from pff_fa_ai.infrastructure.persistence.in_memory_conversation_repository import (
     InMemoryConversationRepository,
 )
-from pf_ft_ai.infrastructure.persistence.in_memory_message_repository import (
+from pff_fa_ai.infrastructure.persistence.in_memory_message_repository import (
     InMemoryMessageRepository,
 )
 

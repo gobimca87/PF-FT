@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ValidationError
-from pf_ft_ai.rag.chunking import chunk_text
-from pf_ft_ai.rag.models import Chunk
+from pff_fa_ai.common.exceptions import ValidationError
+from pff_fa_ai.rag.chunking import chunk_text
+from pff_fa_ai.rag.models import Chunk
 
 
 def test_should_return_a_single_chunk_for_short_text() -> None:

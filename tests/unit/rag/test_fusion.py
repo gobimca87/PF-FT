@@ -1,4 +1,4 @@
-from pf_ft_ai.rag.fusion import reciprocal_rank_fusion
+from pff_fa_ai.rag.fusion import reciprocal_rank_fusion
 
 
 def test_should_favor_items_ranked_highly_in_both_lists() -> None:

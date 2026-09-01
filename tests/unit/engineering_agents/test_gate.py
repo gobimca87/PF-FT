@@ -1,6 +1,6 @@
-from pf_ft_ai.engineering_agents.gate import QualityGateConfig, evaluate_quality_gate
-from pf_ft_ai.engineering_agents.models import EngineeringAgentResult, Finding
-from pf_ft_ai.engineering_agents.states import AgentResultStatus, FindingSeverity, GateStatus
+from pff_fa_ai.engineering_agents.gate import QualityGateConfig, evaluate_quality_gate
+from pff_fa_ai.engineering_agents.models import EngineeringAgentResult, Finding
+from pff_fa_ai.engineering_agents.states import AgentResultStatus, FindingSeverity, GateStatus
 
 
 def _result(agent_id: str, status: AgentResultStatus, **kwargs: object) -> EngineeringAgentResult:

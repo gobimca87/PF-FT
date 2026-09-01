@@ -1,12 +1,12 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.agents.affiliation.agent import AffiliationAgent
-from pf_ft_ai.agents.affiliation.resume_handler import AffiliationWorkflowResumeHandler
-from pf_ft_ai.common.correlation import new_id
-from pf_ft_ai.infrastructure.persistence import InMemoryWorkflowRepository
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.registry import EventRoute
-from pf_ft_ai.messaging.handlers.workflow_resume import WorkflowResumeService
+from pff_fa_ai.agents.affiliation.agent import AffiliationAgent
+from pff_fa_ai.agents.affiliation.resume_handler import AffiliationWorkflowResumeHandler
+from pff_fa_ai.common.correlation import new_id
+from pff_fa_ai.infrastructure.persistence import InMemoryWorkflowRepository
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.registry import EventRoute
+from pff_fa_ai.messaging.handlers.workflow_resume import WorkflowResumeService
 from tests.unit.agents.affiliation.support import (
     build_test_dependencies,
     enterprise_response_handler,

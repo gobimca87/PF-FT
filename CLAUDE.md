@@ -6,7 +6,7 @@
 
 **FA-PFF** is the FA's ("The FA" — England's Football Association) county/club administration platform ("PFF"). It manages club affiliation, team registration, insurance, discipline, officials/safeguarding, county cups, and payments, and integrates with **WGS** (Whole Game System — the FA's national football database).
 
-**PFF AI** (doc prefix `FA-PFF-AI-*`) is a conversational orchestration layer being built on top of PFF. It does not replace PFF's business logic, databases, or authority — it interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results. First end-to-end workflow: **Club Affiliation** (`MD files/0 Workflow/pff_affiliation_e2e_flow.md`).
+**PFF AI** (doc prefix `PFF-FA-AI-*`) is a conversational orchestration layer being built on top of PFF. It does not replace PFF's business logic, databases, or authority — it interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results. First end-to-end workflow: **Club Affiliation** (`MD files/0 Workflow/pff_affiliation_e2e_flow.md`).
 
 ## The Golden Rule (never violate — repeated in every spec doc)
 
@@ -171,7 +171,7 @@ reference before considering it aligned with the project.
 | Schema/validation | **Pydantic** (all API/tool/config/event boundary models), **TypedDict** (LangGraph internal state) |
 | Dependency mgmt | `pyproject.toml` + lock file, pinned versions |
 
-Vector store, memory/cache store, IaC tool (Terraform/Bicep), and manifest tool (Kustomize/Helm) are **still open — resolve via ADR, don't silently pick one**. See `DEVELOPMENT-GUIDE.md` §2 for candidates and the reconciliation notes (5-stage environment model, `AffiliationAgent`-only first).
+Memory/session/cache store is **resolved: Azure Managed Redis** (`ADR-D4-10`; supersedes `docs/adr/0004`). Five decisions remain **open — resolve via ADR, don't silently pick one**: embedding model (`ADR-D3-23`), vector store (`ADR-D3-24`), self-hosted SLM serving stack (`ADR-D5-10`), IaC tool (`ADR-D5-12`), and Kubernetes manifest tool (`ADR-D5-13`) — full evaluations and stated recommendations are in `docs/architecture/adr/_register/open-decisions.md`, awaiting the sign-off named there. See `DEVELOPMENT-GUIDE.md` §2 for the reconciliation notes (5-stage environment model, `AffiliationAgent`-only first).
 
 ## Coding Conventions
 
@@ -181,7 +181,7 @@ Vector store, memory/cache store, IaC tool (Terraform/Bicep), and manifest tool 
 - **Boundary models:** Pydantic everywhere data crosses a boundary (FastAPI req/res, tool req/res, config, event contracts, ERC schema, SLM req/res). **LangGraph internal state:** `TypedDict`.
 - **API versioning:** explicit in the path, e.g. `/api/v1/chat`.
 - **Layering (enforced, not just conventional):** API → Application → Orchestration → Domain → Infrastructure/Integrations. Domain code must never import FastAPI, Langfuse, Azure SDK, a provider SDK, or a DB driver directly.
-- **Canonical package:** `src/pf_ft_ai/`.
+- **Canonical package:** `src/pff_fa_ai/`.
 - **Constants example:** `MAX_ERC_BATCH_SIZE = 20`.
 - **Commits:** Conventional Commits — `feat(agent): add affiliation workflow routing`, `fix(erc): handle failed official batch`, `test(rag): add ACL retrieval tests`.
 

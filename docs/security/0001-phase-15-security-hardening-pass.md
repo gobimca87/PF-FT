@@ -1,7 +1,7 @@
 # Phase 15 — Security Hardening Pass
 
 Date: 2026-08-17
-Doc: 19 (`MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md`)
+Doc: 19 (`MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md`)
 
 ## Status
 
@@ -50,10 +50,10 @@ Doc 19's 9 zones, mapped to what exists today:
 Verified directly in source, not assumed:
 
 ```
-src/pf_ft_ai/common/claims.py:9        ClaimsContext        ConfigDict(frozen=True)
-src/pf_ft_ai/agents/context.py:10      AgentExecutionContext ConfigDict(frozen=True)
-src/pf_ft_ai/guardrails/models.py:26   GuardrailContext      ConfigDict(frozen=True, extra="forbid")
-src/pf_ft_ai/messaging/events/models.py EventEnvelope        ConfigDict(frozen=True, extra="forbid")
+src/pff_fa_ai/common/claims.py:9        ClaimsContext        ConfigDict(frozen=True)
+src/pff_fa_ai/agents/context.py:10      AgentExecutionContext ConfigDict(frozen=True)
+src/pff_fa_ai/guardrails/models.py:26   GuardrailContext      ConfigDict(frozen=True, extra="forbid")
+src/pff_fa_ai/messaging/events/models.py EventEnvelope        ConfigDict(frozen=True, extra="forbid")
 ```
 
 - `get_claims_context()` (`api/dependencies.py`) builds `ClaimsContext` **only** from

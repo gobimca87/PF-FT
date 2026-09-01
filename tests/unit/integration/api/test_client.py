@@ -1,13 +1,13 @@
 import httpx
 
-from pf_ft_ai.integration.api.catalog import (
+from pff_fa_ai.integration.api.catalog import (
     ApiAuthorization,
     ApiCatalogEntry,
     ApiEndpoint,
     ApiExecutionPolicy,
     ApiOperation,
 )
-from pf_ft_ai.integration.api.client import HttpxEnterpriseHttpClient
+from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
 
 ENTRY = ApiCatalogEntry(
     api_id="enterprise.club.get",

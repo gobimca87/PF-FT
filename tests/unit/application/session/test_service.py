@@ -2,12 +2,12 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from pf_ft_ai.application.session.service import SessionService
-from pf_ft_ai.common.exceptions import WorkflowError
-from pf_ft_ai.configuration.models import SessionSettings
-from pf_ft_ai.domain.session.entities import Session
-from pf_ft_ai.domain.session.states import SessionStatus
-from pf_ft_ai.infrastructure.persistence.in_memory_session_repository import (
+from pff_fa_ai.application.session.service import SessionService
+from pff_fa_ai.common.exceptions import WorkflowError
+from pff_fa_ai.configuration.models import SessionSettings
+from pff_fa_ai.domain.session.entities import Session
+from pff_fa_ai.domain.session.states import SessionStatus
+from pff_fa_ai.infrastructure.persistence.in_memory_session_repository import (
     InMemorySessionRepository,
 )
 

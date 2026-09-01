@@ -1,4 +1,4 @@
-from pf_ft_ai.guardrails.states import (
+from pff_fa_ai.guardrails.states import (
     GuardrailBoundary,
     GuardrailDecision,
     is_blocking,

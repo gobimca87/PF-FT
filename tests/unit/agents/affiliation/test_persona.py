@@ -1,4 +1,4 @@
-from pf_ft_ai.agents.affiliation.persona import build_response_text
+from pff_fa_ai.agents.affiliation.persona import build_response_text
 
 _CLUB = {"name": "Testville FC"}
 _APPLICATION = {"season": "2026-27", "total_fee": 150.0, "currency": "GBP"}

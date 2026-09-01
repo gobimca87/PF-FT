@@ -1,8 +1,8 @@
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.orchestration.supervisor.models import AgentCapability, IntentClassification
-from pf_ft_ai.orchestration.supervisor.registry import AgentRegistry
-from pf_ft_ai.orchestration.supervisor.service import Supervisor
-from pf_ft_ai.orchestration.supervisor.states import SupervisorStatus
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.orchestration.supervisor.models import AgentCapability, IntentClassification
+from pff_fa_ai.orchestration.supervisor.registry import AgentRegistry
+from pff_fa_ai.orchestration.supervisor.service import Supervisor
+from pff_fa_ai.orchestration.supervisor.states import SupervisorStatus
 
 CLAIMS = ClaimsContext(subject="user-1", organization="club-1")
 

@@ -2,8 +2,8 @@
 (batching → collection → aggregation working together), rather than each function in
 isolation the way `tests/unit/context/collection/` already does."""
 
-from pf_ft_ai.context.collection.aggregator import aggregate_records
-from pf_ft_ai.context.collection.batching import split_into_batches
+from pff_fa_ai.context.collection.aggregator import aggregate_records
+from pff_fa_ai.context.collection.batching import split_into_batches
 from tests.fixtures.factories import make_enterprise_records
 
 _BATCH_SIZE = 20

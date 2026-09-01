@@ -1,8 +1,8 @@
 import httpx
 import pytest
 
-from pf_ft_ai.common.exceptions import IntegrationError
-from pf_ft_ai.embedding_vector.providers import HuggingFaceEmbeddingProvider, MockEmbeddingProvider
+from pff_fa_ai.common.exceptions import IntegrationError
+from pff_fa_ai.embedding_vector.providers import HuggingFaceEmbeddingProvider, MockEmbeddingProvider
 
 
 async def test_mock_provider_should_be_deterministic() -> None:

@@ -1,7 +1,7 @@
 schema:
   id: platform-config
   version: 1.0.0
-  enforced_by: src/pf_ft_ai/configuration/models.py (Pydantic — authoritative at runtime)
+  enforced_by: src/pff_fa_ai/configuration/models.py (Pydantic — authoritative at runtime)
 
 fields:
   configuration.configuration_id: { type: string, required: true }

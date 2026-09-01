@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.portal_links.catalog import PortalRegistry, load_portal_catalog
-from pf_ft_ai.portal_links.models import Portal, PortalRoute
-from pf_ft_ai.portal_links.states import PortalStatus
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.portal_links.catalog import PortalRegistry, load_portal_catalog
+from pff_fa_ai.portal_links.models import Portal, PortalRoute
+from pff_fa_ai.portal_links.states import PortalStatus
 
 
 def _portal(portal_id: str = "club-portal") -> Portal:

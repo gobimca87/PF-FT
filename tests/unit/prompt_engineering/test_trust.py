@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.guardrails.trust import PromptTrustTier
-from pf_ft_ai.prompt_engineering.states import PromptTrustLevel
-from pf_ft_ai.prompt_engineering.trust import classify_trust_level
+from pff_fa_ai.guardrails.trust import PromptTrustTier
+from pff_fa_ai.prompt_engineering.states import PromptTrustLevel
+from pff_fa_ai.prompt_engineering.trust import classify_trust_level
 
 
 @pytest.mark.parametrize(

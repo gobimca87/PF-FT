@@ -1,12 +1,12 @@
 import pytest
 from fakeredis import FakeAsyncRedis
 
-from pf_ft_ai.common.exceptions import GuardrailError
-from pf_ft_ai.configuration.models import MemorySettings
-from pf_ft_ai.memory.models import MemoryQuery, MemoryScope, MemorySource, MemoryWriteRequest
-from pf_ft_ai.memory.service import MemoryService
-from pf_ft_ai.memory.states import MemoryCategory, MemoryConfidence, MemorySourceType
-from pf_ft_ai.memory.store import RedisMemoryStore
+from pff_fa_ai.common.exceptions import GuardrailError
+from pff_fa_ai.configuration.models import MemorySettings
+from pff_fa_ai.memory.models import MemoryQuery, MemoryScope, MemorySource, MemoryWriteRequest
+from pff_fa_ai.memory.service import MemoryService
+from pff_fa_ai.memory.states import MemoryCategory, MemoryConfidence, MemorySourceType
+from pff_fa_ai.memory.store import RedisMemoryStore
 
 
 @pytest.fixture

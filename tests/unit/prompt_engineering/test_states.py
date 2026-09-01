@@ -1,4 +1,4 @@
-from pf_ft_ai.prompt_engineering.states import PromptTrustLevel, trust_rank
+from pff_fa_ai.prompt_engineering.states import PromptTrustLevel, trust_rank
 
 
 def test_trusted_should_outrank_controlled() -> None:

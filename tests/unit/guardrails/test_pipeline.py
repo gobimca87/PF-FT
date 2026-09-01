@@ -1,9 +1,9 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.guardrails.models import GuardrailContext, GuardrailResult
-from pf_ft_ai.guardrails.pipeline import GuardrailPipeline
-from pf_ft_ai.guardrails.states import GuardrailBoundary, GuardrailDecision, GuardrailSeverity
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.guardrails.models import GuardrailContext, GuardrailResult
+from pff_fa_ai.guardrails.pipeline import GuardrailPipeline
+from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision, GuardrailSeverity
 
 
 class _StaticPolicy:

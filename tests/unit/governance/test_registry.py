@@ -1,9 +1,9 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError, GuardrailError
-from pf_ft_ai.governance.models import GovernedArtifact
-from pf_ft_ai.governance.registry import GovernedArtifactRegistry
-from pf_ft_ai.governance.states import AiLifecycleState, GovernanceRiskLevel, GovernedArtifactType
+from pff_fa_ai.common.exceptions import ConfigurationError, GuardrailError
+from pff_fa_ai.governance.models import GovernedArtifact
+from pff_fa_ai.governance.registry import GovernedArtifactRegistry
+from pff_fa_ai.governance.states import AiLifecycleState, GovernanceRiskLevel, GovernedArtifactType
 
 
 def _artifact(

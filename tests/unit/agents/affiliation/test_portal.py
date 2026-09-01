@@ -1,7 +1,7 @@
-from pf_ft_ai.agents.affiliation.portal import resolve_affiliation_portal_links
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.portal_links.catalog import load_portal_catalog
-from pf_ft_ai.portal_links.resolver import PortalLinkResolver
+from pff_fa_ai.agents.affiliation.portal import resolve_affiliation_portal_links
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.portal_links.catalog import load_portal_catalog
+from pff_fa_ai.portal_links.resolver import PortalLinkResolver
 from tests.unit.agents.affiliation.support import (
     build_test_dependencies,
     enterprise_response_handler,

@@ -4,7 +4,7 @@ plain test functions across every layer can call them directly."""
 
 from __future__ import annotations
 
-from pf_ft_ai.common.claims import ClaimsContext
+from pff_fa_ai.common.claims import ClaimsContext
 
 
 def make_claims(

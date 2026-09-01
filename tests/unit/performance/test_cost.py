@@ -1,15 +1,15 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import GuardrailError
-from pf_ft_ai.performance.cost import (
+from pff_fa_ai.common.exceptions import GuardrailError
+from pff_fa_ai.performance.cost import (
     CostOptimizationRecord,
     TokenPricing,
     WorkflowCostSummary,
     assert_priority_order_respected,
     estimate_token_cost,
 )
-from pf_ft_ai.performance.states import CostOptimizationCategory
-from pf_ft_ai.slm.models import SlmUsage
+from pff_fa_ai.performance.states import CostOptimizationCategory
+from pff_fa_ai.slm.models import SlmUsage
 
 
 def test_estimate_token_cost_should_apply_input_and_output_rates() -> None:

@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.models import EventEnvelope
 
 
 def _envelope(**overrides: object) -> EventEnvelope:

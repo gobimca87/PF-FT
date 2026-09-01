@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.context.erc.provenance import Provenance
-from pf_ft_ai.context.erc.states import ErcAuthority
+from pff_fa_ai.context.erc.provenance import Provenance
+from pff_fa_ai.context.erc.states import ErcAuthority
 
 
 def test_should_build_provenance_with_authoritative_source() -> None:

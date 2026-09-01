@@ -10,14 +10,14 @@ from typing import Any
 import httpx
 import pytest
 
-from pf_ft_ai.integration.api.catalog import (
+from pff_fa_ai.integration.api.catalog import (
     ApiAuthorization,
     ApiCatalogEntry,
     ApiEndpoint,
     ApiExecutionPolicy,
     ApiOperation,
 )
-from pf_ft_ai.integration.api.client import HttpxEnterpriseHttpClient
+from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
 from tests.mocks.enterprise_api import empty_transport, status_transport, timeout_transport
 from tests.stubs.payloads import MALFORMED_JSON_BODY, large_enterprise_list_payload
 

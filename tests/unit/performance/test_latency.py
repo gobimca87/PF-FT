@@ -2,8 +2,8 @@ import time
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ValidationError
-from pf_ft_ai.performance.latency import LatencyBreakdown, LatencyRecorder
+from pff_fa_ai.common.exceptions import ValidationError
+from pff_fa_ai.performance.latency import LatencyBreakdown, LatencyRecorder
 
 
 def test_summary_should_return_zeros_for_no_samples() -> None:

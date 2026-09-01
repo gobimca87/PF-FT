@@ -1,6 +1,6 @@
-from pf_ft_ai.portal_links.link_budget import apply_link_budget
-from pf_ft_ai.portal_links.models import ResolvedLink
-from pf_ft_ai.portal_links.states import LinkType, RouteSecurityClassification
+from pff_fa_ai.portal_links.link_budget import apply_link_budget
+from pff_fa_ai.portal_links.models import ResolvedLink
+from pff_fa_ai.portal_links.states import LinkType, RouteSecurityClassification
 
 
 def _link(link_id: str, *, portal_id: str = "club-portal", url: str | None = None) -> ResolvedLink:

@@ -1,4 +1,4 @@
-from pf_ft_ai.context.projection.budget import compute_available_context_tokens
+from pff_fa_ai.context.projection.budget import compute_available_context_tokens
 
 
 def test_should_compute_available_tokens_per_doc8_formula() -> None:

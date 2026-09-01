@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.prompt_engineering.models import PromptArtifact
-from pf_ft_ai.prompt_engineering.registry import PromptRegistry, load_prompt_registry
-from pf_ft_ai.prompt_engineering.states import (
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.prompt_engineering.models import PromptArtifact
+from pff_fa_ai.prompt_engineering.registry import PromptRegistry, load_prompt_registry
+from pff_fa_ai.prompt_engineering.states import (
     PromptCategory,
     PromptRiskLevel,
     PromptStatus,

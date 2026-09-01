@@ -1,8 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
-from pf_ft_ai.evaluation.models import EvaluationResult, ExpectedOutcome, GoldenCase
-from pf_ft_ai.evaluation.states import DatasetCategory, EvaluationStatus
+from pff_fa_ai.evaluation.models import EvaluationResult, ExpectedOutcome, GoldenCase
+from pff_fa_ai.evaluation.states import DatasetCategory, EvaluationStatus
 
 
 def test_golden_case_should_default_version_and_optional_collections() -> None:

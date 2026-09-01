@@ -1,6 +1,6 @@
-from pf_ft_ai.guardrails.model_policy import ModelAllowlistPolicy
-from pf_ft_ai.guardrails.models import GuardrailContext
-from pf_ft_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
+from pff_fa_ai.guardrails.model_policy import ModelAllowlistPolicy
+from pff_fa_ai.guardrails.models import GuardrailContext
+from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 
 
 async def test_should_allow_an_approved_model() -> None:

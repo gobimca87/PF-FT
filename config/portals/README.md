@@ -1,6 +1,6 @@
 # Portal Catalog
 
-`src/pf_ft_ai/portal_links/catalog.py`'s `load_portal_catalog()` loads every `*.yaml` file
+`src/pff_fa_ai/portal_links/catalog.py`'s `load_portal_catalog()` loads every `*.yaml` file
 in this directory into a `PortalRegistry`.
 
 `affiliation.yaml` (Phase 23) registers the Club Portal with the two routes

@@ -7,10 +7,10 @@ picked up by CI without anyone having to wire a new test."""
 
 from pathlib import Path
 
-from pf_ft_ai.evaluation.dataset import load_golden_dataset
-from pf_ft_ai.evaluation.models import ExpectedOutcome, GoldenCase
-from pf_ft_ai.evaluation.runner import EvaluationRunner
-from pf_ft_ai.evaluation.states import DatasetCategory, EvaluationStatus
+from pff_fa_ai.evaluation.dataset import load_golden_dataset
+from pff_fa_ai.evaluation.models import ExpectedOutcome, GoldenCase
+from pff_fa_ai.evaluation.runner import EvaluationRunner
+from pff_fa_ai.evaluation.states import DatasetCategory, EvaluationStatus
 
 
 def test_the_real_golden_dataset_should_regress_clean() -> None:

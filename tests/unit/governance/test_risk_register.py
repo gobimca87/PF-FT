@@ -2,10 +2,10 @@ from datetime import date
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.governance.models import RiskRegisterEntry
-from pf_ft_ai.governance.risk_register import RiskRegister
-from pf_ft_ai.governance.states import GovernanceRiskLevel, Likelihood, RiskStatus
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.governance.models import RiskRegisterEntry
+from pff_fa_ai.governance.risk_register import RiskRegister
+from pff_fa_ai.governance.states import GovernanceRiskLevel, Likelihood, RiskStatus
 
 
 def _entry(

@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from pf_ft_ai.engineering_agents.agents.configuration_agent import ConfigurationValidationAgent
-from pf_ft_ai.engineering_agents.states import AgentResultStatus, FindingSeverity
+from pff_fa_ai.engineering_agents.agents.configuration_agent import ConfigurationValidationAgent
+from pff_fa_ai.engineering_agents.states import AgentResultStatus, FindingSeverity
 
 
 async def test_should_pass_for_a_directory_of_valid_config_with_no_secrets(tmp_path: Path) -> None:

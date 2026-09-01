@@ -1,5 +1,5 @@
-from pf_ft_ai.rag.models import Chunk, RetrievedChunk
-from pf_ft_ai.rag.reranking import ScoreTruncationReranker
+from pff_fa_ai.rag.models import Chunk, RetrievedChunk
+from pff_fa_ai.rag.reranking import ScoreTruncationReranker
 
 
 def _candidate(chunk_id: str, score: float) -> RetrievedChunk:

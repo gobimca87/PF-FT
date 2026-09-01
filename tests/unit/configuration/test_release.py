@@ -2,12 +2,12 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.configuration.release import load_release_manifest
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.configuration.release import load_release_manifest
 
 VALID_RELEASE_YAML = """
 release:
-  release_id: pf-ft-ai-0.1.0
+  release_id: pff-fa-ai-0.1.0
   version: 0.1.0
   environment: dev
   application_version: 0.1.0
@@ -22,7 +22,7 @@ def test_should_load_release_manifest(tmp_path: Path) -> None:
 
     manifest = load_release_manifest("0.1.0", config_root=root)
 
-    assert manifest.release_id == "pf-ft-ai-0.1.0"
+    assert manifest.release_id == "pff-fa-ai-0.1.0"
     assert manifest.environment == "dev"
     assert manifest.components == {}
 
@@ -39,7 +39,7 @@ def test_should_raise_when_release_manifest_invalid(tmp_path: Path) -> None:
     root = tmp_path / "config"
     (root / "releases").mkdir(parents=True)
     (root / "releases" / "0.2.0.yaml").write_text(
-        "release:\n  release_id: pf-ft-ai-0.2.0\n", encoding="utf-8"
+        "release:\n  release_id: pff-fa-ai-0.2.0\n", encoding="utf-8"
     )
 
     with pytest.raises(ConfigurationError, match="Invalid release manifest"):

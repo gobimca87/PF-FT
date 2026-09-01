@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import GuardrailError
-from pf_ft_ai.governance.lifecycle import allowed_next_states, assert_valid_lifecycle_transition
-from pf_ft_ai.governance.states import AiLifecycleState
+from pff_fa_ai.common.exceptions import GuardrailError
+from pff_fa_ai.governance.lifecycle import allowed_next_states, assert_valid_lifecycle_transition
+from pff_fa_ai.governance.states import AiLifecycleState
 
 
 def test_every_state_should_appear_in_the_transition_table() -> None:
@@ -16,7 +16,10 @@ def test_retire_should_be_a_terminal_state() -> None:
 
 def test_review_should_fork_to_change_or_retire() -> None:
     assert allowed_next_states(AiLifecycleState.REVIEW) == frozenset(
-        {AiLifecycleState.CHANGE, AiLifecycleState.RETIRE}
+        {
+            AiLifecycleState.CHANGE,
+            AiLifecycleState.RETIRE,
+        }
     )
 
 

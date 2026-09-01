@@ -1,7 +1,7 @@
 from datetime import UTC, datetime, timedelta
 
-from pf_ft_ai.domain.session.entities import Session
-from pf_ft_ai.domain.session.states import SessionStatus
+from pff_fa_ai.domain.session.entities import Session
+from pff_fa_ai.domain.session.states import SessionStatus
 
 
 def test_should_create_a_new_session_at_version_one() -> None:

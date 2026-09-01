@@ -2,26 +2,26 @@ from enum import StrEnum
 
 import pytest
 
-from pf_ft_ai.agents.states import AgentRunStatus
-from pf_ft_ai.cache.states import CacheStatus
-from pf_ft_ai.common.error_category import ErrorCategory
-from pf_ft_ai.common.precedence import DataSourcePrecedence
-from pf_ft_ai.context.erc.states import ErcLifecycleStatus, ErcSectionStatus
-from pf_ft_ai.domain.conversation.states import ConversationStatus
-from pf_ft_ai.domain.conversation.value_objects import MessageRole
-from pf_ft_ai.domain.session.states import SessionStatus
-from pf_ft_ai.domain.state_transition import StateActor
-from pf_ft_ai.domain.workflow.states import HilStatus, WaitingType, WorkflowStatus
-from pf_ft_ai.integration.execution.states import IdempotencyStatus
-from pf_ft_ai.integration.tools.states import ToolCallStatus
-from pf_ft_ai.messaging.events.states import EventProcessingStatus
-from pf_ft_ai.orchestration.langgraph.states import GraphNodeStatus
-from pf_ft_ai.orchestration.supervisor.states import SupervisorStatus
-from pf_ft_ai.rag.states import RagStatus
-from pf_ft_ai.slm.states import SlmStatus
+from pff_fa_ai.agents.states import AgentRunStatus
+from pff_fa_ai.cache.states import CacheStatus
+from pff_fa_ai.common.error_category import ErrorCategory
+from pff_fa_ai.common.precedence import DataSourcePrecedence
+from pff_fa_ai.context.erc.states import ErcLifecycleStatus, ErcSectionStatus
+from pff_fa_ai.domain.conversation.states import ConversationStatus
+from pff_fa_ai.domain.conversation.value_objects import MessageRole
+from pff_fa_ai.domain.session.states import SessionStatus
+from pff_fa_ai.domain.state_transition import StateActor
+from pff_fa_ai.domain.workflow.states import HilStatus, WaitingType, WorkflowStatus
+from pff_fa_ai.integration.execution.states import IdempotencyStatus
+from pff_fa_ai.integration.tools.states import ToolCallStatus
+from pff_fa_ai.messaging.events.states import EventProcessingStatus
+from pff_fa_ai.orchestration.langgraph.states import GraphNodeStatus
+from pff_fa_ai.orchestration.supervisor.states import SupervisorStatus
+from pff_fa_ai.rag.states import RagStatus
+from pff_fa_ai.slm.states import SlmStatus
 
 # (enum class, expected members in doc-5 declaration order) — each tuple is traceable
-# back to a specific numbered section of MD files/1 Foundation/5. PF-FT-AI-STATE-MODEL.md.
+# back to a specific numbered section of MD files/1 Foundation/5. PFF-FA-AI-STATE-MODEL.md.
 ENUM_CASES: list[tuple[type[StrEnum], list[str]]] = [
     (
         ConversationStatus,  # doc 5 §8

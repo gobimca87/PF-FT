@@ -1,6 +1,6 @@
 import pytest
 
-from pf_ft_ai.integration.tools.policy import ToolRiskClass, requires_hil
+from pff_fa_ai.integration.tools.policy import ToolRiskClass, requires_hil
 
 
 @pytest.mark.parametrize(

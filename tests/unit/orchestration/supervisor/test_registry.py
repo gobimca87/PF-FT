@@ -1,8 +1,8 @@
-from pf_ft_ai.agents.context import AgentExecutionContext
-from pf_ft_ai.agents.result import AgentExecutionResult
-from pf_ft_ai.agents.states import AgentRunStatus
-from pf_ft_ai.orchestration.supervisor.models import AgentCapability
-from pf_ft_ai.orchestration.supervisor.registry import AgentRegistry
+from pff_fa_ai.agents.context import AgentExecutionContext
+from pff_fa_ai.agents.result import AgentExecutionResult
+from pff_fa_ai.agents.states import AgentRunStatus
+from pff_fa_ai.orchestration.supervisor.models import AgentCapability
+from pff_fa_ai.orchestration.supervisor.registry import AgentRegistry
 
 
 class _StubAgent:

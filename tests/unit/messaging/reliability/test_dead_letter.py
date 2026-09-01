@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.messaging.reliability.dead_letter import DeadLetterRecord, InMemoryDeadLetterStore
+from pff_fa_ai.messaging.reliability.dead_letter import DeadLetterRecord, InMemoryDeadLetterStore
 
 
 def _record(event_id: str = "evt-1") -> DeadLetterRecord:
@@ -10,7 +10,7 @@ def _record(event_id: str = "evt-1") -> DeadLetterRecord:
         event_type="OFFICIAL_UPDATED",
         event_version="1.0.0",
         source="affiliation-service",
-        subscription="pf-ft-ai-runtime-dev",
+        subscription="pff-fa-ai-runtime-dev",
         first_received_at=now,
         last_attempt_at=now,
         attempt_count=5,

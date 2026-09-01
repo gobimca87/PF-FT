@@ -1,11 +1,11 @@
 import pytest
 from fakeredis import FakeAsyncRedis
 
-from pf_ft_ai.cache.models import CacheWriteRequest
-from pf_ft_ai.cache.service import CacheService
-from pf_ft_ai.cache.states import CacheCategory
-from pf_ft_ai.cache.store import RedisCacheStore
-from pf_ft_ai.configuration.models import CacheSettings
+from pff_fa_ai.cache.models import CacheWriteRequest
+from pff_fa_ai.cache.service import CacheService
+from pff_fa_ai.cache.states import CacheCategory
+from pff_fa_ai.cache.store import RedisCacheStore
+from pff_fa_ai.configuration.models import CacheSettings
 
 
 @pytest.fixture

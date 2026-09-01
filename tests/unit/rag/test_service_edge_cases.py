@@ -1,22 +1,22 @@
 from collections.abc import Sequence
 
-from pf_ft_ai.configuration.models import RerankingSettings, RetrievalSettings
-from pf_ft_ai.embedding_vector.models import (
+from pff_fa_ai.configuration.models import RerankingSettings, RetrievalSettings
+from pff_fa_ai.embedding_vector.models import (
     EmbeddingModelDescriptor,
     VectorMetadata,
     VectorRecord,
     VectorSearchFilter,
     VectorSearchResult,
 )
-from pf_ft_ai.embedding_vector.providers import MockEmbeddingProvider
-from pf_ft_ai.embedding_vector.registry import EmbeddingModelRegistry
-from pf_ft_ai.embedding_vector.states import EmbeddingModelStatus
-from pf_ft_ai.rag.chunk_store import InMemoryChunkStore
-from pf_ft_ai.rag.keyword_search import TermOverlapKeywordSearch
-from pf_ft_ai.rag.models import Chunk, RagQuery
-from pf_ft_ai.rag.reranking import ScoreTruncationReranker
-from pf_ft_ai.rag.service import RagService
-from pf_ft_ai.rag.states import RagStatus
+from pff_fa_ai.embedding_vector.providers import MockEmbeddingProvider
+from pff_fa_ai.embedding_vector.registry import EmbeddingModelRegistry
+from pff_fa_ai.embedding_vector.states import EmbeddingModelStatus
+from pff_fa_ai.rag.chunk_store import InMemoryChunkStore
+from pff_fa_ai.rag.keyword_search import TermOverlapKeywordSearch
+from pff_fa_ai.rag.models import Chunk, RagQuery
+from pff_fa_ai.rag.reranking import ScoreTruncationReranker
+from pff_fa_ai.rag.service import RagService
+from pff_fa_ai.rag.states import RagStatus
 
 _MODEL_ID = "mock-embedding-v1"
 

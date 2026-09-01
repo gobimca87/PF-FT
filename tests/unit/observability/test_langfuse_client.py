@@ -1,6 +1,6 @@
-from pf_ft_ai.common.correlation import CorrelationContext
-from pf_ft_ai.configuration.models import LangfuseSettings
-from pf_ft_ai.observability.langfuse_client import (
+from pff_fa_ai.common.correlation import CorrelationContext
+from pff_fa_ai.configuration.models import LangfuseSettings
+from pff_fa_ai.observability.langfuse_client import (
     LangfuseObservabilityClient,
     NullObservabilityClient,
     build_observability_client,

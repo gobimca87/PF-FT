@@ -1,6 +1,6 @@
 import pytest
 
-from pf_ft_ai.evaluation.retrieval_metrics import (
+from pff_fa_ai.evaluation.retrieval_metrics import (
     hit_rate_at_k,
     mean_reciprocal_rank,
     ndcg_at_k,

@@ -1,6 +1,6 @@
-from pf_ft_ai.guardrails.models import GuardrailContext
-from pf_ft_ai.guardrails.pii import PiiDetectionPolicy, detect_pii
-from pf_ft_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
+from pff_fa_ai.guardrails.models import GuardrailContext
+from pff_fa_ai.guardrails.pii import PiiDetectionPolicy, detect_pii
+from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 
 
 def test_should_detect_an_email_address() -> None:

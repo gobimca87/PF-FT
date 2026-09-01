@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.orchestration.langgraph.nodes import NodeKind, NodeRegistry
-from pf_ft_ai.orchestration.langgraph.state import GraphState
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.orchestration.langgraph.nodes import NodeKind, NodeRegistry
+from pff_fa_ai.orchestration.langgraph.state import GraphState
 
 
 async def _handler(state: GraphState) -> GraphState:

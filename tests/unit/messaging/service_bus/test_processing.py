@@ -1,23 +1,23 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
-from pf_ft_ai.domain.workflow.states import WaitingType, WorkflowStatus
-from pf_ft_ai.infrastructure.persistence.in_memory_workflow_repository import (
+from pff_fa_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
+from pff_fa_ai.domain.workflow.states import WaitingType, WorkflowStatus
+from pff_fa_ai.infrastructure.persistence.in_memory_workflow_repository import (
     InMemoryWorkflowRepository,
 )
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.registry import EventRoute, EventRouteRegistry
-from pf_ft_ai.messaging.events.states import EventProcessingStatus
-from pf_ft_ai.messaging.handlers.base import HandlerOutcome
-from pf_ft_ai.messaging.handlers.external import ExternalEventHandler
-from pf_ft_ai.messaging.handlers.workflow_resume import (
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.registry import EventRoute, EventRouteRegistry
+from pff_fa_ai.messaging.events.states import EventProcessingStatus
+from pff_fa_ai.messaging.handlers.base import HandlerOutcome
+from pff_fa_ai.messaging.handlers.external import ExternalEventHandler
+from pff_fa_ai.messaging.handlers.workflow_resume import (
     WorkflowResumeEventHandler,
     WorkflowResumeService,
 )
-from pf_ft_ai.messaging.reliability.dead_letter import InMemoryDeadLetterStore
-from pf_ft_ai.messaging.reliability.idempotency import InMemoryEventIdempotencyStore
-from pf_ft_ai.messaging.routing.router import EventRouter
-from pf_ft_ai.messaging.service_bus.processing import EventProcessingService
+from pff_fa_ai.messaging.reliability.dead_letter import InMemoryDeadLetterStore
+from pff_fa_ai.messaging.reliability.idempotency import InMemoryEventIdempotencyStore
+from pff_fa_ai.messaging.routing.router import EventRouter
+from pff_fa_ai.messaging.service_bus.processing import EventProcessingService
 
 _KNOWN_SOURCES = frozenset({"hil-service"})
 
@@ -79,7 +79,7 @@ def _service(
     *,
     registry: EventRouteRegistry,
     handlers: dict[str, object],
-    subscription: str = "pf-ft-ai-runtime-dev",
+    subscription: str = "pff-fa-ai-runtime-dev",
 ) -> tuple[EventProcessingService, InMemoryDeadLetterStore]:
     dead_letter = InMemoryDeadLetterStore()
     service = EventProcessingService(

@@ -1,5 +1,5 @@
-from pf_ft_ai.embedding_vector.models import VectorMetadata, VectorRecord, VectorSearchFilter
-from pf_ft_ai.embedding_vector.vector_store import InMemoryVectorStore, cosine_similarity
+from pff_fa_ai.embedding_vector.models import VectorMetadata, VectorRecord, VectorSearchFilter
+from pff_fa_ai.embedding_vector.vector_store import InMemoryVectorStore, cosine_similarity
 
 
 def _record(

@@ -5,7 +5,7 @@
 ## Status note
 
 The vector store is still an open ADR decision (`docs/adr/0003-deferred-decisions-log.md`)
-— `src/pf_ft_ai/embedding_vector/vector_store.py` is an interface only, with no
+— `src/pff_fa_ai/embedding_vector/vector_store.py` is an interface only, with no
 production backend selected among the candidates (Azure AI Search, Pinecone, Qdrant,
 Weaviate, Milvus, pgvector, OpenSearch, Elasticsearch, Redis Vector Search, Chroma).
 This runbook documents the *interface-level* diagnostic steps that apply regardless of

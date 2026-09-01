@@ -4,7 +4,7 @@
 
 ## Status note
 
-MCP has **no implementation yet** — `src/pf_ft_ai/integration/mcp/` is an empty
+MCP has **no implementation yet** — `src/pff_fa_ai/integration/mcp/` is an empty
 package. This is a genuine gap, not an oversight: no MCP server has been approved or
 integrated (see `docs/adr/0003-deferred-decisions-log.md` for the pattern this
 follows). There is nothing to troubleshoot in production because nothing runs yet.

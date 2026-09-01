@@ -1,5 +1,5 @@
 configuration:
-  configuration_id: pf-ft-ai-platform
+  configuration_id: pff-fa-ai-platform
   version: 0.1.0
   owner: AI Platform
   effective_date: 2026-08-16

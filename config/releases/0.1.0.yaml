@@ -1,5 +1,5 @@
 release:
-  release_id: pf-ft-ai-0.1.0
+  release_id: pff-fa-ai-0.1.0
   version: 0.1.0
   environment: dev
   application_version: 0.1.0

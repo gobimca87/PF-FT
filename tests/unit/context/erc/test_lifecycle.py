@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import WorkflowError
-from pf_ft_ai.context.erc.lifecycle import assert_valid_transition, is_valid_transition
-from pf_ft_ai.context.erc.states import ErcLifecycleStatus
+from pff_fa_ai.common.exceptions import WorkflowError
+from pff_fa_ai.context.erc.lifecycle import assert_valid_transition, is_valid_transition
+from pff_fa_ai.context.erc.states import ErcLifecycleStatus
 
 
 def test_should_allow_the_documented_happy_path_transitions() -> None:

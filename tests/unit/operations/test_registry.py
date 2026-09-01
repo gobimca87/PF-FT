@@ -1,6 +1,6 @@
-from pf_ft_ai.engineering_agents.states import AgentResultStatus
-from pf_ft_ai.operations.registry import build_default_checklist
-from pf_ft_ai.operations.states import CheckFrequency
+from pff_fa_ai.engineering_agents.states import AgentResultStatus
+from pff_fa_ai.operations.registry import build_default_checklist
+from pff_fa_ai.operations.states import CheckFrequency
 
 
 def test_default_checklist_should_assign_platform_health_and_configuration_to_daily() -> None:

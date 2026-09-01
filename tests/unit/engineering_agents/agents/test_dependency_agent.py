@@ -1,7 +1,7 @@
 import json
 
-from pf_ft_ai.engineering_agents.agents.dependency_agent import DependencyVulnerabilityAgent
-from pf_ft_ai.engineering_agents.states import AgentResultStatus, FindingSeverity
+from pff_fa_ai.engineering_agents.agents.dependency_agent import DependencyVulnerabilityAgent
+from pff_fa_ai.engineering_agents.states import AgentResultStatus, FindingSeverity
 
 
 async def test_should_pass_when_no_dependencies_have_vulnerabilities() -> None:

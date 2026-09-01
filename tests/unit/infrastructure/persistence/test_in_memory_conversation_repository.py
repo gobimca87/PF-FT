@@ -2,10 +2,10 @@ from datetime import UTC, datetime
 
 import pytest
 
-from pf_ft_ai.common.exceptions import WorkflowError
-from pf_ft_ai.domain.conversation.entities import Conversation
-from pf_ft_ai.domain.conversation.states import ConversationStatus
-from pf_ft_ai.infrastructure.persistence.in_memory_conversation_repository import (
+from pff_fa_ai.common.exceptions import WorkflowError
+from pff_fa_ai.domain.conversation.entities import Conversation
+from pff_fa_ai.domain.conversation.states import ConversationStatus
+from pff_fa_ai.infrastructure.persistence.in_memory_conversation_repository import (
     InMemoryConversationRepository,
 )
 

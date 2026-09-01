@@ -1,4 +1,4 @@
-from pf_ft_ai.cache.states import CacheCategory
+from pff_fa_ai.cache.states import CacheCategory
 
 
 def test_should_define_exactly_the_ten_documented_cache_categories() -> None:

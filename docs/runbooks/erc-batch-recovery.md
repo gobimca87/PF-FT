@@ -10,7 +10,7 @@ context overflow, API failure mid-batch.
 
 ## Diagnostic steps
 
-1. Identify the batch shape — `split_into_batches()` (`src/pf_ft_ai/context/collection/batching.py`)
+1. Identify the batch shape — `split_into_batches()` (`src/pff_fa_ai/context/collection/batching.py`)
    uses `config/base/batching.yaml`'s `batching.batch_size` (agreed default: 20).
    `tests/erc/test_batch_scale_points.py` documents the exact scale points this has
    been verified at (1, 20, 21, 40, 100, 100+).

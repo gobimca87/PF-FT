@@ -10,7 +10,7 @@ description: >
 risk: MEDIUM
 compatibility:
   model:
-    - pf-ft-slm-primary: ">=1.0.0"
+    - pff-fa-slm-primary: ">=1.0.0"
 variables:
   - user_name
   - workflow_name

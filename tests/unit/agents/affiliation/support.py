@@ -8,28 +8,28 @@ from typing import Any
 
 import httpx
 
-from pf_ft_ai.agents.affiliation.dependencies import AffiliationDependencies
-from pf_ft_ai.agents.affiliation.resume_context import AffiliationResumeContextStore
-from pf_ft_ai.agents.context import AgentExecutionContext
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.common.correlation import CorrelationContext, new_id
-from pf_ft_ai.configuration.loader import (
+from pff_fa_ai.agents.affiliation.dependencies import AffiliationDependencies
+from pff_fa_ai.agents.affiliation.resume_context import AffiliationResumeContextStore
+from pff_fa_ai.agents.context import AgentExecutionContext
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.common.correlation import CorrelationContext, new_id
+from pff_fa_ai.configuration.loader import (
     CONFIG_ROOT,
     load_agents_configuration,
     load_integration_configuration,
     load_portal_link_configuration,
 )
-from pf_ft_ai.configuration.models import Environment
-from pf_ft_ai.domain.workflow.repository import WorkflowRepository
-from pf_ft_ai.guardrails.pipeline import GuardrailPipeline
-from pf_ft_ai.infrastructure.persistence import InMemoryWorkflowRepository
-from pf_ft_ai.integration.api.catalog import load_api_catalog
-from pf_ft_ai.integration.api.client import HttpxEnterpriseHttpClient
-from pf_ft_ai.integration.execution.concurrency import ConcurrencyLimiter
-from pf_ft_ai.integration.tools.executor import ToolExecutor
-from pf_ft_ai.integration.tools.registry import load_tool_registry
-from pf_ft_ai.portal_links.catalog import load_portal_catalog
-from pf_ft_ai.portal_links.resolver import PortalLinkResolver
+from pff_fa_ai.configuration.models import Environment
+from pff_fa_ai.domain.workflow.repository import WorkflowRepository
+from pff_fa_ai.guardrails.pipeline import GuardrailPipeline
+from pff_fa_ai.infrastructure.persistence import InMemoryWorkflowRepository
+from pff_fa_ai.integration.api.catalog import load_api_catalog
+from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
+from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
+from pff_fa_ai.integration.tools.executor import ToolExecutor
+from pff_fa_ai.integration.tools.registry import load_tool_registry
+from pff_fa_ai.portal_links.catalog import load_portal_catalog
+from pff_fa_ai.portal_links.resolver import PortalLinkResolver
 
 RequestHandler = Callable[[httpx.Request], httpx.Response]
 

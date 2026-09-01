@@ -1,4 +1,4 @@
-from pf_ft_ai.cache.keys import build_cache_key
+from pff_fa_ai.cache.keys import build_cache_key
 
 
 def test_should_build_a_deterministic_key_for_identical_inputs() -> None:

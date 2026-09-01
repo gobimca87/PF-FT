@@ -2,8 +2,8 @@ import json
 
 import httpx
 
-from pf_ft_ai.engineering_agents.states import AgentResultStatus
-from pf_ft_ai.operations.checks import (
+from pff_fa_ai.engineering_agents.states import AgentResultStatus
+from pff_fa_ai.operations.checks import (
     architecture_check,
     configuration_check,
     dependency_check,

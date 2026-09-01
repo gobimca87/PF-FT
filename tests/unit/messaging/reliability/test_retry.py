@@ -1,9 +1,9 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import IntegrationError
-from pf_ft_ai.configuration.models import EventRetrySettings
-from pf_ft_ai.integration.errors.codes import IntegrationErrorCode
-from pf_ft_ai.messaging.reliability.retry import execute_event_handler_with_retry
+from pff_fa_ai.common.exceptions import IntegrationError
+from pff_fa_ai.configuration.models import EventRetrySettings
+from pff_fa_ai.integration.errors.codes import IntegrationErrorCode
+from pff_fa_ai.messaging.reliability.retry import execute_event_handler_with_retry
 
 _SETTINGS = EventRetrySettings(max_attempts=2, initial_seconds=1, max_seconds=1, jitter=False)
 

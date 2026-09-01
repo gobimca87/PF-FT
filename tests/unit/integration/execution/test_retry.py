@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.configuration.models import RetrySettings
-from pf_ft_ai.integration.execution.retry import compute_backoff_delay_ms, execute_with_retry
+from pff_fa_ai.configuration.models import RetrySettings
+from pff_fa_ai.integration.execution.retry import compute_backoff_delay_ms, execute_with_retry
 
 SETTINGS_NO_JITTER = RetrySettings(
     max_attempts=3, backoff="exponential", initial_ms=250, max_ms=5000, jitter=False

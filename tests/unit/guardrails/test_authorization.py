@@ -1,7 +1,7 @@
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.guardrails.authorization import AuthorizationContextPolicy
-from pf_ft_ai.guardrails.models import GuardrailContext
-from pf_ft_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.guardrails.authorization import AuthorizationContextPolicy
+from pff_fa_ai.guardrails.models import GuardrailContext
+from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 
 
 def _claims(*, subject: str = "user-1", permissions: tuple[str, ...] = ()) -> ClaimsContext:

@@ -1,6 +1,6 @@
-from pf_ft_ai.configuration.models import CircuitBreakerSettings
-from pf_ft_ai.integration.execution.circuit import CircuitBreaker, CircuitState
-from pf_ft_ai.observability.resilience import ResilienceDependency, ResilienceRegistry
+from pff_fa_ai.configuration.models import CircuitBreakerSettings
+from pff_fa_ai.integration.execution.circuit import CircuitBreaker, CircuitState
+from pff_fa_ai.observability.resilience import ResilienceDependency, ResilienceRegistry
 
 _SETTINGS = CircuitBreakerSettings(failure_threshold=2, cooldown_seconds=30, half_open_max_calls=1)
 

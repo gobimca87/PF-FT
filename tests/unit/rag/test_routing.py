@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.rag.routing import route_information_requirement
-from pf_ft_ai.rag.states import InformationRequirement, RetrievalRoute
+from pff_fa_ai.rag.routing import route_information_requirement
+from pff_fa_ai.rag.states import InformationRequirement, RetrievalRoute
 
 
 @pytest.mark.parametrize(

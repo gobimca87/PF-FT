@@ -1,6 +1,6 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError, PlatformError
+from pff_fa_ai.common.exceptions import ConfigurationError, PlatformError
 
 
 def test_should_carry_message_and_details() -> None:

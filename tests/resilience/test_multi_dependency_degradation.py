@@ -10,14 +10,14 @@ from collections.abc import AsyncIterator
 import httpx
 import pytest
 
-from pf_ft_ai.common.exceptions import ModelError
-from pf_ft_ai.configuration.models import (
+from pff_fa_ai.common.exceptions import ModelError
+from pff_fa_ai.configuration.models import (
     CircuitBreakerSettings,
     ConcurrencyPoolSettings,
     ConcurrencySettings,
     RetrySettings,
 )
-from pf_ft_ai.integration.api.catalog import (
+from pff_fa_ai.integration.api.catalog import (
     ApiAuthorization,
     ApiCatalog,
     ApiCatalogEntry,
@@ -25,20 +25,20 @@ from pf_ft_ai.integration.api.catalog import (
     ApiExecutionPolicy,
     ApiOperation,
 )
-from pf_ft_ai.integration.api.client import HttpxEnterpriseHttpClient
-from pf_ft_ai.integration.execution.concurrency import ConcurrencyLimiter
-from pf_ft_ai.integration.tools.executor import ToolExecutor
-from pf_ft_ai.integration.tools.models import (
+from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
+from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
+from pff_fa_ai.integration.tools.executor import ToolExecutor
+from pff_fa_ai.integration.tools.models import (
     ToolDefinition,
     ToolExecutionPolicy,
     ToolExecutionRequest,
     ToolSource,
 )
-from pf_ft_ai.integration.tools.registry import ToolRegistry
-from pf_ft_ai.integration.tools.states import ToolCallStatus
-from pf_ft_ai.slm.models import SlmMessage, SlmRequest, SlmResponse
-from pf_ft_ai.slm.service import SlmService
-from pf_ft_ai.slm.states import ProviderHealthStatus
+from pff_fa_ai.integration.tools.registry import ToolRegistry
+from pff_fa_ai.integration.tools.states import ToolCallStatus
+from pff_fa_ai.slm.models import SlmMessage, SlmRequest, SlmResponse
+from pff_fa_ai.slm.service import SlmService
+from pff_fa_ai.slm.states import ProviderHealthStatus
 from tests.fixtures.factories import make_claims
 
 _TIGHT_RETRY = RetrySettings(

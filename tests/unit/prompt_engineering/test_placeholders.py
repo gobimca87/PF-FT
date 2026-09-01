@@ -1,14 +1,14 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ValidationError
-from pf_ft_ai.prompt_engineering.models import FewShotExample, PromptArtifact
-from pf_ft_ai.prompt_engineering.placeholders import (
+from pff_fa_ai.common.exceptions import ValidationError
+from pff_fa_ai.prompt_engineering.models import FewShotExample, PromptArtifact
+from pff_fa_ai.prompt_engineering.placeholders import (
     find_undeclared_placeholders,
     find_unused_variables,
     render_template,
 )
-from pf_ft_ai.prompt_engineering.registry import load_prompt_registry
-from pf_ft_ai.prompt_engineering.states import PromptCategory, PromptRiskLevel, PromptStatus
+from pff_fa_ai.prompt_engineering.registry import load_prompt_registry
+from pff_fa_ai.prompt_engineering.states import PromptCategory, PromptRiskLevel, PromptStatus
 
 
 def _artifact(template: str, variables: tuple[str, ...]) -> PromptArtifact:

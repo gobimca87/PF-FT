@@ -1,4 +1,4 @@
-from pf_ft_ai.evaluation.states import DatasetCategory, EvaluationStatus
+from pff_fa_ai.evaluation.states import DatasetCategory, EvaluationStatus
 
 
 def test_should_define_all_sixteen_documented_dataset_categories() -> None:

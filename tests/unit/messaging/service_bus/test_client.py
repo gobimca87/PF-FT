@@ -1,24 +1,24 @@
 from azure.servicebus.aio import ServiceBusClient
 from azure.servicebus.aio import ServiceBusReceiver as AzureReceiver
 
-from pf_ft_ai.configuration.models import ServiceBusConnectionSettings, TopicSettings
-from pf_ft_ai.messaging.service_bus.client import (
+from pff_fa_ai.configuration.models import ServiceBusConnectionSettings, TopicSettings
+from pff_fa_ai.messaging.service_bus.client import (
     AzureServiceBusReceiver,
     build_service_bus_client,
     build_subscription_receiver,
 )
 
 _FAKE_CONNECTION_STRING = (
-    "Endpoint=sb://pf-ft-example.servicebus.windows.net/;"
+    "Endpoint=sb://pff-fa-example.servicebus.windows.net/;"
     "SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=fakekey123=="
 )
 
 
 def _topic() -> TopicSettings:
     return TopicSettings(
-        name="pf-ft-enterprise-events-dev",
+        name="pff-fa-enterprise-events-dev",
         description="dev topic",
-        subscription_name="pf-ft-ai-runtime-dev",
+        subscription_name="pff-fa-ai-runtime-dev",
         subscription_description="dev subscription",
     )
 
@@ -38,8 +38,10 @@ def test_build_subscription_receiver_should_target_the_configured_topic_and_subs
 
     receiver = build_subscription_receiver(client, topic=_topic())
 
+    expected_entity_path = "pff-fa-enterprise-events-dev/Subscriptions/pff-fa-ai-runtime-dev"
+
     assert isinstance(receiver, AzureReceiver)
-    assert receiver.entity_path == "pf-ft-enterprise-events-dev/Subscriptions/pf-ft-ai-runtime-dev"
+    assert receiver.entity_path == expected_entity_path
 
 
 class _FakeRawReceiver:

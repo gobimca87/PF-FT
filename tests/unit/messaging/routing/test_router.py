@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.registry import EventRoute, EventRouteRegistry
-from pf_ft_ai.messaging.routing.router import EventRouter
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.registry import EventRoute, EventRouteRegistry
+from pff_fa_ai.messaging.routing.router import EventRouter
 
 
 def _envelope(event_type: str) -> EventEnvelope:
