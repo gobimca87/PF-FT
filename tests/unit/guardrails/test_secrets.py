@@ -1,6 +1,6 @@
-from pf_ft_ai.guardrails.models import GuardrailContext
-from pf_ft_ai.guardrails.secrets import SecretDetectionPolicy, detect_secrets
-from pf_ft_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
+from pff_fa_ai.guardrails.models import GuardrailContext
+from pff_fa_ai.guardrails.secrets import SecretDetectionPolicy, detect_secrets
+from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 
 
 def test_should_detect_an_aws_access_key() -> None:

@@ -7,7 +7,7 @@ description: Task instructions for requesting and confirming payment during the 
 risk: HIGH
 compatibility:
   model:
-    - pf-ft-slm-primary: ">=1.0.0"
+    - pff-fa-slm-primary: ">=1.0.0"
 variables:
   - invoice_amount
   - payment_status

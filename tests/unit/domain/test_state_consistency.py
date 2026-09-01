@@ -1,9 +1,9 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import WorkflowError
-from pf_ft_ai.common.precedence import DataSourcePrecedence
-from pf_ft_ai.context.erc.states import ErcSectionStatus
-from pf_ft_ai.domain.state_consistency import (
+from pff_fa_ai.common.exceptions import WorkflowError
+from pff_fa_ai.common.precedence import DataSourcePrecedence
+from pff_fa_ai.context.erc.states import ErcSectionStatus
+from pff_fa_ai.domain.state_consistency import (
     assert_child_not_completed_while_parent_cancelled,
     assert_erc_completion_consistent,
     assert_state_update_respects_precedence,
@@ -12,7 +12,7 @@ from pf_ft_ai.domain.state_consistency import (
     assert_workflow_completion_allowed,
     should_process_event,
 )
-from pf_ft_ai.domain.workflow.states import WorkflowStatus
+from pff_fa_ai.domain.workflow.states import WorkflowStatus
 
 
 def test_rule1_should_reject_completed_child_under_cancelled_parent() -> None:

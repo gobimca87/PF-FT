@@ -1,4 +1,4 @@
-# PFF AI (`pf-ft-ai`)
+# PFF AI (`pff-fa-ai`)
 
 Conversational orchestration layer for the FA's PFF county/club administration platform.
 See [`CLAUDE.md`](CLAUDE.md) for what the project is and the Golden Rule governing it, and
@@ -24,7 +24,7 @@ in `DEVELOPMENT-GUIDE.md`'s build plan.
 
 ## Enterprise Integration
 
-`src/pf_ft_ai/integration/` implements Phase 6 (doc 10) — genuinely working and end-to-end
+`src/pff_fa_ai/integration/` implements Phase 6 (doc 10) — genuinely working and end-to-end
 tested (via `httpx.MockTransport`, including real retry/circuit-breaker/idempotency
 behavior), but with an intentionally **empty** catalog/registry since no real PFF
 enterprise API contracts exist yet:
@@ -72,7 +72,7 @@ real PFF API contracts are available to describe truthfully.
 
 ## ERC (Enterprise Runtime Context)
 
-`src/pf_ft_ai/context/` implements Phase 5 (doc 8) — the construction *primitives*, built
+`src/pff_fa_ai/context/` implements Phase 5 (doc 8) — the construction *primitives*, built
 and fully tested against synthetic data since the enterprise API layer that will actually
 feed them doesn't exist until Phase 6:
 
@@ -109,7 +109,7 @@ be built on.
 
 ## Memory & Cache
 
-`src/pf_ft_ai/memory/` and `src/pf_ft_ai/cache/` implement Phase 7 (doc 9), backed by
+`src/pff_fa_ai/memory/` and `src/pff_fa_ai/cache/` implement Phase 7 (doc 9), backed by
 **Azure Managed Redis** (`docs/adr/0004-memory-cache-store-azure-managed-redis.md` —
 RESP-protocol-compatible, so plain `redis.asyncio.Redis` works unmodified). Both packages
 are built strictly behind provider-independent interfaces (doc 9 §137-138) — nothing above
@@ -127,8 +127,8 @@ are built strictly behind provider-independent interfaces (doc 9 §137-138) — 
   9 §35), `CacheStore` protocol + `RedisCacheStore` (including targeted, prefix-based
   `invalidate()` per doc 9 §115), and `CacheService.get_or_set()` implementing the
   cache-aside pattern (doc 9 §41).
-- Both key layouts are scope-isolated (`pf-ft:<environment>:memory:...` /
-  `pf-ft:<environment>:cache:...`, then tenant/user/org/conversation/workflow) so dev/test
+- Both key layouts are scope-isolated (`pff-fa:<environment>:memory:...` /
+  `pff-fa:<environment>:cache:...`, then tenant/user/org/conversation/workflow) so dev/test
   data can never collide with prod, and one tenant can never read another's entries (doc 9
   §77, §99-101).
 - Redis connection config (`load_redis_configuration()`) is Key Vault-ready: `dev`/`test`/
@@ -141,7 +141,7 @@ are built strictly behind provider-independent interfaces (doc 9 §137-138) — 
 
 ## RAG + Embedding/Vector
 
-`src/pf_ft_ai/embedding_vector/` and `src/pf_ft_ai/rag/` implement Phase 8 (docs 13, 14).
+`src/pff_fa_ai/embedding_vector/` and `src/pff_fa_ai/rag/` implement Phase 8 (docs 13, 14).
 The vector/search-engine technology is still an open ADR
 (`docs/adr/0003-deferred-decisions-log.md`), so — same discipline as Phase 7 before Redis
 was resolved — everything is built strictly behind interfaces with genuinely working
@@ -181,7 +181,7 @@ in-memory implementations, not stubs:
 
 ## SLM Abstraction
 
-`src/pf_ft_ai/slm/` implements Phase 9 (doc 15). Request/response contracts
+`src/pff_fa_ai/slm/` implements Phase 9 (doc 15). Request/response contracts
 (`SlmRequest`/`SlmResponse`) follow the doc's exact fields (`model_id, messages,
 temperature, top_p, max_output_tokens, stream, response_format` /
 `request_id, model_id, model_version, output, usage, finish_reason`):
@@ -203,7 +203,7 @@ temperature, top_p, max_output_tokens, stream, response_format` /
 
 ## Prompt Engineering & Registry
 
-`src/pf_ft_ai/prompt_engineering/` implements Phase 10 (doc 16), built directly against
+`src/pff_fa_ai/prompt_engineering/` implements Phase 10 (doc 16), built directly against
 the real prompt artifacts already committed under `prompts/` (system, persona, task,
 few-shot — see that directory's own `README.md` for the composition-order/trust-tier
 summary and the folder→phase map):
@@ -239,7 +239,7 @@ summary and the folder→phase map):
 
 ## Guardrails Pipeline
 
-`src/pf_ft_ai/guardrails/` implements Phase 11 (doc 18 — the densest, most
+`src/pff_fa_ai/guardrails/` implements Phase 11 (doc 18 — the densest, most
 cross-referential spec doc, deliberately read in full for this phase). This is the phase
 DEVELOPMENT-GUIDE.md calls out as where earlier primitives get "actually enforced
 end-to-end," so most of it wires already-built components into real, testable
@@ -291,7 +291,7 @@ end-to-end," so most of it wires already-built components into real, testable
 
 ## Service Bus / Event-Driven Resume
 
-`src/pf_ft_ai/messaging/` implements Phase 12 (doc 11), including a **real** Azure
+`src/pff_fa_ai/messaging/` implements Phase 12 (doc 11), including a **real** Azure
 Service Bus client — not just interfaces behind an in-memory fake, since the connection
 is genuinely Key Vault-configurable today:
 
@@ -303,8 +303,8 @@ is genuinely Key Vault-configurable today:
   hardcodes a connection string.
 - **Topics** — `config/environments/<env>/service-bus.yaml` holds the topic name,
   description, subscription name, subscription description, and `event_type_filters`
-  **per environment**, e.g. `pf-ft-enterprise-events-dev` / `pf-ft-ai-runtime-dev` for
-  dev, through to `pf-ft-enterprise-events-prod` / `pf-ft-ai-runtime-prod` for
+  **per environment**, e.g. `pff-fa-enterprise-events-dev` / `pff-fa-ai-runtime-dev` for
+  dev, through to `pff-fa-enterprise-events-prod` / `pff-fa-ai-runtime-prod` for
   production — a dedicated AI subscription per doc 11 §29 so the platform never consumes
   unrelated enterprise events. The filter list itself is doc 11 §128's own illustrative
   event types, not a confirmed PFF event catalog — flagged in each file for validation
@@ -356,7 +356,7 @@ is genuinely Key Vault-configurable today:
 
 ## Portal Links
 
-`src/pf_ft_ai/portal_links/` implements Phase 13 (doc 12):
+`src/pff_fa_ai/portal_links/` implements Phase 13 (doc 12):
 
 - **`resolver.py`** — `PortalLinkResolver.resolve()` builds `URL = Portal Base URL +
   Registered Route + Validated Parameters` (doc 12 §25) and nothing else can produce a
@@ -385,7 +385,7 @@ is genuinely Key Vault-configurable today:
 
 ## Observability & Resilience
 
-`src/pf_ft_ai/observability/` implements Phase 14 (doc 24), scoped to what's genuinely
+`src/pff_fa_ai/observability/` implements Phase 14 (doc 24), scoped to what's genuinely
 buildable without an IaC/dashboard tool decision (still open — see
 `docs/adr/0003-deferred-decisions-log.md`):
 
@@ -443,7 +443,7 @@ findings in [`docs/security/0001-phase-15-security-hardening-pass.md`](docs/secu
 
 ## AI Evaluation Framework
 
-`src/pf_ft_ai/evaluation/` implements Phase 16 (doc 21) — golden-dataset regression
+`src/pff_fa_ai/evaluation/` implements Phase 16 (doc 21) — golden-dataset regression
 testing, retrieval metrics, LLM-as-judge scoring, and release gating, built as a
 standalone package so it never needs to import `rag`, `slm`, or `prompt_engineering`:
 
@@ -536,7 +536,7 @@ recreated as empty top-level shells — each already has deep coverage under the
 
 ## Engineering (Dev-Time) Agents (Phase 18)
 
-`src/pf_ft_ai/engineering_agents/` implements Phase 18 (doc 23) — CI-time SDLC tooling,
+`src/pff_fa_ai/engineering_agents/` implements Phase 18 (doc 23) — CI-time SDLC tooling,
 explicitly separate from the production business agents (`agents/`, Phase 23). It's
 marked "optional" in `DEVELOPMENT-GUIDE.md`, so scope was bounded to what's honestly
 buildable without a model decision:
@@ -611,7 +611,7 @@ decision is:
   container-level healthcheck against `/api/v1/health`. Tool-agnostic — every
   deployment path needs this image regardless of how the surrounding infra ends up
   provisioned.
-- **`src/pf_ft_ai/api/main.py`** — the container entrypoint (`app` built from a
+- **`src/pff_fa_ai/api/main.py`** — the container entrypoint (`app` built from a
   `PFFT_ENVIRONMENT` env var, defaulting to `dev`). `create_app()` itself (Phase 3)
   stays a pure factory that never reads process environment directly; only this thin
   wiring layer, used by the ASGI server, does.
@@ -642,7 +642,7 @@ decision is:
 
 ## Performance & Cost Tuning (Phase 20)
 
-`src/pf_ft_ai/performance/` implements Phase 20 (doc 26), scoped to what's honestly
+`src/pff_fa_ai/performance/` implements Phase 20 (doc 26), scoped to what's honestly
 measurable without a deployed environment or real business agent (`AffiliationAgent`
 is Phase 23):
 
@@ -676,7 +676,7 @@ is Phase 23):
 
 ## Governance Artifacts (Phase 21)
 
-`src/pf_ft_ai/governance/` implements Phase 21 (doc 20), scoped exactly to
+`src/pff_fa_ai/governance/` implements Phase 21 (doc 20), scoped exactly to
 DEVELOPMENT-GUIDE's two bullets:
 
 - **`states.py` / `lifecycle.py`** — `AiLifecycleState`, doc 20 §11's 11-state
@@ -714,7 +714,7 @@ Phase 22 (doc 28), scoped to DEVELOPMENT-GUIDE's two bullets:
   than staying abstract. No environment is deployed yet (Phase 19), so these serve as
   the on-call documentation directly rather than linking to a live alerting system —
   `docs/runbooks/README.md` explains the distinction and indexes all nine.
-- **`src/pf_ft_ai/operations/`** — "Implement the daily/weekly/monthly operational
+- **`src/pff_fa_ai/operations/`** — "Implement the daily/weekly/monthly operational
   checklists as scheduled checks where feasible," done as real code reusing Phase 18's
   `EngineeringAgentResult`/`Finding` contract: `configuration_check()`,
   `architecture_check()`, `dependency_check()` re-run Phase 18's engineering agents on
@@ -732,7 +732,7 @@ Phase 22 (doc 28), scoped to DEVELOPMENT-GUIDE's two bullets:
 
 ## AffiliationAgent — First Reference Workflow (Phase 23)
 
-`src/pf_ft_ai/agents/affiliation/` implements Phase 23 (docs 4 §72, 7 §133-135, 5 §92-93,
+`src/pff_fa_ai/agents/affiliation/` implements Phase 23 (docs 4 §72, 7 §133-135, 5 §92-93,
 and `MD files/0 Workflow/pff_affiliation_e2e_flow.md`) — the first real business agent,
 proving every earlier-phase capability (Supervisor/Harness, ERC, Tool Registry, Guardrails,
 Portal Links, event-driven resume) working together end-to-end for one real workflow rather
@@ -795,7 +795,7 @@ pending real PFF enterprise API contracts, never fabricated production values.
 ## Running the API
 
 ```bash
-uvicorn pf_ft_ai.api:create_app --factory --reload
+uvicorn pff_fa_ai.api:create_app --factory --reload
 ```
 
 `GET /api/v1/health`, `POST/GET /api/v1/conversations`, `GET
@@ -819,7 +819,7 @@ CLAUDE.md's Golden Rule that the AI platform never authenticates/authorizes itse
 
 ## Agentic orchestration skeleton
 
-`src/pf_ft_ai/orchestration/` implements Phase 4 (doc 7):
+`src/pff_fa_ai/orchestration/` implements Phase 4 (doc 7):
 
 - **Supervisor** (`orchestration/supervisor/`) — `IntentClassifier` port (+ the honest
   `UnknownIntentClassifier` default), `AgentRegistry` (routing capability + optional
@@ -846,7 +846,7 @@ CLAUDE.md's Golden Rule that the AI platform never authenticates/authorizes itse
 
 ## State model & domain layer
 
-`src/pf_ft_ai/domain/` holds the framework-free domain layer: `Conversation`, `Session`,
+`src/pff_fa_ai/domain/` holds the framework-free domain layer: `Conversation`, `Session`,
 and `WorkflowInstance` entities (all immutable/frozen — a transition is a new version via
 `model_copy`), the `Versioned` mixin + `assert_expected_version` for optimistic
 concurrency, `StateTransition`/`StateActor` for auditable transitions, the generic
@@ -860,7 +860,7 @@ just the vocabulary; the capability logic for each arrives in that package's own
 
 ## Configuration
 
-`src/pf_ft_ai/configuration/` loads `config/base/platform.yaml` merged with
+`src/pff_fa_ai/configuration/` loads `config/base/platform.yaml` merged with
 `config/environments/<env>/platform.yaml` (environment overrides win), resolves any
 `*_secret_ref` keys through a `SecretResolver` (env vars locally; Key Vault-backed
 resolver arrives with the Azure integration phase), validates the result against
@@ -870,7 +870,7 @@ raises `ConfigurationError` — the app is meant to fail fast rather than start 
 state (doc 17 §21).
 
 ```python
-from pf_ft_ai.configuration import load_platform_configuration
+from pff_fa_ai.configuration import load_platform_configuration
 
 config = load_platform_configuration("dev")
 ```
@@ -920,5 +920,5 @@ Conventional Commits (`feat(agent): ...`, `fix(erc): ...`, `test(rag): ...`) —
 
 ## Repository layout
 
-Canonical package: `src/pf_ft_ai/`. Full annotated tree (which spec doc governs which
+Canonical package: `src/pff_fa_ai/`. Full annotated tree (which spec doc governs which
 folder) is in `DEVELOPMENT-GUIDE.md` §3.

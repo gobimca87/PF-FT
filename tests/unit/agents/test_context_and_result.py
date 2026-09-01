@@ -1,9 +1,9 @@
-from pf_ft_ai.agents.context import AgentExecutionContext
-from pf_ft_ai.agents.result import AgentError, AgentExecutionResult
-from pf_ft_ai.agents.states import AgentRunStatus
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.common.correlation import CorrelationContext
-from pf_ft_ai.common.error_category import ErrorCategory
+from pff_fa_ai.agents.context import AgentExecutionContext
+from pff_fa_ai.agents.result import AgentError, AgentExecutionResult
+from pff_fa_ai.agents.states import AgentRunStatus
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.common.correlation import CorrelationContext
+from pff_fa_ai.common.error_category import ErrorCategory
 
 
 def test_should_build_an_agent_execution_context() -> None:

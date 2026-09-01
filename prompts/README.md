@@ -1,7 +1,7 @@
 # Prompts
 
 This directory holds the versioned prompt artifacts described by doc 16
-(`MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md`, Phase 10 of `DEVELOPMENT-GUIDE.md`).
+(`MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md`, Phase 10 of `DEVELOPMENT-GUIDE.md`).
 `MD files/` stays the read-only source of truth for *what a prompt must contain*; this
 directory is the actual implementation.
 

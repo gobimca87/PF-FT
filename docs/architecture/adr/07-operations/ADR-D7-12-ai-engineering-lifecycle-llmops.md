@@ -14,9 +14,9 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-11, ADR-D3-15, ADR-D5-06, ADR-D6-15, ADR-D7-13]
 source_docs:
-  - "MD files/4 AI/17.PF-FT-AI-CONFIGURATION-VERSIONING.md §42, §43, §56, §57, §58"
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §151, §152, §156, §157, §158, §159"
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §102, §103, §155, §156"
+  - "MD files/4 AI/17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §42, §43, §56, §57, §58"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §151, §152, §156, §157, §158, §159"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §102, §103, §155, §156"
 build_phases: [12]
 impacted_paths:
   - .github/workflows/
@@ -32,12 +32,12 @@ PFF AI will manage prompts, models, RAG indexes, guardrails and their configs as
 **coordinated LLMOps lifecycle**: authored/versioned in Git, evaluated (ADR-D7-13),
 promoted as **compatible, immutable release bundles** (ADR-D5-06) through the environment
 ladder with shadow/canary for models and blue/green for indexes, under change governance
-(ADR-D6-15) (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §42–§43, §56–§58; 15.PF-FT-AI-SLM.md §151–§159; 16.PF-FT-AI-PROMPT-ENGINEERING.md §102–§103, §155–§156). AI
+(ADR-D6-15) (17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §42–§43, §56–§58; 15.PFF-FA-AI-SLM.md §151–§159; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §102–§103, §155–§156). AI
 artefacts follow the same rigor as code, with AI-specific promotion mechanics.
 
 ## 2. Context and Problem Statement
 
-17.PF-FT-AI-CONFIGURATION-VERSIONING.md §42–§43 RAG version deps/compatibility, §56–§58 dependency + release manifest; 15.PF-FT-AI-SLM.md §151–§159 model promotion/release/shadow/canary/rollback; 16.PF-FT-AI-PROMPT-ENGINEERING.md §102–§103/§155–§156
+17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §42–§43 RAG version deps/compatibility, §56–§58 dependency + release manifest; 15.PFF-FA-AI-SLM.md §151–§159 model promotion/release/shadow/canary/rollback; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §102–§103/§155–§156
 prompt promotion/rollback/regression pipeline. AI artefacts have interdependencies (a
 prompt expects a model capability; an index matches an embedding). Promoting them
 independently breaks compatibility. This ADR fixes the LLMOps lifecycle and bundle model.
@@ -46,16 +46,16 @@ independently breaks compatibility. This ADR fixes the LLMOps lifecycle and bund
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Version all AI artefacts (Git) | ADR-D3-11/D3-15; 17.PF-FT-AI-CONFIGURATION-VERSIONING.md |
-| DR-F-02 | Promote as compatible bundles | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §56–§58 |
-| DR-F-03 | AI-specific promotion (shadow/canary/blue-green) | 15.PF-FT-AI-SLM.md §157–§158; 14.PF-FT-AI-EMBEDDING-VECTOR.md §77 |
+| DR-F-01 | Version all AI artefacts (Git) | ADR-D3-11/D3-15; 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md |
+| DR-F-02 | Promote as compatible bundles | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §56–§58 |
+| DR-F-03 | AI-specific promotion (shadow/canary/blue-green) | 15.PFF-FA-AI-SLM.md §157–§158; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §77 |
 | DR-C-01 | Under change governance + eval gates | ADR-D6-15, D7-13 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | Artefact compatibility is expressible | Compatibility matrix (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §43) | Review |
+| DR-A-01 | Artefact compatibility is expressible | Compatibility matrix (17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §43) | Review |
 
 ## 4. Evaluation Criteria and Weights
 
@@ -73,8 +73,8 @@ independently breaks compatibility. This ADR fixes the LLMOps lifecycle and bund
 ### 5.1 Option A — Coordinated bundles: version + eval + compatibility-checked + AI-specific promotion + governance
 
 **Description.** All AI artefacts versioned (Git); a bundle (manifest, ADR-D5-06) pins
-compatible versions with a compatibility matrix (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §43); eval gate (ADR-D7-13);
-shadow→canary for models (15.PF-FT-AI-SLM.md §157–§158), blue/green for indexes (14.PF-FT-AI-EMBEDDING-VECTOR.md §77); under
+compatible versions with a compatibility matrix (17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §43); eval gate (ADR-D7-13);
+shadow→canary for models (15.PFF-FA-AI-SLM.md §157–§158), blue/green for indexes (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77); under
 governance (ADR-D6-15); rollback per artefact/bundle.
 **Strengths.** Compatible, evaluated, safe, traceable.
 **Weaknesses.** Bundle/compat management.
@@ -116,11 +116,11 @@ eval regression.
 | Option | Eliminated by |
 |---|---|
 | Mutable in-place artefact edits | CLAUDE.md immutability; ADR-D5-06 |
-| No eval before promotion | 20.PF-FT-AI-GOVERNANCE.md §86; ADR-D7-13 |
+| No eval before promotion | 20.PFF-FA-AI-GOVERNANCE.md §86; ADR-D7-13 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §42–§58, 15.PF-FT-AI-SLM.md §151–§159, 16.PF-FT-AI-PROMPT-ENGINEERING.md §102–§103/§155–§156.
+**Method.** Weighted scoring against §4, informed by 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §42–§58, 15.PFF-FA-AI-SLM.md §151–§159, 16.PFF-FA-AI-PROMPT-ENGINEERING.md §102–§103/§155–§156.
 
 | Criterion | Weight | A: Bundles | B: Independent | C: Like-code | D: Manual | E: Bundles+shadow+auto-rollback |
 |---|---|---|---|---|---|---|
@@ -150,10 +150,10 @@ and manual management (D) are rejected.
 
 - Artefact registries: prompts (ADR-D3-11), models (ADR-D3-15), RAG index/embedding
   (ADR-D3-23/24); a release bundle (manifest, ADR-D5-06) pins compatible versions with a
-  compatibility matrix (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §43, §132).
-- Promotion: eval gate (ADR-D7-13) → shadow eval (15.PF-FT-AI-SLM.md §157) → canary (15.PF-FT-AI-SLM.md §158;
-  ADR-D7-10) for models/prompts; blue/green alias swap for indexes (14.PF-FT-AI-EMBEDDING-VECTOR.md §77); rollback
-  per artefact (15.PF-FT-AI-SLM.md §159; 16.PF-FT-AI-PROMPT-ENGINEERING.md §103; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §44–§47).
+  compatibility matrix (17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §43, §132).
+- Promotion: eval gate (ADR-D7-13) → shadow eval (15.PFF-FA-AI-SLM.md §157) → canary (15.PFF-FA-AI-SLM.md §158;
+  ADR-D7-10) for models/prompts; blue/green alias swap for indexes (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77); rollback
+  per artefact (15.PFF-FA-AI-SLM.md §159; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §103; 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §44–§47).
 - All under change governance (ADR-D6-15); traced (ADR-D7-02).
 
 ## 9. Consequences
@@ -186,7 +186,7 @@ and manual management (D) are rejected.
 |---|---|---|---|---|---|---|---|
 | RSK-01 | Incompatible artefact combo in prod | Low | High | M | Compatibility matrix + bundle | AI Arch Lead | Low |
 | RSK-02 | Model/prompt regression | Med | High | H | Shadow + canary + auto-rollback (E) | ML Eng | Low |
-| RSK-03 | Index cutover breaks retrieval | Low | High | M | Blue/green alias (14.PF-FT-AI-EMBEDDING-VECTOR.md §77) | AI Arch Lead | Low |
+| RSK-03 | Index cutover breaks retrieval | Low | High | M | Blue/green alias (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77) | AI Arch Lead | Low |
 
 ## 12. Quantitative Targets and Measures
 
@@ -201,7 +201,7 @@ and manual management (D) are rejected.
 | Dimension | Impact |
 |---|---|
 | Attack surface change | Governed AI changes reduce unsafe deploys |
-| Data classification touched | Internal; eval datasets governed (20.PF-FT-AI-GOVERNANCE.md §84) |
+| Data classification touched | Internal; eval datasets governed (20.PFF-FA-AI-GOVERNANCE.md §84) |
 | Personal data / PII | No real PII in eval (synthetic) |
 | Children's data and safeguarding | Safeguarding-affecting artefacts high-risk (ADR-D6-15) |
 | UK GDPR lawful basis and rights impact | N/A |
@@ -235,9 +235,9 @@ and manual management (D) are rejected.
 |---|---|
 | Monitoring | Bundle promotion; shadow/canary metrics |
 | Alerting | Eval regression; incompatible bundle |
-| Runbook | `docs/runbooks/llmops.md` (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §44–§47) |
+| Runbook | `docs/runbooks/llmops.md` (28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §44–§47) |
 | Failure mode and degradation | Regression → auto-rollback |
-| Rollback | Per-artefact/bundle (15.PF-FT-AI-SLM.md §159) |
+| Rollback | Per-artefact/bundle (15.PFF-FA-AI-SLM.md §159) |
 | Support model impact | AI platform + release mgmt |
 
 ## 17. Cost Impact
@@ -261,7 +261,7 @@ and manual management (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 |
-| Specification sections | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §42–§43, §56–§58, §132; 15.PF-FT-AI-SLM.md §151–§159; 16.PF-FT-AI-PROMPT-ENGINEERING.md §102–§103, §155–§156 |
+| Specification sections | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §42–§43, §56–§58, §132; 15.PFF-FA-AI-SLM.md §151–§159; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §102–§103, §155–§156 |
 | Requirement IDs | LLMOPS-* |
 | Build phases | 12 |
 | Code paths | registries + workflows |

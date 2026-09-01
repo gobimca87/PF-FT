@@ -15,8 +15,8 @@ superseded_by: []
 related_adrs: [ADR-D1-02, ADR-D1-07, ADR-D1-08, ADR-D3-09, ADR-D3-10, ADR-D6-16, ADR-D8-05]
 source_docs:
   - "MD files/Examples/SampleWorkflowchat.md"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §65"
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §65"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md"
   - "MD files/0 Workflow/pff_affiliation_e2e_flow.md — Phases 1, 6, 10"
 build_phases: [10, 16, 23]
 impacted_paths:
@@ -94,7 +94,7 @@ character erodes release by release with nobody having decided to change it.
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Persona adherence must be evaluable separately from workflow correctness | Independent rubric | `CLAUDE.md` §Persona Quality Expectations |
-| DR-N-02 | The character must remain stable across releases | No unintentional drift between versions | 20.PF-FT-AI-GOVERNANCE.md §92 (Prompt Review) |
+| DR-N-02 | The character must remain stable across releases | No unintentional drift between versions | 20.PFF-FA-AI-GOVERNANCE.md §92 (Prompt Review) |
 | DR-N-03 | Persona must not increase response latency materially | ≤5% token overhead | ADR-D5-18 |
 
 ### 3.3 Constraints
@@ -425,7 +425,7 @@ X-1 treatment as a club secretary.
 | RSK-02 | Content class mis-derived from workflow state, applying the wrong register | Medium | High | High | Content class asserted by the agent step, not inferred; unit tests per affiliation phase; QM-03 | AI Engineering Lead | Medium |
 | RSK-03 | Suppressed turns read as a different assistant, breaking continuity | Medium | Medium | Medium | Suppression removes football framing, not warmth; evaluated as a transition case in the rubric | AI Product Owner | Medium |
 | RSK-04 | Over-correction: the register disappears in practice and Adam becomes generic | Medium | Medium | Medium | §7.3 states positively where the register belongs; QM-04 tracks register presence at permitted moments | AI Product Owner | Low |
-| RSK-05 | Charter and prompt layer diverge over successive tunings | Medium | Medium | Medium | Prompt review per 20.PF-FT-AI-GOVERNANCE.md §92 checks against the charter; charter cited in the prompt layer's header | Prompt Owner | Low |
+| RSK-05 | Charter and prompt layer diverge over successive tunings | Medium | Medium | Medium | Prompt review per 20.PFF-FA-AI-GOVERNANCE.md §92 checks against the charter; charter cited in the prompt layer's header | Prompt Owner | Low |
 | RSK-06 | DR-A-01 false — the register does not aid comprehension | Low | Medium | Low | Correlation of persona scores with BM-01; RT-04 leads toward Option D if falsified | AI Evaluation Owner | Low |
 
 ## 12. Quantitative Targets and Measures
@@ -519,10 +519,10 @@ framing, not character.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-04 Personas & User Journey Mapping |
-| Specification sections | `CLAUDE.md` §Adam AI Persona & Conversational Style (rules 1–12, response pattern, quality expectations, golden reference); `Examples/SampleWorkflowchat.md`; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §65 (Responsibility for User Communication); 16.PF-FT-AI-PROMPT-ENGINEERING.md (Prompt Engineering); 20.PF-FT-AI-GOVERNANCE.md §92 (Prompt Review); affiliation flow Phases 1, 6, 10 |
+| Specification sections | `CLAUDE.md` §Adam AI Persona & Conversational Style (rules 1–12, response pattern, quality expectations, golden reference); `Examples/SampleWorkflowchat.md`; 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §65 (Responsibility for User Communication); 16.PFF-FA-AI-PROMPT-ENGINEERING.md (Prompt Engineering); 20.PFF-FA-AI-GOVERNANCE.md §92 (Prompt Review); affiliation flow Phases 1, 6, 10 |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 10, 16, 23 |
-| Code paths | `prompts/persona/`, `src/pf_ft_ai/prompt_engineering/` |
+| Code paths | `prompts/persona/`, `src/pff_fa_ai/prompt_engineering/` |
 | Configuration | `config/base/prompts.yaml`, `config/base/workflows.yaml` |
 | Tests | AC-01 to AC-07; per-zone golden cases |
 | Upstream ADRs | ADR-D1-02, ADR-D1-07, ADR-D1-08 |

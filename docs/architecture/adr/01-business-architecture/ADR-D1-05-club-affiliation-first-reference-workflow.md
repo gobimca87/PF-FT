@@ -15,12 +15,12 @@ superseded_by: []
 related_adrs: [ADR-D1-04, ADR-D1-10, ADR-D1-11, ADR-D2-10, ADR-D3-08, ADR-D8-08]
 source_docs:
   - "MD files/0 Workflow/pff_affiliation_e2e_flow.md — all phases and the 32-scenario summary"
-  - "MD files/1 Foundation/1 PF-FT-AI-ARCHITECTURE.md §37, §39"
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §47, §49"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §48"
+  - "MD files/1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md §37, §39"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §47, §49"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §48"
 build_phases: [23]
 impacted_paths:
-  - src/pf_ft_ai/agents/affiliation/
+  - src/pff_fa_ai/agents/affiliation/
 classification: Internal
 review_due: 2027-02-21
 ---
@@ -47,14 +47,14 @@ confidence, tackle the hard cases later. Applied here, that would mean a read-on
 waiting. It could ship early.
 
 It would also prove almost nothing. The specification set's difficulty is concentrated in a
-small number of capabilities — long-running execution across HTTP requests (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §28), HIL
-suspension and resume (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29), event-driven continuation (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §26), ERC batching (2. PF-FT-AI-ARCHITECTURE-DETAILED.md
-§16), transaction uncertainty (8 PF-FT-AI-ERC-CONTEXT.md §66). A read-only workflow exercises none of them. The
+small number of capabilities — long-running execution across HTTP requests (2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §28), HIL
+suspension and resume (2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §29), event-driven continuation (2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §26), ERC batching (2. PFF-FA-AI-ARCHITECTURE-DETAILED.md
+§16), transaction uncertainty (8 PFF-FA-AI-ERC-CONTEXT.md §66). A read-only workflow exercises none of them. The
 platform would appear to work and would collapse on contact with the first workflow that
 waits for a human.
 
-1 PF-FT-AI-ARCHITECTURE.md §37 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §47 both already designate Club Affiliation as the reference flow, and
-3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §48 works through the responsibility split for it. The 654-line flow document exists.
+1 PFF-FA-AI-ARCHITECTURE.md §37 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §47 both already designate Club Affiliation as the reference flow, and
+3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §48 works through the responsibility split for it. The 654-line flow document exists.
 What is not recorded is why affiliation rather than something smaller, what building it first
 costs, and — importantly — what the platform must not conclude from succeeding at it.
 
@@ -69,11 +69,11 @@ production and what load profile the platform must handle.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | The first workflow must exercise long-running execution across multiple requests | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §28 |
-| DR-F-02 | It must exercise human-in-the-loop suspension and resume | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29; affiliation Phase 6 PENDING CFA |
-| DR-F-03 | It must exercise event-driven ERC refresh and workflow resume | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 12; affiliation Phase 6-7 |
-| DR-F-04 | It must exercise ERC aggregation across several enterprise services with batching | 1 PF-FT-AI-ARCHITECTURE.md §39 criteria 5-6; affiliation Phase 1 |
-| DR-F-05 | It must include cases where a transaction outcome is genuinely uncertain | 8 PF-FT-AI-ERC-CONTEXT.md §66; affiliation Scenarios 21-27 |
+| DR-F-01 | The first workflow must exercise long-running execution across multiple requests | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 13; 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §28 |
+| DR-F-02 | It must exercise human-in-the-loop suspension and resume | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §29; affiliation Phase 6 PENDING CFA |
+| DR-F-03 | It must exercise event-driven ERC refresh and workflow resume | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 12; affiliation Phase 6-7 |
+| DR-F-04 | It must exercise ERC aggregation across several enterprise services with batching | 1 PFF-FA-AI-ARCHITECTURE.md §39 criteria 5-6; affiliation Phase 1 |
+| DR-F-05 | It must include cases where a transaction outcome is genuinely uncertain | 8 PFF-FA-AI-ERC-CONTEXT.md §66; affiliation Scenarios 21-27 |
 | DR-F-06 | It must deliver real user value on completion, not only technical validation | ADR-D1-04 §7.2 |
 
 ### 3.2 Non-functional drivers
@@ -82,7 +82,7 @@ production and what load profile the platform must handle.
 |---|---|---|---|
 | DR-N-01 | The workflow must be documented in enough detail to build against without discovery | Complete scenario coverage available | affiliation flow, 32 scenarios |
 | DR-N-02 | Validation must be possible outside the seasonal window | Test environment with synthetic applications | Phase 23 |
-| DR-N-03 | Capabilities built must be reusable, not affiliation-specific | ≥80% of components reused by workflow two | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §49 |
+| DR-N-03 | Capabilities built must be reusable, not affiliation-specific | ≥80% of components reused by workflow two | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §49 |
 
 ### 3.3 Constraints
 
@@ -152,7 +152,7 @@ and post-completion scenarios.
 - What gets built is the platform: harness, ERC, events, HIL resume, guardrails all generalise.
 - Documented to 32 scenarios with statuses, flags and notifications, so building is
   implementation rather than discovery.
-- Already designated as the reference flow by 1 PF-FT-AI-ARCHITECTURE.md §37 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §47.
+- Already designated as the reference flow by 1 PFF-FA-AI-ARCHITECTURE.md §37 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §47.
 
 **Weaknesses.**
 - Substantial delivery risk; the largest possible first workflow.
@@ -292,7 +292,7 @@ table is the test plan — it enumerates the cases, and completeness against it 
 
 **Status rationale.** Accepted. Tier 2d under ADR-D0-03 §7.1 — it determines which workflows
 the platform supports first — ratified by the AI Product Owner. Confirms the designation
-already made in 1 PF-FT-AI-ARCHITECTURE.md §37 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §47, with the rationale those documents did not record.
+already made in 1 PFF-FA-AI-ARCHITECTURE.md §37 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §47, with the rationale those documents did not record.
 
 ## 8. Architecture Detail
 
@@ -335,7 +335,7 @@ Three places where the conversation must survive without a live request:
 | Portal handoff for document upload | Minutes to hours | User return, or a document-uploaded event |
 
 Each requires durable workflow state (ADR-D2-10). A platform holding this in memory would lose
-it, which is why 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists in-memory-only long-running workflows as an anti-pattern.
+it, which is why 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48 lists in-memory-only long-running workflows as an anti-pattern.
 
 ### 8.3 The hardest conversational moment
 
@@ -374,7 +374,7 @@ resolve cleanly.
 
 ### 9.3 Neutral
 
-- Confirms a designation already made in 1 PF-FT-AI-ARCHITECTURE.md §37 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §47; the decision here is the
+- Confirms a designation already made in 1 PFF-FA-AI-ARCHITECTURE.md §37 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §47; the decision here is the
   recorded rationale and the §7.3 caution.
 - Only `AffiliationAgent` is built, per DR-C-01 — this decision does not expand scope.
 
@@ -435,7 +435,7 @@ resolve cleanly.
 | Aspect | Detail |
 |---|---|
 | Build phases | 23, depending on Phases 0–22 |
-| Repository paths | `src/pf_ft_ai/agents/affiliation/`; exercises nearly every other package |
+| Repository paths | `src/pff_fa_ai/agents/affiliation/`; exercises nearly every other package |
 | Configuration | `config/base/agents.yaml`, `config/base/workflows.yaml`, `config/enterprise/api-catalog/affiliations.yaml`; affiliation prompts under `prompts/` |
 | Contracts / schemas | Affiliation event contracts under `contracts/events/affiliation/` |
 | Migration | None; first workflow |
@@ -480,7 +480,7 @@ resolve cleanly.
 |---|---|---|---|
 | RT-01 | QM-03 shows under 60% component reuse at workflow two | Workflow two build | DR-A-02 is false; causal analysis on why components coupled to affiliation |
 | RT-02 | QM-01 falls short of full scenario coverage at Phase 23 exit | Phase review | Do not exit the phase on partial coverage; the scenario table is the completion definition |
-| RT-03 | QM-06 records a safeguarding fact without provenance | Weekly audit | Immediate governance incident per 20.PF-FT-AI-GOVERNANCE.md §105 |
+| RT-03 | QM-06 records a safeguarding fact without provenance | Weekly audit | Immediate governance incident per 20.PFF-FA-AI-GOVERNANCE.md §105 |
 | RT-04 | The affiliation flow document is revised by the enterprise | Change notice | Re-derive scenario coverage; new scenarios need tests before release |
 | RT-05 | BM-01 for affiliation is below baseline after a full window | Quarterly review | Causal analysis; the workflow choice was right but the execution is not delivering |
 
@@ -491,10 +491,10 @@ resolve cleanly.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-02 Business Vision, Problem Statement & Objectives; WS-05 Enterprise Workflow Catalogue |
-| Specification sections | `MD files/0 Workflow/pff_affiliation_e2e_flow.md` Phases 0–11, Complete Scenario Summary Table, Application Status Reference, Key Decision Flags; 1 PF-FT-AI-ARCHITECTURE.md §37 (Club Affiliation Reference Architecture), §39 (Success Criteria); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §47 (Club Affiliation Reference Flow), §49 (Extension Model); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §48 (Responsibility During Affiliation) |
+| Specification sections | `MD files/0 Workflow/pff_affiliation_e2e_flow.md` Phases 0–11, Complete Scenario Summary Table, Application Status Reference, Key Decision Flags; 1 PFF-FA-AI-ARCHITECTURE.md §37 (Club Affiliation Reference Architecture), §39 (Success Criteria); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §47 (Club Affiliation Reference Flow), §49 (Extension Model); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §48 (Responsibility During Affiliation) |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 23 |
-| Code paths | `src/pf_ft_ai/agents/affiliation/` |
+| Code paths | `src/pff_fa_ai/agents/affiliation/` |
 | Configuration | `config/base/agents.yaml`, `config/enterprise/api-catalog/affiliations.yaml`, `contracts/events/affiliation/` |
 | Tests | AC-01 to AC-07; the 32-scenario suite |
 | Upstream ADRs | ADR-D1-01, ADR-D1-04 |

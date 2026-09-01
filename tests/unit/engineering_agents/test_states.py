@@ -1,4 +1,4 @@
-from pf_ft_ai.engineering_agents.states import (
+from pff_fa_ai.engineering_agents.states import (
     FINDING_SEVERITY_RANK,
     AgentLifecycleStatus,
     AgentResultStatus,
@@ -8,8 +8,8 @@ from pf_ft_ai.engineering_agents.states import (
     PermissionLevel,
     RemediationMode,
 )
-from pf_ft_ai.evaluation.states import EvaluationStatus
-from pf_ft_ai.guardrails.states import GuardrailSeverity
+from pff_fa_ai.evaluation.states import EvaluationStatus
+from pff_fa_ai.guardrails.states import GuardrailSeverity
 
 
 def test_agent_result_status_should_be_the_same_type_as_evaluation_status() -> None:

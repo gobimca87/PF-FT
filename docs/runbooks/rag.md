@@ -10,7 +10,7 @@ incorrect citations.
 ## Diagnostic steps
 
 1. Check whether this is a legitimate empty result rather than an infrastructure
-   failure (doc 28 §59) — `src/pf_ft_ai/rag/pipeline.py`'s `IngestionPipeline` and
+   failure (doc 28 §59) — `src/pff_fa_ai/rag/pipeline.py`'s `IngestionPipeline` and
    the retrieval path in `rag/service.py` don't currently enforce
    `SourceAuthorityLevel` before ingesting (documented gap,
    `docs/security/0001-phase-15-security-hardening-pass.md` §3), so an unexpectedly

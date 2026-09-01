@@ -1,9 +1,9 @@
-from pf_ft_ai.governance.states import (
+from pff_fa_ai.governance.states import (
     AiLifecycleState,
     GovernanceRiskLevel,
     GovernedArtifactType,
 )
-from pf_ft_ai.prompt_engineering.states import PromptRiskLevel
+from pff_fa_ai.prompt_engineering.states import PromptRiskLevel
 
 
 def test_ai_lifecycle_state_should_have_the_eleven_documented_states() -> None:

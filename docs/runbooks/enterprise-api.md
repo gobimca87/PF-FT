@@ -9,7 +9,7 @@ integration is down platform-wide, otherwise P2/P3 (doc 28 §9-11).
 
 ## Diagnostic steps
 
-1. Identify the failing `api_id` from `src/pf_ft_ai/integration/api/catalog.py`'s
+1. Identify the failing `api_id` from `src/pff_fa_ai/integration/api/catalog.py`'s
    `ApiCatalog` and the calling tool from `integration/tools/registry.py`.
 2. Check the classification: `classify_http_status()` /
    `IntegrationErrorCode` (`integration/errors/codes.py`) — this is what

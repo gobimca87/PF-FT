@@ -1,6 +1,6 @@
 import pytest
 
-from pf_ft_ai.common.precedence import DataSourcePrecedence, higher_precedence
+from pff_fa_ai.common.precedence import DataSourcePrecedence, higher_precedence
 
 
 @pytest.mark.parametrize(

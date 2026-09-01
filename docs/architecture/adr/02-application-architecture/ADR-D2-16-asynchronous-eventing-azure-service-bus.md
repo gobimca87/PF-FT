@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-03, ADR-D2-10, ADR-D2-17, ADR-D2-18, ADR-D4-06, ADR-D5-08, ADR-D6-04]
 source_docs:
-  - "MD files/3 Context & Integration/11 PF-FT-AI-SERVICE-BUS.md §2, §3, §4, §5, §6, §7, §8, §9, §10, §27, §28, §29, §30, §31, §32, §33, §34, §50, §51"
-  - "MD files/1 Foundation/1 PF-FT-AI-ARCHITECTURE.md §24"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28"
+  - "MD files/3 Context & Integration/11 PFF-FA-AI-SERVICE-BUS.md §2, §3, §4, §5, §6, §7, §8, §9, §10, §27, §28, §29, §30, §31, §32, §33, §34, §50, §51"
+  - "MD files/1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md §24"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28"
 build_phases: [12]
 impacted_paths:
-  - src/pf_ft_ai/messaging/service_bus/
+  - src/pff_fa_ai/messaging/service_bus/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -35,28 +35,28 @@ reviewable statement rather than everything the enterprise happens to publish.
 
 ## 2. Context and Problem Statement
 
-`CLAUDE.md` lists Azure Service Bus under Confirmed Tech Stack. 11 PF-FT-AI-SERVICE-BUS.md covers it across sixty-odd
+`CLAUDE.md` lists Azure Service Bus under Confirmed Tech Stack. 11 PFF-FA-AI-SERVICE-BUS.md covers it across sixty-odd
 sections: §2–§5 the principle and why it is required, §6–§10 event types, §27–§31 namespace,
 topics, subscriptions and filtering, §32–§34 consumer architecture and what the consumer must not
-do, §50–§51 ERC refresh triggering and scope. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28 splits Service Bus responsibility:
+do, §50–§51 ERC refresh triggering and scope. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28 splits Service Bus responsibility:
 enterprise produces, AI consumes.
 
 The platform choice is settled. Three postural questions are not, and each has a security or
 architectural consequence.
 
-**Does the platform ever produce events?** 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28 assigns event production to the enterprise
+**Does the platform ever produce events?** 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28 assigns event production to the enterprise
 and subscription to the AI. But the platform will have internal needs — a workflow suspended, an
 evaluation triggered, a guardrail fired — and Service Bus is right there. Using it for internal
-signalling would put platform-internal messages on enterprise infrastructure, blur the 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28
+signalling would put platform-internal messages on enterprise infrastructure, blur the 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28
 split, and create a channel through which the platform could appear to be asserting business
 facts.
 
-**What does the platform subscribe to?** 11 PF-FT-AI-SERVICE-BUS.md §30 covers subscription filtering without saying
+**What does the platform subscribe to?** 11 PFF-FA-AI-SERVICE-BUS.md §30 covers subscription filtering without saying
 what the filter should express. A broad subscription is simpler and means the platform receives
 events about clubs, applications and officials it has no interest in — receiving personal data it
 never needed, and creating processing volume it must discard.
 
-**Who owns the subscription's lifecycle?** 11 PF-FT-AI-SERVICE-BUS.md §31 covers subscription responsibility. If the
+**Who owns the subscription's lifecycle?** 11 PFF-FA-AI-SERVICE-BUS.md §31 covers subscription responsibility. If the
 enterprise owns it, the platform cannot change what it receives without an enterprise change. If
 the platform owns it, it can subscribe to more than it should without anyone noticing.
 
@@ -71,11 +71,11 @@ make.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Events must refresh ERC and resume workflows | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 12; 11 PF-FT-AI-SERVICE-BUS.md §50–§51 |
-| DR-F-02 | The enterprise produces; the AI consumes | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28; 11 PF-FT-AI-SERVICE-BUS.md §2 |
-| DR-F-03 | The consumer must not make business decisions | 11 PF-FT-AI-SERVICE-BUS.md §34 |
-| DR-F-04 | Subscriptions must be filtered | 11 PF-FT-AI-SERVICE-BUS.md §30 |
-| DR-F-05 | Four event types must be supported | 11 PF-FT-AI-SERVICE-BUS.md §6–§10 |
+| DR-F-01 | Events must refresh ERC and resume workflows | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 12; 11 PFF-FA-AI-SERVICE-BUS.md §50–§51 |
+| DR-F-02 | The enterprise produces; the AI consumes | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28; 11 PFF-FA-AI-SERVICE-BUS.md §2 |
+| DR-F-03 | The consumer must not make business decisions | 11 PFF-FA-AI-SERVICE-BUS.md §34 |
+| DR-F-04 | Subscriptions must be filtered | 11 PFF-FA-AI-SERVICE-BUS.md §30 |
+| DR-F-05 | Four event types must be supported | 11 PFF-FA-AI-SERVICE-BUS.md §6–§10 |
 
 ### 3.2 Non-functional drivers
 
@@ -91,8 +91,8 @@ make.
 |---|---|---|---|
 | DR-C-01 | Azure Service Bus is the confirmed platform | Organisational | `CLAUDE.md` |
 | DR-C-02 | The platform implements no enterprise scheduled processing | Platform | ADR-D1-01 §7.3 |
-| DR-C-03 | An event is a notification, not data or instruction | Platform | ADR-D2-03 §7.4; 11 PF-FT-AI-SERVICE-BUS.md §25, §58 |
-| DR-C-04 | The enterprise owns event contracts | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28 |
+| DR-C-03 | An event is a notification, not data or instruction | Platform | ADR-D2-03 §7.4; 11 PFF-FA-AI-SERVICE-BUS.md §25, §58 |
+| DR-C-04 | The enterprise owns event contracts | Organisational | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28 |
 
 ### 3.4 Assumptions
 
@@ -131,7 +131,7 @@ lifecycle, AI outcomes, evaluation signals — onto Service Bus.
 - Natural fit for an event-driven architecture.
 
 **Weaknesses.**
-- Contradicts 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28's split (DR-F-02).
+- Contradicts 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28's split (DR-F-02).
 - A platform-emitted event on enterprise infrastructure looks like an enterprise event to a
   consumer. An `AffiliationAssessed` event from the AI could be consumed by something that treats
   it as authoritative — the AI asserting a business fact, which is the Golden Rule's central
@@ -193,7 +193,7 @@ suspended workflows.
 - Simple failure model.
 
 **Weaknesses.**
-- Fails 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 12, which requires event-driven refresh and resume.
+- Fails 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 12, which requires event-driven refresh and resume.
 - Polling every suspended workflow across a county during an affiliation window is substantial
   enterprise load for mostly-unchanged state.
 - Latency is the polling interval; a CFA approval could sit unnoticed for the interval's duration
@@ -222,7 +222,7 @@ platform without being needed.
 
 **Sensitivity.** B leads D by 60 points and C by 75. C differs from B only on minimisation and
 flexibility, and loses decisively on the first — receiving a county's event stream to discard most
-of it is processing personal data without need. D is excluded by 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 12 and by its
+of it is processing personal data without need. D is excluded by 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 12 and by its
 enterprise load. A fails EC-01 categorically: no reweighting makes it acceptable for the AI
 platform to emit something an enterprise consumer might treat as authoritative.
 
@@ -233,7 +233,7 @@ platform to emit something an enterprise consumer might treat as authoritative.
 PFF AI **subscribes only**. It has no publish capability: the Service Bus client is configured
 without a sender, and no code path constructs an outbound message.
 
-This is stronger than a policy. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28's split is realised by the platform being structurally
+This is stronger than a policy. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28's split is realised by the platform being structurally
 incapable of publishing, which means the failure mode Option A creates — an AI-emitted event
 consumed as authoritative — cannot occur.
 
@@ -255,7 +255,7 @@ problem.
 
 ### 7.3 Subscriptions are filtered and platform-owned
 
-The platform owns its subscriptions per 11 PF-FT-AI-SERVICE-BUS.md §31. Filters express, as precisely as the broker
+The platform owns its subscriptions per 11 PFF-FA-AI-SERVICE-BUS.md §31. Filters express, as precisely as the broker
 allows:
 
 - **Event types** the platform handles — nothing outside the registered handler set (ADR-D2-03
@@ -263,7 +263,7 @@ allows:
 - **Entity scope** where expressible — for example, counties the platform is live in during a
   phased rollout.
 - **Schema versions** the platform supports, so an unsupported version is not delivered rather
-  than being delivered and rejected (11 PF-FT-AI-SERVICE-BUS.md §38).
+  than being delivered and rejected (11 PFF-FA-AI-SERVICE-BUS.md §38).
 
 The filter is the platform's statement of what it consumes, and it is versioned configuration
 subject to review. A widened filter is a change to what personal data the platform receives, which
@@ -275,12 +275,12 @@ identifiers, and QM-03 tracks the volume as a minimisation signal.
 
 ### 7.4 The four event types
 
-11 PF-FT-AI-SERVICE-BUS.md §6–§10 define four, each with a distinct handling:
+11 PFF-FA-AI-SERVICE-BUS.md §6–§10 define four, each with a distinct handling:
 
-| Type | 11 PF-FT-AI-SERVICE-BUS.md | Affiliation examples | Handling |
+| Type | 11 PFF-FA-AI-SERVICE-BUS.md | Affiliation examples | Handling |
 |---|---|---|---|
 | **Workflow events** | §7 | Application status transitions | Invalidate ERC section; refresh; resume workflow |
-| **HIL events** | §8 | CFA approval, rejection, cancellation, override | Same, plus HIL evidence recording (20.PF-FT-AI-GOVERNANCE.md §71) |
+| **HIL events** | §8 | CFA approval, rejection, cancellation, override | Same, plus HIL evidence recording (20.PFF-FA-AI-GOVERNANCE.md §71) |
 | **Enterprise data events** | §9 | Team folded, official's DBS updated, debt cleared | Invalidate the affected ERC section; refresh on next use |
 | **External events** | §10 | Payment confirmation, WGS integration result | Invalidate; refresh; may resume |
 
@@ -290,7 +290,7 @@ whether a workflow resumes.
 
 ### 7.5 The consumer makes no business decision
 
-11 PF-FT-AI-SERVICE-BUS.md §34 constrains the consumer. Restated as what it may and may not do:
+11 PFF-FA-AI-SERVICE-BUS.md §34 constrains the consumer. Restated as what it may and may not do:
 
 | May | May not |
 |---|---|
@@ -312,7 +312,7 @@ platform schedules nothing business-facing; the cancellation arrives as a workfl
 handled like any other. The platform has no scheduler for business outcomes, and ADR-D1-01 AC-07
 asserts its absence.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — eventing is a named 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — eventing is a named 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52
 category — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -347,13 +347,13 @@ There is no arrow from `AI` back to `T`. That absence is §7.1.
 
 ### 8.2 Namespace, topic and subscription
 
-Per 11 PF-FT-AI-SERVICE-BUS.md §27–§29:
+Per 11 PFF-FA-AI-SERVICE-BUS.md §27–§29:
 
 | Element | Owner | Notes |
 |---|---|---|
 | Namespace | Enterprise / Platform-DevOps | Shared enterprise infrastructure |
-| Topics | Enterprise | Producers own their topics (3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28) |
-| **AI subscription** | **PFF AI platform** | One per topic of interest; filters are platform configuration (11 PF-FT-AI-SERVICE-BUS.md §29, §31) |
+| Topics | Enterprise | Producers own their topics (3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28) |
+| **AI subscription** | **PFF AI platform** | One per topic of interest; filters are platform configuration (11 PFF-FA-AI-SERVICE-BUS.md §29, §31) |
 | Dead-letter queue | PFF AI platform | Per subscription; monitored per ADR-D2-18 |
 
 Platform ownership of the subscription is what gives EC-05: adding an event type to consume is a
@@ -363,9 +363,9 @@ filter change and a handler, not an enterprise change request.
 
 | Aspect | Decision |
 |---|---|
-| Authentication | Azure Managed Identity (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §28), never connection strings with embedded keys |
+| Authentication | Azure Managed Identity (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §28), never connection strings with embedded keys |
 | Authorisation | Listen-only on the subscription. **No Send claim is granted**, which enforces §7.1 at the infrastructure level as well as in code. |
-| Network | Private connectivity per 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §24; no public endpoint traversal |
+| Network | Private connectivity per 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §24; no public endpoint traversal |
 | Secrets | No Service Bus key in configuration; identity-based access only (ADR-D5-07) |
 
 The listen-only grant is worth noting: even if a future code change added a sender, it would fail
@@ -444,11 +444,11 @@ QM-01 and QM-06 are the two checks on §7.1, at the code and infrastructure leve
 | Dimension | Impact |
 |---|---|
 | Attack surface change | The subscription is an ingress point. Listen-only access, private connectivity and managed identity bound it; envelope and schema validation bound what can be processed; ADR-D2-03 §7.4's structural prohibition closes the payload-to-prompt path. |
-| Data classification touched | Event payloads carry identifiers by design (11 PF-FT-AI-SERVICE-BUS.md §24), not personal data; refreshed API responses carry the personal data. |
+| Data classification touched | Event payloads carry identifiers by design (11 PFF-FA-AI-SERVICE-BUS.md §24), not personal data; refreshed API responses carry the personal data. |
 | Personal data / PII | Filters implement minimisation before delivery, which is stronger than filtering after. An event about a club outside the platform's scope is never received. |
 | Children's data and safeguarding | Compliance events — a DBS completing, a suspension lifting — invalidate the safeguarding section and trigger a refresh. The event never carries the clearance status into ERC, so a safeguarding status shown to a user always came from an authoritative read. |
 | UK GDPR lawful basis and rights impact | Filtering supports minimisation (Art. 5(1)(c)). Receiving fewer events reduces the processing footprint for the records of processing. |
-| Audit and evidential requirements | Correlation and causation IDs (11 PF-FT-AI-SERVICE-BUS.md §19–§20) link enterprise decision to platform action to user notification, giving an unbroken chain for HIL evidence (20.PF-FT-AI-GOVERNANCE.md §71). |
+| Audit and evidential requirements | Correlation and causation IDs (11 PFF-FA-AI-SERVICE-BUS.md §19–§20) link enterprise decision to platform action to user notification, giving an unbroken chain for HIL evidence (20.PFF-FA-AI-GOVERNANCE.md §71). |
 | Standards touched | ISO/IEC 27001 A.5.15, A.8.16 (monitoring), A.8.21 (security of network services); ISO/IEC 42001; UK GDPR Art. 5(1)(c), 30. |
 
 ## 14. Implementation Impact
@@ -456,7 +456,7 @@ QM-01 and QM-06 are the two checks on §7.1, at the code and infrastructure leve
 | Aspect | Detail |
 |---|---|
 | Build phases | 12 (Service Bus and event-driven resume) |
-| Repository paths | `src/pf_ft_ai/messaging/service_bus/` — client, consumer, message, lock, configuration. **No `producer.py`.** |
+| Repository paths | `src/pff_fa_ai/messaging/service_bus/` — client, consumer, message, lock, configuration. **No `producer.py`.** |
 | Configuration | Subscription names and filters per environment; managed identity configuration |
 | Contracts / schemas | Event envelope per ADR-D2-17 |
 | Migration | None |
@@ -516,10 +516,10 @@ decision determines it is not built; §7.1 makes the platform a pure consumer.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-11 Event Notification & Real-Time Synchronization |
-| Specification sections | 11 PF-FT-AI-SERVICE-BUS.md §2 (Core Principle), §3–§5 (Position, Why Required, Event-Driven Workflow Principle), §6–§10 (Event Types, Workflow, HIL, Enterprise Data, External), §19–§20 (Correlation, Causation), §24–§25 (Payload, Event as Notification), §27–§31 (Namespace, Topics, AI Subscription, Filtering, Subscription Responsibility), §32–§34 (Consumer Architecture, Responsibilities, Must Not), §38 (Unknown Event Version), §50–§51 (ERC Refresh Trigger, Scope), §58 (Event Should Not Become Prompt Instruction); 1 PF-FT-AI-ARCHITECTURE.md §24, §39 criterion 12; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28 (Service Bus Responsibility); 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §24, §28; 20.PF-FT-AI-GOVERNANCE.md §71 |
+| Specification sections | 11 PFF-FA-AI-SERVICE-BUS.md §2 (Core Principle), §3–§5 (Position, Why Required, Event-Driven Workflow Principle), §6–§10 (Event Types, Workflow, HIL, Enterprise Data, External), §19–§20 (Correlation, Causation), §24–§25 (Payload, Event as Notification), §27–§31 (Namespace, Topics, AI Subscription, Filtering, Subscription Responsibility), §32–§34 (Consumer Architecture, Responsibilities, Must Not), §38 (Unknown Event Version), §50–§51 (ERC Refresh Trigger, Scope), §58 (Event Should Not Become Prompt Instruction); 1 PFF-FA-AI-ARCHITECTURE.md §24, §39 criterion 12; 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28 (Service Bus Responsibility); 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §24, §28; 20.PFF-FA-AI-GOVERNANCE.md §71 |
 | Requirement IDs | `FR-A39-12`, `NFR-A38-REL` |
 | Build phases | 12 |
-| Code paths | `src/pf_ft_ai/messaging/service_bus/` |
+| Code paths | `src/pff_fa_ai/messaging/service_bus/` |
 | Configuration | Subscription filters per environment |
 | Tests | AC-01 to AC-07 |
 | Upstream ADRs | ADR-D2-03, ADR-D2-10 |

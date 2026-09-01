@@ -7,7 +7,7 @@ description: Task instructions for proposing and confirming official assignments
 risk: HIGH
 compatibility:
   model:
-    - pf-ft-slm-primary: ">=1.0.0"
+    - pff-fa-slm-primary: ">=1.0.0"
 variables:
   - erc_context
   - eligible_officials

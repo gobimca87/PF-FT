@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-09, ADR-D3-10, ADR-D5-06, ADR-D6-15, ADR-D7-12]
 source_docs:
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §31, §32, §33, §34, §35, §36, §37, §39, §84, §102, §103, §161, §166, §167, §168, §169"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §31, §32, §33, §34, §35, §36, §37, §39, §84, §102, §103, §161, §166, §167, §168, §169"
 build_phases: [6]
 impacted_paths:
   - prompts/
@@ -30,12 +30,12 @@ PFF AI will treat **Git as the canonical source of truth for all prompts**, stor
 as versioned Markdown-body-with-YAML-metadata artefacts under `prompts/`, promoted
 through environments as immutable, semantically-versioned releases via the release
 manifest. A prompt registry loads prompts by `id@version`; production never reads a
-mutable prompt. This mirrors 16.PF-FT-AI-PROMPT-ENGINEERING.md §169 ("prompt source of truth" = Git) and the
+mutable prompt. This mirrors 16.PFF-FA-AI-PROMPT-ENGINEERING.md §169 ("prompt source of truth" = Git) and the
 versioned-artefact rule in `CLAUDE.md`.
 
 ## 2. Context and Problem Statement
 
-16.PF-FT-AI-PROMPT-ENGINEERING.md §31–§39 defines a template registry, file naming, metadata, status lifecycle
+16.PFF-FA-AI-PROMPT-ENGINEERING.md §31–§39 defines a template registry, file naming, metadata, status lifecycle
 and semantic versioning; §166–§169 discuss storage and name Git as the source of
 truth; §102–§103 define promotion and rollback. `CLAUDE.md` requires prompts to be
 "versioned software artifacts — never mutate in place in production." Without a
@@ -50,26 +50,26 @@ persona, task, tool) is authored, reviewed, promoted and rolled back.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Load prompt deterministically by id@version | 16.PF-FT-AI-PROMPT-ENGINEERING.md §35, §87 |
-| DR-F-02 | Full review/diff/history on every prompt change | 16.PF-FT-AI-PROMPT-ENGINEERING.md §96, §157 |
-| DR-F-03 | Promote across DEV→…→PROD as immutable release | 16.PF-FT-AI-PROMPT-ENGINEERING.md §102, §161 |
-| DR-F-04 | Roll back to a prior version instantly | 16.PF-FT-AI-PROMPT-ENGINEERING.md §103, §160 |
+| DR-F-01 | Load prompt deterministically by id@version | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §35, §87 |
+| DR-F-02 | Full review/diff/history on every prompt change | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §96, §157 |
+| DR-F-03 | Promote across DEV→…→PROD as immutable release | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §102, §161 |
+| DR-F-04 | Roll back to a prior version instantly | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §103, §160 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Production prompt is immutable | No runtime edit path | 16.PF-FT-AI-PROMPT-ENGINEERING.md §39, §155 |
-| DR-N-02 | Provenance on every generation | Version in every trace | 16.PF-FT-AI-PROMPT-ENGINEERING.md §90 |
-| DR-N-03 | Human-readable authoring + machine metadata | MD body + YAML | 16.PF-FT-AI-PROMPT-ENGINEERING.md §167, §168 |
+| DR-N-01 | Production prompt is immutable | No runtime edit path | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §39, §155 |
+| DR-N-02 | Provenance on every generation | Version in every trace | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §90 |
+| DR-N-03 | Human-readable authoring + machine metadata | MD body + YAML | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §167, §168 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Prompts are versioned artefacts, not in-place mutable | Organisational | CLAUDE.md; 16.PF-FT-AI-PROMPT-ENGINEERING.md §39 |
-| DR-C-02 | Change governance/approval gates apply | Governance | ADR-D6-15; 16.PF-FT-AI-PROMPT-ENGINEERING.md §96 |
-| DR-C-03 | Secrets never embedded in prompts | Security | 16.PF-FT-AI-PROMPT-ENGINEERING.md §114, §116 |
+| DR-C-01 | Prompts are versioned artefacts, not in-place mutable | Organisational | CLAUDE.md; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §39 |
+| DR-C-02 | Change governance/approval gates apply | Governance | ADR-D6-15; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §96 |
+| DR-C-03 | Secrets never embedded in prompts | Security | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §114, §116 |
 
 ### 3.4 Assumptions
 
@@ -86,7 +86,7 @@ persona, task, tool) is authored, reviewed, promoted and rolled back.
 | EC-03 | Rollback speed & safety | 18 | Incident recovery | Time-to-rollback |
 | EC-04 | Authoring ergonomics | 12 | Prompt engineers iterate often | Author effort |
 | EC-05 | Operational simplicity | 13 | Fewer moving parts | # systems to run |
-| EC-06 | Security (secret-free, scannable) | 10 | 16.PF-FT-AI-PROMPT-ENGINEERING.md §114 | Secret-scan in CI |
+| EC-06 | Security (secret-free, scannable) | 10 | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §114 | Secret-scan in CI |
 | | **Total** | **100** | | |
 
 Scoring scale: **1**–**5** as elsewhere.
@@ -96,7 +96,7 @@ Scoring scale: **1**–**5** as elsewhere.
 ### 5.1 Option A — Git-canonical files + registry loader + release manifest
 
 **Description.** Prompts as MD+YAML files in `prompts/`; a loader/registry resolves
-`id@version`; promotion pins versions in an immutable release manifest (16.PF-FT-AI-PROMPT-ENGINEERING.md §161).
+`id@version`; promotion pins versions in an immutable release manifest (16.PFF-FA-AI-PROMPT-ENGINEERING.md §161).
 **Strengths.** PR review/diff/history; immutable prod; instant rollback (repoint
 manifest); secret-scannable in CI; no extra datastore.
 **Weaknesses.** Non-technical authors need Git literacy.
@@ -106,7 +106,7 @@ manifest); secret-scannable in CI; no extra datastore.
 
 **Description.** Prompts in a DB, edited at runtime through a console.
 **Strengths.** Friendly authoring; no deploy to change a prompt.
-**Weaknesses.** Runtime mutability violates DR-C-01/16.PF-FT-AI-PROMPT-ENGINEERING.md §39; weak diff/review;
+**Weaknesses.** Runtime mutability violates DR-C-01/16.PFF-FA-AI-PROMPT-ENGINEERING.md §39; weak diff/review;
 provenance and rollback bespoke; secret-scanning harder.
 **Cost / effort.** Higher; new datastore + UI + guardrails to re-impose immutability.
 
@@ -115,7 +115,7 @@ provenance and rollback bespoke; secret-scanning harder.
 **Description.** Prompt strings in code modules.
 **Strengths.** Versioned with code; simple.
 **Weaknesses.** Couples prompt iteration to code releases; poor separation from the
-prompt-engineering lifecycle (16.PF-FT-AI-PROMPT-ENGINEERING.md §40); harder for prompt engineers; no metadata
+prompt-engineering lifecycle (16.PFF-FA-AI-PROMPT-ENGINEERING.md §40); harder for prompt engineers; no metadata
 registry; A/B and per-environment overlays awkward.
 **Cost / effort.** Low but rigid.
 
@@ -123,7 +123,7 @@ registry; A/B and per-environment overlays awkward.
 
 **Description.** External prompt CMS with versioning APIs.
 **Strengths.** Rich UI, A/B, analytics.
-**Weaknesses.** Off-tenancy storage of prompts (some sensitive, 16.PF-FT-AI-PROMPT-ENGINEERING.md §116); new
+**Weaknesses.** Off-tenancy storage of prompts (some sensitive, 16.PFF-FA-AI-PROMPT-ENGINEERING.md §116); new
 vendor dependency; provenance split from code; conflicts with Git-as-truth (§169).
 **Cost / effort.** Licence + integration; lock-in.
 
@@ -146,7 +146,7 @@ conflict.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 16.PF-FT-AI-PROMPT-ENGINEERING.md §166–§169 and the
+**Method.** Weighted scoring against §4, informed by 16.PFF-FA-AI-PROMPT-ENGINEERING.md §166–§169 and the
 release-manifest model (ADR-D5-06).
 
 | Criterion | Weight | A: Git+manifest | B: DB+UI | C: In code | D: SaaS | E: Langfuse |
@@ -176,22 +176,22 @@ used to *label/trace* prompt versions, not as the source of truth. B and D are
 rejected for runtime mutability and off-tenancy/lock-in concerns; C for coupling
 prompt iteration to code releases.
 
-**Status rationale.** `Accepted` — 16.PF-FT-AI-PROMPT-ENGINEERING.md §169 and CLAUDE.md fix Git-as-truth and
+**Status rationale.** `Accepted` — 16.PFF-FA-AI-PROMPT-ENGINEERING.md §169 and CLAUDE.md fix Git-as-truth and
 immutability; this ADR records the alternatives and rationale.
 
 ## 8. Architecture Detail
 
-- **Layout** (16.PF-FT-AI-PROMPT-ENGINEERING.md §84): `prompts/{system,persona,task,tool}/…vN.md`, each with
-  metadata (16.PF-FT-AI-PROMPT-ENGINEERING.md §33): `id`, `version` (semver, §35–§36), `status` (§34),
+- **Layout** (16.PFF-FA-AI-PROMPT-ENGINEERING.md §84): `prompts/{system,persona,task,tool}/…vN.md`, each with
+  metadata (16.PFF-FA-AI-PROMPT-ENGINEERING.md §33): `id`, `version` (semver, §35–§36), `status` (§34),
   `owner` (§40), `risk_class` (§41), `model_compatibility` (§82), `dependencies`
   (§106).
-- **Registry/loader** (16.PF-FT-AI-PROMPT-ENGINEERING.md §86–§87): resolves and caches by `id@version`;
-  missing/invalid version fails closed (16.PF-FT-AI-PROMPT-ENGINEERING.md §29).
-- **Promotion** (16.PF-FT-AI-PROMPT-ENGINEERING.md §102, §118 overlays, §161 manifest): environment overlays
+- **Registry/loader** (16.PFF-FA-AI-PROMPT-ENGINEERING.md §86–§87): resolves and caches by `id@version`;
+  missing/invalid version fails closed (16.PFF-FA-AI-PROMPT-ENGINEERING.md §29).
+- **Promotion** (16.PFF-FA-AI-PROMPT-ENGINEERING.md §102, §118 overlays, §161 manifest): environment overlays
   layer non-secret env values; the release manifest pins exact versions per env.
-- **Rollback** (16.PF-FT-AI-PROMPT-ENGINEERING.md §103, §160): change the manifest pointer; previous version is
+- **Rollback** (16.PFF-FA-AI-PROMPT-ENGINEERING.md §103, §160): change the manifest pointer; previous version is
   still present and immutable.
-- **CI gates** (16.PF-FT-AI-PROMPT-ENGINEERING.md §113 lint, §114 secret-scan, §155 regression): every prompt
+- **CI gates** (16.PFF-FA-AI-PROMPT-ENGINEERING.md §113 lint, §114 secret-scan, §155 regression): every prompt
   change runs lint, secret-scan, contract and regression tests before promotion.
 
 ## 9. Consequences
@@ -226,7 +226,7 @@ immutability; this ADR records the alternatives and rationale.
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
-| RSK-01 | Secret committed in a prompt | Low | High | M | CI secret-scan (16.PF-FT-AI-PROMPT-ENGINEERING.md §114) | Security Architect | Low |
+| RSK-01 | Secret committed in a prompt | Low | High | M | CI secret-scan (16.PFF-FA-AI-PROMPT-ENGINEERING.md §114) | Security Architect | Low |
 | RSK-02 | Non-technical author blocked | Med | Low | L | Authoring UI over Git PRs | Prompt Eng | Low |
 | RSK-03 | Wrong version promoted | Low | Med | M | Manifest review gate (ADR-D6-15) | Release Manager | Low |
 
@@ -256,7 +256,7 @@ immutability; this ADR records the alternatives and rationale.
 |---|---|
 | Build phases | 6 |
 | Repository paths | `prompts/`, release manifest |
-| Configuration | Env overlays (16.PF-FT-AI-PROMPT-ENGINEERING.md §118); manifest (§161) |
+| Configuration | Env overlays (16.PFF-FA-AI-PROMPT-ENGINEERING.md §118); manifest (§161) |
 | Contracts / schemas | Prompt metadata schema (§33) |
 | Migration | N/A |
 | Dependencies on other ADRs | ADR-D5-06 (config/manifest), ADR-D6-15 (gates) |
@@ -303,7 +303,7 @@ immutability; this ADR records the alternatives and rationale.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-15 |
-| Specification sections | 16.PF-FT-AI-PROMPT-ENGINEERING.md §31–§41, §84–§87, §102–§103, §161, §166–§169 |
+| Specification sections | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §31–§41, §84–§87, §102–§103, §161, §166–§169 |
 | Requirement IDs | PROMPT-STORE-* |
 | Build phases | 6 |
 | Code paths | `prompts/`, registry loader |

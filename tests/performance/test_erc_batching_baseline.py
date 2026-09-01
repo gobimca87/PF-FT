@@ -7,8 +7,8 @@ yet to calibrate a tighter one)."""
 
 import time
 
-from pf_ft_ai.context.collection.aggregator import aggregate_records
-from pf_ft_ai.context.collection.batching import split_into_batches
+from pff_fa_ai.context.collection.aggregator import aggregate_records
+from pff_fa_ai.context.collection.batching import split_into_batches
 from tests.fixtures.factories import make_enterprise_records
 
 _LARGE_SCALE_BOUND_SECONDS = 1.0

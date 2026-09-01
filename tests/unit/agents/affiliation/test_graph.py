@@ -1,6 +1,6 @@
-from pf_ft_ai.agents.affiliation.graph import build_affiliation_graph
-from pf_ft_ai.agents.affiliation.steps import FAILED_STATUS, STEP_ORDER
-from pf_ft_ai.orchestration.langgraph.state import GraphState
+from pff_fa_ai.agents.affiliation.graph import build_affiliation_graph
+from pff_fa_ai.agents.affiliation.steps import FAILED_STATUS, STEP_ORDER
+from pff_fa_ai.orchestration.langgraph.state import GraphState
 from tests.unit.agents.affiliation.support import (
     build_test_dependencies,
     enterprise_response_handler,

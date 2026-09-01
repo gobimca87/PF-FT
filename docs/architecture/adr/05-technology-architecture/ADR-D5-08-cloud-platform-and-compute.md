@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-09, ADR-D5-11, ADR-D5-12, ADR-D5-13, ADR-D5-15, ADR-D6-04]
 source_docs:
-  - "MD files/6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §3, §4, §9, §10, §11, §12, §20, §22, §54"
+  - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §3, §4, §9, §10, §11, §12, §20, §22, §54"
 build_phases: [1, 21]
 impacted_paths:
   - infra/
@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will run on **Microsoft Azure** with **Azure Kubernetes Service (AKS)** as the
 compute platform, alongside APIM, Key Vault, Service Bus, ACR and Azure Monitor
-(CLAUDE.md; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §3–§4, §10). AKS gives the container orchestration, GPU node pools
+(CLAUDE.md; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §3–§4, §10). AKS gives the container orchestration, GPU node pools
 (ADR-D5-11), private networking and workload separation the platform needs while
 staying inside the FA's Azure tenancy.
 
 ## 2. Context and Problem Statement
 
-CLAUDE.md fixes Azure + AKS; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §3–§4 describe the target Azure architecture,
+CLAUDE.md fixes Azure + AKS; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §3–§4 describe the target Azure architecture,
 §9–§12 the container/AKS runtime and workload separation, §20–§22 CPU/GPU and network
 architecture. The platform must co-locate with FA enterprise systems, support GPU
 serving for the self-hosted SLM, provide private connectivity, and meet enterprise
@@ -45,10 +45,10 @@ platform choice and why alternatives were not taken.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Container orchestration with GPU node pools | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §10, §20–§21; ADR-D5-11 |
-| DR-F-02 | Private connectivity to enterprise + PaaS | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §22–§24; ADR-D6-04 |
+| DR-F-01 | Container orchestration with GPU node pools | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §10, §20–§21; ADR-D5-11 |
+| DR-F-02 | Private connectivity to enterprise + PaaS | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §22–§24; ADR-D6-04 |
 | DR-C-01 | Stay in the FA's Azure tenancy | CLAUDE.md; organisational |
-| DR-N-01 | HA, autoscaling, workload separation | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12, §52, §54 |
+| DR-N-01 | HA, autoscaling, workload separation | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12, §52, §54 |
 
 ### 3.4 Assumptions
 
@@ -83,7 +83,7 @@ GPU + K8s; private networking.
 **Description.** Azure Container Apps instead of AKS.
 **Strengths.** Less K8s ops; scale-to-zero.
 **Weaknesses.** Less control over GPU serving/node pools; weaker fit for self-hosted
-SLM and fine-grained workload separation (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12, §21).
+SLM and fine-grained workload separation (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12, §21).
 **Cost / effort.** Lower ops, less control.
 
 ### 5.3 Option C — AWS + EKS
@@ -117,7 +117,7 @@ stack (APIM/KV/SB) is Azure-named. Cross-cloud to enterprise systems.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by CLAUDE.md and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §3–§22.
+**Method.** Weighted scoring against §4, informed by CLAUDE.md and 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §3–§22.
 
 | Criterion | Weight | A: Azure+AKS | B: Container Apps | C: AWS+EKS | D: GCP+GKE | E: Azure VMs |
 |---|---|---|---|---|---|---|
@@ -143,11 +143,11 @@ Key Vault (ADR-D5-07), Service Bus (ADR-D2-16), ACR (ADR-D5-09) and Azure Monito
 Container Apps (B) may host stateless CPU workers later; AWS/GCP (C/D) and plain VMs
 (E) are rejected.
 
-**Status rationale.** `Accepted` — confirmed in CLAUDE.md and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md.
+**Status rationale.** `Accepted` — confirmed in CLAUDE.md and 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md.
 
 ## 8. Architecture Detail
 
-- AKS cluster with node pools: system, CPU workload, GPU workload (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12, §20–§21);
+- AKS cluster with node pools: system, CPU workload, GPU workload (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12, §20–§21);
   namespace strategy per environment (§11); pod distribution/HA (§54–§55).
 - Private cluster / private endpoints (§24; ADR-D6-04); egress control (§25).
 - IaC provisions all of it (ADR-D5-12); K8s manifests deploy workloads (ADR-D5-13).
@@ -255,7 +255,7 @@ Container Apps (B) may host stateless CPU workers later; AWS/GCP (C/D) and plain
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 Infrastructure |
-| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §3–§4, §9–§12, §20–§25, §54 |
+| Specification sections | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §3–§4, §9–§12, §20–§25, §54 |
 | Requirement IDs | INFRA-PLAT-* |
 | Build phases | 1, 21 |
 | Code paths | `infra/` |

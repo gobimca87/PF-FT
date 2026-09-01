@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-03, ADR-D3-21, ADR-D3-22, ADR-D3-24, ADR-D2-12, ADR-D6-12]
 source_docs:
-  - "MD files/4 AI/13.FP-FT-AI-RAG.md §2, §4, §5, §100, §101, §102, §103, §116, §117, §118, §119"
+  - "MD files/4 AI/13.PFF-FA-AI-RAG.md §2, §4, §5, §100, §101, §102, §103, §116, §117, §118, §119"
 build_phases: [8]
 impacted_paths:
-  - src/pf_ft_ai/rag/
+  - src/pff_fa_ai/rag/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -31,11 +31,11 @@ guidance, how-to, rules explanations — and will **never** be a source of
 authoritative business state (a club's affiliation status, a payment result, an
 official's record). Those come exclusively from enterprise APIs/events via ERC, per
 the precedence chain. RAG sits at the bottom-but-one tier of authority and its output
-is always grounded, cited, and subordinate to enterprise truth (13.FP-FT-AI-RAG.md §2, §4, §5).
+is always grounded, cited, and subordinate to enterprise truth (13.PFF-FA-AI-RAG.md §2, §4, §5).
 
 ## 2. Context and Problem Statement
 
-13.FP-FT-AI-RAG.md §4 states "RAG is not the enterprise API layer" and §5 defines the RAG
+13.PFF-FA-AI-RAG.md §4 states "RAG is not the enterprise API layer" and §5 defines the RAG
 decision boundary; §100–§103 fix how RAG relates to Service Bus, memory, ERC and
 enterprise APIs; §116–§119 govern hallucination control and answerability. The
 Golden Rule and precedence chain (ADR-D1-03) place RAG below ERC/enterprise. The
@@ -48,11 +48,11 @@ explicitly and makes it enforceable.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | RAG answers knowledge/FAQ questions with citations | 13.FP-FT-AI-RAG.md §2, §81 |
-| DR-C-01 | RAG must never assert business truth | 13.FP-FT-AI-RAG.md §4, §5; ADR-D1-03 |
-| DR-C-02 | Precedence: Enterprise API/Event > ERC > Cache > RAG > SLM | CLAUDE.md; 13.FP-FT-AI-RAG.md §102–§103 |
-| DR-C-03 | Grounded-response + answerability rules apply | 13.FP-FT-AI-RAG.md §116–§119 |
-| DR-N-01 | ACL-aware retrieval (some knowledge is restricted) | 13.FP-FT-AI-RAG.md §33–§39; ADR-D6-12 |
+| DR-F-01 | RAG answers knowledge/FAQ questions with citations | 13.PFF-FA-AI-RAG.md §2, §81 |
+| DR-C-01 | RAG must never assert business truth | 13.PFF-FA-AI-RAG.md §4, §5; ADR-D1-03 |
+| DR-C-02 | Precedence: Enterprise API/Event > ERC > Cache > RAG > SLM | CLAUDE.md; 13.PFF-FA-AI-RAG.md §102–§103 |
+| DR-C-03 | Grounded-response + answerability rules apply | 13.PFF-FA-AI-RAG.md §116–§119 |
+| DR-N-01 | ACL-aware retrieval (some knowledge is restricted) | 13.PFF-FA-AI-RAG.md §33–§39; ADR-D6-12 |
 
 ### 3.4 Assumptions
 
@@ -123,7 +123,7 @@ what it will do), never guessing.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 13.FP-FT-AI-RAG.md §2–§5, §100–§103,
+**Method.** Weighted scoring against §4, informed by 13.PFF-FA-AI-RAG.md §2–§5, §100–§103,
 §116–§119 and the precedence chain (ADR-D1-03).
 
 | Criterion | Weight | A: Knowledge-only | B: +snapshot | C: General Q&A | D: No RAG | E: Knowledge + handoff |
@@ -151,21 +151,21 @@ assert or override business truth. Indexing business-record snapshots (B) or a
 general Q&A layer (C) is forbidden. Dropping RAG entirely (D) is rejected as
 low-value.
 
-**Status rationale.** `Accepted` — 13.FP-FT-AI-RAG.md §4–§5 and the Golden Rule fix this
+**Status rationale.** `Accepted` — 13.PFF-FA-AI-RAG.md §4–§5 and the Golden Rule fix this
 boundary; the ADR records the enforceable design.
 
 ## 8. Architecture Detail
 
-- **Source registry** (13.FP-FT-AI-RAG.md §8–§10): only knowledge/FAQ/policy sources may be
+- **Source registry** (13.PFF-FA-AI-RAG.md §8–§10): only knowledge/FAQ/policy sources may be
   registered; source authority classification tags every source; business systems
   are not registrable RAG sources.
-- **Decision boundary** (13.FP-FT-AI-RAG.md §5): a check before retrieval classifies the question;
+- **Decision boundary** (13.PFF-FA-AI-RAG.md §5): a check before retrieval classifies the question;
   business-state intents bypass RAG and go to enterprise APIs (ADR-D2-12/D3-05).
-- **Grounding + answerability** (13.FP-FT-AI-RAG.md §116–§119): answers must be supported by
+- **Grounding + answerability** (13.PFF-FA-AI-RAG.md §116–§119): answers must be supported by
   retrieved, cited content; unanswerable/low-confidence → say so, don't fabricate.
-- **Precedence enforcement** (13.FP-FT-AI-RAG.md §102–§103): where RAG and ERC/enterprise both
+- **Precedence enforcement** (13.PFF-FA-AI-RAG.md §102–§103): where RAG and ERC/enterprise both
   have content, enterprise wins; RAG never contradicts authoritative state.
-- **ACL** (13.FP-FT-AI-RAG.md §33–§39; ADR-D6-12): retrieval-time filtering on the caller's
+- **ACL** (13.PFF-FA-AI-RAG.md §33–§39; ADR-D6-12): retrieval-time filtering on the caller's
   authorisation.
 
 ## 9. Consequences
@@ -188,9 +188,9 @@ boundary; the ADR records the enforceable design.
 | Constraint | Conformance |
 |---|---|
 | Enterprise decides; AI orchestrates | RAG informs; it never decides or asserts business state |
-| Precedence chain | RAG explicitly ranked below ERC/enterprise; never overrides (13.FP-FT-AI-RAG.md §102–§103) |
+| Precedence chain | RAG explicitly ranked below ERC/enterprise; never overrides (13.PFF-FA-AI-RAG.md §102–§103) |
 | Four-state separation | Knowledge plane distinct from enterprise business state |
-| Versioned artefacts | RAG pipeline/index versioned (13.FP-FT-AI-RAG.md §138–§143) |
+| Versioned artefacts | RAG pipeline/index versioned (13.PFF-FA-AI-RAG.md §138–§143) |
 | Adam persona governs *how*, not *what* | Persona narrates cited knowledge; never invents business truth |
 
 ## 11. Risks and Mitigations
@@ -206,7 +206,7 @@ boundary; the ADR records the enforceable design.
 | ID | Measure | Target | Threshold (alert) | Source | Review cadence |
 |---|---|---|---|---|---|
 | QM-01 | Business questions answered by RAG | 0 | > 0 | Boundary tests / traces | Continuous |
-| QM-02 | Knowledge answers with valid citation | 100% | < 98% | Eval (13.FP-FT-AI-RAG.md §135) | Per release |
+| QM-02 | Knowledge answers with valid citation | 100% | < 98% | Eval (13.PFF-FA-AI-RAG.md §135) | Per release |
 | QM-03 | Ungrounded answer rate | ≈ 0 | rising | Eval (§117) | Per release |
 
 ## 13. Security, Privacy and Compliance Impact
@@ -218,7 +218,7 @@ boundary; the ADR records the enforceable design.
 | Personal data / PII | Business/personal records are not in RAG |
 | Children's data and safeguarding | Safeguarding knowledge yes; safeguarding records never |
 | UK GDPR lawful basis and rights impact | Minimises personal data in the index |
-| Audit and evidential requirements | Citations + provenance (13.FP-FT-AI-RAG.md §176–§178) |
+| Audit and evidential requirements | Citations + provenance (13.PFF-FA-AI-RAG.md §176–§178) |
 | Standards touched | ISO/IEC 42001, 27001, NIST AI RMF |
 
 ## 14. Implementation Impact
@@ -226,9 +226,9 @@ boundary; the ADR records the enforceable design.
 | Aspect | Detail |
 |---|---|
 | Build phases | 8 |
-| Repository paths | `src/pf_ft_ai/rag/` |
+| Repository paths | `src/pff_fa_ai/rag/` |
 | Configuration | Source registry policy; decision-boundary config |
-| Contracts / schemas | RAG tool contract (13.FP-FT-AI-RAG.md §106) |
+| Contracts / schemas | RAG tool contract (13.PFF-FA-AI-RAG.md §106) |
 | Migration | N/A |
 | Dependencies on other ADRs | ADR-D1-03, ADR-D2-12, ADR-D3-05, ADR-D6-12 |
 | Effort estimate | M |
@@ -249,7 +249,7 @@ boundary; the ADR records the enforceable design.
 | Monitoring | Boundary decisions; citation rate; grounding metrics |
 | Alerting | Any business-question-answered-by-RAG detection |
 | Runbook | `docs/runbooks/rag.md` |
-| Failure mode and degradation | Retrieval failure → say so / hand off (13.FP-FT-AI-RAG.md §182–§183) |
+| Failure mode and degradation | Retrieval failure → say so / hand off (13.PFF-FA-AI-RAG.md §182–§183) |
 | Rollback | Disable RAG source; fall back to enterprise-only answers |
 | Support model impact | AI platform + content owners |
 
@@ -274,10 +274,10 @@ boundary; the ADR records the enforceable design.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-17 |
-| Specification sections | 13.FP-FT-AI-RAG.md §2, §4, §5, §100–§103, §116–§119 |
+| Specification sections | 13.PFF-FA-AI-RAG.md §2, §4, §5, §100–§103, §116–§119 |
 | Requirement IDs | RAG-SCOPE-* |
 | Build phases | 8 |
-| Code paths | `src/pf_ft_ai/rag/` |
+| Code paths | `src/pff_fa_ai/rag/` |
 | Configuration | source registry policy |
 | Tests | boundary + citation + precedence suites |
 | Upstream ADRs | ADR-D1-03, ADR-D2-12 |

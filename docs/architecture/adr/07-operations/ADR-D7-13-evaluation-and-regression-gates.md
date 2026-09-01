@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-09, ADR-D7-12, ADR-D7-14, ADR-D6-15, ADR-D8-05]
 source_docs:
-  - "MD files/5 QualityGovernance/21.PF-FT-AI-EVALUATION.md §6, §7, §8, §10, §12, §16, §17, §21, §22, §23, §24, §26, §56, §57, §58, §59"
+  - "MD files/5 QualityGovernance/21.PFF-FA-AI-EVALUATION.md §6, §7, §8, §10, §12, §16, §17, §21, §22, §23, §24, §26, §56, §57, §58, §59"
 build_phases: [12]
 impacted_paths:
   - tests/eval/
@@ -29,13 +29,13 @@ review_due: 2027-08-22
 PFF AI will gate AI changes on **automated evaluation against versioned golden datasets**,
 combining **deterministic checks** (exact/functional correctness) with **LLM-as-judge**
 for subjective qualities (relevance, groundedness, faithfulness, persona), plus adversarial
-and security evals — with **regression thresholds** blocking promotion (21.PF-FT-AI-EVALUATION.md §6–§26,
+and security evals — with **regression thresholds** blocking promotion (21.PFF-FA-AI-EVALUATION.md §6–§26,
 §56–§59). Deterministic-first; LLM-judge only where determinism can't measure the quality,
 and always validated against human ratings.
 
 ## 2. Context and Problem Statement
 
-21.PF-FT-AI-EVALUATION.md §6–§8 evaluation levels/types/offline, §10–§13 golden dataset/versioning/categories,
+21.PFF-FA-AI-EVALUATION.md §6–§8 evaluation levels/types/offline, §10–§13 golden dataset/versioning/categories,
 §16–§17 functional/deterministic correctness, §21–§24 groundedness/faithfulness/
 hallucination/citation, §26 prompt regression, §56–§59 guardrail/security/adversarial/human
 eval. AI quality can regress invisibly on a prompt/model/index change. This ADR fixes the
@@ -45,17 +45,17 @@ evaluation-gate approach used by CI (ADR-D7-09) and LLMOps (ADR-D7-12).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Versioned golden datasets | 21.PF-FT-AI-EVALUATION.md §10, §12 |
-| DR-F-02 | Deterministic + subjective (judge) eval | 21.PF-FT-AI-EVALUATION.md §16–§17, §18–§24 |
-| DR-F-03 | Regression thresholds block promotion | 21.PF-FT-AI-EVALUATION.md §26; 20.PF-FT-AI-GOVERNANCE.md §86 |
-| DR-F-04 | Adversarial + security eval | 21.PF-FT-AI-EVALUATION.md §56–§58 |
-| DR-C-01 | Judge validated vs human ratings | 21.PF-FT-AI-EVALUATION.md §59 |
+| DR-F-01 | Versioned golden datasets | 21.PFF-FA-AI-EVALUATION.md §10, §12 |
+| DR-F-02 | Deterministic + subjective (judge) eval | 21.PFF-FA-AI-EVALUATION.md §16–§17, §18–§24 |
+| DR-F-03 | Regression thresholds block promotion | 21.PFF-FA-AI-EVALUATION.md §26; 20.PFF-FA-AI-GOVERNANCE.md §86 |
+| DR-F-04 | Adversarial + security eval | 21.PFF-FA-AI-EVALUATION.md §56–§58 |
+| DR-C-01 | Judge validated vs human ratings | 21.PFF-FA-AI-EVALUATION.md §59 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | LLM-judge correlates with human ratings | Fall back to human eval for that dimension | 21.PF-FT-AI-EVALUATION.md §59 |
+| DR-A-01 | LLM-judge correlates with human ratings | Fall back to human eval for that dimension | 21.PFF-FA-AI-EVALUATION.md §59 |
 
 ## 4. Evaluation Criteria and Weights
 
@@ -72,7 +72,7 @@ evaluation-gate approach used by CI (ADR-D7-09) and LLMOps (ADR-D7-12).
 
 ### 5.1 Option A — Golden datasets + deterministic-first + validated LLM-judge + adversarial/security + regression thresholds
 
-**Description.** Versioned golden datasets per category (21.PF-FT-AI-EVALUATION.md §13); deterministic checks
+**Description.** Versioned golden datasets per category (21.PFF-FA-AI-EVALUATION.md §13); deterministic checks
 where possible (§17); LLM-as-judge for subjective dims (§18–§24), calibrated to human
 ratings (§59); adversarial + security evals (§56–§58); thresholds gate promotion (§26).
 **Strengths.** Strong detection, reliable, broad, calibrated.
@@ -103,7 +103,7 @@ correctness.
 
 ### 5.5 Option E — A + online evaluation (production monitoring) feeding datasets
 
-**Description.** Option A plus online eval (21.PF-FT-AI-EVALUATION.md §9) on production traffic feeding new
+**Description.** Option A plus online eval (21.PFF-FA-AI-EVALUATION.md §9) on production traffic feeding new
 golden cases and drift detection.
 **Strengths.** Offline gate + online drift catch; datasets stay representative.
 **Weaknesses.** Online eval pipeline + privacy handling.
@@ -113,12 +113,12 @@ golden cases and drift detection.
 
 | Option | Eliminated by |
 |---|---|
-| No eval gate | 20.PF-FT-AI-GOVERNANCE.md §86 |
-| Unversioned datasets | 21.PF-FT-AI-EVALUATION.md §12 |
+| No eval gate | 20.PFF-FA-AI-GOVERNANCE.md §86 |
+| Unversioned datasets | 21.PFF-FA-AI-EVALUATION.md §12 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 21.PF-FT-AI-EVALUATION.md §6–§26/§56–§59.
+**Method.** Weighted scoring against §4, informed by 21.PFF-FA-AI-EVALUATION.md §6–§26/§56–§59.
 
 | Criterion | Weight | A: Golden+det+judge | B: Deterministic-only | C: Judge-only | D: Human-only | E: A+online |
 |---|---|---|---|---|---|---|
@@ -142,17 +142,17 @@ unreliable alone.
 deterministic checks first and validated LLM-as-judge for subjective dimensions, plus
 adversarial and security evals, with regression thresholds blocking promotion; online
 evaluation on production traffic feeds the golden datasets and drift detection (Option
-E).** The judge is calibrated against human ratings (21.PF-FT-AI-EVALUATION.md §59). Deterministic-only (B),
+E).** The judge is calibrated against human ratings (21.PFF-FA-AI-EVALUATION.md §59). Deterministic-only (B),
 judge-only (C) and human-only (D) are rejected as sole approaches.
 
 ## 8. Architecture Detail
 
-- `tests/eval/`: golden datasets per category (21.PF-FT-AI-EVALUATION.md §13), versioned (§12); deterministic
+- `tests/eval/`: golden datasets per category (21.PFF-FA-AI-EVALUATION.md §13), versioned (§12); deterministic
   scorers (§17); an LLM-judge harness (calibrated, §59) for relevance/completeness/
   groundedness/faithfulness/citation/persona (§19–§24; persona ties to ADR-D8-05);
   adversarial + security datasets (§56–§58).
 - Regression thresholds (§26) gate promotion in CI (ADR-D7-09) and LLMOps (ADR-D7-12);
-  online eval (§9) samples production (privacy-safe, 20.PF-FT-AI-GOVERNANCE.md §84) to grow datasets + detect
+  online eval (§9) samples production (privacy-safe, 20.PFF-FA-AI-GOVERNANCE.md §84) to grow datasets + detect
   drift.
 
 ## 9. Consequences
@@ -200,7 +200,7 @@ judge-only (C) and human-only (D) are rejected as sole approaches.
 | Dimension | Impact |
 |---|---|
 | Attack surface change | Adversarial eval strengthens guardrails |
-| Data classification touched | Eval datasets governed (20.PF-FT-AI-GOVERNANCE.md §84) |
+| Data classification touched | Eval datasets governed (20.PFF-FA-AI-GOVERNANCE.md §84) |
 | Personal data / PII | Synthetic/anonymised eval data; online eval privacy-safe |
 | Children's data and safeguarding | No real children's data in eval |
 | UK GDPR lawful basis and rights impact | Online eval minimised/anonymised |
@@ -259,7 +259,7 @@ judge-only (C) and human-only (D) are rejected as sole approaches.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 |
-| Specification sections | 21.PF-FT-AI-EVALUATION.md §6–§26, §56–§59 |
+| Specification sections | 21.PFF-FA-AI-EVALUATION.md §6–§26, §56–§59 |
 | Requirement IDs | EVAL-* |
 | Build phases | 12 |
 | Code paths | `tests/eval/` |

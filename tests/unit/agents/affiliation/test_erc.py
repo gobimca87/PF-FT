@@ -1,9 +1,9 @@
-from pf_ft_ai.agents.affiliation.erc import (
+from pff_fa_ai.agents.affiliation.erc import (
     REQUIRED_SECTIONS,
     build_affiliation_erc,
     build_erc_section,
 )
-from pf_ft_ai.context.erc.states import ErcAuthority, ErcLifecycleStatus, ErcSectionStatus
+from pff_fa_ai.context.erc.states import ErcAuthority, ErcLifecycleStatus, ErcSectionStatus
 
 
 def test_build_erc_section_should_mark_the_source_as_authoritative() -> None:

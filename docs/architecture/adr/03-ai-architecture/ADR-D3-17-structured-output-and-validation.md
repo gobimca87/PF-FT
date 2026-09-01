@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-14, ADR-D3-16, ADR-D3-04, ADR-D3-19, ADR-D2-07]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §37, §38, §39, §40, §42, §48"
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §42, §43, §44"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §37, §38, §39, §40, §42, §48"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §42, §43, §44"
 build_phases: [6]
 impacted_paths:
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -34,12 +34,12 @@ constraint the provider supports (native structured/JSON mode or tool-call schem
 and will **validate every output against the schema before use** — with a bounded
 repair/retry loop on failure, never acceptance of unvalidated text. The SLM never
 executes business rules; structured output is data for deterministic code to act on
-(15.PF-FT-AI-SLM.md §37–§40).
+(15.PFF-FA-AI-SLM.md §37–§40).
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §37–§39 make structured output a principle and require output validation;
-§40 states the SLM must not execute business rules; 16.PF-FT-AI-PROMPT-ENGINEERING.md §42–§44 cover output
+15.PFF-FA-AI-SLM.md §37–§39 make structured output a principle and require output validation;
+§40 states the SLM must not execute business rules; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §42–§44 cover output
 schema and instructions. Free-text parsed with regex is brittle and a security risk
 (malformed or injected fields). Without a decision, structured needs are met
 inconsistently — some call sites JSON-parse hopefully, others rely on prose — and an
@@ -50,10 +50,10 @@ requested and how outputs are validated.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Machine-consumable outputs conform to a schema | 15.PF-FT-AI-SLM.md §37–§38; 16.PF-FT-AI-PROMPT-ENGINEERING.md §43 |
-| DR-F-02 | Every structured output validated before use | 15.PF-FT-AI-SLM.md §39 |
-| DR-F-03 | Invalid output handled (repair/retry/fail), never trusted | 15.PF-FT-AI-SLM.md §39; ADR-D3-04 |
-| DR-C-01 | SLM output is data, not a business decision | 15.PF-FT-AI-SLM.md §40 |
+| DR-F-01 | Machine-consumable outputs conform to a schema | 15.PFF-FA-AI-SLM.md §37–§38; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §43 |
+| DR-F-02 | Every structured output validated before use | 15.PFF-FA-AI-SLM.md §39 |
+| DR-F-03 | Invalid output handled (repair/retry/fail), never trusted | 15.PFF-FA-AI-SLM.md §39; ADR-D3-04 |
+| DR-C-01 | SLM output is data, not a business decision | 15.PFF-FA-AI-SLM.md §40 |
 | DR-N-01 | Deterministic (temp 0) generation for structured tasks | ADR-D3-16 |
 
 ### 3.4 Assumptions
@@ -128,7 +128,7 @@ final validation.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §37–§42 and 16.PF-FT-AI-PROMPT-ENGINEERING.md
+**Method.** Weighted scoring against §4, informed by 15.PFF-FA-AI-SLM.md §37–§42 and 16.PFF-FA-AI-PROMPT-ENGINEERING.md
 §42–§44. D scored for the self-host phase where it becomes available.
 
 | Criterion | Weight | A: Native+validate+repair | B: Tool schema | C: Regex | D: Constrained decode | E: Two-pass |
@@ -157,9 +157,9 @@ use the tool-call schema mechanism (Option B, per ADR-D3-04). When self-hosting
 lands, grammar-constrained decoding (Option D) will be layered beneath A to maximise
 first-try validity. Regex parsing (C) and unvalidated trust are forbidden; two-pass
 (E) rejected on cost. Validated output is data for deterministic code — the SLM never
-executes business rules (15.PF-FT-AI-SLM.md §40).
+executes business rules (15.PFF-FA-AI-SLM.md §40).
 
-**Status rationale.** `Accepted` — 15.PF-FT-AI-SLM.md §37–§40 mandate structure+validation.
+**Status rationale.** `Accepted` — 15.PFF-FA-AI-SLM.md §37–§40 mandate structure+validation.
 
 ## 8. Architecture Detail
 
@@ -168,7 +168,7 @@ executes business rules (15.PF-FT-AI-SLM.md §40).
 - On `ValidationError`: one bounded repair attempt feeding the error back; on second
   failure raise `ModelError` (fail closed) — the caller handles per ADR-D3-04/D3-08.
 - Structured tasks pinned to temperature 0 (ADR-D3-16); streaming disabled for
-  structured output unless the provider supports valid streamed structure (15.PF-FT-AI-SLM.md
+  structured output unless the provider supports valid streamed structure (15.PFF-FA-AI-SLM.md
   §48; ADR-D3-19).
 - Schemas are the internal-state TypedDicts' boundary Pydantic models (ADR-D2-07).
 
@@ -230,7 +230,7 @@ executes business rules (15.PF-FT-AI-SLM.md §40).
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 |
-| Repository paths | `src/pf_ft_ai/slm/` |
+| Repository paths | `src/pff_fa_ai/slm/` |
 | Configuration | Structured-mode capability flags (registry) |
 | Contracts / schemas | Pydantic output schemas |
 | Migration | Add constrained decoding at self-host phase |
@@ -278,10 +278,10 @@ executes business rules (15.PF-FT-AI-SLM.md §40).
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 |
-| Specification sections | 15.PF-FT-AI-SLM.md §37–§42, §48; 16.PF-FT-AI-PROMPT-ENGINEERING.md §42–§44 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §37–§42, §48; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §42–§44 |
 | Requirement IDs | SLM-STRUCT-* |
 | Build phases | 6 |
-| Code paths | `src/pf_ft_ai/slm/` |
+| Code paths | `src/pff_fa_ai/slm/` |
 | Configuration | registry capability flags |
 | Tests | structured-output + validation suites |
 | Upstream ADRs | ADR-D3-14, ADR-D3-16 |

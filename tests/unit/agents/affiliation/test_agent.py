@@ -2,16 +2,16 @@ from datetime import UTC, datetime
 
 import httpx
 
-from pf_ft_ai.agents.affiliation.agent import AffiliationAgent
-from pf_ft_ai.agents.affiliation.resume_handler import AffiliationWorkflowResumeHandler
-from pf_ft_ai.agents.states import AgentRunStatus
-from pf_ft_ai.common.correlation import new_id
-from pf_ft_ai.domain.workflow.entities import WorkflowInstance
-from pf_ft_ai.domain.workflow.states import WorkflowStatus
-from pf_ft_ai.infrastructure.persistence import InMemoryWorkflowRepository
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.registry import EventRoute
-from pf_ft_ai.messaging.handlers.workflow_resume import WorkflowResumeService
+from pff_fa_ai.agents.affiliation.agent import AffiliationAgent
+from pff_fa_ai.agents.affiliation.resume_handler import AffiliationWorkflowResumeHandler
+from pff_fa_ai.agents.states import AgentRunStatus
+from pff_fa_ai.common.correlation import new_id
+from pff_fa_ai.domain.workflow.entities import WorkflowInstance
+from pff_fa_ai.domain.workflow.states import WorkflowStatus
+from pff_fa_ai.infrastructure.persistence import InMemoryWorkflowRepository
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.registry import EventRoute
+from pff_fa_ai.messaging.handlers.workflow_resume import WorkflowResumeService
 from tests.unit.agents.affiliation.support import (
     APPLICATION_ID,
     build_test_dependencies,

@@ -1,13 +1,13 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.orchestration.langgraph.graph_builder import (
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.orchestration.langgraph.graph_builder import (
     COMPLETED_STATUS,
     STEP_LIMIT_EXCEEDED_STATUS,
     build_skeleton_graph,
 )
-from pf_ft_ai.orchestration.langgraph.nodes import NodeRegistry
-from pf_ft_ai.orchestration.langgraph.state import GraphState
+from pff_fa_ai.orchestration.langgraph.nodes import NodeRegistry
+from pff_fa_ai.orchestration.langgraph.state import GraphState
 
 
 def _initial_state() -> GraphState:

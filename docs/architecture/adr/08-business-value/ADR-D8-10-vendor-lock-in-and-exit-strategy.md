@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D8-02, ADR-D3-14, ADR-D4-10, ADR-D3-24, ADR-D7-01]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §95, §96, §97"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §95, §96, §97"
   - "DEVELOPMENT-GUIDE.md §2"
 build_phases: [24]
 impacted_paths:
@@ -30,12 +30,12 @@ review_due: 2027-08-22
 PFF AI will manage lock-in by **abstracting swappable dependencies behind provider-neutral
 interfaces, preferring open standards/OSS for the core, and documenting an exit strategy per
 major dependency** — while accepting deliberate, valuable Azure-native coupling where it earns
-its keep (20.PF-FT-AI-GOVERNANCE.md §95–§97; DEVELOPMENT-GUIDE §2). Portability is engineered where it matters
+its keep (20.PFF-FA-AI-GOVERNANCE.md §95–§97; DEVELOPMENT-GUIDE §2). Portability is engineered where it matters
 (SLM, embeddings, vector store, observability), not pursued everywhere at cost.
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §95–§97 third-party AI governance/provider-change/exit-strategy; DEVELOPMENT-GUIDE §2
+20.PFF-FA-AI-GOVERNANCE.md §95–§97 third-party AI governance/provider-change/exit-strategy; DEVELOPMENT-GUIDE §2
 deferred choices. The platform depends on Azure PaaS, HF, Langfuse, LangGraph and (proposed)
 vector store / SLM serving. Unmanaged, these become lock-in that raises cost and risk. This
 ADR fixes the lock-in posture and exit strategy.
@@ -45,7 +45,7 @@ ADR fixes the lock-in posture and exit strategy.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Abstract swappable dependencies | ADR-D3-14/D4-10/D3-24 |
-| DR-F-02 | Documented exit strategy per major dependency | 20.PF-FT-AI-GOVERNANCE.md §97 |
+| DR-F-02 | Documented exit strategy per major dependency | 20.PFF-FA-AI-GOVERNANCE.md §97 |
 | DR-C-01 | Accept valuable Azure-native coupling deliberately | ADR-D5-08 |
 | DR-N-01 | Prefer open standards/OSS for core | ADR-D8-02 |
 
@@ -72,7 +72,7 @@ ADR fixes the lock-in posture and exit strategy.
 
 **Description.** Provider abstractions for SLM (ADR-D3-14), memory/cache (ADR-D4-10), vector
 store (ADR-D3-24), observability via OTel (ADR-D7-01); open standards/OSS for the core
-(ADR-D8-02); a documented exit strategy per major dependency (20.PF-FT-AI-GOVERNANCE.md §97); deliberate
+(ADR-D8-02); a documented exit strategy per major dependency (20.PFF-FA-AI-GOVERNANCE.md §97); deliberate
 Azure-native coupling where it clearly pays (ADR-D5-08).
 **Strengths.** Pragmatic, switchable where it matters, exit-ready, cost-aware.
 **Weaknesses.** Some coupling remains (accepted).
@@ -112,12 +112,12 @@ test env) to prove abstractions and exit plans actually work.
 
 | Option | Eliminated by |
 |---|---|
-| No exit strategy | 20.PF-FT-AI-GOVERNANCE.md §97 |
+| No exit strategy | 20.PFF-FA-AI-GOVERNANCE.md §97 |
 | Abstract nothing | Strategic lock-in risk |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §95–§97 and DEVELOPMENT-GUIDE §2.
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §95–§97 and DEVELOPMENT-GUIDE §2.
 
 | Criterion | Weight | A: Pragmatic abstraction | B: Cloud-agnostic | C: Accept lock-in | D: Multi-cloud active | E: A+exit-drills |
 |---|---|---|---|---|---|---|
@@ -146,7 +146,7 @@ cloud-agnostic (B), accept-all-lock-in (C) and active multi-cloud (D) are reject
 
 - Abstractions: `SLMProvider` (ADR-D3-14), `MemoryStore`/`CacheStore` (ADR-D4-10),
   `VectorStore` (ADR-D3-24), OTel observability (ADR-D7-01); core on open frameworks (ADR-D8-02).
-- Per-dependency exit strategy (20.PF-FT-AI-GOVERNANCE.md §97): what it is, switching cost, alternative, data-export
+- Per-dependency exit strategy (20.PFF-FA-AI-GOVERNANCE.md §97): what it is, switching cost, alternative, data-export
   path, trigger to switch — recorded in `docs/architecture/adr/` / open-decisions where relevant.
 - Deliberate Azure coupling (APIM, Key Vault, Service Bus, AKS) documented as accepted trade-offs
   (ADR-D5-08/15/07/D2-16). Periodic exit-drills (e.g. swap SLM/vector provider in test) validate
@@ -257,7 +257,7 @@ cloud-agnostic (B), accept-all-lock-in (C) and active multi-cloud (D) are reject
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-37 |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §95–§97; DEVELOPMENT-GUIDE §2 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §95–§97; DEVELOPMENT-GUIDE §2 |
 | Requirement IDs | EXIT-* |
 | Build phases | 24 → ongoing |
 | Code paths | abstractions + exit plans |

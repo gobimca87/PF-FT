@@ -25,7 +25,7 @@ Escalate to Security immediately
 
 1. Identify the channel the injected content came through —
    `wrap_rag_evidence()`, `wrap_enterprise_api_result()`, `wrap_tool_result()`,
-   `wrap_repository_content()` (`src/pf_ft_ai/guardrails/content.py`) each wrap
+   `wrap_repository_content()` (`src/pff_fa_ai/guardrails/content.py`) each wrap
    content as clearly-delimited, non-instructional data. Confirm the content was
    actually wrapped through one of these before reaching the model — unwrapped raw
    content reaching a prompt is itself the root-cause bug.

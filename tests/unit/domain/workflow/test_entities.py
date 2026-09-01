@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
-from pf_ft_ai.domain.workflow.states import WaitingType, WorkflowStatus
+from pff_fa_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
+from pff_fa_ai.domain.workflow.states import WaitingType, WorkflowStatus
 
 
 def test_should_create_a_new_workflow_instance_at_version_one() -> None:

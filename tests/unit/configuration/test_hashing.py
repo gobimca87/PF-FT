@@ -1,4 +1,4 @@
-from pf_ft_ai.configuration.hashing import compute_configuration_hash
+from pff_fa_ai.configuration.hashing import compute_configuration_hash
 
 
 def test_should_produce_stable_hash_for_equivalent_input_regardless_of_key_order() -> None:

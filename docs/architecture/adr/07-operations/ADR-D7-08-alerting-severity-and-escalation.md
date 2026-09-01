@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-07, ADR-D7-05, ADR-D7-17, ADR-D7-01, ADR-D7-16]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49, §53"
-  - "MD files/6 Production/28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8, §9, §10, §11, §12, §13"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49, §53"
+  - "MD files/6 Production/28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §8, §9, §10, §11, §12, §13"
 build_phases: [10]
 impacted_paths:
   - docs/runbooks/
@@ -28,14 +28,14 @@ review_due: 2027-08-22
 ## 1. Summary
 
 PFF AI will alert on **symptoms (SLO burn) and defined error severities**, mapped to a
-**P1–P4 severity model** with an **on-call escalation path** (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49, §53; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md
+**P1–P4 severity model** with an **on-call escalation path** (24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49, §53; 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md
 §8–§13). Alerts are actionable and tied to runbooks (ADR-D7-16); severity comes from the
 error taxonomy (ADR-D7-05) and SLO burn (ADR-D7-07); noisy/non-actionable alerts are
 prohibited.
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49 metrics, §53 error severity; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§13 operational severity (P1–P4) and
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49 metrics, §53 error severity; 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §8–§13 operational severity (P1–P4) and
 incident lifecycle. Alert fatigue from noisy, non-actionable alerts is a top operational
 failure. This ADR fixes the alerting philosophy, severity model and escalation.
 
@@ -43,8 +43,8 @@ failure. This ADR fixes the alerting philosophy, severity model and escalation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Alert on symptoms/SLO burn + severities | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49, §53; ADR-D7-07 |
-| DR-F-02 | P1–P4 severity + escalation | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§13 |
+| DR-F-01 | Alert on symptoms/SLO burn + severities | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49, §53; ADR-D7-07 |
+| DR-F-02 | P1–P4 severity + escalation | 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §8–§13 |
 | DR-C-01 | Actionable alerts only (no noise) | SRE practice |
 | DR-F-03 | Alerts link to runbooks | ADR-D7-16 |
 
@@ -70,7 +70,7 @@ failure. This ADR fixes the alerting philosophy, severity model and escalation.
 ### 5.1 Option A — Symptom/SLO-burn alerting + P1–P4 severity + on-call escalation + runbook links
 
 **Description.** Alert primarily on SLO burn (ADR-D7-07) and defined error severities
-(ADR-D7-05); map to P1–P4 (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §9–§12); escalation path per severity; every alert
+(ADR-D7-05); map to P1–P4 (28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §9–§12); escalation path per severity; every alert
 links a runbook (ADR-D7-16).
 **Strengths.** Actionable, well-covered, clear response.
 **Weaknesses.** SLO/alert tuning.
@@ -110,11 +110,11 @@ downstream) to cut noise during incidents.
 | Option | Eliminated by |
 |---|---|
 | Alert on everything | Fatigue; non-actionable |
-| No severity model | 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8 |
+| No severity model | 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §8 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49/§53 and 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§13.
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49/§53 and 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §8–§13.
 
 | Criterion | Weight | A: Symptom+severity | B: Raw thresholds | C: Log-error | D: Manual | E: A+correlation |
 |---|---|---|---|---|---|---|
@@ -142,10 +142,10 @@ manual-only (D) are rejected.
 ## 8. Architecture Detail
 
 - Alert rules in Azure Monitor (ADR-D7-01) on SLO burn (ADR-D7-07) + severity from the
-  error catalogue (ADR-D7-05); P1–P4 mapping (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §9–§12); escalation to on-call per
+  error catalogue (ADR-D7-05); P1–P4 mapping (28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §9–§12); escalation to on-call per
   severity (ADR-D7-16); each alert carries a runbook link.
 - Correlation/dedup groups related alerts; security alerts (e.g. ADR-D6-08/D6-12) route
-  to security on-call; incident lifecycle per 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §13 and ADR-D7-17.
+  to security on-call; incident lifecycle per 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §13 and ADR-D7-17.
 
 ## 9. Consequences
 
@@ -251,7 +251,7 @@ manual-only (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49, §53; 28.PF-FT-AI-OPERATIONS-RUNBOOK.md §8–§13 |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49, §53; 28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §8–§13 |
 | Requirement IDs | ALERT-* |
 | Build phases | 10 |
 | Code paths | alert config + runbooks |

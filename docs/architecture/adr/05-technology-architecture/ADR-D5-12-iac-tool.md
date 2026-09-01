@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-08, ADR-D5-13, ADR-D5-14, ADR-D0-04]
 source_docs:
-  - "MD files/6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §42, §43, §44"
+  - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42, §43, §44"
 build_phases: [1]
 impacted_paths:
   - infra/
@@ -38,7 +38,7 @@ pending the platform team's confirmation of house standard.
 
 ## 2. Context and Problem Statement
 
-25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §42–§44 require infrastructure-as-code with a defined structure and principles;
+25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42–§44 require infrastructure-as-code with a defined structure and principles;
 CLAUDE.md lists the IaC tool as unresolved (Terraform vs Bicep). The choice affects
 state management, module reuse, review workflow, multi-cloud portability and team
 skills across every Azure resource (AKS, APIM, KV, SB, ACR, networking). This ADR
@@ -48,10 +48,10 @@ evaluates and recommends, pending team confirmation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Declarative IaC for all Azure resources | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §42–§44 |
-| DR-F-02 | Plan/preview + review before apply | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §44 |
-| DR-N-01 | Module reuse across 5 environments | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §33–§38; ADR-D5-14 |
-| DR-N-02 | State management + drift detection | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §44 |
+| DR-F-01 | Declarative IaC for all Azure resources | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42–§44 |
+| DR-F-02 | Plan/preview + review before apply | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §44 |
+| DR-N-01 | Module reuse across 5 environments | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §33–§38; ADR-D5-14 |
+| DR-N-02 | State management + drift detection | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §44 |
 | DR-C-01 | Fits team skills + org standard | organisational |
 
 ### 3.4 Assumptions
@@ -118,7 +118,7 @@ ecosystem than Terraform; less mature drift tooling.
 
 | Option | Eliminated by |
 |---|---|
-| Manual portal/CLI provisioning | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §42 — must be IaC |
+| Manual portal/CLI provisioning | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42 — must be IaC |
 | Ansible for cloud provisioning | Better for config mgmt than declarative cloud resources |
 
 ## 6. Evaluation Method and Decision Matrix
@@ -158,7 +158,7 @@ a clear recommendation so provisioning can start once the team confirms; listed 
 
 ## 8. Architecture Detail
 
-- `infra/` holds IaC modules per resource group/service (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §43); environments
+- `infra/` holds IaC modules per resource group/service (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §43); environments
   (ADR-D5-14) compose modules with per-env variables (§40).
 - Remote state in Azure Storage with locking; `plan` output reviewed in PRs before
   `apply` via CD (ADR-D7-10); drift detection scheduled.
@@ -271,7 +271,7 @@ a clear recommendation so provisioning can start once the team confirms; listed 
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 |
-| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §42–§44 |
+| Specification sections | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42–§44 |
 | Requirement IDs | INFRA-IAC-* |
 | Build phases | 1 |
 | Code paths | `infra/` |

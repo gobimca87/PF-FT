@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-01, ADR-D7-03, ADR-D3-11, ADR-D6-17, ADR-D7-04]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15, §23, §24, §25, §27, §42, §43, §44, §45, §46, §47, §48, §50"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15, §23, §24, §25, §27, §42, §43, §44, §45, §46, §47, §48, §50"
 build_phases: [10]
 impacted_paths:
-  - src/pf_ft_ai/observability/
+  - src/pff_fa_ai/observability/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will use **Langfuse** as the AI-specific observability layer — tracing LLM/agent
 executions, prompt versions, token usage and cost, and AI-quality signals — complementing
-the platform stack (ADR-D7-01) (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15, §23–§27, §42–§48, §50; CLAUDE.md). Langfuse
+the platform stack (ADR-D7-01) (24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15, §23–§27, §42–§48, §50; CLAUDE.md). Langfuse
 is for AI observability, **not** the tamper-evident audit record (ADR-D6-17), and its
 traces are redacted of sensitive data.
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15 AI observability, §23–§24 prompt observability/version traceability, §25–§27
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15 AI observability, §23–§24 prompt observability/version traceability, §25–§27
 model/provider/token observability, §42–§48 Langfuse integration/trace-structure/config/
 sampling/retention/failure, §50 AI quality metrics; CLAUDE.md names Langfuse. Generic APM
 can't see prompt versions, token cost per step, or agent-graph reasoning. This ADR fixes
@@ -44,9 +44,9 @@ Langfuse as the AI-observability layer and its boundaries.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Trace LLM/agent/prompt/token/cost | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15, §23–§27 |
-| DR-F-02 | Prompt-version traceability | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §24; ADR-D3-11 |
-| DR-C-01 | Redact sensitive data in traces | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §14; ADR-D7-04 |
+| DR-F-01 | Trace LLM/agent/prompt/token/cost | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15, §23–§27 |
+| DR-F-02 | Prompt-version traceability | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §24; ADR-D3-11 |
+| DR-C-01 | Redact sensitive data in traces | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §14; ADR-D7-04 |
 | DR-C-02 | Not the audit record | ADR-D6-17 |
 
 ### 3.4 Assumptions
@@ -110,12 +110,12 @@ compelling edge for this stack.
 
 | Option | Eliminated by |
 |---|---|
-| No AI observability | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15 |
+| No AI observability | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15 |
 | Langfuse as the audit record | ADR-D6-17 (separate concern) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15/§42–§48 and CLAUDE.md.
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15/§42–§48 and CLAUDE.md.
 
 | Criterion | Weight | A: Langfuse self-host | B: Langfuse Cloud | C: App Insights only | D: Bespoke | E: Other tool |
 |---|---|---|---|---|---|---|
@@ -207,7 +207,7 @@ bespoke (D) and other tools (E) are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 10 |
-| Repository paths | `src/pf_ft_ai/observability/` |
+| Repository paths | `src/pff_fa_ai/observability/` |
 | Configuration | Langfuse env config; sampling/retention |
 | Contracts / schemas | Trace structure (§43) |
 | Migration | N/A |
@@ -226,7 +226,7 @@ bespoke (D) and other tools (E) are rejected.
 
 | Aspect | Detail |
 |---|---|
-| Monitoring | Langfuse health (28.PF-FT-AI-OPERATIONS-RUNBOOK.md §39); trace volume |
+| Monitoring | Langfuse health (28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §39); trace volume |
 | Alerting | Langfuse down; trace loss |
 | Runbook | `docs/runbooks/langfuse.md` |
 | Failure mode and degradation | Degrade tracing, keep serving (§48) |
@@ -253,10 +253,10 @@ bespoke (D) and other tools (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §15, §23–§27, §42–§48, §50 |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §15, §23–§27, §42–§48, §50 |
 | Requirement IDs | OBS-AI-* |
 | Build phases | 10 |
-| Code paths | `src/pf_ft_ai/observability/` |
+| Code paths | `src/pff_fa_ai/observability/` |
 | Configuration | Langfuse config |
 | Tests | trace + redaction suites |
 | Upstream ADRs | ADR-D7-01, D3-11 |

@@ -1,5 +1,5 @@
 [project]
-name = "pf-ft-ai"
+name = "pff-fa-ai"
 version = "0.1.0"
 description = "PFF AI — conversational orchestration layer for the FA's PFF club/county administration platform"
 requires-python = ">=3.11,<3.13"
@@ -67,7 +67,7 @@ ignore = [
 "tests/**/*.py" = ["S101", "S105", "S106"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["pf_ft_ai"]
+known-first-party = ["pff_fa_ai"]
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [
@@ -105,8 +105,8 @@ warn_required_dynamic_aliases = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
-addopts = "--cov=src/pf_ft_ai --cov-report=term-missing"
+addopts = "--cov=src/pff_fa_ai --cov-report=term-missing"
 
 [tool.coverage.run]
-source = ["src/pf_ft_ai"]
+source = ["src/pff_fa_ai"]
 branch = true

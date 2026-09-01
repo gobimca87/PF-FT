@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-09, ADR-D3-12, ADR-D3-22, ADR-D2-12, ADR-D4-11, ADR-D1-03]
 source_docs:
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §20, §73, §123, §124, §125, §127, §128, §129, §130, §131, §138"
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §28, §29, §30, §31, §32"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §20, §73, §123, §124, §125, §127, §128, §129, §130, §131, §138"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §28, §29, §30, §31, §32"
 build_phases: [6, 8]
 impacted_paths:
-  - src/pf_ft_ai/prompt/
-  - src/pf_ft_ai/context/
+  - src/pff_fa_ai/prompt/
+  - src/pff_fa_ai/context/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -32,15 +32,15 @@ PFF AI will assemble the model context by a **deterministic, precedence-ordered
 pipeline** with an explicit **token budget allocated per source** — enterprise/ERC
 context and instructions first and protected, then memory, then retrieved knowledge,
 each trimmed to its budget by defined rules, with ERC summarisation/overflow handling
-when large (16.PF-FT-AI-PROMPT-ENGINEERING.md §123–§131; 15.PF-FT-AI-SLM.md §28–§32). Assembly order encodes the
+when large (16.PFF-FA-AI-PROMPT-ENGINEERING.md §123–§131; 15.PFF-FA-AI-SLM.md §28–§32). Assembly order encodes the
 authoritative-truth precedence chain so that under token pressure the platform drops
 the *lowest*-authority content first, never enterprise truth or safety instructions.
 
 ## 2. Context and Problem Statement
 
-16.PF-FT-AI-PROMPT-ENGINEERING.md §123–§124 define prompt context budget and budget strategy; §125–§131 define
+16.PFF-FA-AI-PROMPT-ENGINEERING.md §123–§124 define prompt context budget and budget strategy; §125–§131 define
 composition with ERC batching, RAG, memory, API/tool results and authorization;
-§138 covers source authority. 15.PF-FT-AI-SLM.md §28–§32 define context budget, dynamic budget,
+§138 covers source authority. 15.PFF-FA-AI-SLM.md §28–§32 define context budget, dynamic budget,
 large-ERC handling, summarisation and overflow. The model window is finite; when
 inputs exceed it, *what gets dropped* is a correctness and safety decision. Without a
 policy, naive truncation could cut authoritative ERC data or a safety instruction
@@ -51,11 +51,11 @@ fixes the assembly order and budget allocation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Deterministic assembly order | 16.PF-FT-AI-PROMPT-ENGINEERING.md §20, §22 |
-| DR-F-02 | Per-source token budget | 16.PF-FT-AI-PROMPT-ENGINEERING.md §123–§124; 15.PF-FT-AI-SLM.md §28–§29 |
-| DR-C-01 | Assembly honours precedence (drop lowest authority first) | CLAUDE.md; 16.PF-FT-AI-PROMPT-ENGINEERING.md §138; ADR-D1-03 |
-| DR-C-02 | ERC large → summarise/overflow safely | 15.PF-FT-AI-SLM.md §30–§32 |
-| DR-C-03 | Trust tiers preserved (untrusted delimited) | ADR-D3-12; 16.PF-FT-AI-PROMPT-ENGINEERING.md §57 |
+| DR-F-01 | Deterministic assembly order | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §20, §22 |
+| DR-F-02 | Per-source token budget | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §123–§124; 15.PFF-FA-AI-SLM.md §28–§29 |
+| DR-C-01 | Assembly honours precedence (drop lowest authority first) | CLAUDE.md; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §138; ADR-D1-03 |
+| DR-C-02 | ERC large → summarise/overflow safely | 15.PFF-FA-AI-SLM.md §30–§32 |
+| DR-C-03 | Trust tiers preserved (untrusted delimited) | ADR-D3-12; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §57 |
 
 ### 3.4 Assumptions
 
@@ -82,7 +82,7 @@ fixes the assembly order and budget allocation.
 **Description.** Fixed order: system+safety instructions → persona → task →
 authorization/ERC (protected) → memory → retrieved knowledge → user turn (delimited).
 Each source has a token budget; when total exceeds the window, trim from the
-*lowest-authority* end (retrieved first, then memory), summarise large ERC (15.PF-FT-AI-SLM.md
+*lowest-authority* end (retrieved first, then memory), summarise large ERC (15.PFF-FA-AI-SLM.md
 §31), never drop instructions or authoritative ERC facts.
 **Strengths.** Precedence-faithful; deterministic; safe; tunable budgets.
 **Weaknesses.** Requires budget bookkeeping + ERC summarisation.
@@ -125,12 +125,12 @@ precedence and budget; better as a *later* pattern for very large contexts.
 
 | Option | Eliminated by |
 |---|---|
-| No budget (rely on window being big enough) | Overflow inevitable at large ERC (15.PF-FT-AI-SLM.md §30) |
+| No budget (rely on window being big enough) | Overflow inevitable at large ERC (15.PFF-FA-AI-SLM.md §30) |
 | Drop instructions to fit data | DR-C-01/EC-04 — safety violation |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 16.PF-FT-AI-PROMPT-ENGINEERING.md §123–§131/§138 and 15.PF-FT-AI-SLM.md
+**Method.** Weighted scoring against §4, informed by 16.PFF-FA-AI-PROMPT-ENGINEERING.md §123–§131/§138 and 15.PFF-FA-AI-SLM.md
 §28–§32, and the precedence chain (ADR-D1-03).
 
 | Criterion | Weight | A: Precedence+budgets | B: Naive trunc | C: Relevance packing | D: Summarise-all | E: Model-managed |
@@ -156,24 +156,24 @@ future option for very large contexts (RT-02). A can *incorporate* relevance ran
 per-source token budgets and graceful degradation (Option A).** Instructions,
 persona, task and authorization/ERC context are assembled first and protected;
 memory and retrieved knowledge follow within their budgets; under token pressure the
-platform trims from the lowest-authority end and summarises large ERC per 15.PF-FT-AI-SLM.md §31,
+platform trims from the lowest-authority end and summarises large ERC per 15.PFF-FA-AI-SLM.md §31,
 never dropping instructions or authoritative facts. Relevance ranking is applied
 *within* each source's budget. Naive truncation (B), authority-blind packing (C) and
 summarise-everything (D) are rejected; model-managed context (E) is a future option
 for very large contexts.
 
-**Status rationale.** `Accepted` — 16.PF-FT-AI-PROMPT-ENGINEERING.md §123–§131 and 15.PF-FT-AI-SLM.md §28–§32 govern this;
+**Status rationale.** `Accepted` — 16.PFF-FA-AI-PROMPT-ENGINEERING.md §123–§131 and 15.PFF-FA-AI-SLM.md §28–§32 govern this;
 ADR records the rationale.
 
 ## 8. Architecture Detail
 
-- **Pipeline** `src/pf_ft_ai/context/` + prompt composer (ADR-D3-09): ordered stages
-  each with a `token_budget`; a tokenizer-aware counter (15.PF-FT-AI-SLM.md §27; 16.PF-FT-AI-PROMPT-ENGINEERING.md §122)
+- **Pipeline** `src/pff_fa_ai/context/` + prompt composer (ADR-D3-09): ordered stages
+  each with a `token_budget`; a tokenizer-aware counter (15.PFF-FA-AI-SLM.md §27; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §122)
   enforces budgets.
 - **Order** (highest→lowest authority): system/safety instructions → persona → task →
   authorization + ERC (protected, ADR-D2-12) → memory (ADR-D4-11) → retrieved
   knowledge (ADR-D3-22, delimited per ADR-D3-12) → user turn.
-- **ERC handling** (15.PF-FT-AI-SLM.md §30–§32): large ERC is paginated/batched (MAX_ERC_BATCH_SIZE
+- **ERC handling** (15.PFF-FA-AI-SLM.md §30–§32): large ERC is paginated/batched (MAX_ERC_BATCH_SIZE
   = 20) and summarised only with a lossless-for-decisions strategy; overflow raises a
   handled condition, never silent truncation of facts.
 - **Degradation**: when trimming, emit a trace note of what was omitted; if
@@ -232,7 +232,7 @@ ADR records the rationale.
 | Personal data / PII | Only necessary ERC fields assembled |
 | Children's data and safeguarding | Safeguarding context handled within protected ERC slot |
 | UK GDPR lawful basis and rights impact | Data minimisation in assembly |
-| Audit and evidential requirements | Assembly recorded (prompt snapshot, 16.PF-FT-AI-PROMPT-ENGINEERING.md §89) |
+| Audit and evidential requirements | Assembly recorded (prompt snapshot, 16.PFF-FA-AI-PROMPT-ENGINEERING.md §89) |
 | Standards touched | ISO/IEC 27001, 42001 |
 
 ## 14. Implementation Impact
@@ -240,7 +240,7 @@ ADR records the rationale.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 (composition), 8 (RAG integration) |
-| Repository paths | `src/pf_ft_ai/context/`, `src/pf_ft_ai/prompt/` |
+| Repository paths | `src/pff_fa_ai/context/`, `src/pff_fa_ai/prompt/` |
 | Configuration | Per-source budgets; order config; summary strategy |
 | Contracts / schemas | Context assembly contract; token counts |
 | Migration | N/A |
@@ -289,10 +289,10 @@ ADR records the rationale.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-18 Context Engineering |
-| Specification sections | 16.PF-FT-AI-PROMPT-ENGINEERING.md §20, §73, §123–§131, §138; 15.PF-FT-AI-SLM.md §28–§32 |
+| Specification sections | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §20, §73, §123–§131, §138; 15.PFF-FA-AI-SLM.md §28–§32 |
 | Requirement IDs | CTX-* |
 | Build phases | 6, 8 |
-| Code paths | `src/pf_ft_ai/context/`, `src/pf_ft_ai/prompt/` |
+| Code paths | `src/pff_fa_ai/context/`, `src/pff_fa_ai/prompt/` |
 | Configuration | budgets/order/summary config |
 | Tests | drop-order + determinism + summary suites |
 | Upstream ADRs | ADR-D3-09, ADR-D2-12, ADR-D4-11, ADR-D3-22 |

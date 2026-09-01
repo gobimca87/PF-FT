@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D8-04, ADR-D7-13, ADR-D1-09, ADR-D3-22, ADR-D7-07]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §50"
-  - "MD files/5 QualityGovernance/21.PF-FT-AI-EVALUATION.md §14, §15, §19, §21, §22, §23, §24"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §50"
+  - "MD files/5 QualityGovernance/21.PFF-FA-AI-EVALUATION.md §14, §15, §19, §21, §22, §23, §24"
 build_phases: [16, 20]
 impacted_paths:
   - docs/governance/
@@ -30,13 +30,13 @@ review_due: 2027-08-22
 PFF AI will track **AI-quality KPIs distinct from business KPIs** — answer accuracy/
 groundedness, retrieval quality, hallucination rate, clarification appropriateness,
 containment/deflection, and **persona adherence evaluated separately** (per CLAUDE.md and
-ADR-D1-09) — sourced from the evaluation framework (ADR-D7-13) and observability (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md
-§50; 21.PF-FT-AI-EVALUATION.md §14–§24). Persona adherence is measured independently of workflow/tool/security
+ADR-D1-09) — sourced from the evaluation framework (ADR-D7-13) and observability (24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md
+§50; 21.PFF-FA-AI-EVALUATION.md §14–§24). Persona adherence is measured independently of workflow/tool/security
 correctness, as CLAUDE.md requires.
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §50 AI quality metrics; 21.PF-FT-AI-EVALUATION.md §14–§15 business/outcome metrics, §19–§24 relevance/
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §50 AI quality metrics; 21.PFF-FA-AI-EVALUATION.md §14–§15 business/outcome metrics, §19–§24 relevance/
 completeness/groundedness/faithfulness/hallucination/citation. CLAUDE.md §Persona Quality
 mandates evaluating persona adherence **separately** from workflow, tool, security and model
 quality. Without a defined AI-quality KPI set, quality regressions and persona drift are
@@ -46,8 +46,8 @@ invisible. This ADR fixes the AI-quality KPIs and the separate persona-adherence
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Accuracy/groundedness/hallucination/retrieval KPIs | 21.PF-FT-AI-EVALUATION.md §19–§24; 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §50 |
-| DR-F-02 | Containment/deflection quality | 21.PF-FT-AI-EVALUATION.md §14–§15 |
+| DR-F-01 | Accuracy/groundedness/hallucination/retrieval KPIs | 21.PFF-FA-AI-EVALUATION.md §19–§24; 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §50 |
+| DR-F-02 | Containment/deflection quality | 21.PFF-FA-AI-EVALUATION.md §14–§15 |
 | DR-C-01 | Persona adherence measured separately | CLAUDE.md §Persona Quality; ADR-D1-09 |
 | DR-F-03 | Sourced from eval framework | ADR-D7-13 |
 
@@ -75,7 +75,7 @@ invisible. This ADR fixes the AI-quality KPIs and the separate persona-adherence
 **Description.** KPIs: accuracy/groundedness/faithfulness, hallucination rate, retrieval
 quality (Recall@k, ADR-D3-22), citation validity, clarification appropriateness,
 containment/deflection; persona adherence as a **separate** KPI (CLAUDE.md); sourced from
-eval (ADR-D7-13) + online signals (21.PF-FT-AI-EVALUATION.md §9).
+eval (ADR-D7-13) + online signals (21.PFF-FA-AI-EVALUATION.md §9).
 **Strengths.** Comprehensive, mandate-compliant, actionable.
 **Weaknesses.** Eval/measurement upkeep.
 **Cost / effort.** Medium.
@@ -105,7 +105,7 @@ eval (ADR-D7-13) + online signals (21.PF-FT-AI-EVALUATION.md §9).
 ### 5.5 Option E — Full quality set + separate persona + online drift detection + human-eval sampling
 
 **Description.** Option A with online drift detection and periodic human-eval sampling to
-validate automated scores (21.PF-FT-AI-EVALUATION.md §59).
+validate automated scores (21.PFF-FA-AI-EVALUATION.md §59).
 **Strengths.** A + drift catch + human-validated.
 **Weaknesses.** Human-eval effort.
 **Cost / effort.** Medium.
@@ -114,12 +114,12 @@ validate automated scores (21.PF-FT-AI-EVALUATION.md §59).
 
 | Option | Eliminated by |
 |---|---|
-| No AI-quality KPIs | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §50 |
+| No AI-quality KPIs | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §50 |
 | Persona blended with correctness | CLAUDE.md §Persona Quality |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §50, 21.PF-FT-AI-EVALUATION.md §14–§24/§59 and
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §50, 21.PFF-FA-AI-EVALUATION.md §14–§24/§59 and
 CLAUDE.md persona-quality rules.
 
 | Criterion | Weight | A: Full+separate persona | B: Blended score | C: Accuracy-only | D: Persona in business | E: A+drift+human |
@@ -151,7 +151,7 @@ rejected — the last violates CLAUDE.md's separation requirement.
 - KPIs computed by the eval framework (ADR-D7-13) on golden + online data; retrieval KPIs
   from ADR-D3-22; persona adherence scored by a dedicated persona eval (ADR-D1-09; CLAUDE.md
   Persona Quality) on its own axis, never blended with correctness.
-- Online drift detection flags regressions; human-eval sampling calibrates (21.PF-FT-AI-EVALUATION.md §59); an
+- Online drift detection flags regressions; human-eval sampling calibrates (21.PFF-FA-AI-EVALUATION.md §59); an
   AI-quality dashboard (distinct from business D8-04 and SLIs D7-07); correctness KPI feeds
   the SLO (ADR-D7-07).
 
@@ -201,7 +201,7 @@ rejected — the last violates CLAUDE.md's separation requirement.
 | Dimension | Impact |
 |---|---|
 | Attack surface change | None |
-| Data classification touched | Eval data governed (20.PF-FT-AI-GOVERNANCE.md §84) |
+| Data classification touched | Eval data governed (20.PFF-FA-AI-GOVERNANCE.md §84) |
 | Personal data / PII | Synthetic/anonymised eval; online privacy-safe |
 | Children's data and safeguarding | No real children's data in eval |
 | UK GDPR lawful basis and rights impact | Minimised online eval |
@@ -260,7 +260,7 @@ rejected — the last violates CLAUDE.md's separation requirement.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-35 |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §50; 21.PF-FT-AI-EVALUATION.md §14–§24, §59; CLAUDE.md §Persona Quality |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §50; 21.PFF-FA-AI-EVALUATION.md §14–§24, §59; CLAUDE.md §Persona Quality |
 | Requirement IDs | KPI-AI-* |
 | Build phases | 16, 20 |
 | Code paths | `tests/eval/`, governance |

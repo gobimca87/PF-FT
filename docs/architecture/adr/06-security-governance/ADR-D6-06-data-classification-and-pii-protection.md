@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-07, ADR-D6-07, ADR-D6-16, ADR-D7-04, ADR-D6-05]
 source_docs:
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §31, §32, §33, §34"
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §61, §62, §63, §68, §69"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §31, §32, §33, §34"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §61, §62, §63, §68, §69"
 build_phases: [3, 9]
 impacted_paths:
-  - src/pf_ft_ai/
+  - src/pff_fa_ai/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -30,13 +30,13 @@ review_due: 2027-08-22
 PFF AI will apply **data minimisation and a data-flow policy driven by classification**
 (ADR-D4-07): PII is detected/redacted at inputs and outputs where appropriate, only the
 minimum necessary data crosses each boundary, and higher-classification data is barred
-from lower-controlled sinks (logs, external SLM, cache) (19.PF-FT-AI-SECURITY.md §31–§34; 18.PF-FT-AI-GUARDRAILS.md
+from lower-controlled sinks (logs, external SLM, cache) (19.PFF-FA-AI-SECURITY.md §31–§34; 18.PFF-FA-AI-GUARDRAILS.md
 §61–§63, §68–§69). Guardrails enforce PII handling at the six boundaries (ADR-D6-09).
 
 ## 2. Context and Problem Statement
 
-19.PF-FT-AI-SECURITY.md §31 PII protection, §32 data classification, §33 data-flow policy, §34 data
-minimisation; 18.PF-FT-AI-GUARDRAILS.md §61–§63 PII input/output handling, §68–§69 data classification and
+19.PFF-FA-AI-SECURITY.md §31 PII protection, §32 data classification, §33 data-flow policy, §34 data
+minimisation; 18.PFF-FA-AI-GUARDRAILS.md §61–§63 PII input/output handling, §68–§69 data classification and
 handling policy. FA data is rich in personal and children's data; uncontrolled flow into
 logs or external services is a breach. This ADR fixes classification-driven PII
 protection and data-flow control at runtime (D4-07 sets the taxonomy; this ADR enforces
@@ -46,10 +46,10 @@ it in data paths).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Data minimisation across boundaries | 19.PF-FT-AI-SECURITY.md §34; 18.PF-FT-AI-GUARDRAILS.md §69 |
-| DR-F-01 | PII detection/redaction at input/output | 18.PF-FT-AI-GUARDRAILS.md §61–§63 |
-| DR-C-02 | Classification-driven data-flow control | 19.PF-FT-AI-SECURITY.md §32–§33; 18.PF-FT-AI-GUARDRAILS.md §68 |
-| DR-C-03 | No high-class data in low-controlled sinks | 18.PF-FT-AI-GUARDRAILS.md §68; ADR-D6-07, D7-04 |
+| DR-C-01 | Data minimisation across boundaries | 19.PFF-FA-AI-SECURITY.md §34; 18.PFF-FA-AI-GUARDRAILS.md §69 |
+| DR-F-01 | PII detection/redaction at input/output | 18.PFF-FA-AI-GUARDRAILS.md §61–§63 |
+| DR-C-02 | Classification-driven data-flow control | 19.PFF-FA-AI-SECURITY.md §32–§33; 18.PFF-FA-AI-GUARDRAILS.md §68 |
+| DR-C-03 | No high-class data in low-controlled sinks | 18.PFF-FA-AI-GUARDRAILS.md §68; ADR-D6-07, D7-04 |
 
 ### 3.4 Assumptions
 
@@ -112,12 +112,12 @@ tokens, reversing only where authorised.
 
 | Option | Eliminated by |
 |---|---|
-| No PII control | UK GDPR; 19.PF-FT-AI-SECURITY.md §31 |
+| No PII control | UK GDPR; 19.PFF-FA-AI-SECURITY.md §31 |
 | Send raw PII to external SLM | ADR-D6-07 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §31–§34 and 18.PF-FT-AI-GUARDRAILS.md
+**Method.** Weighted scoring against §4, informed by 19.PFF-FA-AI-SECURITY.md §31–§34 and 18.PFF-FA-AI-GUARDRAILS.md
 §61–§63/§68–§69.
 
 | Criterion | Weight | A: Class-driven+redact | B: Perimeter logs | C: Annotation | D: Detect-only | E: A+tokenization |
@@ -150,8 +150,8 @@ are rejected.
 ## 8. Architecture Detail
 
 - Classification from ADR-D4-07 drives per-boundary rules; a PII detector/redactor runs
-  at input (18.PF-FT-AI-GUARDRAILS.md §62), output (§63) and before low-controlled sinks.
-- Minimisation: only required fields cross each boundary (19.PF-FT-AI-SECURITY.md §34); ERC collects
+  at input (18.PFF-FA-AI-GUARDRAILS.md §62), output (§63) and before low-controlled sinks.
+- Minimisation: only required fields cross each boundary (19.PFF-FA-AI-SECURITY.md §34); ERC collects
   minimally (ADR-D4-04).
 - Enforcement via guardrails (ADR-D6-09); log redaction (ADR-D7-04); external-SLM
   boundary (ADR-D6-07). Tokenization for identifiers where needed, with a controlled
@@ -214,7 +214,7 @@ are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 3, 9 |
-| Repository paths | `src/pf_ft_ai/` (guardrails, boundaries) |
+| Repository paths | `src/pff_fa_ai/` (guardrails, boundaries) |
 | Configuration | Classification rules; detector config |
 | Contracts / schemas | Redaction/minimisation policy |
 | Migration | N/A |
@@ -262,7 +262,7 @@ are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 19.PF-FT-AI-SECURITY.md §31–§34; 18.PF-FT-AI-GUARDRAILS.md §61–§63, §68–§69 |
+| Specification sections | 19.PFF-FA-AI-SECURITY.md §31–§34; 18.PFF-FA-AI-GUARDRAILS.md §61–§63, §68–§69 |
 | Requirement IDs | SEC-PII-* |
 | Build phases | 3, 9 |
 | Code paths | guardrails/boundaries |

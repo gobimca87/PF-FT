@@ -14,15 +14,15 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-05, ADR-D1-08, ADR-D2-03, ADR-D2-06, ADR-D2-07, ADR-D2-16, ADR-D4-10, ADR-D6-14]
 source_docs:
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §28, §29"
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §46, §49"
-  - "MD files/2 Agent Runtime/6 PF-FT-AI-CONVERSATION-SESSION.md §42, §43, §44, §45, §46, §47, §48"
-  - "MD files/3 Context & Integration/11 PF-FT-AI-SERVICE-BUS.md §55, §56, §57, §59"
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §68, §69, §70, §71"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §28, §29"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §46, §49"
+  - "MD files/2 Agent Runtime/6 PFF-FA-AI-CONVERSATION-SESSION.md §42, §43, §44, §45, §46, §47, §48"
+  - "MD files/3 Context & Integration/11 PFF-FA-AI-SERVICE-BUS.md §55, §56, §57, §59"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §68, §69, §70, §71"
 build_phases: [4, 12, 23]
 impacted_paths:
-  - src/pf_ft_ai/application/workflows/
-  - src/pf_ft_ai/domain/workflow/
+  - src/pff_fa_ai/application/workflows/
+  - src/pff_fa_ai/domain/workflow/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -39,11 +39,11 @@ the user's behalf.
 
 ## 2. Context and Problem Statement
 
-1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13 requires that long-running workflows survive request termination. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md
-§28 covers durable workflow architecture and §29 HIL architecture. 6 PF-FT-AI-CONVERSATION-SESSION.md §42–§48 cover async
+1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 13 requires that long-running workflows survive request termination. 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md
+§28 covers durable workflow architecture and §29 HIL architecture. 6 PFF-FA-AI-CONVERSATION-SESSION.md §42–§48 cover async
 workflow support and the three waiting states — waiting for user, waiting for human, waiting for
-external event — plus session expiry during a workflow. 11 PF-FT-AI-SERVICE-BUS.md §55–§57 cover workflow resume,
-resume safety and resume context. 20.PF-FT-AI-GOVERNANCE.md §68–§71 cover HIL governance. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 lists
+external event — plus session expiry during a workflow. 11 PFF-FA-AI-SERVICE-BUS.md §55–§57 cover workflow resume,
+resume safety and resume context. 20.PFF-FA-AI-GOVERNANCE.md §68–§71 cover HIL governance. 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48 lists
 in-memory-only long-running workflows as an anti-pattern.
 
 The affiliation flow gives the requirement its real shape, and it is more demanding than "persist
@@ -51,7 +51,7 @@ some state":
 
 - An application sits at PENDING CFA for **hours to days** while a county officer works through a
   review queue.
-- The user's session expires long before that (6 PF-FT-AI-CONVERSATION-SESSION.md §48).
+- The user's session expires long before that (6 PFF-FA-AI-CONVERSATION-SESSION.md §48).
 - The user closes their browser, and possibly the conversation.
 - The API pod is replaced by a routine deployment, or scaled down overnight.
 - The resumption trigger is a **Service Bus event** arriving on the *consumer* workload — a
@@ -81,27 +81,27 @@ facts to be invalidated rather than used, and a three-day-old ERC is emphaticall
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Workflows must survive request termination | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §28 |
-| DR-F-02 | Workflows must survive session expiry | 6 PF-FT-AI-CONVERSATION-SESSION.md §48 |
+| DR-F-01 | Workflows must survive request termination | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 13; 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §28 |
+| DR-F-02 | Workflows must survive session expiry | 6 PFF-FA-AI-CONVERSATION-SESSION.md §48 |
 | DR-F-03 | Resume must be possible from a different workload than the one that suspended | ADR-D2-03 §7.2 |
-| DR-F-04 | HIL suspension and resume must be supported | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §29; 20.PF-FT-AI-GOVERNANCE.md §68–§71 |
-| DR-F-05 | Resume must be safe against duplicate and stale triggers | 11 PF-FT-AI-SERVICE-BUS.md §56 |
-| DR-F-06 | Three waiting kinds must be distinguished | 6 PF-FT-AI-CONVERSATION-SESSION.md §43–§45; ADR-D1-08 §7.2 |
+| DR-F-04 | HIL suspension and resume must be supported | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §29; 20.PFF-FA-AI-GOVERNANCE.md §68–§71 |
+| DR-F-05 | Resume must be safe against duplicate and stale triggers | 11 PFF-FA-AI-SERVICE-BUS.md §56 |
+| DR-F-06 | Three waiting kinds must be distinguished | 6 PFF-FA-AI-CONVERSATION-SESSION.md §43–§45; ADR-D1-08 §7.2 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Persisted state must be small and free of personal data | Identifiers only | ADR-D2-07 §7.3 |
-| DR-N-02 | Suspension and resume must not lose a workflow | 0 lost workflows | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13 |
+| DR-N-02 | Suspension and resume must not lose a workflow | 0 lost workflows | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 13 |
 | DR-N-03 | Persisted state must survive schema and framework changes | Versioned model | ADR-D2-06 AC-07 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | In-memory-only long-running workflows are an anti-pattern | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 |
-| DR-C-02 | Human decision authority is enterprise-owned | Organisational | 20.PF-FT-AI-GOVERNANCE.md §70 |
+| DR-C-01 | In-memory-only long-running workflows are an anti-pattern | Platform | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48 |
+| DR-C-02 | Human decision authority is enterprise-owned | Organisational | 20.PFF-FA-AI-GOVERNANCE.md §70 |
 | DR-C-03 | An event-triggered run uses the captured context, revalidated | Platform | ADR-D2-03 §7.3 |
 | DR-C-04 | Stale authoritative facts are invalidated, not used | Platform | ADR-D1-03 §7.3 |
 
@@ -139,7 +139,7 @@ same replica.
 - No serialisation concerns.
 
 **Weaknesses.**
-- Explicitly an anti-pattern under 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 (DR-C-01).
+- Explicitly an anti-pattern under 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48 (DR-C-01).
 - Cannot survive pod replacement, which happens on every deployment (EC-02).
 - Cannot survive session expiry, which occurs long before a CFA review completes.
 - Cannot be resumed by the consumer workload, which is a different process entirely.
@@ -298,10 +298,10 @@ standing authorization.
 
 ### 7.4 The three waiting kinds
 
-6 PF-FT-AI-CONVERSATION-SESSION.md §43–§45 and ADR-D1-08 §7.2 distinguish three; each has a different resumption trigger and
+6 PFF-FA-AI-CONVERSATION-SESSION.md §43–§45 and ADR-D1-08 §7.2 distinguish three; each has a different resumption trigger and
 a different timeout:
 
-| Wait | 6 PF-FT-AI-CONVERSATION-SESSION.md | Trigger | Timeout behaviour |
+| Wait | 6 PFF-FA-AI-CONVERSATION-SESSION.md | Trigger | Timeout behaviour |
 |---|---|---|---|
 | **Waiting for user** (W-2) | §43 | User's next message, or an event if the action is observable | Conversation-lifetime bounded |
 | **Waiting for human** (W-1) | §44 | Enterprise event — CFA approval, rejection, cancellation | Bounded by the enterprise's own timer (Scenario 12's 31 May) |
@@ -312,12 +312,12 @@ ADR-D1-08's communication pattern is available on resume.
 
 ### 7.5 Resume safety
 
-11 PF-FT-AI-SERVICE-BUS.md §56 requires safe resume. Three properties:
+11 PFF-FA-AI-SERVICE-BUS.md §56 requires safe resume. Three properties:
 
 - **Idempotent.** A workflow resumed twice by a duplicate event produces one advance. Event
-  deduplication (11 PF-FT-AI-SERVICE-BUS.md §41) is the first line; workflow-level position checking is the second —
+  deduplication (11 PFF-FA-AI-SERVICE-BUS.md §41) is the first line; workflow-level position checking is the second —
   a resume targeting a node the workflow has already passed is a no-op.
-- **Ordered by state, not by arrival.** A stale event (11 PF-FT-AI-SERVICE-BUS.md §47) — an approval arriving after a
+- **Ordered by state, not by arrival.** A stale event (11 PFF-FA-AI-SERVICE-BUS.md §47) — an approval arriving after a
   cancellation — is detected by comparing against current enterprise state in step 3, not by
   trusting arrival order.
 - **Single-flight.** Concurrent resume attempts on one workflow instance are serialised, as
@@ -337,7 +337,7 @@ This is a backstop, not the primary mechanism, and the distinction matters: if r
 becomes the usual path to resumption, event delivery is broken and should be fixed rather than
 compensated for. QM-04 measures the split.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — state and eventing are 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — state and eventing are 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52
 categories — ratified by the external ADF/ADR governance forum, with the Security Owner
 co-approving §7.3.
 
@@ -390,7 +390,7 @@ record what happened.
 
 Workflow state is namespaced separately from conversation, session, memory and cache, per the
 key-namespace separation ADR-D4-12 defines. Same technology, different logical store — the
-separation 9 PF-FT-AI-MEMORY-CACHE.md §140 requires.
+separation 9 PFF-FA-AI-MEMORY-CACHE.md §140 requires.
 
 ### 8.3 What happens when resumption cannot proceed
 
@@ -429,7 +429,7 @@ wait than tell the user something stale.
 
 ### 9.3 Neutral
 
-- The three waiting kinds are 6 PF-FT-AI-CONVERSATION-SESSION.md §43–§45's; this decision assigns each a trigger and a
+- The three waiting kinds are 6 PFF-FA-AI-CONVERSATION-SESSION.md §43–§45's; this decision assigns each a trigger and a
   timeout.
 - Reconciliation exists as a backstop and should stay one.
 
@@ -446,7 +446,7 @@ wait than tell the user something stale.
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | The workflow waits for an enterprise decision it neither makes nor predicts (ADR-D1-08 §7.3). Human decision authority stays with the CFA officer per 20.PF-FT-AI-GOVERNANCE.md §70. |
+| Enterprise decides; AI orchestrates | The workflow waits for an enterprise decision it neither makes nor predicts (ADR-D1-08 §7.3). Human decision authority stays with the CFA officer per 20.PFF-FA-AI-GOVERNANCE.md §70. |
 | Authoritative-truth precedence | §7.2 step 3 is ADR-D1-03 §7.3 applied to resumption: the suspended ERC is stale and is invalidated, not restored. Rebuilding is the only way to honour the freshness policy across days. |
 | Four-state separation | Workflow State is persisted independently of Conversation State and Session State, and holds only references to Enterprise Business State. The independence is what lets a session expire without losing the workflow. |
 | Versioned artefacts, never mutated in place | Persisted state is a versioned model; graph version is recorded so a resumed workflow knows which graph it belongs to. |
@@ -487,7 +487,7 @@ means event delivery is unreliable and needs fixing rather than compensating.
 | Personal data / PII | None persisted, by construction (§7.1). This is the decision's most significant privacy property: a county's worth of suspended affiliations holds no personal data at rest in AI storage. |
 | Children's data and safeguarding | Directly material. Under Option B, a suspended affiliation would persist named youth-team officials' DBS and safeguarding status for the days of a CFA review, in a store whose retention follows workflow lifetime rather than safeguarding policy. Under this decision it persists an `erc_id`. |
 | UK GDPR lawful basis and rights impact | Supports minimisation (Art. 5(1)(c)) and storage limitation (Art. 5(1)(e)). Erasure is clean: deleting ERC removes the data and the workflow reference becomes unresolvable, handled by §8.3 — no orphaned copy survives an erasure request. |
-| Audit and evidential requirements | Suspension reason, wait type, captured context and every resume attempt with its revalidation outcome are recorded, satisfying 20.PF-FT-AI-GOVERNANCE.md §71's HIL evidence requirement. |
+| Audit and evidential requirements | Suspension reason, wait type, captured context and every resume attempt with its revalidation outcome are recorded, satisfying 20.PFF-FA-AI-GOVERNANCE.md §71's HIL evidence requirement. |
 | Standards touched | ISO/IEC 27001 A.5.15, A.8.10 (information deletion), A.8.13 (backup); ISO/IEC 42001 (human oversight); NIST AI RMF GOVERN 5.2; EU AI Act Art. 14; UK GDPR Art. 5(1)(c), 5(1)(e), 17, 25. |
 
 ## 14. Implementation Impact
@@ -495,7 +495,7 @@ means event delivery is unreliable and needs fixing rather than compensating.
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 (suspension model), 12 (event-driven resume), 23 (affiliation validation) |
-| Repository paths | `src/pf_ft_ai/application/workflows/`, `src/pf_ft_ai/domain/workflow/`, `src/pf_ft_ai/infrastructure/persistence/` |
+| Repository paths | `src/pff_fa_ai/application/workflows/`, `src/pff_fa_ai/domain/workflow/`, `src/pff_fa_ai/infrastructure/persistence/` |
 | Configuration | Expected windows and maximum lifetimes per workflow in `config/base/workflows.yaml`; store connection per ADR-D4-10 |
 | Contracts / schemas | Versioned persisted workflow state model; captured authorization context model |
 | Migration | None |
@@ -554,10 +554,10 @@ means event delivery is unreliable and needs fixing rather than compensating.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture; WS-11 Event Notification & Real-Time Synchronization |
-| Specification sections | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §28 (Durable Workflow Architecture), §29 (HIL Architecture), §48 (Anti-Patterns — in-memory-only long-running workflows); 4. PF-FT-AI-RUNTIME.md §46 (Long-Running Workflow), §49 (HIL Runtime); 6 PF-FT-AI-CONVERSATION-SESSION.md §42–§48 (Async Workflow Support, Waiting for User, Waiting for Human, Waiting for External Event, Event Resume, Conversation After External Event, Session Expiration During Workflow); 11 PF-FT-AI-SERVICE-BUS.md §55–§57 (Workflow Resume, Resume Safety, Resume Context), §59 (HIL Event Flow), §47 (Stale Event); 20.PF-FT-AI-GOVERNANCE.md §68–§71 (Human Oversight, HIL Boundary, Human Decision Authority, HIL Evidence); 9 PF-FT-AI-MEMORY-CACHE.md §140; affiliation flow Phases 6–7, Scenario 12 |
+| Specification sections | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §28 (Durable Workflow Architecture), §29 (HIL Architecture), §48 (Anti-Patterns — in-memory-only long-running workflows); 4. PFF-FA-AI-RUNTIME.md §46 (Long-Running Workflow), §49 (HIL Runtime); 6 PFF-FA-AI-CONVERSATION-SESSION.md §42–§48 (Async Workflow Support, Waiting for User, Waiting for Human, Waiting for External Event, Event Resume, Conversation After External Event, Session Expiration During Workflow); 11 PFF-FA-AI-SERVICE-BUS.md §55–§57 (Workflow Resume, Resume Safety, Resume Context), §59 (HIL Event Flow), §47 (Stale Event); 20.PFF-FA-AI-GOVERNANCE.md §68–§71 (Human Oversight, HIL Boundary, Human Decision Authority, HIL Evidence); 9 PFF-FA-AI-MEMORY-CACHE.md §140; affiliation flow Phases 6–7, Scenario 12 |
 | Requirement IDs | `FR-A39-12`, `FR-A39-13`, `NFR-A38-REL`, `NFR-A38-RECOV` |
 | Build phases | 4, 12, 23 |
-| Code paths | `src/pf_ft_ai/application/workflows/`, `src/pf_ft_ai/domain/workflow/` |
+| Code paths | `src/pff_fa_ai/application/workflows/`, `src/pff_fa_ai/domain/workflow/` |
 | Configuration | `config/base/workflows.yaml` |
 | Tests | AC-01 to AC-08 |
 | Upstream ADRs | ADR-D2-03, ADR-D2-06, ADR-D2-07 |

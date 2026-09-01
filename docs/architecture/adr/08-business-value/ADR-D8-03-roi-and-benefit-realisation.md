@@ -14,9 +14,9 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D8-01, ADR-D8-04, ADR-D8-05, ADR-D1-04, ADR-D1-05]
 source_docs:
-  - "MD files/6 Production/26.PF-FT-AI-PERFORMANCE-COST.md §78"
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §15"
-  - "MD files/1 Foundation/1 PF-FT-AI-ARCHITECTURE.md §1"
+  - "MD files/6 Production/26.PFF-FA-AI-PERFORMANCE-COST.md §78"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §15"
+  - "MD files/1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md §1"
 build_phases: [20]
 impacted_paths:
   - docs/governance/
@@ -31,12 +31,12 @@ review_due: 2027-08-22
 PFF AI will track ROI as **benefit (cost/time saved, capacity freed, error reduction,
 experience uplift) minus cost (unit economics, ADR-D8-01), measured against a pre-launch
 baseline per workflow**, with **benefit-realisation reviews** rather than a one-off business
-case (26.PF-FT-AI-PERFORMANCE-COST.md §78; 20.PF-FT-AI-GOVERNANCE.md §15; 1 PF-FT-AI-ARCHITECTURE.md §1). The first ROI subject is Club Affiliation
+case (26.PFF-FA-AI-PERFORMANCE-COST.md §78; 20.PFF-FA-AI-GOVERNANCE.md §15; 1 PFF-FA-AI-ARCHITECTURE.md §1). The first ROI subject is Club Affiliation
 (ADR-D1-05): cost per completed affiliation vs the manual/portal baseline.
 
 ## 2. Context and Problem Statement
 
-26.PF-FT-AI-PERFORMANCE-COST.md §78 cost per successful outcome; 20.PF-FT-AI-GOVERNANCE.md §15 AI suitability/benefit; 1 PF-FT-AI-ARCHITECTURE.md §1 the
+26.PFF-FA-AI-PERFORMANCE-COST.md §78 cost per successful outcome; 20.PFF-FA-AI-GOVERNANCE.md §15 AI suitability/benefit; 1 PFF-FA-AI-ARCHITECTURE.md §1 the
 problem/value framing. Without a measured ROI model tied to a baseline, the platform's value
 is asserted, not demonstrated, and investment decisions lack evidence. This ADR fixes the
 ROI model and benefit-realisation tracking (D8-01 = cost; D8-04/05 = KPIs feeding benefit).
@@ -45,7 +45,7 @@ ROI model and benefit-realisation tracking (D8-01 = cost; D8-04/05 = KPIs feedin
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Benefit − cost vs baseline per workflow | 26.PF-FT-AI-PERFORMANCE-COST.md §78; 20.PF-FT-AI-GOVERNANCE.md §15 |
+| DR-F-01 | Benefit − cost vs baseline per workflow | 26.PFF-FA-AI-PERFORMANCE-COST.md §78; 20.PFF-FA-AI-GOVERNANCE.md §15 |
 | DR-F-02 | Ongoing benefit-realisation reviews | benefit-realisation practice |
 | DR-F-03 | Baseline captured pre-launch | measurement practice |
 | DR-C-01 | Benefit not overstated (evidence-based) | governance |
@@ -111,12 +111,12 @@ causally, not just correlationally.
 
 | Option | Eliminated by |
 |---|---|
-| No ROI tracking | 20.PF-FT-AI-GOVERNANCE.md §15 |
+| No ROI tracking | 20.PFF-FA-AI-GOVERNANCE.md §15 |
 | Overstated benefit | Governance/honesty |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 26.PF-FT-AI-PERFORMANCE-COST.md §78, 20.PF-FT-AI-GOVERNANCE.md §15, 1 PF-FT-AI-ARCHITECTURE.md §1.
+**Method.** Weighted scoring against §4, informed by 26.PFF-FA-AI-PERFORMANCE-COST.md §78, 20.PFF-FA-AI-GOVERNANCE.md §15, 1 PFF-FA-AI-ARCHITECTURE.md §1.
 
 | Criterion | Weight | A: Baseline+reviews | B: One-off case | C: Savings-only | D: Vanity | E: A+control comparison |
 |---|---|---|---|---|---|---|
@@ -146,7 +146,7 @@ business case (B), savings-only (C) and vanity metrics (D) are rejected.
   metrics from KPIs (ADR-D8-04/05) and unit cost (ADR-D8-01); ROI computed and reviewed on
   a cadence; re-baseline as processes change.
 - Control/A-B where feasible (e.g. cohort still on the portal) for attribution; results feed
-  investment/prioritisation (ADR-D1-10) and governance (20.PF-FT-AI-GOVERNANCE.md §15).
+  investment/prioritisation (ADR-D1-10) and governance (20.PFF-FA-AI-GOVERNANCE.md §15).
 
 ## 9. Consequences
 
@@ -252,7 +252,7 @@ business case (B), savings-only (C) and vanity metrics (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-34 |
-| Specification sections | 26.PF-FT-AI-PERFORMANCE-COST.md §78; 20.PF-FT-AI-GOVERNANCE.md §15; 1 PF-FT-AI-ARCHITECTURE.md §1 |
+| Specification sections | 26.PFF-FA-AI-PERFORMANCE-COST.md §78; 20.PFF-FA-AI-GOVERNANCE.md §15; 1 PFF-FA-AI-ARCHITECTURE.md §1 |
 | Requirement IDs | ROI-* |
 | Build phases | 20 |
 | Code paths | governance/ROI |

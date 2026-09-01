@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-12, ADR-D6-09, ADR-D3-04, ADR-D6-12, ADR-D2-19]
 source_docs:
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §16, §17, §18, §19, §20, §21, §22, §23, §24, §25, §26, §28, §29, §30, §31"
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §37, §38, §47"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §16, §17, §18, §19, §20, §21, §22, §23, §24, §25, §26, §28, §29, §30, §31"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §37, §38, §47"
 build_phases: [9]
 impacted_paths:
-  - src/pf_ft_ai/guardrails/
+  - src/pff_fa_ai/guardrails/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -31,14 +31,14 @@ PFF AI will defend against prompt injection and jailbreaks with **layered runtim
 guardrails** covering direct and indirect injection across all untrusted channels —
 user input, RAG documents, tool/API results, MCP responses, memory, Service Bus events —
 combining structural defences (ADR-D3-12) with detection/classification and fail-closed
-handling (18.PF-FT-AI-GUARDRAILS.md §16–§31; 19.PF-FT-AI-SECURITY.md §37–§38, §47). No single technique is trusted alone;
+handling (18.PFF-FA-AI-GUARDRAILS.md §16–§31; 19.PFF-FA-AI-SECURITY.md §37–§38, §47). No single technique is trusted alone;
 authoritative data always outranks injected instructions.
 
 ## 2. Context and Problem Statement
 
-18.PF-FT-AI-GUARDRAILS.md §16–§31 detail injection defence across every channel (direct §17, indirect §18,
+18.PFF-FA-AI-GUARDRAILS.md §16–§31 detail injection defence across every channel (direct §17, indirect §18,
 detection §20–§21, jailbreak §22–§23, multi-turn §24, memory §25, RAG §26, API §28, tool
-§29, MCP §30, Service Bus §31); 19.PF-FT-AI-SECURITY.md §37–§38/§47 prompt-injection/jailbreak/memory-
+§29, MCP §30, Service Bus §31); 19.PFF-FA-AI-SECURITY.md §37–§38/§47 prompt-injection/jailbreak/memory-
 injection. ADR-D3-12 covers the *prompt-layer* structural defence; this ADR fixes the
 *runtime guardrail* defence architecture that complements it across all channels.
 
@@ -46,10 +46,10 @@ injection. ADR-D3-12 covers the *prompt-layer* structural defence; this ADR fixe
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Defend direct + indirect injection on all channels | 18.PF-FT-AI-GUARDRAILS.md §17–§18, §26–§31 |
-| DR-F-02 | Jailbreak + multi-turn defence | 18.PF-FT-AI-GUARDRAILS.md §22–§24 |
-| DR-C-01 | Authoritative data outranks injected instructions | 18.PF-FT-AI-GUARDRAILS.md §27, §58 |
-| DR-F-03 | Fail-closed on detected injection | 18.PF-FT-AI-GUARDRAILS.md §11, §54 |
+| DR-F-01 | Defend direct + indirect injection on all channels | 18.PFF-FA-AI-GUARDRAILS.md §17–§18, §26–§31 |
+| DR-F-02 | Jailbreak + multi-turn defence | 18.PFF-FA-AI-GUARDRAILS.md §22–§24 |
+| DR-C-01 | Authoritative data outranks injected instructions | 18.PFF-FA-AI-GUARDRAILS.md §27, §58 |
+| DR-F-03 | Fail-closed on detected injection | 18.PFF-FA-AI-GUARDRAILS.md §11, §54 |
 
 ### 3.4 Assumptions
 
@@ -114,12 +114,12 @@ ADR-D3-07 confirmation).
 
 | Option | Eliminated by |
 |---|---|
-| "Please ignore injections" instruction only | 18.PF-FT-AI-GUARDRAILS.md §19; non-deterministic |
+| "Please ignore injections" instruction only | 18.PFF-FA-AI-GUARDRAILS.md §19; non-deterministic |
 | No defence | Unacceptable for an action-taking agent |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 18.PF-FT-AI-GUARDRAILS.md §16–§31 and 19.PF-FT-AI-SECURITY.md §37–§47.
+**Method.** Weighted scoring against §4, informed by 18.PFF-FA-AI-GUARDRAILS.md §16–§31 and 19.PFF-FA-AI-SECURITY.md §37–§47.
 
 | Criterion | Weight | A: Layered | B: Structural-only | C: Classifier-only | D: Model-intrinsic | E: Layered+HIL |
 |---|---|---|---|---|---|---|
@@ -213,9 +213,9 @@ approaches (B/C/D) are rejected as sole defences.
 | Aspect | Detail |
 |---|---|
 | Build phases | 9 |
-| Repository paths | `src/pf_ft_ai/guardrails/` |
+| Repository paths | `src/pff_fa_ai/guardrails/` |
 | Configuration | Rules, classifier, thresholds |
-| Contracts / schemas | Guardrail result (18.PF-FT-AI-GUARDRAILS.md §10) |
+| Contracts / schemas | Guardrail result (18.PFF-FA-AI-GUARDRAILS.md §10) |
 | Migration | N/A |
 | Dependencies on other ADRs | ADR-D3-12, D6-09, D3-04, D6-12 |
 | Effort estimate | L |
@@ -260,10 +260,10 @@ approaches (B/C/D) are rejected as sole defences.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 18.PF-FT-AI-GUARDRAILS.md §16–§31, §54, §58; 19.PF-FT-AI-SECURITY.md §37–§38, §47 |
+| Specification sections | 18.PFF-FA-AI-GUARDRAILS.md §16–§31, §54, §58; 19.PFF-FA-AI-SECURITY.md §37–§38, §47 |
 | Requirement IDs | SEC-INJ-* |
 | Build phases | 9 |
-| Code paths | `src/pf_ft_ai/guardrails/` |
+| Code paths | `src/pff_fa_ai/guardrails/` |
 | Configuration | rules/classifier |
 | Tests | injection/jailbreak suites |
 | Upstream ADRs | ADR-D3-12 |

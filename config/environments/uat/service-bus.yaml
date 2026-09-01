@@ -2,11 +2,11 @@
 # (§128), not a confirmed PFF enterprise event catalog — validate/extend against real
 # enterprise event contracts before this subscription is used against real traffic.
 topic:
-  name: pf-ft-enterprise-events-uat
+  name: pff-fa-enterprise-events-uat
   description: >
     UAT enterprise event stream. Mirrors production event shapes/volume for
     user-acceptance testing against realistic (but non-production) enterprise data.
-  subscription_name: pf-ft-ai-runtime-uat
+  subscription_name: pff-fa-ai-runtime-uat
   subscription_description: >
     Dedicated AI-runtime subscription on the UAT topic, filtered to AI-relevant event
     types only (doc 11 §29-30) so the platform never consumes unrelated enterprise

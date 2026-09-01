@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-02, ADR-D7-03, ADR-D7-04, ADR-D5-08, ADR-D7-07]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §4, §5, §6, §11, §12, §49"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §4, §5, §6, §11, §12, §49"
 build_phases: [10]
 impacted_paths:
-  - src/pf_ft_ai/observability/
+  - src/pff_fa_ai/observability/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -29,12 +29,12 @@ review_due: 2027-08-22
 PFF AI will use the **Azure-native observability stack — Azure Monitor, Application
 Insights and Log Analytics** — for platform metrics, traces and logs, answering the four
 runtime questions (is it up, is it fast, is it correct, is it costing what we expect)
-(24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §4–§6, §11–§12, §49; CLAUDE.md). AI-specific observability (Langfuse) is a
+(24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §4–§6, §11–§12, §49; CLAUDE.md). AI-specific observability (Langfuse) is a
 distinct, complementary layer (ADR-D7-02).
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §4–§6 define the observability architecture, pillars and four runtime questions;
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §4–§6 define the observability architecture, pillars and four runtime questions;
 §11–§12 application/structured logging; §49 metrics; CLAUDE.md names Azure Monitor/App
 Insights/Log Analytics for platform observability and Langfuse for AI-specific. Without a
 defined stack, telemetry is fragmented and incident response is blind. This ADR fixes the
@@ -44,8 +44,8 @@ platform observability stack (D7-02 covers AI-specific; D7-03 correlation; D7-04
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Metrics + traces + logs (three pillars) | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §5 |
-| DR-F-02 | Answer the four runtime questions | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §6 |
+| DR-F-01 | Metrics + traces + logs (three pillars) | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §5 |
+| DR-F-02 | Answer the four runtime questions | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §6 |
 | DR-N-01 | Azure-native integration (AKS/APIM/PaaS) | ADR-D5-08 |
 | DR-F-03 | Feed SLOs/alerts | ADR-D7-07/08 |
 
@@ -110,12 +110,12 @@ OSS/other backend.
 
 | Option | Eliminated by |
 |---|---|
-| No platform observability | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §4 |
-| Logs-only (no metrics/traces) | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §5 |
+| No platform observability | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §4 |
+| Logs-only (no metrics/traces) | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §5 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §4–§12/§49 and ADR-D5-08.
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §4–§12/§49 and ADR-D5-08.
 
 | Criterion | Weight | A: Azure-native | B: OSS self-host | C: SaaS APM | D: Azure+Grafana | E: Azure+OTel Collector |
 |---|---|---|---|---|---|---|
@@ -143,7 +143,7 @@ SaaS APM (C) are rejected as the primary stack.
 
 ## 8. Architecture Detail
 
-- OTel instrumentation in `src/pf_ft_ai/observability/`; exporters via an OTel Collector
+- OTel instrumentation in `src/pff_fa_ai/observability/`; exporters via an OTel Collector
   to App Insights (traces/metrics) and Log Analytics (logs); Azure Monitor alerts
   (ADR-D7-08).
 - Three pillars answer the four runtime questions (§6); correlation ids (ADR-D7-03) tie
@@ -207,7 +207,7 @@ SaaS APM (C) are rejected as the primary stack.
 | Aspect | Detail |
 |---|---|
 | Build phases | 10 |
-| Repository paths | `src/pf_ft_ai/observability/` |
+| Repository paths | `src/pff_fa_ai/observability/` |
 | Configuration | OTel + Collector + exporters |
 | Contracts / schemas | Telemetry schema |
 | Migration | N/A |
@@ -253,10 +253,10 @@ SaaS APM (C) are rejected as the primary stack.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 Observability |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §4–§6, §11–§12, §49–§50 |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §4–§6, §11–§12, §49–§50 |
 | Requirement IDs | OBS-PLAT-* |
 | Build phases | 10 |
-| Code paths | `src/pf_ft_ai/observability/` |
+| Code paths | `src/pff_fa_ai/observability/` |
 | Configuration | OTel/Collector |
 | Tests | telemetry coverage |
 | Upstream ADRs | ADR-D5-08 |

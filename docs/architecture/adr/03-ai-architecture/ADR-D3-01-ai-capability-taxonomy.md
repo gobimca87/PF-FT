@@ -14,13 +14,13 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-01, ADR-D1-06, ADR-D2-09, ADR-D3-02, ADR-D8-05]
 source_docs:
-  - "MD files/1 Foundation/1 PF-FT-AI-ARCHITECTURE.md §2.2"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4, §64"
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §4"
-  - "MD files/2 Agent Runtime/7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §4, §67, §69"
+  - "MD files/1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md §2.2"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §4, §64"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §4"
+  - "MD files/2 Agent Runtime/7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §4, §67, §69"
 build_phases: [0, 16]
 impacted_paths:
-  - src/pf_ft_ai/
+  - src/pff_fa_ai/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -33,13 +33,13 @@ AI capabilities are classified by **where the intelligence sits and what it is t
 not by which technology provides them. Four classes — Deterministic, Model-Assisted,
 Model-Generated and Model-Terminal — with the rule that no Model-Terminal capability exists in
 this platform, because a capability whose output reaches a user or an enterprise system without an
-intervening deterministic check is exactly what 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 forbids.
+intervening deterministic check is exactly what 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 forbids.
 
 ## 2. Context and Problem Statement
 
-1 PF-FT-AI-ARCHITECTURE.md §2.2 lists what the AI platform owns — nineteen items from conversation management to
-AI observability. 4. PF-FT-AI-RUNTIME.md §4 lists runtime responsibilities per component. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §4 names four core
-components. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4's matrix marks capabilities as AI-owned. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §67 and §69 draw a reasoning
+1 PFF-FA-AI-ARCHITECTURE.md §2.2 lists what the AI platform owns — nineteen items from conversation management to
+AI observability. 4. PFF-FA-AI-RUNTIME.md §4 lists runtime responsibilities per component. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §4 names four core
+components. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §4's matrix marks capabilities as AI-owned. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §67 and §69 draw a reasoning
 boundary.
 
 These are all **component** inventories: which module does what. WS-12 asks for a **capability**
@@ -55,11 +55,11 @@ evaluation" are all described as AI platform capabilities. They differ enormousl
   and a wrong answer produces a clarification rather than a wrong enterprise operation.
 - Response generation uses a model and its output goes to a user — but only after passing the
   output guardrail.
-- Guardrail evaluation must never use a model as its sole mechanism (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3).
+- Guardrail evaluation must never use a model as its sole mechanism (2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3).
 
 Treating these as one class of thing produces two failures. It leads to uniform controls, which
 are either too heavy for the deterministic cases or too light for the generative ones. And it makes
-evaluation strategy incoherent: 21.PF-FT-AI-EVALUATION.md requires AI quality evaluation, but unit-testing a
+evaluation strategy incoherent: 21.PFF-FA-AI-EVALUATION.md requires AI quality evaluation, but unit-testing a
 deterministic capability and evaluating a generative one are different activities, and a taxonomy
 that does not distinguish them cannot say which applies where.
 
@@ -73,10 +73,10 @@ case by case, inconsistently.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | The nineteen AI-owned capabilities of 1 PF-FT-AI-ARCHITECTURE.md §2.2 must be classifiable | 1 PF-FT-AI-ARCHITECTURE.md §2.2 |
-| DR-F-02 | The reasoning boundary must be expressible per capability | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §67, §69 |
-| DR-F-03 | Critical controls must be deterministic | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
-| DR-F-04 | Evaluation strategy must follow from capability class | 21.PF-FT-AI-EVALUATION.md §1 |
+| DR-F-01 | The nineteen AI-owned capabilities of 1 PFF-FA-AI-ARCHITECTURE.md §2.2 must be classifiable | 1 PFF-FA-AI-ARCHITECTURE.md §2.2 |
+| DR-F-02 | The reasoning boundary must be expressible per capability | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §67, §69 |
+| DR-F-03 | Critical controls must be deterministic | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-F-04 | Evaluation strategy must follow from capability class | 21.PFF-FA-AI-EVALUATION.md §1 |
 | DR-F-05 | A new capability must be classifiable on proposal | Programme practice |
 
 ### 3.2 Non-functional drivers
@@ -85,16 +85,16 @@ case by case, inconsistently.
 |---|---|---|---|
 | DR-N-01 | The taxonomy must be small enough to apply consistently | ≤5 classes | Programme practice |
 | DR-N-02 | Classification must be unambiguous | Two reviewers agree on class | DR-F-05 |
-| DR-N-03 | Class must determine controls, not merely describe | Each class names its required controls | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-N-03 | Class must determine controls, not merely describe | Each class names its required controls | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The SLM must not be the only enforcement mechanism for a critical control | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
-| DR-C-02 | Model output is never authoritative | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63; ADR-D1-03 |
+| DR-C-01 | The SLM must not be the only enforcement mechanism for a critical control | Platform | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-C-02 | Model output is never authoritative | Platform | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63; ADR-D1-03 |
 | DR-C-03 | Every model interaction passes the harness | Platform | ADR-D2-09 §7.1 |
-| DR-C-04 | The AI decides workflow and agent selection, context needs and communication | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 |
+| DR-C-04 | The AI decides workflow and agent selection, context needs and communication | Organisational | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46 |
 
 ### 3.4 Assumptions
 
@@ -109,8 +109,8 @@ case by case, inconsistently.
 |---|---|---|---|---|
 | EC-01 | Control adequacy follows from class | 35 | The taxonomy's purpose is ensuring each capability gets controls proportionate to its risk | Does class determine required controls? |
 | EC-02 | Classification unambiguity | 25 | An ambiguous taxonomy is applied inconsistently and is worse than none | Do independent reviewers agree? |
-| EC-03 | Evaluation strategy follows from class | 20 | 21.PF-FT-AI-EVALUATION.md requires evaluation; class should say what kind | Does class determine test versus evaluate? |
-| EC-04 | Coverage of 1 PF-FT-AI-ARCHITECTURE.md §2.2's capabilities | 12 | All nineteen must classify | Unclassifiable capabilities |
+| EC-03 | Evaluation strategy follows from class | 20 | 21.PFF-FA-AI-EVALUATION.md requires evaluation; class should say what kind | Does class determine test versus evaluate? |
+| EC-04 | Coverage of 1 PFF-FA-AI-ARCHITECTURE.md §2.2's capabilities | 12 | All nineteen must classify | Unclassifiable capabilities |
 | EC-05 | Simplicity | 8 | A taxonomy nobody remembers is unused | Number of classes |
 | | **Total** | **100** | | |
 
@@ -125,7 +125,7 @@ rule-based, integration-based.
 
 **Strengths.**
 - Immediately obvious from an implementation; no judgement needed (EC-02).
-- Maps directly to the package structure and to 1 PF-FT-AI-ARCHITECTURE.md §2.2's list.
+- Maps directly to the package structure and to 1 PFF-FA-AI-ARCHITECTURE.md §2.2's list.
 - Familiar organising principle.
 - Complete coverage trivially (EC-04).
 
@@ -133,7 +133,7 @@ rule-based, integration-based.
 - Technology does not determine risk. Intent classification and response generation are both
   SLM-based and carry very different consequences for being wrong (EC-01 fails).
 - Says nothing about what controls apply — a guardrail that used a model and a response generator
-  would classify identically, which is precisely the conflation 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 warns against.
+  would classify identically, which is precisely the conflation 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 warns against.
 - Evaluation strategy does not follow: two SLM-based capabilities may need unit tests and an
   evaluation suite respectively (EC-03).
 
@@ -151,7 +151,7 @@ Model-Terminal (model output acts without an intervening check).
   (EC-01).
 - Evaluation follows: Deterministic gets unit tests, Model-Assisted gets accuracy measurement
   against a golden set, Model-Generated gets quality evaluation (EC-03).
-- Makes 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 operational: Model-Terminal is the class that must not exist, and naming it
+- Makes 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 operational: Model-Terminal is the class that must not exist, and naming it
   makes its absence checkable.
 - The classification question — "what catches this if the model is wrong?" — is concrete (EC-02).
 
@@ -172,7 +172,7 @@ experience-affecting, internal.
 - Directly aligned with what matters to the organisation.
 - Naturally prioritises effort toward high-consequence capabilities.
 - Familiar to governance and risk functions.
-- Maps onto 20.PF-FT-AI-GOVERNANCE.md §15's AI risk classification.
+- Maps onto 20.PFF-FA-AI-GOVERNANCE.md §15's AI risk classification.
 
 **Weaknesses.**
 - Risk is a property of a capability's *use*, not the capability. Response generation is
@@ -180,7 +180,7 @@ experience-affecting, internal.
   (EC-02 weakened).
 - Does not determine controls: two safety-critical capabilities, one deterministic and one
   generative, need entirely different controls (EC-01).
-- Duplicates 20.PF-FT-AI-GOVERNANCE.md §15–§17's risk classification, which already exists for a different purpose.
+- Duplicates 20.PFF-FA-AI-GOVERNANCE.md §15–§17's risk classification, which already exists for a different purpose.
 
 **Cost / effort.** Low, and it duplicates existing governance machinery.
 
@@ -197,7 +197,7 @@ experience-affecting, internal.
 - Inconsistent by construction: two similar capabilities get different treatment depending on who
   designed them (EC-01, EC-02 fail).
 - No answer for a newly proposed capability beyond "design it".
-- Nothing makes 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition checkable — the absence of a Model-Terminal class cannot
+- Nothing makes 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition checkable — the absence of a Model-Terminal class cannot
   be asserted if there are no classes.
 - Review has no reference point.
 
@@ -222,7 +222,7 @@ option and asking whether the class implies the right controls and the right tes
 
 **Sensitivity.** B leads A by 172 points, losing only on unambiguity where A's mechanical
 classification wins by one point. B's slight ambiguity is the price of classifying by something
-that matters. C's problem is that risk attaches to use rather than to capability, and 20.PF-FT-AI-GOVERNANCE.md §15
+that matters. C's problem is that risk attaches to use rather than to capability, and 20.PFF-FA-AI-GOVERNANCE.md §15
 already handles risk classification for governance — this taxonomy answers a different question and
 should not duplicate it.
 
@@ -238,7 +238,7 @@ should not duplicate it.
 | **C4 Model-Terminal** | A model's output acts — on an enterprise system, on an authorization decision, or on a user — with **no intervening deterministic check**. | — | — |
 
 **No C4 capability exists in this platform.** That is the taxonomy's most important content.
-2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's requirement that the SLM never be the sole enforcement mechanism, and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48's
+2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3's requirement that the SLM never be the sole enforcement mechanism, and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48's
 prohibitions on SLM-controlled authorization and SLM-generated URLs, are all statements that
 particular capabilities must not be C4. Naming the class makes its emptiness assertable and
 testable (AC-01) rather than merely intended.
@@ -259,9 +259,9 @@ To classify a capability, ask:
 This is a question about the downstream path, which is why Option A's technology-based
 classification cannot answer it.
 
-### 7.3 1 PF-FT-AI-ARCHITECTURE.md §2.2's capabilities, classified
+### 7.3 1 PFF-FA-AI-ARCHITECTURE.md §2.2's capabilities, classified
 
-| Capability (1 PF-FT-AI-ARCHITECTURE.md §2.2) | Class | What constrains the model |
+| Capability (1 PFF-FA-AI-ARCHITECTURE.md §2.2) | Class | What constrains the model |
 |---|---|---|
 | FastAPI AI API boundary | C1 | — |
 | Conversation and session management | C1 | — |
@@ -272,12 +272,12 @@ classification cannot answer it.
 | ERC construction and context engineering | C1 | Declared context requirements (ADR-D2-12 §7.4) |
 | Controlled tools | **C2** | Per-agent allowlist; parameter schema (ADR-D6-10) |
 | Selective MCP integration | C2 | Same, plus MCP trust assessment (ADR-D6-11) |
-| RAG integration | C2 | Retrieval filters and ACL applied before retrieval (13.FP-FT-AI-RAG.md §62) |
+| RAG integration | C2 | Retrieval filters and ACL applied before retrieval (13.PFF-FA-AI-RAG.md §62) |
 | Embedding / vector integration | C1 | — |
 | SLM abstraction | C1 | The abstraction itself is deterministic |
-| Prompt management / versioning | C1 | Deterministic composition (16.PF-FT-AI-PROMPT-ENGINEERING.md §22) |
+| Prompt management / versioning | C1 | Deterministic composition (16.PFF-FA-AI-PROMPT-ENGINEERING.md §22) |
 | Memory / session / cache | C1 | — |
-| Input / output guardrails | **C1 — mandatory** | Must be deterministic per 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| Input / output guardrails | **C1 — mandatory** | Must be deterministic per 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
 | AI evaluation | C1 with C3 components | LLM-as-judge is C3; its output informs, never gates alone |
 | AI observability / Langfuse | C1 | — |
 | Service Bus event consumption | C1 | Static handler registry (ADR-D2-03 §7.4) |
@@ -285,14 +285,14 @@ classification cannot answer it.
 
 Two things stand out. Most AI-platform capabilities are **C1** — the platform is mostly
 deterministic machinery around a small number of model interactions. And the guardrails are C1 by
-requirement, which is 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 expressed as a classification.
+requirement, which is 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 expressed as a classification.
 
-Response generation is not in 1 PF-FT-AI-ARCHITECTURE.md §2.2's list because it is part of agent execution; it is the
+Response generation is not in 1 PFF-FA-AI-ARCHITECTURE.md §2.2's list because it is part of agent execution; it is the
 platform's principal **C3** capability and carries C3's full control set.
 
 ### 7.4 Class determines evaluation, not just controls
 
-21.PF-FT-AI-EVALUATION.md requires AI quality evaluation, and the class says what kind:
+21.PFF-FA-AI-EVALUATION.md requires AI quality evaluation, and the class says what kind:
 
 | Class | Testing approach | Failure signal |
 |---|---|---|
@@ -310,10 +310,10 @@ is therefore re-asserted whenever a capability's downstream path changes, and a 
 produce C4 is rejected.
 
 This is why classification is not a one-time exercise, and it is the mechanism by which
-2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition is maintained rather than merely established.
+2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition is maintained rather than merely established.
 
 **Status rationale.** Accepted. Tier 3 under ADR-D0-03 §7.1 — a classification framework rather
-than a 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 architecture change — ratified by the AI Solution Architect, with the Security
+than a 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52 architecture change — ratified by the AI Solution Architect, with the Security
 Owner consulted on §7.1's C4 prohibition.
 
 ## 8. Architecture Detail
@@ -385,7 +385,7 @@ collectively guarantee: that no capability is C4.
 
 - Class determines controls and evaluation, so a new capability's treatment follows from a single
   question rather than case-by-case judgement.
-- 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition becomes an assertable property — "no C4 capability exists" — rather
+- 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition becomes an assertable property — "no C4 capability exists" — rather
   than a principle.
 - Makes visible that most AI-platform capabilities are deterministic, which is useful context for
   reviewers who assume an AI platform is mostly model.
@@ -401,8 +401,8 @@ collectively guarantee: that no capability is C4.
 
 ### 9.3 Neutral
 
-- Does not replace 20.PF-FT-AI-GOVERNANCE.md §15's risk classification, which answers a governance question.
-- Component inventories in 1 PF-FT-AI-ARCHITECTURE.md §2.2 and 4. PF-FT-AI-RUNTIME.md §4 remain; this is an orthogonal cut.
+- Does not replace 20.PFF-FA-AI-GOVERNANCE.md §15's risk classification, which answers a governance question.
+- Component inventories in 1 PFF-FA-AI-ARCHITECTURE.md §2.2 and 4. PFF-FA-AI-RUNTIME.md §4 remain; this is an orthogonal cut.
 
 ### 9.4 Trade-offs explicitly accepted
 
@@ -473,7 +473,7 @@ exist anyway (§8.3) rather than by a new check.
 | ID | Acceptance criterion | Verification method |
 |---|---|---|
 | AC-01 | No capability's model output acts without a downstream deterministic check | §8.3's three checks; QM-03 |
-| AC-02 | Every capability in 1 PF-FT-AI-ARCHITECTURE.md §2.2 has a recorded class | Audit against §7.3 |
+| AC-02 | Every capability in 1 PFF-FA-AI-ARCHITECTURE.md §2.2 has a recorded class | Audit against §7.3 |
 | AC-03 | Guardrails are C1 and contain no model-only enforcement | ADR-D1-02 AC-07's prompt-ablation test |
 | AC-04 | Every C2 capability has golden-set accuracy measurement | Evaluation coverage; QM-04 |
 | AC-05 | Every C3 capability has quality evaluation | Evaluation coverage; QM-05 |
@@ -515,10 +515,10 @@ exist anyway (§8.3) rather than by a new check.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-12 AI Capability Mapping |
-| Specification sections | 1 PF-FT-AI-ARCHITECTURE.md §2.2 (AI-platform-owned); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4 (Executive Responsibility Matrix), §64 (Ownership of AI Reasoning); 4. PF-FT-AI-RUNTIME.md §4 (Runtime Responsibilities); 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §4 (Four Core Components), §67 (Reasoning Boundary), §69 (AI Reasoning Boundary); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 (Deterministic Control), §48; 21.PF-FT-AI-EVALUATION.md §1 |
+| Specification sections | 1 PFF-FA-AI-ARCHITECTURE.md §2.2 (AI-platform-owned); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §4 (Executive Responsibility Matrix), §64 (Ownership of AI Reasoning); 4. PFF-FA-AI-RUNTIME.md §4 (Runtime Responsibilities); 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §4 (Four Core Components), §67 (Reasoning Boundary), §69 (AI Reasoning Boundary); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 (Deterministic Control), §48; 21.PFF-FA-AI-EVALUATION.md §1 |
 | Requirement IDs | `NFR-A38-SEC`, `NFR-A38-TEST` |
 | Build phases | 0, 16 |
-| Code paths | All of `src/pf_ft_ai/` |
+| Code paths | All of `src/pff_fa_ai/` |
 | Configuration | `config/evaluation/` coverage |
 | Tests | AC-01 to AC-06 |
 | Upstream ADRs | ADR-D1-01, ADR-D1-02, ADR-D1-06 |
@@ -528,4 +528,4 @@ exist anyway (§8.3) rather than by a new check.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Four classes by model trust and downstream check rather than by technology; C4 (Model-Terminal) named specifically so its absence is assertable, making 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition testable; class determines both controls and evaluation strategy. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Four classes by model trust and downstream check rather than by technology; C4 (Model-Terminal) named specifically so its absence is assertable, making 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition testable; class determines both controls and evaluation strategy. |

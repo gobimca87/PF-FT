@@ -1,4 +1,4 @@
-from pf_ft_ai.common.claims import ClaimsContext
+from pff_fa_ai.common.claims import ClaimsContext
 
 
 def test_should_default_roles_and_permissions_to_empty() -> None:

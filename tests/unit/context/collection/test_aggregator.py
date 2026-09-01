@@ -1,4 +1,4 @@
-from pf_ft_ai.context.collection.aggregator import aggregate_records, deduplicate_records
+from pff_fa_ai.context.collection.aggregator import aggregate_records, deduplicate_records
 
 
 def test_should_deduplicate_by_enterprise_identifier() -> None:

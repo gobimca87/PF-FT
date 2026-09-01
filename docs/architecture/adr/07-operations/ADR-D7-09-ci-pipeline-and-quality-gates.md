@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-02, ADR-D5-04, ADR-D5-05, ADR-D7-13, ADR-D7-14, ADR-D6-15]
 source_docs:
-  - "MD files/6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65, §66, §68"
-  - "MD files/6 Production/27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §4, §12, §13"
+  - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65, §66, §68"
+  - "MD files/6 Production/27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4, §12, §13"
 build_phases: [0]
 impacted_paths:
   - .github/workflows/
@@ -30,12 +30,12 @@ review_due: 2027-08-22
 PFF AI's CI will run **mandatory quality gates on every PR** — lint/format (Ruff,
 ADR-D5-05), type check (mypy strict, ADR-D5-02), unit/component tests (ADR-D7-14),
 security + dependency scans (ADR-D6-18), and AI-evaluation gates where relevant
-(ADR-D7-13) — with a green pipeline required to merge (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§66, §68; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §4,
+(ADR-D7-13) — with a green pipeline required to merge (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65–§66, §68; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4,
 §12–§13). Gates are fast, deterministic and block merge on failure.
 
 ## 2. Context and Problem Statement
 
-25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§66 CI/CD architecture and CI pipeline, §68 PR gate; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §4 architecture
+25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65–§66 CI/CD architecture and CI pipeline, §68 PR gate; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4 architecture
 compliance, §12–§13 lint/type-check. Without mandatory CI gates, regressions, style
 drift, type errors and vulnerabilities reach main. This ADR fixes the CI pipeline and its
 required gates.
@@ -44,10 +44,10 @@ required gates.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Mandatory gates on every PR | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §68 |
-| DR-F-02 | Lint/type/test/security/eval gates | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §12–§13; ADR-D5-05/02, D6-18, D7-13 |
+| DR-F-01 | Mandatory gates on every PR | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §68 |
+| DR-F-02 | Lint/type/test/security/eval gates | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §12–§13; ADR-D5-05/02, D6-18, D7-13 |
 | DR-N-01 | Fast, deterministic feedback | CI practice |
-| DR-C-01 | Green required to merge | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §68 |
+| DR-C-01 | Green required to merge | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §68 |
 
 ### 3.4 Assumptions
 
@@ -109,12 +109,12 @@ green; fast unit/component tests inline, heavier eval staged if needed (ADR-D7-1
 
 | Option | Eliminated by |
 |---|---|
-| No CI | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65 |
-| Optional gates | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §68 (required) |
+| No CI | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65 |
+| Optional gates | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §68 (required) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§68 and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §12–§13.
+**Method.** Weighted scoring against §4, informed by 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65–§68 and 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §12–§13.
 
 | Criterion | Weight | A: Full PR gates | B: Lint+tests | C: Nightly | D: Manual | E: Full+tiered |
 |---|---|---|---|---|---|---|
@@ -143,7 +143,7 @@ manual (D) are rejected.
 
 - `.github/workflows/`: PR pipeline runs Ruff (ADR-D5-05), mypy (ADR-D5-02), unit/
   component tests (ADR-D7-14), secret + dependency + SAST scans (ADR-D6-18), and
-  architecture-compliance checks (import-linter, 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §4); heavier integration/eval
+  architecture-compliance checks (import-linter, 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4); heavier integration/eval
   gates (ADR-D7-13) run pre-merge; branch protection requires all.
 - Deterministic mock SLM (ADR-D7-14) keeps AI tests stable; caching keeps CI fast.
 
@@ -251,7 +251,7 @@ manual (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 CI/CD |
-| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §65–§66, §68; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §4, §12–§13 |
+| Specification sections | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65–§66, §68; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4, §12–§13 |
 | Requirement IDs | CI-* |
 | Build phases | 0 |
 | Code paths | `.github/workflows/` |

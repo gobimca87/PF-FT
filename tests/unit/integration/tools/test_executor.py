@@ -2,14 +2,14 @@ from collections.abc import Callable
 
 import httpx
 
-from pf_ft_ai.common.claims import ClaimsContext
-from pf_ft_ai.configuration.models import (
+from pff_fa_ai.common.claims import ClaimsContext
+from pff_fa_ai.configuration.models import (
     CircuitBreakerSettings,
     ConcurrencyPoolSettings,
     ConcurrencySettings,
     RetrySettings,
 )
-from pf_ft_ai.integration.api.catalog import (
+from pff_fa_ai.integration.api.catalog import (
     ApiAuthorization,
     ApiCatalog,
     ApiCatalogEntry,
@@ -17,18 +17,18 @@ from pf_ft_ai.integration.api.catalog import (
     ApiExecutionPolicy,
     ApiOperation,
 )
-from pf_ft_ai.integration.api.client import HttpxEnterpriseHttpClient
-from pf_ft_ai.integration.errors.codes import IntegrationErrorCode
-from pf_ft_ai.integration.execution.concurrency import ConcurrencyLimiter
-from pf_ft_ai.integration.tools.executor import ToolExecutor
-from pf_ft_ai.integration.tools.models import (
+from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
+from pff_fa_ai.integration.errors.codes import IntegrationErrorCode
+from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
+from pff_fa_ai.integration.tools.executor import ToolExecutor
+from pff_fa_ai.integration.tools.models import (
     ToolDefinition,
     ToolExecutionPolicy,
     ToolExecutionRequest,
     ToolSource,
 )
-from pf_ft_ai.integration.tools.registry import ToolRegistry
-from pf_ft_ai.integration.tools.states import ToolCallStatus
+from pff_fa_ai.integration.tools.registry import ToolRegistry
+from pff_fa_ai.integration.tools.states import ToolCallStatus
 
 FAST_RETRY = RetrySettings(
     max_attempts=3, backoff="exponential", initial_ms=1, max_ms=2, jitter=False

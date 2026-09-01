@@ -1,9 +1,9 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError, ValidationError
-from pf_ft_ai.embedding_vector.models import EmbeddingModelDescriptor
-from pf_ft_ai.embedding_vector.registry import EmbeddingModelRegistry
-from pf_ft_ai.embedding_vector.states import EmbeddingModelStatus
+from pff_fa_ai.common.exceptions import ConfigurationError, ValidationError
+from pff_fa_ai.embedding_vector.models import EmbeddingModelDescriptor
+from pff_fa_ai.embedding_vector.registry import EmbeddingModelRegistry
+from pff_fa_ai.embedding_vector.states import EmbeddingModelStatus
 
 
 def _descriptor(dimension: int = 32) -> EmbeddingModelDescriptor:

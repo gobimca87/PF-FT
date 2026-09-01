@@ -17,7 +17,7 @@ source_docs:
   - "MD files/<folder>/<doc>.md §<n>, §<n>"
 build_phases: [<phase numbers from DEVELOPMENT-GUIDE.md §4>]
 impacted_paths:
-  - src/pf_ft_ai/<module>/
+  - src/pff_fa_ai/<module>/
 classification: <Internal | Confidential>
 review_due: YYYY-MM-DD
 ---

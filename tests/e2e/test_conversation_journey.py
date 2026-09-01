@@ -7,7 +7,7 @@ it — see `tests/e2e/README.md`."""
 
 from fastapi.testclient import TestClient
 
-from pf_ft_ai.api import create_app
+from pff_fa_ai.api import create_app
 
 CLAIMS_HEADERS = {"x-subject": "e2e-user", "x-organization": "e2e-club"}
 

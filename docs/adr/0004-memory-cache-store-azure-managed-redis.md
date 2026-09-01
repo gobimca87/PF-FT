@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-`DEVELOPMENT-GUIDE.md` §2 and doc 9 (`MD files/3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md`
+`DEVELOPMENT-GUIDE.md` §2 and doc 9 (`MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md`
 §21, §137-139) deliberately left the memory/session/cache backing store open, to be
 resolved via ADR rather than guessed. Doc 9 explicitly requires the choice stay behind
 `MemoryStore`/`CacheStore` interfaces regardless of which technology is picked (§137-138,
@@ -17,13 +17,13 @@ resolved via ADR rather than guessed. Doc 9 explicitly requires the choice stay 
 ## Decision
 
 Use **Azure Managed Redis** as the backing store for both the memory subsystem
-(`src/pf_ft_ai/memory/`) and the cache subsystem (`src/pf_ft_ai/cache/`), built in
+(`src/pff_fa_ai/memory/`) and the cache subsystem (`src/pff_fa_ai/cache/`), built in
 Phase 7. Azure Managed Redis speaks the standard Redis (RESP) protocol, so `redis-py`'s
 `redis.asyncio.Redis` client is used unmodified — no Azure-specific SDK is needed at the
 application layer.
 
 Memory and cache share one Redis instance but are logically separated by key namespace
-(`pf-ft:<environment>:memory:...` / `pf-ft:<environment>:cache:...`), per doc 9 §99-100,
+(`pff-fa:<environment>:memory:...` / `pff-fa:<environment>:cache:...`), per doc 9 §99-100,
 §140 ("logically separated by namespace... even if the same physical technology is used").
 
 Connection configuration (`config/base/redis.yaml`) follows the project's established
@@ -35,7 +35,7 @@ resolvers, per the interface already built in Phase 1).
 
 ## Consequences
 
-- `src/pf_ft_ai/memory/` and `src/pf_ft_ai/cache/` get concrete `RedisMemoryStore` /
+- `src/pff_fa_ai/memory/` and `src/pff_fa_ai/cache/` get concrete `RedisMemoryStore` /
   `RedisCacheStore` implementations in Phase 7, not another in-memory placeholder — this
   decision is resolved, unlike the still-open items in
   [`0003-deferred-decisions-log.md`](0003-deferred-decisions-log.md).

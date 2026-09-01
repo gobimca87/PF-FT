@@ -1,13 +1,13 @@
 from datetime import UTC, datetime, timedelta
 
-from pf_ft_ai.context.erc.models import (
+from pff_fa_ai.context.erc.models import (
     Erc,
     ErcCompleteness,
     ErcSection,
     ErcValidationResult,
     compute_freshness,
 )
-from pf_ft_ai.context.erc.states import (
+from pff_fa_ai.context.erc.states import (
     ErcLifecycleStatus,
     ErcSectionStatus,
     ErcValidationStatus,

@@ -1,8 +1,8 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import WorkflowError
-from pf_ft_ai.prompt_engineering.lifecycle import assert_valid_transition, is_valid_transition
-from pf_ft_ai.prompt_engineering.states import PromptStatus
+from pff_fa_ai.common.exceptions import WorkflowError
+from pff_fa_ai.prompt_engineering.lifecycle import assert_valid_transition, is_valid_transition
+from pff_fa_ai.prompt_engineering.states import PromptStatus
 
 
 @pytest.mark.parametrize(

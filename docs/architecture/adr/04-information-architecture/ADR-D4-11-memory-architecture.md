@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-10, ADR-D4-12, ADR-D4-01, ADR-D3-25, ADR-D4-07, ADR-D6-06]
 source_docs:
-  - "MD files/3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md §5, §6, §10, §11, §12, §16, §17, §20, §22, §24, §25, §26, §27, §28, §29, §30, §32, §62, §64, §67, §68, §69, §72, §73, §74, §75, §76, §77, §78, §79"
+  - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §5, §6, §10, §11, §12, §16, §17, §20, §22, §24, §25, §26, §27, §28, §29, §30, §32, §62, §64, §67, §68, §69, §72, §73, §74, §75, §76, §77, §78, §79"
 build_phases: [7]
 impacted_paths:
-  - src/pf_ft_ai/memory/
+  - src/pff_fa_ai/memory/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -28,16 +28,16 @@ review_due: 2027-08-22
 
 PFF AI will implement memory as **typed categories** (conversation, session, working,
 workflow, agent-run, user-preference, organizational, ERC-reference, decision,
-summary — 9 PF-FT-AI-MEMORY-CACHE.md §5–§19) behind a provider-independent `MemoryStore`, with
-**relevance+recency+confidence ranking** for retrieval (9 PF-FT-AI-MEMORY-CACHE.md §24–§28),
-**summarisation** for long conversations (9 PF-FT-AI-MEMORY-CACHE.md §19, §64–§66), and **category-specific
-retention** (9 PF-FT-AI-MEMORY-CACHE.md §32, §74–§75). Crucially, memory **never stores enterprise business
-truth** — ERC is *referenced*, not copied (9 PF-FT-AI-MEMORY-CACHE.md §16–§17). Memory carries provenance
-and trust and is isolated per user/club (9 PF-FT-AI-MEMORY-CACHE.md §69, §77–§79).
+summary — 9 PFF-FA-AI-MEMORY-CACHE.md §5–§19) behind a provider-independent `MemoryStore`, with
+**relevance+recency+confidence ranking** for retrieval (9 PFF-FA-AI-MEMORY-CACHE.md §24–§28),
+**summarisation** for long conversations (9 PFF-FA-AI-MEMORY-CACHE.md §19, §64–§66), and **category-specific
+retention** (9 PFF-FA-AI-MEMORY-CACHE.md §32, §74–§75). Crucially, memory **never stores enterprise business
+truth** — ERC is *referenced*, not copied (9 PFF-FA-AI-MEMORY-CACHE.md §16–§17). Memory carries provenance
+and trust and is isolated per user/club (9 PFF-FA-AI-MEMORY-CACHE.md §69, §77–§79).
 
 ## 2. Context and Problem Statement
 
-9 PF-FT-AI-MEMORY-CACHE.md §5–§19 enumerate memory categories; §16–§17 forbid copying ERC into memory as
+9 PFF-FA-AI-MEMORY-CACHE.md §5–§19 enumerate memory categories; §16–§17 forbid copying ERC into memory as
 truth; §20–§32 cover lifecycle, storage, retrieval, ranking, confidence, trust,
 write policy and retention; §62–§79 cover selection, compression, conflict,
 staleness, provenance, versioning, deletion, security and isolation. Without a memory
@@ -49,11 +49,11 @@ fixes what memory is, how it is ranked and summarised, and how long it lives.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Typed memory categories behind MemoryStore | 9 PF-FT-AI-MEMORY-CACHE.md §5–§19, §22 |
-| DR-F-02 | Relevance+recency+confidence ranked retrieval | 9 PF-FT-AI-MEMORY-CACHE.md §24–§28 |
-| DR-F-03 | Summarisation for long context | 9 PF-FT-AI-MEMORY-CACHE.md §19, §64–§66 |
-| DR-C-01 | No enterprise truth in memory (ERC referenced) | 9 PF-FT-AI-MEMORY-CACHE.md §16–§17; ADR-D4-01 |
-| DR-C-02 | Category retention + per-user/club isolation | 9 PF-FT-AI-MEMORY-CACHE.md §32, §74–§79 |
+| DR-F-01 | Typed memory categories behind MemoryStore | 9 PFF-FA-AI-MEMORY-CACHE.md §5–§19, §22 |
+| DR-F-02 | Relevance+recency+confidence ranked retrieval | 9 PFF-FA-AI-MEMORY-CACHE.md §24–§28 |
+| DR-F-03 | Summarisation for long context | 9 PFF-FA-AI-MEMORY-CACHE.md §19, §64–§66 |
+| DR-C-01 | No enterprise truth in memory (ERC referenced) | 9 PFF-FA-AI-MEMORY-CACHE.md §16–§17; ADR-D4-01 |
+| DR-C-02 | Category retention + per-user/club isolation | 9 PFF-FA-AI-MEMORY-CACHE.md §32, §74–§79 |
 
 ### 3.4 Assumptions
 
@@ -76,7 +76,7 @@ fixes what memory is, how it is ranked and summarised, and how long it lives.
 
 ### 5.1 Option A — Typed categories + ranked retrieval + summarisation + category retention (ERC referenced, not copied)
 
-**Description.** The full 9 PF-FT-AI-MEMORY-CACHE.md model: categories, `MemoryStore` abstraction,
+**Description.** The full 9 PFF-FA-AI-MEMORY-CACHE.md model: categories, `MemoryStore` abstraction,
 relevance/recency/confidence ranking, summary memory for long conversations,
 per-category TTL/retention, provenance+trust, per-user/club isolation; ERC held as
 *reference* memory (id + pointer), never copied values.
@@ -112,7 +112,7 @@ ranking later.
 
 **Description.** Cache enterprise data in memory for the conversation.
 **Strengths.** Fewer ERC reads.
-**Weaknesses.** Stale enterprise truth in memory — violates 9 PF-FT-AI-MEMORY-CACHE.md §16–§17 and
+**Weaknesses.** Stale enterprise truth in memory — violates 9 PFF-FA-AI-MEMORY-CACHE.md §16–§17 and
 precedence. The exact anti-pattern the spec forbids.
 **Cost / effort.** Low; unacceptable.
 
@@ -121,11 +121,11 @@ precedence. The exact anti-pattern the spec forbids.
 | Option | Eliminated by |
 |---|---|
 | No memory (stateless turns) | DR-F-02 — loses continuity |
-| Cross-user shared memory | 9 PF-FT-AI-MEMORY-CACHE.md §77–§79 — isolation |
+| Cross-user shared memory | 9 PFF-FA-AI-MEMORY-CACHE.md §77–§79 — isolation |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 9 PF-FT-AI-MEMORY-CACHE.md §5–§32/§62–§79.
+**Method.** Weighted scoring against §4, informed by 9 PFF-FA-AI-MEMORY-CACHE.md §5–§32/§62–§79.
 
 | Criterion | Weight | A: Typed+ranked+summary | B: Raw history | C: Summary-only | D: Vector memory | E: Copy ERC |
 |---|---|---|---|---|---|---|
@@ -148,15 +148,15 @@ rejected outright — it is the forbidden ERC-copy anti-pattern.
 `MemoryStore`, with relevance+recency+confidence ranked retrieval, summarisation for
 long conversations, per-category retention and per-user/club isolation; ERC is
 referenced, never copied as truth (Option A).** Memory carries provenance and a trust
-level; conflicting/stale memories are resolved by trust+recency (9 PF-FT-AI-MEMORY-CACHE.md §67–§68).
+level; conflicting/stale memories are resolved by trust+recency (9 PFF-FA-AI-MEMORY-CACHE.md §67–§68).
 Vector/semantic retrieval (D) may later enhance ranking behind the same abstraction.
 Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 
-**Status rationale.** `Accepted` — 9 PF-FT-AI-MEMORY-CACHE.md governs this.
+**Status rationale.** `Accepted` — 9 PFF-FA-AI-MEMORY-CACHE.md governs this.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/memory/`: `MemoryStore` protocol (9 PF-FT-AI-MEMORY-CACHE.md §22) over Redis (ADR-D4-10);
+- `src/pff_fa_ai/memory/`: `MemoryStore` protocol (9 PFF-FA-AI-MEMORY-CACHE.md §22) over Redis (ADR-D4-10);
   category models (§5–§19) including `ERCReferenceMemory` holding pointers, not values
   (§16).
 - Retrieval policy (§23–§27): candidate memories ranked by relevance × recency ×
@@ -187,7 +187,7 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 |---|---|
 | Enterprise decides; AI orchestrates | Memory never holds enterprise truth (ERC referenced) |
 | Precedence chain | Memory ranks below ERC/enterprise; trust/staleness enforced |
-| Four-state separation | Memory distinct from ERC/cache/session (9 PF-FT-AI-MEMORY-CACHE.md §3) |
+| Four-state separation | Memory distinct from ERC/cache/session (9 PFF-FA-AI-MEMORY-CACHE.md §3) |
 | Versioned artefacts | Summary versioning (§65) |
 | Adam persona governs *how*, not *what* | Memory informs wording, not business truth |
 
@@ -213,7 +213,7 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 
 | Dimension | Impact |
 |---|---|
-| Attack surface change | Memory access authorized (9 PF-FT-AI-MEMORY-CACHE.md §79) |
+| Attack surface change | Memory access authorized (9 PFF-FA-AI-MEMORY-CACHE.md §79) |
 | Data classification touched | Conversation/preference memory may be Personal |
 | Personal data / PII | Retention/TTL; deletion path (§75); minimised |
 | Children's data and safeguarding | No safeguarding records in memory; ERC referenced |
@@ -226,7 +226,7 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 7 |
-| Repository paths | `src/pf_ft_ai/memory/` |
+| Repository paths | `src/pff_fa_ai/memory/` |
 | Configuration | Category retention/TTL; ranking weights |
 | Contracts / schemas | Memory category models; MemoryStore protocol |
 | Migration | N/A |
@@ -274,10 +274,10 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-22 |
-| Specification sections | 9 PF-FT-AI-MEMORY-CACHE.md §5–§32, §62–§79 |
+| Specification sections | 9 PFF-FA-AI-MEMORY-CACHE.md §5–§32, §62–§79 |
 | Requirement IDs | MEM-* |
 | Build phases | 7 |
-| Code paths | `src/pf_ft_ai/memory/` |
+| Code paths | `src/pff_fa_ai/memory/` |
 | Configuration | retention/ranking config |
 | Tests | memory eval + isolation suites |
 | Upstream ADRs | ADR-D4-10, ADR-D4-01 |

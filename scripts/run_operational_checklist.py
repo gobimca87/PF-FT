@@ -13,10 +13,10 @@ import asyncio
 import sys
 from pathlib import Path
 
-from pf_ft_ai.engineering_agents.models import EngineeringAgentResult
-from pf_ft_ai.engineering_agents.states import AgentResultStatus
-from pf_ft_ai.operations.registry import build_default_checklist
-from pf_ft_ai.operations.states import CheckFrequency
+from pff_fa_ai.engineering_agents.models import EngineeringAgentResult
+from pff_fa_ai.engineering_agents.states import AgentResultStatus
+from pff_fa_ai.operations.registry import build_default_checklist
+from pff_fa_ai.operations.states import CheckFrequency
 
 
 def print_report(frequency: CheckFrequency, results: tuple[EngineeringAgentResult, ...]) -> None:

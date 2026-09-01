@@ -2,12 +2,12 @@
 # (§128), not a confirmed PFF enterprise event catalog — validate/extend against real
 # enterprise event contracts before this subscription is used against real traffic.
 topic:
-  name: pf-ft-enterprise-events-prod
+  name: pff-fa-enterprise-events-prod
   description: >
     Production enterprise event stream. Approved shared infrastructure, strict
     retention and monitoring (doc 9 §136) — the authoritative source of workflow
     continuation and ERC-refresh signals for live PFF traffic.
-  subscription_name: pf-ft-ai-runtime-prod
+  subscription_name: pff-fa-ai-runtime-prod
   subscription_description: >
     Dedicated AI-runtime subscription on the production topic, filtered to
     AI-relevant event types only (doc 11 §29-30) so the platform never consumes

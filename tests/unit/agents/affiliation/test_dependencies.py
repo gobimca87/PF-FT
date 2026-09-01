@@ -1,5 +1,5 @@
-from pf_ft_ai.agents.affiliation.dependencies import build_affiliation_dependencies
-from pf_ft_ai.infrastructure.persistence import InMemoryWorkflowRepository
+from pff_fa_ai.agents.affiliation.dependencies import build_affiliation_dependencies
+from pff_fa_ai.infrastructure.persistence import InMemoryWorkflowRepository
 
 
 async def test_build_affiliation_dependencies_should_construct_against_the_real_config() -> None:

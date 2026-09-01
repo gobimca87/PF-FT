@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D8-05, ADR-D8-03, ADR-D8-01, ADR-D7-01, ADR-D1-04]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §15, §87, §88"
-  - "MD files/6 Production/26.PF-FT-AI-PERFORMANCE-COST.md §78"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §15, §87, §88"
+  - "MD files/6 Production/26.PFF-FA-AI-PERFORMANCE-COST.md §78"
 build_phases: [20]
 impacted_paths:
   - docs/governance/
@@ -30,12 +30,12 @@ review_due: 2027-08-22
 PFF AI will define a **business KPI framework** — workflow completion rate, containment/
 deflection, time-to-completion, user satisfaction, cost per outcome — presented on a
 **business dashboard**, distinct from AI-quality KPIs (ADR-D8-05) and operational SLIs
-(ADR-D7-07) (20.PF-FT-AI-GOVERNANCE.md §15, §87–§88; 26.PF-FT-AI-PERFORMANCE-COST.md §78). KPIs are outcome-focused and tied to the ROI
+(ADR-D7-07) (20.PFF-FA-AI-GOVERNANCE.md §15, §87–§88; 26.PFF-FA-AI-PERFORMANCE-COST.md §78). KPIs are outcome-focused and tied to the ROI
 model (ADR-D8-03).
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §15 AI suitability/benefit, §87–§88 governance metrics/dashboard; 26.PF-FT-AI-PERFORMANCE-COST.md §78 cost per
+20.PFF-FA-AI-GOVERNANCE.md §15 AI suitability/benefit, §87–§88 governance metrics/dashboard; 26.PFF-FA-AI-PERFORMANCE-COST.md §78 cost per
 outcome. Without an agreed business-KPI set, stakeholders judge success by anecdote. This
 ADR fixes the business KPI framework and dashboard (D8-05 = AI-quality KPIs; D7-07 =
 operational SLIs — kept separate).
@@ -44,8 +44,8 @@ operational SLIs — kept separate).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Outcome-focused business KPIs | 20.PF-FT-AI-GOVERNANCE.md §15; 26.PF-FT-AI-PERFORMANCE-COST.md §78 |
-| DR-F-02 | Business dashboard | 20.PF-FT-AI-GOVERNANCE.md §88 |
+| DR-F-01 | Outcome-focused business KPIs | 20.PFF-FA-AI-GOVERNANCE.md §15; 26.PFF-FA-AI-PERFORMANCE-COST.md §78 |
+| DR-F-02 | Business dashboard | 20.PFF-FA-AI-GOVERNANCE.md §88 |
 | DR-C-01 | Distinct from AI-quality/ops metrics | ADR-D8-05, D7-07 |
 | DR-F-03 | Tied to ROI | ADR-D8-03 |
 
@@ -71,7 +71,7 @@ operational SLIs — kept separate).
 ### 5.1 Option A — Outcome-focused business KPI set + dashboard, tied to ROI, separate from quality/ops
 
 **Description.** KPIs: completion rate, containment/deflection, time-to-completion, CSAT,
-cost per outcome (ADR-D8-01); on a business dashboard (20.PF-FT-AI-GOVERNANCE.md §88); feeding ROI (ADR-D8-03);
+cost per outcome (ADR-D8-01); on a business dashboard (20.PFF-FA-AI-GOVERNANCE.md §88); feeding ROI (ADR-D8-03);
 kept distinct from AI-quality (D8-05) and SLIs (D7-07).
 **Strengths.** Relevant, measurable, actionable, uncluttered.
 **Weaknesses.** Instrumentation for some KPIs.
@@ -109,12 +109,12 @@ kept distinct from AI-quality (D8-05) and SLIs (D7-07).
 
 | Option | Eliminated by |
 |---|---|
-| No business KPIs | 20.PF-FT-AI-GOVERNANCE.md §15/§87 |
+| No business KPIs | 20.PFF-FA-AI-GOVERNANCE.md §15/§87 |
 | Vanity-only KPIs | Not outcome-focused |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §15/§87–§88 and 26.PF-FT-AI-PERFORMANCE-COST.md §78.
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §15/§87–§88 and 26.PFF-FA-AI-PERFORMANCE-COST.md §78.
 
 | Criterion | Weight | A: Outcome set | B: Merged | C: Usage | D: Financial-only | E: A+segments+targets |
 |---|---|---|---|---|---|---|
@@ -142,8 +142,8 @@ E-with-A base).** Merged (B), usage-only (C) and financial-only (D) are rejected
 ## 8. Architecture Detail
 
 - KPIs computed from platform telemetry (ADR-D7-01), enterprise outcomes (completion), and
-  cost (ADR-D8-01); business dashboard (20.PF-FT-AI-GOVERNANCE.md §88) with targets/trends and county/segment
-  slices; feeds ROI (ADR-D8-03) and governance review (20.PF-FT-AI-GOVERNANCE.md §90).
+  cost (ADR-D8-01); business dashboard (20.PFF-FA-AI-GOVERNANCE.md §88) with targets/trends and county/segment
+  slices; feeds ROI (ADR-D8-03) and governance review (20.PFF-FA-AI-GOVERNANCE.md §90).
 - Separation: AI-quality (D8-05) and SLIs (D7-07) live on their own dashboards for their
   audiences.
 
@@ -251,7 +251,7 @@ E-with-A base).** Merged (B), usage-only (C) and financial-only (D) are rejected
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-35 KPIs |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §15, §87–§88; 26.PF-FT-AI-PERFORMANCE-COST.md §78 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §15, §87–§88; 26.PFF-FA-AI-PERFORMANCE-COST.md §78 |
 | Requirement IDs | KPI-BIZ-* |
 | Build phases | 20 |
 | Code paths | governance/KPI |

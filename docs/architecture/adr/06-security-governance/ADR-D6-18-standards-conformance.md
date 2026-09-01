@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D6-13, ADR-D6-16, ADR-D6-17, ADR-D6-15, ADR-D0-01]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §98, §99, §100"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §98, §99, §100"
 build_phases: [12, 24]
 impacted_paths:
   - docs/governance/
@@ -30,12 +30,12 @@ PFF AI will align to a defined set of standards — **ISO/IEC 42001 (AI manageme
 ISO/IEC 27001 (infosec), ISO/IEC 27701 (privacy), ISO 9001 (quality), ISO/IEC 23894 (AI
 risk), NIST AI RMF, NIST CSF, and the EU AI Act / UK GDPR** — via a **compliance mapping**
 that ties each requirement to the ADRs/controls that satisfy it, with evidence collected
-continuously rather than at audit time (20.PF-FT-AI-GOVERNANCE.md §98–§100). Conformance is treated as a
+continuously rather than at audit time (20.PFF-FA-AI-GOVERNANCE.md §98–§100). Conformance is treated as a
 mapping-and-evidence exercise over the existing controls, not a parallel bureaucracy.
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §98 lists the regulatory/compliance mapping (ISO/IEC 42001, 23894, 27001, 27701,
+20.PFF-FA-AI-GOVERNANCE.md §98 lists the regulatory/compliance mapping (ISO/IEC 42001, 23894, 27001, 27701,
 NIST AI RMF, NIST CSF), §99 compliance evidence, §100 compliance-mapping structure.
 Without a single conformance decision and mapping, the platform cannot demonstrate
 compliance efficiently and controls risk being built twice. This ADR fixes the target
@@ -45,9 +45,9 @@ standards and the mapping-driven conformance approach.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Define target standards | 20.PF-FT-AI-GOVERNANCE.md §98 |
-| DR-F-02 | Map requirements → ADRs/controls | 20.PF-FT-AI-GOVERNANCE.md §100 |
-| DR-F-03 | Continuous evidence collection | 20.PF-FT-AI-GOVERNANCE.md §99 |
+| DR-F-01 | Define target standards | 20.PFF-FA-AI-GOVERNANCE.md §98 |
+| DR-F-02 | Map requirements → ADRs/controls | 20.PFF-FA-AI-GOVERNANCE.md §100 |
+| DR-F-03 | Continuous evidence collection | 20.PFF-FA-AI-GOVERNANCE.md §99 |
 | DR-C-01 | Reuse existing controls (no parallel bureaucracy) | efficiency |
 
 ### 3.4 Assumptions
@@ -90,7 +90,7 @@ conformance, not precedes it.
 
 **Description.** Keep standards in mind, no mapping.
 **Strengths.** Low overhead.
-**Weaknesses.** Can't demonstrate compliance; gaps invisible; 20.PF-FT-AI-GOVERNANCE.md §99–§100 unmet.
+**Weaknesses.** Can't demonstrate compliance; gaps invisible; 20.PFF-FA-AI-GOVERNANCE.md §99–§100 unmet.
 **Cost / effort.** Low; non-compliant posture.
 
 ### 5.4 Option D — Adopt one framework only (e.g. ISO 42001) and ignore others
@@ -98,7 +98,7 @@ conformance, not precedes it.
 **Description.** Single-standard focus.
 **Strengths.** Simpler.
 **Weaknesses.** Misses infosec (27001), privacy (27701/GDPR), quality (9001), EU AI Act
-obligations; 20.PF-FT-AI-GOVERNANCE.md §98 lists several.
+obligations; 20.PFF-FA-AI-GOVERNANCE.md §98 lists several.
 **Cost / effort.** Low; incomplete.
 
 ### 5.5 Option E — Compliance mapping + continuous evidence + periodic external gap assessment
@@ -113,12 +113,12 @@ mapping and prepare for eventual certification.
 
 | Option | Eliminated by |
 |---|---|
-| No standards alignment | 20.PF-FT-AI-GOVERNANCE.md §98 |
+| No standards alignment | 20.PFF-FA-AI-GOVERNANCE.md §98 |
 | Duplicate control set per standard | Inefficient; error-prone |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §98–§100.
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §98–§100.
 
 | Criterion | Weight | A: Mapping+evidence | B: Certify first | C: Guidance only | D: One framework | E: A+gap assessment |
 |---|---|---|---|---|---|---|
@@ -147,7 +147,7 @@ Certify-first (B), guidance-only (C) and single-framework (D) are rejected.
 
 ## 8. Architecture Detail
 
-- A compliance mapping (20.PF-FT-AI-GOVERNANCE.md §100) in `docs/governance/`: rows = requirements per
+- A compliance mapping (20.PFF-FA-AI-GOVERNANCE.md §100) in `docs/governance/`: rows = requirements per
   standard; columns = satisfying ADR(s)/control(s), evidence source, status, owner.
 - Evidence sources: audit store (ADR-D6-17), eval results (ADR-D7-13), CI gates, config
   audits, DPIA (ADR-D6-16), RAI metrics (ADR-D6-13).
@@ -260,7 +260,7 @@ Certify-first (B), guidance-only (C) and single-framework (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-30 Standards |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §98–§100 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §98–§100 |
 | Requirement IDs | GOV-STD-* |
 | Build phases | 12, 24 |
 | Code paths | `docs/governance/` |

@@ -14,13 +14,13 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-01, ADR-D1-03, ADR-D2-09, ADR-D3-08, ADR-D6-09, ADR-D6-10]
 source_docs:
-  - "MD files/1 Foundation/1 PF-FT-AI-ARCHITECTURE.md §1, §2.3"
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.1, §3.2, §3.3, §3.4, §48"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §2, §46, §63, §71"
+  - "MD files/1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md §1, §2.3"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.1, §3.2, §3.3, §3.4, §48"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §2, §46, §63, §71"
 build_phases: [0, 4, 11, 23]
 impacted_paths:
-  - src/pf_ft_ai/guardrails/
-  - src/pf_ft_ai/orchestration/harness/
+  - src/pff_fa_ai/guardrails/
+  - src/pff_fa_ai/orchestration/harness/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -33,7 +33,7 @@ The Golden Rule — *enterprise systems decide and execute; the AI platform inte
 orchestrates, contextualises, explains and communicates* — is adopted as a binding
 architectural constraint enforced deterministically in code, not as a principle relied on
 through discipline. Every clause maps to a specific enforcement point, and the enforcement is
-deterministic rather than model-mediated, per 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3.
+deterministic rather than model-mediated, per 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3.
 
 ## 2. Context and Problem Statement
 
@@ -52,7 +52,7 @@ matters most. Left unconstrained, a language model asked "is my club eligible to
 will answer. It will answer well. It will sometimes answer correctly. And nothing about the
 answer will indicate which of those occurred.
 
-2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 states the necessary response directly: security, authorization enforcement,
+2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 states the necessary response directly: security, authorization enforcement,
 batching, retry, timeout, idempotency, schema validation and transaction protection must be
 deterministic wherever practical, and *the SLM must not be the only enforcement mechanism*.
 That sentence is the crux. A guardrail implemented as a prompt instruction — "do not state
@@ -77,28 +77,28 @@ None is prevented by stating the rule more often.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | No business outcome may reach a user unless it originated from an enterprise response or event | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63; 1 PF-FT-AI-ARCHITECTURE.md §2.3 |
-| DR-F-02 | No model output may function as an authorization decision | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §48 (SLM-controlled authorization) |
-| DR-F-03 | Critical controls must be deterministic, with the SLM never the sole enforcement | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
-| DR-F-04 | Tool access must be governed, never open | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.4 |
+| DR-F-01 | No business outcome may reach a user unless it originated from an enterprise response or event | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63; 1 PFF-FA-AI-ARCHITECTURE.md §2.3 |
+| DR-F-02 | No model output may function as an authorization decision | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48 (SLM-controlled authorization) |
+| DR-F-03 | Critical controls must be deterministic, with the SLM never the sole enforcement | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-F-04 | Tool access must be governed, never open | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.4 |
 | DR-F-05 | An unconfirmed transaction must never be communicated as confirmed | `CLAUDE.md` §Adam persona rule 6; affiliation flow Scenarios 21–27 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Enforcement must not depend on prompt compliance | 100% of business-truth checks implemented outside the model | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
-| DR-N-02 | A violation must be detectable, not merely improbable | Every violation class has a detecting control | 20.PF-FT-AI-GOVERNANCE.md §29 |
+| DR-N-01 | Enforcement must not depend on prompt compliance | 100% of business-truth checks implemented outside the model | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-N-02 | A violation must be detectable, not merely improbable | Every violation class has a detecting control | 20.PFF-FA-AI-GOVERNANCE.md §29 |
 | DR-N-03 | Enforcement latency must fit the conversational budget | ≤50 ms added per output guardrail pass | ADR-D5-18 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The SLM must not be the only enforcement mechanism for any critical control | Platform | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 |
-| DR-C-02 | The AI platform never authenticates or authorizes; it consumes validated claims | Platform | 1 PF-FT-AI-ARCHITECTURE.md §2.1; `CLAUDE.md` |
-| DR-C-03 | Model output is never an authoritative data source | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 |
-| DR-C-04 | The nine prohibitions of 1 PF-FT-AI-ARCHITECTURE.md §2.3 are binding | Organisational | ADR-D1-01 §7.3 |
+| DR-C-01 | The SLM must not be the only enforcement mechanism for any critical control | Platform | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
+| DR-C-02 | The AI platform never authenticates or authorizes; it consumes validated claims | Platform | 1 PFF-FA-AI-ARCHITECTURE.md §2.1; `CLAUDE.md` |
+| DR-C-03 | Model output is never an authoritative data source | Platform | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 |
+| DR-C-04 | The nine prohibitions of 1 PFF-FA-AI-ARCHITECTURE.md §2.3 are binding | Organisational | ADR-D1-01 §7.3 |
 
 ### 3.4 Assumptions
 
@@ -121,7 +121,7 @@ None is prevented by stating the rule more often.
 Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good · **5** excellent.
 
 EC-01 at 35 is the highest weight assigned anywhere in this library. It is justified by
-DR-C-01: 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 does not present determinism as preferable, it presents SLM-only
+DR-C-01: 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 does not present determinism as preferable, it presents SLM-only
 enforcement as unacceptable. A criterion reflecting a stated prohibition dominates criteria
 reflecting preferences.
 
@@ -140,7 +140,7 @@ transactions.
 - Scales to any number of workflows at no cost.
 
 **Weaknesses.**
-- Violates DR-C-01 directly: this is the SLM as sole enforcement mechanism, which 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3
+- Violates DR-C-01 directly: this is the SLM as sole enforcement mechanism, which 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3
   prohibits in terms.
 - Provides no guarantee. Prompt instructions are probabilistic and degrade under injection,
   long context, unusual phrasing and ordinary sampling variance.
@@ -259,7 +259,7 @@ in code at a named boundary:
 | **I-3** | Only allowlisted tools execute, with schema-valid parameters | Tool executor | Per-agent allowlist; Pydantic validation of every parameter before dispatch | ADR-D6-10 |
 | **I-4** | No success is stated for an unconfirmed transaction | Output guardrail | Transaction-state check: success language requires a confirmed enterprise state | ADR-D3-08 |
 | **I-5** | No URL is emitted that did not come from the portal link registry | Output guardrail | URL extraction and registry membership check | ADR-D2-19 |
-| **I-6** | No business rule is evaluated inside the platform | Build time | Architecture-fitness test over `src/pf_ft_ai/domain/`; dependency scan | ADR-D2-01 |
+| **I-6** | No business rule is evaluated inside the platform | Build time | Architecture-fitness test over `src/pff_fa_ai/domain/`; dependency scan | ADR-D2-01 |
 
 I-1 to I-5 are runtime checks. I-6 is a build-time check, because a rule implementation is a
 property of the code, not of a turn.
@@ -285,7 +285,7 @@ The rule is frequently read as purely restrictive. It is not, and reading it tha
 an unnecessarily timid platform. Within the boundary, the AI has full authority over:
 interpreting what the user means; deciding which workflow applies; deciding what context to
 gather and in what order; deciding how to explain an outcome; deciding what to ask next; and
-deciding when to hand off. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 marks these as **authoritative AI decisions** in the same
+deciding when to hand off. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46 marks these as **authoritative AI decisions** in the same
 matrix that marks eligibility and payment as authoritative enterprise decisions. The rule
 partitions authority; it does not subordinate one side to the other in everything.
 
@@ -377,7 +377,7 @@ precedence chain establishes which source to believe. Neither substitutes for th
 | Given up | In exchange for | Accepted by |
 |---|---|---|
 | Some conversational latitude and fluency | A guarantee rather than a probability on business truth | AI Product Owner |
-| Simplicity of prompt-based control | Conformance with 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition on SLM-only enforcement | External ADF/ADR forum |
+| Simplicity of prompt-based control | Conformance with 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3's prohibition on SLM-only enforcement | External ADF/ADR forum |
 | Some legitimate responses blocked by false positives | No unsourced business assertion reaching a user | Business Owner |
 | ~50 ms per turn | Every violation detectable | AI Engineering Lead |
 
@@ -414,7 +414,7 @@ precedence chain establishes which source to believe. Neither substitutes for th
 
 QM-02, QM-04, QM-05 and QM-06 all carry zero thresholds. Each represents a categorical
 failure of the constraint rather than a metric to optimise, and a single occurrence is a
-governance incident under 20.PF-FT-AI-GOVERNANCE.md §105.
+governance incident under 20.PFF-FA-AI-GOVERNANCE.md §105.
 
 ## 13. Security, Privacy and Compliance Impact
 
@@ -425,7 +425,7 @@ governance incident under 20.PF-FT-AI-GOVERNANCE.md §105.
 | Personal data / PII | Guardrail processing is in-memory and transient. Rejection events log the invariant breached and a redacted excerpt, never the full context — per ADR-D7-04. |
 | Children's data and safeguarding | Central. I-1 makes it structurally impossible for the platform to state a DBS or safeguarding outcome it was not given by the enterprise. Affiliation Phase 1's youth-team CRC checks are exactly this case. A model-only control would reduce the frequency of a wrong safeguarding answer; I-1 removes the possibility. |
 | UK GDPR lawful basis and rights impact | Supports accuracy (Art. 5(1)(d)) by preventing the platform from asserting personal data it does not hold, and supports Art. 22 by ensuring no decision about a person originates from the model. |
-| Audit and evidential requirements | Every enforcement decision is a logged event, giving positive evidence that the control operated, not merely that it existed. Supports 20.PF-FT-AI-GOVERNANCE.md §30 and §99. |
+| Audit and evidential requirements | Every enforcement decision is a logged event, giving positive evidence that the control operated, not merely that it existed. Supports 20.PFF-FA-AI-GOVERNANCE.md §30 and §99. |
 | Standards touched | ISO/IEC 42001 (AI system controls and human oversight); ISO/IEC 27001 A.8.28 (secure coding), A.5.15 (access control); NIST AI RMF MEASURE 2.5, MANAGE 2.2; EU AI Act Art. 14 (human oversight) — deterministic enforcement is what makes oversight meaningful rather than nominal. |
 
 ## 14. Implementation Impact
@@ -433,7 +433,7 @@ governance incident under 20.PF-FT-AI-GOVERNANCE.md §105.
 | Aspect | Detail |
 |---|---|
 | Build phases | 0 (principle), 4 (harness enforcement points), 11 (guardrail pipeline), 23 (affiliation E2E validation) |
-| Repository paths | `src/pf_ft_ai/guardrails/`, `src/pf_ft_ai/orchestration/harness/`, `src/pf_ft_ai/context/projection/` (context manifest) |
+| Repository paths | `src/pff_fa_ai/guardrails/`, `src/pff_fa_ai/orchestration/harness/`, `src/pff_fa_ai/context/projection/` (context manifest) |
 | Configuration | `config/base/guardrails.yaml` — versioned, release-gated |
 | Contracts / schemas | Context manifest schema; guardrail decision event schema; tool parameter schemas |
 | Migration | None; foundational |
@@ -449,7 +449,7 @@ governance incident under 20.PF-FT-AI-GOVERNANCE.md §105.
 | AC-03 | A tool call outside the agent's allowlist is rejected before dispatch | Tool executor test |
 | AC-04 | Success language is blocked when transaction state is not confirmed | Scenario-23 test from the affiliation flow |
 | AC-05 | A URL not present in the portal registry is stripped or blocked | Portal link guardrail test |
-| AC-06 | No business-rule evaluation exists in `src/pf_ft_ai/domain/` or `src/pf_ft_ai/agents/` | Architecture-fitness test in CI |
+| AC-06 | No business-rule evaluation exists in `src/pff_fa_ai/domain/` or `src/pff_fa_ai/agents/` | Architecture-fitness test in CI |
 | AC-07 | Removing the Golden Rule text from the system prompt degrades quality but breaks no safety test | Prompt-ablation test in the evaluation suite — the direct test of DR-C-01 |
 
 AC-07 is the definitive check that Option A was genuinely rejected. If any safety test fails
@@ -483,7 +483,7 @@ when the prompt text is removed, that control is SLM-only and must be reimplemen
 | RT-02 | QM-03 exceeds 5% false positives | Weekly evaluation | Tune the provenance check; do not relax I-1 — a superseding ADR would be required |
 | RT-03 | QM-04 records any fail-open | Daily log review | Immediate incident; fail-closed is not negotiable |
 | RT-04 | AC-07 ablation test fails | CI | A control has become SLM-only; DR-C-01 breached; reimplement deterministically |
-| RT-05 | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3 amended | Change notice | Re-evaluate the determinism requirement |
+| RT-05 | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 amended | Change notice | Re-evaluate the determinism requirement |
 | RT-06 | A new workflow introduces an assertion class the six invariants do not cover | Agent onboarding review | Extend §7.1; adding an invariant is a minor version bump, weakening one is a supersession |
 
 **Scheduled review:** 2027-08-21, or on any trigger above.
@@ -493,10 +493,10 @@ when the prompt text is removed, that control is SLM-only and must be reimplemen
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-01 Executive Summary; WS-02 Business Vision, Problem Statement & Objectives |
-| Specification sections | 1 PF-FT-AI-ARCHITECTURE.md §1 (Purpose — the rule as stated), §2.3 (Explicit non-goals); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.1 (Enterprise Authority), §3.2 (AI Orchestration), §3.3 (Deterministic Control), §3.4 (Controlled Tool Access), §48 (Anti-Patterns); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §2 (Core Responsibility Principle), §46 (Decision Authority Matrix), §63 (Ownership of Authoritative Truth), §71 (Final Boundary Statement); affiliation flow Scenarios 21–27 |
+| Specification sections | 1 PFF-FA-AI-ARCHITECTURE.md §1 (Purpose — the rule as stated), §2.3 (Explicit non-goals); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.1 (Enterprise Authority), §3.2 (AI Orchestration), §3.3 (Deterministic Control), §3.4 (Controlled Tool Access), §48 (Anti-Patterns); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §2 (Core Responsibility Principle), §46 (Decision Authority Matrix), §63 (Ownership of Authoritative Truth), §71 (Final Boundary Statement); affiliation flow Scenarios 21–27 |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 4, 11, 23 |
-| Code paths | `src/pf_ft_ai/guardrails/`, `src/pf_ft_ai/orchestration/harness/`, `src/pf_ft_ai/context/projection/` |
+| Code paths | `src/pff_fa_ai/guardrails/`, `src/pff_fa_ai/orchestration/harness/`, `src/pff_fa_ai/context/projection/` |
 | Configuration | `config/base/guardrails.yaml` |
 | Tests | AC-01 to AC-07; guardrail evaluation suite; prompt-ablation test |
 | Upstream ADRs | ADR-D1-01 |
@@ -506,4 +506,4 @@ when the prompt text is removed, that control is SLM-only and must be reimplemen
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Golden Rule decomposed into six deterministically enforced invariants; prompt-level enforcement rejected under 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.3. Tier 1 — ratified by the external ADF/ADR forum. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Golden Rule decomposed into six deterministically enforced invariants; prompt-level enforcement rejected under 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3. Tier 1 — ratified by the external ADF/ADR forum. |

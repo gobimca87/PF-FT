@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-05, ADR-D3-18, ADR-D2-11, ADR-D5-16, ADR-D5-17]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54, §55, §56, §57, §58, §59"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54, §55, §56, §57, §58, §59"
 build_phases: [2]
 impacted_paths:
-  - src/pf_ft_ai/infrastructure/
+  - src/pff_fa_ai/infrastructure/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -30,12 +30,12 @@ PFF AI will apply a **standard resilience toolkit — bounded retry with backoff
 retryable errors), circuit breakers per dependency, bulkhead isolation, timeouts and
 fallback** — uniformly across all external dependencies (enterprise APIs, SLM, RAG, MCP,
 Service Bus), driven by the error taxonomy (ADR-D7-05) and shared HTTP client (ADR-D5-16)
-(24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59). Retries never amplify incidents; a failing dependency is isolated, not
+(24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54–§59). Retries never amplify incidents; a failing dependency is isolated, not
 propagated.
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§58 retry classification/strategy/retryable/non-retryable/anti-pattern, §59
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54–§58 retry classification/strategy/retryable/non-retryable/anti-pattern, §59
 timeout strategy. Distributed dependencies fail; without disciplined resilience, failures
 cascade (retry storms, thread exhaustion, timeouts stacking). This ADR fixes the
 resilience patterns applied consistently (SLM-specific resilience is ADR-D3-18; workflow
@@ -45,10 +45,10 @@ idempotency/retry is ADR-D2-11 — this ADR is the shared toolkit).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Bounded retry only on retryable errors | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§57; ADR-D7-05 |
-| DR-F-02 | Circuit breakers per dependency | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md (breaker); ADR-D3-18 |
-| DR-F-03 | Bulkhead isolation + timeouts | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §59 |
-| DR-C-01 | No retry amplification | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §58; ADR-D5-17 |
+| DR-F-01 | Bounded retry only on retryable errors | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54–§57; ADR-D7-05 |
+| DR-F-02 | Circuit breakers per dependency | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md (breaker); ADR-D3-18 |
+| DR-F-03 | Bulkhead isolation + timeouts | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §59 |
+| DR-C-01 | No retry amplification | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §58; ADR-D5-17 |
 
 ### 3.4 Assumptions
 
@@ -111,12 +111,12 @@ retries can conflict with app retries.
 
 | Option | Eliminated by |
 |---|---|
-| No resilience patterns | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59 |
-| Unbounded retries | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §58 |
+| No resilience patterns | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54–§59 |
+| Unbounded retries | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §58 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59 and ADR-D3-18/D5-16.
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54–§59 and ADR-D3-18/D5-16.
 
 | Criterion | Weight | A: Full toolkit | B: Retry-only | C: Timeout+breaker | D: Mesh | E: Full+adaptive |
 |---|---|---|---|---|---|---|
@@ -144,7 +144,7 @@ complements in-cluster only.
 
 ## 8. Architecture Detail
 
-- Shared resilience wrappers in `src/pf_ft_ai/infrastructure/`: retry (retryable-only,
+- Shared resilience wrappers in `src/pff_fa_ai/infrastructure/`: retry (retryable-only,
   jittered backoff, §55–§57), breakers per dependency, bulkheads (bounded pools/
   semaphores per dependency), timeouts (§59), fallbacks.
 - Retryable/severity from ADR-D7-05; breakers/metrics feed alerting (ADR-D7-08) and
@@ -208,7 +208,7 @@ complements in-cluster only.
 | Aspect | Detail |
 |---|---|
 | Build phases | 2 |
-| Repository paths | `src/pf_ft_ai/infrastructure/` |
+| Repository paths | `src/pff_fa_ai/infrastructure/` |
 | Configuration | Per-dependency retry/breaker/bulkhead/timeout |
 | Contracts / schemas | Resilience config |
 | Migration | N/A |
@@ -255,10 +255,10 @@ complements in-cluster only.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §54–§59 |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §54–§59 |
 | Requirement IDs | RESIL-* |
 | Build phases | 2 |
-| Code paths | `src/pf_ft_ai/infrastructure/` |
+| Code paths | `src/pff_fa_ai/infrastructure/` |
 | Configuration | resilience config |
 | Tests | chaos + resilience suites |
 | Upstream ADRs | ADR-D7-05, D5-16 |

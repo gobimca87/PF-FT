@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-17, ADR-D3-14, ADR-D2-04, ADR-D6-09, ADR-D2-19]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §47, §48"
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §141"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §47, §48"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §141"
 build_phases: [6, 7]
 impacted_paths:
-  - src/pf_ft_ai/api/
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/api/
+  - src/pff_fa_ai/slm/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -32,14 +32,14 @@ PFF AI will **stream user-facing persona narration** token-by-token for
 responsiveness, but will **never stream structured output, tool arguments, or any
 text that must pass validation or guardrails before the user sees it**. Streaming is
 a presentation optimisation on already-decided, guardrail-cleared content; it must
-never let unvalidated or unconfirmed text reach the user (15.PF-FT-AI-SLM.md §47–§48). Where a
+never let unvalidated or unconfirmed text reach the user (15.PFF-FA-AI-SLM.md §47–§48). Where a
 turn contains both a decision/tool step and narration, the decision completes and is
 validated first; only the final narration streams.
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §47 introduces streaming and §48 warns explicitly about streaming and
-structured output; 16.PF-FT-AI-PROMPT-ENGINEERING.md §141 covers citation handling in output. Streaming
+15.PFF-FA-AI-SLM.md §47 introduces streaming and §48 warns explicitly about streaming and
+structured output; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §141 covers citation handling in output. Streaming
 improves perceived latency but conflicts with three hard requirements: structured
 output must be validated whole before use (ADR-D3-17); guardrails must vet output
 before the user sees it (ADR-D6-09); and Adam must never state an unconfirmed
@@ -51,8 +51,8 @@ intentions, or a premature "GOAL!" before enterprise confirmation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Stream persona narration for responsiveness | 15.PF-FT-AI-SLM.md §47 |
-| DR-F-02 | Never stream unvalidated structured output | 15.PF-FT-AI-SLM.md §48; ADR-D3-17 |
+| DR-F-01 | Stream persona narration for responsiveness | 15.PFF-FA-AI-SLM.md §47 |
+| DR-F-02 | Never stream unvalidated structured output | 15.PFF-FA-AI-SLM.md §48; ADR-D3-17 |
 | DR-C-01 | Guardrails vet output before user sees it | ADR-D6-09 |
 | DR-C-02 | No unconfirmed transaction stated | CLAUDE.md §Adam 6 |
 | DR-N-01 | Perceived latency improvement | UX target |
@@ -127,7 +127,7 @@ enterprise/safeguarding correctness; can't un-show a premature "GOAL!".
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §47–§48 and the guardrail
+**Method.** Weighted scoring against §4, informed by 15.PFF-FA-AI-SLM.md §47–§48 and the guardrail
 placement of ADR-D6-09.
 
 | Criterion | Weight | A: Narration-only | B: Everything | C: No stream | D: Chunk+vet | E: Optimistic+redact |
@@ -157,7 +157,7 @@ confirmation (CLAUDE.md §Adam 6). During non-streamed phases the Conversation
 Manager (ADR-D2-04) may show workflow status ("VAR check in progress"). Chunk-level
 vetted streaming (D) is a documented future option; B and E are rejected as unsafe.
 
-**Status rationale.** `Accepted` — 15.PF-FT-AI-SLM.md §48's warning and the guardrail/persona
+**Status rationale.** `Accepted` — 15.PFF-FA-AI-SLM.md §48's warning and the guardrail/persona
 rules make this the only safe posture; ADR records the rationale.
 
 ## 8. Architecture Detail
@@ -230,7 +230,7 @@ rules make this the only safe posture; ADR records the rationale.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 (SLM), 7 (API/conversation) |
-| Repository paths | `src/pf_ft_ai/api/`, `src/pf_ft_ai/slm/` |
+| Repository paths | `src/pff_fa_ai/api/`, `src/pff_fa_ai/slm/` |
 | Configuration | Streaming enabled per task class (narration only) |
 | Contracts / schemas | SSE/stream event contract |
 | Migration | N/A |
@@ -278,10 +278,10 @@ rules make this the only safe posture; ADR records the rationale.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 |
-| Specification sections | 15.PF-FT-AI-SLM.md §47–§48; 16.PF-FT-AI-PROMPT-ENGINEERING.md §141 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §47–§48; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §141 |
 | Requirement IDs | SLM-STREAM-* |
 | Build phases | 6, 7 |
-| Code paths | `src/pf_ft_ai/api/`, `src/pf_ft_ai/slm/` |
+| Code paths | `src/pff_fa_ai/api/`, `src/pff_fa_ai/slm/` |
 | Configuration | streaming task-class flag |
 | Tests | stream safety + guardrail suites |
 | Upstream ADRs | ADR-D3-17, ADR-D6-09 |

@@ -1,10 +1,10 @@
-from pf_ft_ai.guardrails.content import (
+from pff_fa_ai.guardrails.content import (
     wrap_enterprise_api_result,
     wrap_rag_evidence,
     wrap_repository_content,
     wrap_tool_result,
 )
-from pf_ft_ai.guardrails.states import TrustClassification
+from pff_fa_ai.guardrails.states import TrustClassification
 
 
 def test_rag_evidence_should_be_wrapped_as_reference_not_instructions() -> None:

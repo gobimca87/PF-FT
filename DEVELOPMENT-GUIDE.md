@@ -22,7 +22,7 @@ The source docs deliberately leave these open and list candidates. **Before Phas
 
 | Decision | Candidates listed in the docs | Status |
 |---|---|---|
-| Embedding model | HF-hosted general vs high-quality vs commercial API vs small vs domain-fine-tuned | Open — `ADR-D3-23` recommends HF-hosted general-purpose 768-dim (`bge-base-en-v1.5` class), pending the mandated PF-FT retrieval evaluation |
+| Embedding model | HF-hosted general vs high-quality vs commercial API vs small vs domain-fine-tuned | Open — `ADR-D3-23` recommends HF-hosted general-purpose 768-dim (`bge-base-en-v1.5` class), pending the mandated PFF-FA retrieval evaluation |
 | Vector store | Azure AI Search, Pinecone, Qdrant, Weaviate, Milvus, pgvector, OpenSearch, Elasticsearch, Redis Vector Search, Chroma | Open — `ADR-D3-24` recommends Azure AI Search (vector + hybrid), fallback pgvector, pending ARB sign-off |
 | Memory / session / cache store | Redis, PostgreSQL, CosmosDB, SQL — abstracted behind `MemoryStore` / `CacheStore` interfaces regardless | **Resolved: Azure Managed Redis** — see `ADR-D4-10` (supersedes `docs/adr/0004-memory-cache-store-azure-managed-redis.md`) |
 | Self-hosted SLM serving stack | vLLM, HF TGI, Azure ML managed endpoints, Triton+TensorRT-LLM, Ray Serve | Open — `ADR-D5-10` recommends vLLM, fallback Azure ML/TGI/Triton, pending benchmark |
@@ -58,7 +58,7 @@ FA-PFF/
 ├── .github/workflows/ (or azure-pipelines.yml)   # Phase 19 — doc 25 CI/CD pipeline
 │
 ├── src/
-│   └── pf_ft_ai/                      # canonical package name — doc 6 §102
+│   └── pff_fa_ai/                      # canonical package name — doc 6 §102
 │       ├── api/                       # Phase 3 — docs 4, 6 (FastAPI boundary only, no business logic)
 │       │   └── v1/
 │       │       ├── chat.py            # POST /api/v1/chat
@@ -179,7 +179,7 @@ Build strictly in this order — each phase depends on interfaces/contracts esta
 ### Phase 0 — Repo Bootstrap
 - `pyproject.toml` with pinned `requires-python`, Ruff config, chosen type checker (mypy or pyright — pick one, doc 27).
 - `.pre-commit-config.yaml` running lint/format/type-check.
-- Empty `src/pf_ft_ai/` package skeleton per §3, `VERSION.yaml` stub, `README.md`.
+- Empty `src/pff_fa_ai/` package skeleton per §3, `VERSION.yaml` stub, `README.md`.
 - Git branch model: `main`, `develop`, `feature/*`, `bugfix/*`, `hotfix/*`, `release/*`. Commits use conventional-commit style: `feat(agent): ...`, `fix(erc): ...`, `test(rag): ...`, `refactor(slm): ...`, `docs(prompt): ...`. Semantic versioning `MAJOR.MINOR.PATCH`.
 - **Doc:** 27 (Development Standards).
 
@@ -369,34 +369,34 @@ See `CLAUDE.md` for naming, async, exception hierarchy, Pydantic/TypedDict bound
 | # | File | Governs (phase / folder) |
 |---|---|---|
 | — | `0 Workflow/pff_affiliation_e2e_flow.md` | Phase 23 — functional spec for `AffiliationAgent` |
-| 1 | `1 Foundation/1 PF-FT-AI-ARCHITECTURE.md` | Phases 0, 4 — top-level architecture, component chain, related-doc roadmap |
-| 2 | `1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md` | Phase 4 — detailed architecture, anti-patterns, extension model |
-| 3 | `1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md` | All phases — ownership boundaries (E-OWN/AI-OWN/Shared), RACI, team boundary model |
-| 4 | `1 Foundation/4. PF-FT-AI-RUNTIME.md` | Phase 3 — request lifecycle, API contract, runtime state machine, limits |
-| 5 | `1 Foundation/5. PF-FT-AI-STATE-MODEL.md` | Phase 2 — all state enums, consistency rules, store separation |
-| 6 | `2 Agent Runtime/6 PF-FT-AI-CONVERSATION-SESSION.md` | Phase 3 — `pf_ft_ai` package layout, conversation/session contracts |
-| 7 | `2 Agent Runtime/7 PF-FT-AI-AGENTIC-ORCHESTRATION.md` | Phase 4, 23 — Supervisor/Agent/Harness/LangGraph, agent catalog, reference Affiliation graph |
-| 8 | `3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md` | Phase 5 — ERC pipeline, batching defaults, provenance |
-| 9 | `3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md` | Phase 7 — memory/cache categories, keys, storage abstraction |
-| 10 | `3 Context & Integration/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md` | Phase 6 — API catalog, tools, MCP, retry/circuit breaker |
-| 11 | `3 Context & Integration/11 PF-FT-AI-SERVICE-BUS.md` | Phase 12 — event envelope, consumer, resume, DLQ |
-| 12 | `3 Context & Integration/12 PF-FT-AI-PORTAL-LINKS.md` | Phase 13 — deterministic link generation, security |
-| 13 | `4 AI/13.FP-FT-AI-RAG.md` | Phase 8 — RAG pipelines, chunking, citations |
-| 14 | `4 AI/14.PF-FT-AI-EMBEDDING-VECTOR.md` | Phase 8 — embedding providers, vector store abstraction |
-| 15 | `4 AI/15.PF-FT-AI-SLM.md` | Phase 9 — SLM provider abstraction, model registry |
-| 16 | `4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md` | Phase 10 — prompt hierarchy, registry, injection defense |
-| 17 | `4 AI/17.PF-FT-AI-CONFIGURATION-VERSIONING.md` | Phase 1 — config precedence, release manifest |
-| 18 | `4 AI/18.PF-FT-AI-GUARDRAILS.md` | Phase 11 — guardrail pipeline, trust model |
-| 19 | `5 QualityGovernance/19.PF-FT-AI-SECURITY.md` | Phase 15 — trust zones, threat categories |
-| 20 | `5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md` | Phase 21 — lifecycle states, risk register |
-| 21 | `5 QualityGovernance/21.PF-FT-AI-EVALUATION.md` | Phase 16 — golden datasets, LLM-as-judge |
-| 22 | `5 QualityGovernance/22.PF-FT-AI-TESTING.md` | Phase 17 — test pyramid, `tests/` tree |
-| 23 | `5 QualityGovernance/23.PF-FT-AI-ENGINEERING-AGENTS.md` | Phase 18 — dev-time agent tooling |
-| 24 | `6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md` | Phase 14 — Langfuse, correlation IDs, circuit breakers |
-| 25 | `6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md` | Phase 19 — Azure services, IaC, CI/CD, environments |
-| 26 | `6 Production/26.PF-FT-AI-PERFORMANCE-COST.md` | Phase 20 — latency/cost formulas, benchmarks |
-| 27 | `6 Production/27.PF-FT-AI-DEVELOPMENT-STANDARDS.md` | Phase 0 — repo scaffold, coding standards (primary reference for §3/§5) |
-| 28 | `6 Production/28.PF-FT-AI-OPERATIONS-RUNBOOK.md` | Phase 22 — incident runbooks, checklists |
+| 1 | `1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md` | Phases 0, 4 — top-level architecture, component chain, related-doc roadmap |
+| 2 | `1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md` | Phase 4 — detailed architecture, anti-patterns, extension model |
+| 3 | `1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md` | All phases — ownership boundaries (E-OWN/AI-OWN/Shared), RACI, team boundary model |
+| 4 | `1 Foundation/4. PFF-FA-AI-RUNTIME.md` | Phase 3 — request lifecycle, API contract, runtime state machine, limits |
+| 5 | `1 Foundation/5. PFF-FA-AI-STATE-MODEL.md` | Phase 2 — all state enums, consistency rules, store separation |
+| 6 | `2 Agent Runtime/6 PFF-FA-AI-CONVERSATION-SESSION.md` | Phase 3 — `pff_fa_ai` package layout, conversation/session contracts |
+| 7 | `2 Agent Runtime/7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md` | Phase 4, 23 — Supervisor/Agent/Harness/LangGraph, agent catalog, reference Affiliation graph |
+| 8 | `3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md` | Phase 5 — ERC pipeline, batching defaults, provenance |
+| 9 | `3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md` | Phase 7 — memory/cache categories, keys, storage abstraction |
+| 10 | `3 Context & Integration/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md` | Phase 6 — API catalog, tools, MCP, retry/circuit breaker |
+| 11 | `3 Context & Integration/11 PFF-FA-AI-SERVICE-BUS.md` | Phase 12 — event envelope, consumer, resume, DLQ |
+| 12 | `3 Context & Integration/12 PFF-FA-AI-PORTAL-LINKS.md` | Phase 13 — deterministic link generation, security |
+| 13 | `4 AI/13.PFF-FA-AI-RAG.md` | Phase 8 — RAG pipelines, chunking, citations |
+| 14 | `4 AI/14.PFF-FA-AI-EMBEDDING-VECTOR.md` | Phase 8 — embedding providers, vector store abstraction |
+| 15 | `4 AI/15.PFF-FA-AI-SLM.md` | Phase 9 — SLM provider abstraction, model registry |
+| 16 | `4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md` | Phase 10 — prompt hierarchy, registry, injection defense |
+| 17 | `4 AI/17.PFF-FA-AI-CONFIGURATION-VERSIONING.md` | Phase 1 — config precedence, release manifest |
+| 18 | `4 AI/18.PFF-FA-AI-GUARDRAILS.md` | Phase 11 — guardrail pipeline, trust model |
+| 19 | `5 QualityGovernance/19.PFF-FA-AI-SECURITY.md` | Phase 15 — trust zones, threat categories |
+| 20 | `5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md` | Phase 21 — lifecycle states, risk register |
+| 21 | `5 QualityGovernance/21.PFF-FA-AI-EVALUATION.md` | Phase 16 — golden datasets, LLM-as-judge |
+| 22 | `5 QualityGovernance/22.PFF-FA-AI-TESTING.md` | Phase 17 — test pyramid, `tests/` tree |
+| 23 | `5 QualityGovernance/23.PFF-FA-AI-ENGINEERING-AGENTS.md` | Phase 18 — dev-time agent tooling |
+| 24 | `6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md` | Phase 14 — Langfuse, correlation IDs, circuit breakers |
+| 25 | `6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md` | Phase 19 — Azure services, IaC, CI/CD, environments |
+| 26 | `6 Production/26.PFF-FA-AI-PERFORMANCE-COST.md` | Phase 20 — latency/cost formulas, benchmarks |
+| 27 | `6 Production/27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md` | Phase 0 — repo scaffold, coding standards (primary reference for §3/§5) |
+| 28 | `6 Production/28.PFF-FA-AI-OPERATIONS-RUNBOOK.md` | Phase 22 — incident runbooks, checklists |
 
 ---
 

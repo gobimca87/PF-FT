@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-06, ADR-D3-11, ADR-D3-15, ADR-D7-12, ADR-D7-13]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §34, §36, §37, §42, §44, §49, §75, §76, §77, §78, §79, §80, §81, §86"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §34, §36, §37, §42, §44, §49, §75, §76, §77, §78, §79, §80, §81, §86"
 build_phases: [12]
 impacted_paths:
   - .github/
@@ -29,13 +29,13 @@ review_due: 2027-08-22
 Changes to versioned AI artefacts — models, prompts, RAG indexes, guardrails, agents,
 workflows — will pass **classified change-governance gates**: risk-classified changes,
 required approvals by role, evaluation release gates (golden datasets/regression), and
-approval evidence, before promotion via the release manifest (20.PF-FT-AI-GOVERNANCE.md §34–§49, §75–§81,
+approval evidence, before promotion via the release manifest (20.PFF-FA-AI-GOVERNANCE.md §34–§49, §75–§81,
 §86; ADR-D5-06). High-risk changes need explicit sign-off; emergency changes have a
 defined expedited-but-evidenced path.
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §34/§36–§37 model governance/approval/change, §42/§44 prompt governance/change,
+20.PFF-FA-AI-GOVERNANCE.md §34/§36–§37 model governance/approval/change, §42/§44 prompt governance/change,
 §49 workflow change, §75–§81 release/change management/classification/high-risk/emergency/
 approval workflow/evidence, §86 evaluation release gate. Ungoverned changes to
 model/prompt/index are the top cause of AI regressions and safety incidents. This ADR
@@ -45,10 +45,10 @@ fixes the change-governance gates (D5-06 provides the manifest; D7-13 the eval g
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Risk-classify changes | 20.PF-FT-AI-GOVERNANCE.md §77 |
-| DR-F-02 | Role-based approvals + evidence | 20.PF-FT-AI-GOVERNANCE.md §80–§81 |
-| DR-F-03 | Evaluation release gate | 20.PF-FT-AI-GOVERNANCE.md §86; ADR-D7-13 |
-| DR-F-04 | Emergency-change path | 20.PF-FT-AI-GOVERNANCE.md §79 |
+| DR-F-01 | Risk-classify changes | 20.PFF-FA-AI-GOVERNANCE.md §77 |
+| DR-F-02 | Role-based approvals + evidence | 20.PFF-FA-AI-GOVERNANCE.md §80–§81 |
+| DR-F-03 | Evaluation release gate | 20.PFF-FA-AI-GOVERNANCE.md §86; ADR-D7-13 |
+| DR-F-04 | Emergency-change path | 20.PFF-FA-AI-GOVERNANCE.md §79 |
 | DR-C-01 | Promote via immutable manifest | ADR-D5-06 |
 
 ### 3.4 Assumptions
@@ -99,12 +99,12 @@ judgement calls.
 
 **Description.** Reviewers approve; no automated eval.
 **Strengths.** Judgement.
-**Weaknesses.** Misses measurable regressions; subjective; 20.PF-FT-AI-GOVERNANCE.md §86 wants eval gate.
+**Weaknesses.** Misses measurable regressions; subjective; 20.PFF-FA-AI-GOVERNANCE.md §86 wants eval gate.
 **Cost / effort.** Medium; gaps.
 
 ### 5.5 Option E — Risk-classified gates + automated eval + change-impact analysis + rollback readiness
 
-**Description.** Option A plus mandatory change-impact analysis (16.PF-FT-AI-PROMPT-ENGINEERING.md §105/§158 for
+**Description.** Option A plus mandatory change-impact analysis (16.PFF-FA-AI-PROMPT-ENGINEERING.md §105/§158 for
 prompts; dependency graph) and verified rollback readiness before promotion.
 **Strengths.** Understands blast radius; safe to revert.
 **Weaknesses.** More upfront analysis.
@@ -114,12 +114,12 @@ prompts; dependency graph) and verified rollback readiness before promotion.
 
 | Option | Eliminated by |
 |---|---|
-| Ad-hoc changes to prod artefacts | 20.PF-FT-AI-GOVERNANCE.md §76; CLAUDE.md immutability |
-| No emergency path | 20.PF-FT-AI-GOVERNANCE.md §79 |
+| Ad-hoc changes to prod artefacts | 20.PFF-FA-AI-GOVERNANCE.md §76; CLAUDE.md immutability |
+| No emergency path | 20.PFF-FA-AI-GOVERNANCE.md §79 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §75–§86.
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §75–§86.
 
 | Criterion | Weight | A: Risk gates | B: Uniform heavy | C: CI-only | D: Human-only | E: A+impact+rollback |
 |---|---|---|---|---|---|---|
@@ -149,9 +149,9 @@ CI-only (C) and human-only (D) are rejected.
 ## 8. Architecture Detail
 
 - Change classification (§77) → required approvals (§78/§80) encoded in CI/CD (branch
-  protection, required reviewers) + governance record; eval gate (ADR-D7-13; 20.PF-FT-AI-GOVERNANCE.md §86)
+  protection, required reviewers) + governance record; eval gate (ADR-D7-13; 20.PFF-FA-AI-GOVERNANCE.md §86)
   blocks promotion on regression.
-- Change-impact analysis (prompt dependency graph 16.PF-FT-AI-PROMPT-ENGINEERING.md §105–§106; model/index deps
+- Change-impact analysis (prompt dependency graph 16.PFF-FA-AI-PROMPT-ENGINEERING.md §105–§106; model/index deps
   ADR-D3-15/D3-24); rollback readiness verified (prior manifest available, ADR-D5-06).
 - Emergency path (§79): expedited approval with mandatory post-hoc evidence + review.
 - Approval evidence retained (§81; ADR-D6-17).
@@ -202,7 +202,7 @@ CI-only (C) and human-only (D) are rejected.
 |---|---|
 | Attack surface change | Governed changes reduce unsafe deploys |
 | Data classification touched | Internal |
-| Personal data / PII | Eval datasets governed for privacy (20.PF-FT-AI-GOVERNANCE.md §84) |
+| Personal data / PII | Eval datasets governed for privacy (20.PFF-FA-AI-GOVERNANCE.md §84) |
 | Children's data and safeguarding | Safeguarding-affecting changes high-risk |
 | UK GDPR lawful basis and rights impact | Change control supports accountability |
 | Audit and evidential requirements | Approval evidence retained |
@@ -260,7 +260,7 @@ CI-only (C) and human-only (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-28 |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §34–§49, §75–§86 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §34–§49, §75–§86 |
 | Requirement IDs | GOV-CHG-* |
 | Build phases | 12 |
 | Code paths | `.github/`, governance |

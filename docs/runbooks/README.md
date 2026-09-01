@@ -11,7 +11,7 @@ runbooks cannot link to a live dashboard or paging system. They *are* the on-cal
 documentation for now; once a real environment and alerting stack exist, wire actual
 alert links into the "Diagnostic steps" section of each file without changing its
 structure. The daily/weekly/monthly operational checklists (doc 28 §135-137) **are**
-implemented as real scheduled code — see `src/pf_ft_ai/operations/` and
+implemented as real scheduled code — see `src/pff_fa_ai/operations/` and
 `.github/workflows/operational-checks.yml`.
 
 ## Severity (doc 28 §8-12)
@@ -28,7 +28,7 @@ implemented as real scheduled code — see `src/pf_ft_ai/operations/` and
 `Alert → Acknowledge → Classify → Correlate → Diagnose → Contain → Recover → Validate → Monitor → Close → RCA`
 
 Always start with `correlation_id` (`x-correlation-id` header / `request.state.correlation_id`,
-`src/pf_ft_ai/api/app.py`'s `add_correlation_context` middleware) — every runbook below
+`src/pff_fa_ai/api/app.py`'s `add_correlation_context` middleware) — every runbook below
 assumes it's in hand.
 
 ## Escalation (doc 28 §116, trimmed to what this codebase actually owns)
@@ -59,9 +59,9 @@ assumes it's in hand.
 
 Implemented as real code, not just a markdown checkbox list:
 
-- `src/pf_ft_ai/operations/checks.py` — `configuration_check()`, `architecture_check()`,
+- `src/pff_fa_ai/operations/checks.py` — `configuration_check()`, `architecture_check()`,
   `dependency_check()`, `platform_health_check()`.
-- `src/pf_ft_ai/operations/registry.py` — `build_default_checklist()` assigns each
+- `src/pff_fa_ai/operations/registry.py` — `build_default_checklist()` assigns each
   check to DAILY/WEEKLY/MONTHLY per doc 28's own checklist item placement.
 - `.github/workflows/operational-checks.yml` — cron-scheduled CI runs each cadence.
 - `scripts/run_operational_checklist.py` — the CLI entrypoint the workflow calls.

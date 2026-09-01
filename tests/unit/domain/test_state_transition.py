@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.domain.state_transition import StateActor, StateTransition
+from pff_fa_ai.domain.state_transition import StateActor, StateTransition
 
 
 def test_should_capture_a_full_state_transition_record() -> None:

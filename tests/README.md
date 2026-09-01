@@ -3,14 +3,14 @@
 Phase 17 (doc 22 — Testing) organizes this repo's tests around the 12-layer pyramid doc
 22 §6/§8 defines. Layers with genuinely new Phase 17 content get a dedicated top-level
 directory below; layers that already have deep coverage from earlier phases keep living
-under `tests/unit/<module>/`, mirroring `src/pf_ft_ai/<module>/` — duplicating that
+under `tests/unit/<module>/`, mirroring `src/pff_fa_ai/<module>/` — duplicating that
 coverage into empty placeholder directories here would be padding, not testing, so it
 was deliberately not done. Every test name is behavior-descriptive
 (`test_should_split_erc_into_20_team_batches`-style), per doc 22's convention.
 
 | Layer (doc 22 §6) | Where it lives | Notes |
 |---|---|---|
-| L1 Unit | `tests/unit/**` | Mirrors `src/pf_ft_ai/**` exactly; one test module per source module. |
+| L1 Unit | `tests/unit/**` | Mirrors `src/pff_fa_ai/**` exactly; one test module per source module. |
 | L2 Component | `tests/component/` | Multiple units of one capability exercised together (e.g. ERC batching + aggregation as a pipeline). |
 | L3 Contract | `tests/contract/` | Boundary contracts, e.g. the enterprise API status/error space (doc 22 §21). |
 | L4 API | `tests/unit/api/` | FastAPI endpoint tests — request/response schema, auth headers, error envelopes. |

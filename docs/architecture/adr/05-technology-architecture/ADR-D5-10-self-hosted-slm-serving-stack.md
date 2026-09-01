@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-13, ADR-D3-14, ADR-D3-17, ADR-D5-08, ADR-D5-11, ADR-D0-04]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §5, §20, §21, §46, §47, §70, §71, §73, §77, §78, §80, §81"
-  - "MD files/6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §20, §21"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §5, §20, §21, §46, §47, §70, §71, §73, §77, §78, §80, §81"
+  - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §20, §21"
 build_phases: [20]
 impacted_paths:
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
   - infra/
 classification: Internal
 review_due: 2027-08-22
@@ -42,9 +42,9 @@ benchmark on the selected model and Azure GPU node type.
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §5/§20–§21 describe the future self-hosted architecture and its
+15.PFF-FA-AI-SLM.md §5/§20–§21 describe the future self-hosted architecture and its
 responsibilities; §46–§47 inference/streaming; §70–§73 GPU/VRAM/quantisation; §77–§81
-KV cache, scaling, warm-up, rolling deploy; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §20–§21 CPU/GPU strategy and SLM
+KV cache, scaling, warm-up, rolling deploy; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §20–§21 CPU/GPU strategy and SLM
 infrastructure. CLAUDE.md lists the serving stack (vLLM or HF TGI) as still open. The
 serving engine determines throughput per GPU (cost), latency, streaming/structured-
 output support (ADR-D3-17/19), quantisation options and operational model. This ADR
@@ -54,11 +54,11 @@ evaluates the candidates and recommends one, to be confirmed by benchmark.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | High-throughput GPU serving (continuous batching) | 15.PF-FT-AI-SLM.md §49–§51, §78; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §21 |
-| DR-F-02 | Streaming + structured/constrained output support | 15.PF-FT-AI-SLM.md §47–§48; ADR-D3-17/19 |
+| DR-F-01 | High-throughput GPU serving (continuous batching) | 15.PFF-FA-AI-SLM.md §49–§51, §78; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §21 |
+| DR-F-02 | Streaming + structured/constrained output support | 15.PFF-FA-AI-SLM.md §47–§48; ADR-D3-17/19 |
 | DR-F-03 | Behind provider abstraction (OpenAI-compatible helps) | ADR-D3-14 |
-| DR-N-01 | Throughput per GPU (unit cost) | 15.PF-FT-AI-SLM.md §105; ADR-D5-11 |
-| DR-N-02 | Quantisation + VRAM efficiency | 15.PF-FT-AI-SLM.md §73–§77 |
+| DR-N-01 | Throughput per GPU (unit cost) | 15.PFF-FA-AI-SLM.md §105; ADR-D5-11 |
+| DR-N-02 | Quantisation + VRAM efficiency | 15.PFF-FA-AI-SLM.md §73–§77 |
 | DR-C-01 | Runs on AKS GPU nodes in-tenancy | ADR-D5-08 |
 
 ### 3.4 Assumptions
@@ -176,7 +176,7 @@ chosen model and Azure GPU SKU, gated at Phase 20; listed in
 
 - A `SelfHostedProvider` adapter (ADR-D3-14) targets the engine's OpenAI-compatible
   endpoint; model registry (ADR-D3-15) records engine + model + quantisation.
-- GPU node pool + VRAM planning (ADR-D5-11; 15.PF-FT-AI-SLM.md §70–§77); KV cache (§77); warm-up
+- GPU node pool + VRAM planning (ADR-D5-11; 15.PFF-FA-AI-SLM.md §70–§77); KV cache (§77); warm-up
   (§80); rolling deploy + smoke test (§81–§82); autoscaling (§79; ADR-D5-17).
 - Quantisation registry + evaluation (§75–§76) before promoting a quantised model.
 - Benchmark harness measures tokens/s/GPU, TTFT, p95, and eval quality per engine on
@@ -240,7 +240,7 @@ chosen model and Azure GPU SKU, gated at Phase 20; listed in
 | Aspect | Detail |
 |---|---|
 | Build phases | 20 (self-host cutover) |
-| Repository paths | `src/pf_ft_ai/slm/`, `infra/` |
+| Repository paths | `src/pff_fa_ai/slm/`, `infra/` |
 | Configuration | Engine/model/quant config; GPU node pool |
 | Contracts / schemas | SelfHostedProvider adapter |
 | Migration | Per-workflow cutover from HF API (ADR-D3-13) |
@@ -290,10 +290,10 @@ chosen model and Azure GPU SKU, gated at Phase 20; listed in
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 |
-| Specification sections | 15.PF-FT-AI-SLM.md §5, §20–§21, §46–§47, §70–§81; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §20–§21 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §5, §20–§21, §46–§47, §70–§81; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §20–§21 |
 | Requirement IDs | SLM-SERVE-* |
 | Build phases | 20 |
-| Code paths | `src/pf_ft_ai/slm/`, `infra/` |
+| Code paths | `src/pff_fa_ai/slm/`, `infra/` |
 | Configuration | engine/GPU config |
 | Tests | benchmark + contract + eval |
 | Upstream ADRs | ADR-D3-13, D3-14, D5-08, D5-11, D0-04 |

@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.configuration.loader import load_batching_configuration
-from pf_ft_ai.configuration.models import ALLOWED_ENVIRONMENTS
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.configuration.loader import load_batching_configuration
+from pff_fa_ai.configuration.models import ALLOWED_ENVIRONMENTS
 
 BASE_YAML = """
 batching:

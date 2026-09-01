@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D0-04, ADR-D6-15, ADR-D8-07, ADR-D6-13, ADR-D7-17]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §18, §19, §20, §101"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §18, §19, §20, §101"
 build_phases: [21]
 impacted_paths:
   - docs/architecture/adr/_register/
@@ -27,13 +27,13 @@ review_due: 2027-08-22
 ## 1. Summary
 
 PFF AI will maintain a **RAID register (Risks, Assumptions, Issues, Dependencies)** with an
-owner and status per entry, integrated with the existing risk register (20.PF-FT-AI-GOVERNANCE.md §18–§20),
-open-decisions register (ADR-D0-04), governance exceptions (20.PF-FT-AI-GOVERNANCE.md §101) and per-ADR risk
+owner and status per entry, integrated with the existing risk register (20.PFF-FA-AI-GOVERNANCE.md §18–§20),
+open-decisions register (ADR-D0-04), governance exceptions (20.PFF-FA-AI-GOVERNANCE.md §101) and per-ADR risk
 sections — so programme-level RAID is tracked in one place and reviewed on a cadence.
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §18–§20 AI risk register/treatment/residual, §101 governance exceptions. ADRs each
+20.PFF-FA-AI-GOVERNANCE.md §18–§20 AI risk register/treatment/residual, §101 governance exceptions. ADRs each
 carry risks (§11) and assumptions (§3.4); open decisions live in ADR-D0-04. Without a
 consolidated RAID register, cross-cutting risks/assumptions/issues/dependencies fall through
 the cracks. This ADR fixes the RAID register and its ownership.
@@ -42,8 +42,8 @@ the cracks. This ADR fixes the RAID register and its ownership.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Track R/A/I/D with owner + status | 20.PF-FT-AI-GOVERNANCE.md §18–§20 |
-| DR-F-02 | Integrate with risk/open-decision/exception registers | 20.PF-FT-AI-GOVERNANCE.md §18, §101; ADR-D0-04 |
+| DR-F-01 | Track R/A/I/D with owner + status | 20.PFF-FA-AI-GOVERNANCE.md §18–§20 |
+| DR-F-02 | Integrate with risk/open-decision/exception registers | 20.PFF-FA-AI-GOVERNANCE.md §18, §101; ADR-D0-04 |
 | DR-F-03 | Reviewed on a cadence | governance |
 
 ### 3.4 Assumptions
@@ -67,9 +67,9 @@ the cracks. This ADR fixes the RAID register and its ownership.
 
 ### 5.1 Option A — Consolidated RAID register integrated with existing registers, owned, reviewed
 
-**Description.** A RAID register in `_register/` linking to the risk register (20.PF-FT-AI-GOVERNANCE.md §18),
+**Description.** A RAID register in `_register/` linking to the risk register (20.PFF-FA-AI-GOVERNANCE.md §18),
 open decisions (ADR-D0-04) and exceptions (§101); each entry has an owner + status; reviewed
-on a cadence (20.PF-FT-AI-GOVERNANCE.md §90).
+on a cadence (20.PFF-FA-AI-GOVERNANCE.md §90).
 **Strengths.** Complete, accountable, integrated, current.
 **Weaknesses.** Upkeep discipline.
 **Cost / effort.** Low.
@@ -107,12 +107,12 @@ register automatically, reducing manual duplication.
 
 | Option | Eliminated by |
 |---|---|
-| No RAID tracking | 20.PF-FT-AI-GOVERNANCE.md §18 |
+| No RAID tracking | 20.PFF-FA-AI-GOVERNANCE.md §18 |
 | Duplicate risk data across tools | Sync errors |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §18–§20/§90/§101 and the ADR
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §18–§20/§90/§101 and the ADR
 registers.
 
 | Criterion | Weight | A: Consolidated | B: Risk-only | C: Scattered | D: PM tool | E: A+auto-linkage |
@@ -142,9 +142,9 @@ rejected.
 
 - `_register/raid-register.md` (or generated) with columns: type (R/A/I/D), description,
   owner, status, severity/likelihood (risks), mitigation/action, links to source ADR/register.
-- Integrates: risks from ADR §11 + 20.PF-FT-AI-GOVERNANCE.md §18; assumptions from ADR §3.4; open decisions
-  (ADR-D0-04); exceptions (20.PF-FT-AI-GOVERNANCE.md §101, e.g. GOV-EX-ADR-001 from ADR-D0-01); issues from
-  incidents (ADR-D7-17). Reviewed at governance cadence (20.PF-FT-AI-GOVERNANCE.md §90).
+- Integrates: risks from ADR §11 + 20.PFF-FA-AI-GOVERNANCE.md §18; assumptions from ADR §3.4; open decisions
+  (ADR-D0-04); exceptions (20.PFF-FA-AI-GOVERNANCE.md §101, e.g. GOV-EX-ADR-001 from ADR-D0-01); issues from
+  incidents (ADR-D7-17). Reviewed at governance cadence (20.PFF-FA-AI-GOVERNANCE.md §90).
 
 ## 9. Consequences
 
@@ -248,7 +248,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-36 RAID/Registers |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §18–§20, §90, §101 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §18–§20, §90, §101 |
 | Requirement IDs | RAID-* |
 | Build phases | 21 |
 | Code paths | `_register/raid-register.md` |

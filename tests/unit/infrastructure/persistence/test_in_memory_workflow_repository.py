@@ -2,10 +2,10 @@ from datetime import UTC, datetime
 
 import pytest
 
-from pf_ft_ai.common.exceptions import WorkflowError
-from pf_ft_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
-from pf_ft_ai.domain.workflow.states import WaitingType, WorkflowStatus
-from pf_ft_ai.infrastructure.persistence.in_memory_workflow_repository import (
+from pff_fa_ai.common.exceptions import WorkflowError
+from pff_fa_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
+from pff_fa_ai.domain.workflow.states import WaitingType, WorkflowStatus
+from pff_fa_ai.infrastructure.persistence.in_memory_workflow_repository import (
     InMemoryWorkflowRepository,
 )
 

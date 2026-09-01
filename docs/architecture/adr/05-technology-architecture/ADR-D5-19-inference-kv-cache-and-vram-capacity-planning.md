@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-10, ADR-D5-11, ADR-D3-25, ADR-D3-16, ADR-D5-17, ADR-D5-18]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §70, §71, §72, §73, §74, §77, §78, §79"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §70, §71, §72, §73, §74, §77, §78, §79"
 build_phases: [20]
 impacted_paths:
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
   - infra/
 classification: Internal
 review_due: 2027-08-23
@@ -32,13 +32,13 @@ connecting **ADR-D3-25's declared token budget** (the maximum prompt size the pl
 allows, including protected ERC content) and a **target concurrency** to the KV-cache
 memory the chosen model, precision and serving engine (ADR-D5-10) actually require —
 verified on the target Azure GPU SKU (ADR-D5-11) by the same benchmark that already
-gates ADR-D5-10's `Proposed` status. This closes a gap where 15.PF-FT-AI-SLM.md §70–§77 name KV
+gates ADR-D5-10's `Proposed` status. This closes a gap where 15.PFF-FA-AI-SLM.md §70–§77 name KV
 cache, VRAM, context length and concurrency as capacity-planning factors three times
 over, but no ADR ever turned them into a target.
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §70 ("GPU Architecture") lists VRAM, GPU utilization, model loading time, KV
+15.PFF-FA-AI-SLM.md §70 ("GPU Architecture") lists VRAM, GPU utilization, model loading time, KV
 cache, batch size and concurrency as things to "plan for." §72 ("VRAM") repeats the
 same list as what VRAM capacity "must account for": model weights, activations, KV
 cache, runtime overhead, batch size, concurrency. §77 ("KV Cache") is the most
@@ -48,7 +48,7 @@ the same need, and none of them states a method.
 
 **ADR-D5-10** (serving stack selection) cites §77 exactly once, in its Architecture
 Detail section, as a bare parenthetical — "GPU node pool + VRAM planning (ADR-D5-11;
-15.PF-FT-AI-SLM.md §70–§77); KV cache (§77)" — with no criterion in its own weighted evaluation
+15.PFF-FA-AI-SLM.md §70–§77); KV cache (§77)" — with no criterion in its own weighted evaluation
 matrix, no quantitative target, and no elaboration. **ADR-D5-11** (GPU node pool and
 CPU/GPU workload separation) governs *topology* — separate node pools, independent
 autoscaling — and its scaling signals (request rate, queue depth, GPU utilization,
@@ -67,7 +67,7 @@ token budget      -->  capacity plan   -->  engine + GPU pool
 ```
 
 This is not a cosmetic gap. KV-cache memory scales with **context length × batch
-size (concurrency) × number of layers × attention heads × precision** — 15.PF-FT-AI-SLM.md §77's
+size (concurrency) × number of layers × attention heads × precision** — 15.PFF-FA-AI-SLM.md §77's
 own list, restated as the actual formula. The platform's own design choice
 (ADR-D3-25) protects ERC content as the highest-priority, hardest-to-trim part of the
 prompt — which means the platform's realistic prompt sizes are pushed toward the
@@ -84,8 +84,8 @@ it, at the infrastructure layer, with no ADR having chosen that trade-off.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | VRAM capacity planning must account for weights, activations, KV cache, runtime overhead, batch size, concurrency | 15.PF-FT-AI-SLM.md §72 |
-| DR-F-02 | KV-cache capacity planning must consider context length, layers, attention heads, precision, concurrency | 15.PF-FT-AI-SLM.md §77 |
+| DR-F-01 | VRAM capacity planning must account for weights, activations, KV cache, runtime overhead, batch size, concurrency | 15.PFF-FA-AI-SLM.md §72 |
+| DR-F-02 | KV-cache capacity planning must consider context length, layers, attention heads, precision, concurrency | 15.PFF-FA-AI-SLM.md §77 |
 | DR-F-03 | The capacity plan must be derived from the platform's own declared token budget, not assumed independently | ADR-D3-25 |
 | DR-F-04 | Capacity is verified by benchmark on the target model/SKU, consistent with ADR-D5-10's existing gate | ADR-D5-10 §7 |
 | DR-F-05 | The platform must never let an infrastructure limit silently override ADR-D3-25's protected-content decision | ADR-D3-25 §7 |
@@ -132,11 +132,11 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 **Description.** Required KV-cache VRAM is computed as
 `max_context_tokens (ADR-D3-25) × target_concurrency × per-token-KV-cache-bytes(model,
 precision, layers, attention heads)`, added to weights + activation + runtime-overhead
-headroom (15.PF-FT-AI-SLM.md §72), and checked against the candidate GPU SKU's VRAM at the
+headroom (15.PFF-FA-AI-SLM.md §72), and checked against the candidate GPU SKU's VRAM at the
 benchmark ADR-D5-10 already runs before its `Proposed` status can close. A named
 measure tracks headroom in production and alerts before exhaustion.
 
-**Strengths.** Directly answers 15.PF-FT-AI-SLM.md §77's list with a formula, not a citation
+**Strengths.** Directly answers 15.PFF-FA-AI-SLM.md §77's list with a formula, not a citation
 (EC-01, EC-03); sized to actual declared demand, not guesswork (EC-02); reuses
 ADR-D5-10's existing benchmark gate rather than adding a second process (EC-04);
 protects ADR-D3-25's decision by making capacity a function of it, not an independent
@@ -254,9 +254,9 @@ required_kv_cache_vram
 
 total_vram_requirement
   = model_weights_vram(model, quantisation)
-  + activations_vram (headroom, 15.PF-FT-AI-SLM.md §72)
+  + activations_vram (headroom, 15.PFF-FA-AI-SLM.md §72)
   + required_kv_cache_vram
-  + runtime_overhead (engine-specific, 15.PF-FT-AI-SLM.md §72)
+  + runtime_overhead (engine-specific, 15.PFF-FA-AI-SLM.md §72)
 ```
 
 `per_token_kv_cache_bytes` is obtained from the candidate model/engine's own
@@ -406,7 +406,7 @@ mechanical, rather than something discovered only when production latency degrad
 | Aspect | Detail |
 |---|---|
 | Build phases | 20 (self-host cutover, same as ADR-D5-10) |
-| Repository paths | `src/pf_ft_ai/slm/` (capacity-planning utility); `infra/` (GPU pool sizing) |
+| Repository paths | `src/pff_fa_ai/slm/` (capacity-planning utility); `infra/` (GPU pool sizing) |
 | Configuration | `max_context_tokens`, `target_concurrency`, per-model KV-cache-bytes figures |
 | Contracts / schemas | None new — extends ADR-D5-10's benchmark harness and ADR-D5-11's node-pool config |
 | Migration | None — applies at the self-host cutover, before which the HF-hosted API path (ADR-D3-13) is unaffected |
@@ -456,10 +456,10 @@ mechanical, rather than something discovered only when production latency degrad
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 Technology — Compute |
-| Specification sections | 15.PF-FT-AI-SLM.md §70 (GPU Architecture), §71 (CPU Architecture), §72 (VRAM), §73–§74 (Quantization, Trade-Off), §77 (KV Cache), §78 (Self-Hosted Scaling), §79 (Autoscaling) |
+| Specification sections | 15.PFF-FA-AI-SLM.md §70 (GPU Architecture), §71 (CPU Architecture), §72 (VRAM), §73–§74 (Quantization, Trade-Off), §77 (KV Cache), §78 (Self-Hosted Scaling), §79 (Autoscaling) |
 | Requirement IDs | `FR-P-07` |
 | Build phases | 20 |
-| Code paths | `src/pf_ft_ai/slm/`, `infra/` |
+| Code paths | `src/pff_fa_ai/slm/`, `infra/` |
 | Configuration | `max_context_tokens`, `target_concurrency`, per-model KV-cache-bytes |
 | Tests | AC-01 to AC-04 |
 | Upstream ADRs | ADR-D3-25, ADR-D5-10, ADR-D5-11 |
@@ -469,4 +469,4 @@ mechanical, rather than something discovered only when production latency degrad
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-23 | AI Architecture Lead | Initial decision recorded, closing a gap found in a post-completion audit: 15.PF-FT-AI-SLM.md §70/§72/§77 name KV-cache and VRAM capacity planning as necessary three times over, and ADR-D5-10 cites §77 once with no elaboration, but no ADR connected ADR-D3-25's token-budget decision to a concrete GPU capacity target. |
+| 1.0.0 | 2026-08-23 | AI Architecture Lead | Initial decision recorded, closing a gap found in a post-completion audit: 15.PFF-FA-AI-SLM.md §70/§72/§77 name KV-cache and VRAM capacity planning as necessary three times over, and ADR-D5-10 cites §77 once with no elaboration, but no ADR connected ADR-D3-25's token-budget decision to a concrete GPU capacity target. |

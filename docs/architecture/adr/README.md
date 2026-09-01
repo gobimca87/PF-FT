@@ -273,17 +273,17 @@ found gaps in how the specification's mechanisms had been translated into decisi
   original RAG ADRs (D3-21 chunking, D3-22 retrieval pipeline) fixed *what happens once
   retrieval/ingestion runs* but not *how retrieval is invoked* or *what starts an ingest*.
 - **ADR-D2-20** (enterprise API endpoint declaration and per-environment resolution) and
-  **ADR-D2-21** (request payload parameter sourcing and binding) — 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §33's
-  `endpoint_ref` indirection and 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §17's per-field `source:` attribute were both
+  **ADR-D2-21** (request payload parameter sourcing and binding) — 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §33's
+  `endpoint_ref` indirection and 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §17's per-field `source:` attribute were both
   specified in the source documents but never generalised into a decision; ADR-D2-15
   already covered the response side (enterprise payload → ERC) but had no request-side
   or endpoint-location counterpart.
-- **ADR-D4-13** (cache and memory key scoping for platform-global entries) — 9 PF-FT-AI-MEMORY-CACHE.md
+- **ADR-D4-13** (cache and memory key scoping for platform-global entries) — 9 PFF-FA-AI-MEMORY-CACHE.md
   §37's cache-key scheme and its ten memory categories are both written as tenant-scoped
   by default, but ADR-D4-12's own example (stable reference data such as leagues) is
   genuinely tenant-invariant; no ADR reconciled the two or gave the cross-tenant
   isolation tests a way to tell a legitimate global entry from a violation.
-- **ADR-D5-19** (inference KV-cache and VRAM capacity planning) — 15.PF-FT-AI-SLM.md §70/§72/§77
+- **ADR-D5-19** (inference KV-cache and VRAM capacity planning) — 15.PFF-FA-AI-SLM.md §70/§72/§77
   name KV-cache and VRAM capacity planning as necessary three times over, and ADR-D5-10
   cited §77 once with no elaboration, but no ADR connected ADR-D3-25's token-budget
   decision to a concrete GPU capacity target — leaving a path by which infrastructure

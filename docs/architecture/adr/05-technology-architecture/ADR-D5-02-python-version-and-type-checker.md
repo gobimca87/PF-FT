@@ -15,7 +15,7 @@ supersedes:
 superseded_by: []
 related_adrs: [ADR-D5-01, ADR-D5-03, ADR-D5-05, ADR-D7-09]
 source_docs:
-  - "MD files/6 Production/27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9, §13, §14, §16"
+  - "MD files/6 Production/27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9, §13, §14, §16"
 build_phases: [0, 1]
 impacted_paths:
   - pyproject.toml
@@ -34,11 +34,11 @@ review_due: 2027-08-22
 PFF AI will target **Python `>=3.11,<3.13`** and use **mypy in strict mode** (with the
 `pydantic.mypy` plugin) as the single primary type checker across CI and pre-commit.
 CLAUDE.md requires exactly one primary checker; mypy is chosen for its maturity,
-Pydantic-plugin support and ecosystem alignment (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §13–§14).
+Pydantic-plugin support and ecosystem alignment (27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §13–§14).
 
 ## 2. Context and Problem Statement
 
-27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9 requires a pinned Python version range; §13–§14 require static type checking
+27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9 requires a pinned Python version range; §13–§14 require static type checking
 and a type-annotation standard; §16 fixes the Pydantic standard. CLAUDE.md leaves the
 checker as a Phase-0 decision but insists on **one** primary tool (mypy or pyright).
 Running two checkers produces conflicting diagnostics and ignore-comment dialects.
@@ -48,10 +48,10 @@ This ADR fixes the version range and the single checker.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Pinned, supported Python range | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9 |
-| DR-F-02 | One primary strict type checker | CLAUDE.md; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §13 |
-| DR-F-03 | First-class Pydantic v2 typing | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16; ADR-D5-03 |
-| DR-N-01 | CI + pre-commit consistency | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §12–§13 |
+| DR-F-01 | Pinned, supported Python range | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9 |
+| DR-F-02 | One primary strict type checker | CLAUDE.md; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §13 |
+| DR-F-03 | First-class Pydantic v2 typing | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16; ADR-D5-03 |
+| DR-N-01 | CI + pre-commit consistency | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §12–§13 |
 
 ### 3.4 Assumptions
 
@@ -108,19 +108,19 @@ primary"; double CI cost.
 
 **Description.** Annotate but don't gate.
 **Strengths.** Fastest CI.
-**Weaknesses.** Loses the correctness benefit; violates 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §13.
+**Weaknesses.** Loses the correctness benefit; violates 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §13.
 **Cost / effort.** Low; unsafe.
 
 ### 5.6 Options considered and eliminated before scoring
 
 | Option | Eliminated by |
 |---|---|
-| Python ≤3.10 | Misses 3.11+ typing/perf; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9 |
+| Python ≤3.10 | Misses 3.11+ typing/perf; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9 |
 | Pyre/other checkers | Smaller ecosystem than mypy/pyright |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9/§13–§16 and CLAUDE.md.
+**Method.** Weighted scoring against §4, informed by 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9/§13–§16 and CLAUDE.md.
 
 | Criterion | Weight | A: mypy | B: pyright | C: both | D: 3.12-only+mypy | E: no checking |
 |---|---|---|---|---|---|---|
@@ -152,8 +152,8 @@ disallowed. This confirms and supersedes `docs/adr/0002`.
 ## 8. Architecture Detail
 
 - `pyproject.toml`: `requires-python = ">=3.11,<3.13"`; `[tool.mypy]` strict with
-  `plugins = ["pydantic.mypy"]`; CI job `mypy src` (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §13); pre-commit hook.
-- Typed domain objects and Pydantic at boundaries (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §14–§16; ADR-D5-03).
+  `plugins = ["pydantic.mypy"]`; CI job `mypy src` (27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §13); pre-commit hook.
+- Typed domain objects and Pydantic at boundaries (27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §14–§16; ADR-D5-03).
 
 ## 9. Consequences
 
@@ -257,7 +257,7 @@ disallowed. This confirms and supersedes `docs/adr/0002`.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §9, §13–§16 |
+| Specification sections | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9, §13–§16 |
 | Requirement IDs | TECH-PY-* |
 | Build phases | 0, 1 |
 | Code paths | `pyproject.toml` |

@@ -1,6 +1,6 @@
 # API Catalog
 
-`src/pf_ft_ai/integration/api/catalog.py`'s `load_api_catalog()` loads every `*.yaml` file
+`src/pff_fa_ai/integration/api/catalog.py`'s `load_api_catalog()` loads every `*.yaml` file
 in this directory into an `ApiCatalog`.
 
 `affiliation.yaml` (Phase 23) registers the 7 read-only tools DEVELOPMENT-GUIDE names for

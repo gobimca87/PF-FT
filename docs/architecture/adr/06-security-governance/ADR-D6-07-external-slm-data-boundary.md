@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-13, ADR-D6-06, ADR-D6-04, ADR-D3-14, ADR-D6-16]
 source_docs:
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §22, §23, §24"
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §70, §71"
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §124, §125, §126"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §22, §23, §24"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §70, §71"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §124, §125, §126"
 build_phases: [6, 20]
 impacted_paths:
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -32,13 +32,13 @@ While the SLM runs on the external Hugging Face API (initial phase, ADR-D3-13), 
 will **strictly bound what may leave the Azure tenancy**: only the minimum
 non-personal, redacted text needed for generation; **no special-category or children's
 personal data**, no secrets, no raw enterprise records — enforced at the external-SLM
-boundary guardrail (19.PF-FT-AI-SECURITY.md §22–§24; 18.PF-FT-AI-GUARDRAILS.md §70–§71; 15.PF-FT-AI-SLM.md §124–§126). Flows that would
+boundary guardrail (19.PFF-FA-AI-SECURITY.md §22–§24; 18.PFF-FA-AI-GUARDRAILS.md §70–§71; 15.PFF-FA-AI-SLM.md §124–§126). Flows that would
 require sending sensitive data are prioritised for the in-tenancy self-hosted SLM.
 
 ## 2. Context and Problem Statement
 
-19.PF-FT-AI-SECURITY.md §22 SLM network security, §23 external-SLM data boundary, §24 self-hosted SLM
-security; 18.PF-FT-AI-GUARDRAILS.md §70 external-SLM boundary, §71 self-hosted boundary; 15.PF-FT-AI-SLM.md §124–§126
+19.PFF-FA-AI-SECURITY.md §22 SLM network security, §23 external-SLM data boundary, §24 self-hosted SLM
+security; 18.PFF-FA-AI-GUARDRAILS.md §70 external-SLM boundary, §71 self-hosted boundary; 15.PFF-FA-AI-SLM.md §124–§126
 data residency/sensitive-data/minimisation. Sending text to an external inference API is
 a cross-tenancy data transfer with GDPR and safeguarding implications. This ADR fixes
 exactly what may cross that boundary and when.
@@ -47,10 +47,10 @@ exactly what may cross that boundary and when.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Minimise + control what leaves the tenancy | 19.PF-FT-AI-SECURITY.md §23; 15.PF-FT-AI-SLM.md §126 |
-| DR-C-02 | No special-category/children's data externally | ADR-D6-16; 15.PF-FT-AI-SLM.md §125 |
-| DR-F-01 | Boundary guardrail enforces the policy | 18.PF-FT-AI-GUARDRAILS.md §70 |
-| DR-C-03 | Prioritise sensitive flows for self-host | ADR-D3-13; 19.PF-FT-AI-SECURITY.md §24 |
+| DR-C-01 | Minimise + control what leaves the tenancy | 19.PFF-FA-AI-SECURITY.md §23; 15.PFF-FA-AI-SLM.md §126 |
+| DR-C-02 | No special-category/children's data externally | ADR-D6-16; 15.PFF-FA-AI-SLM.md §125 |
+| DR-F-01 | Boundary guardrail enforces the policy | 18.PFF-FA-AI-GUARDRAILS.md §70 |
+| DR-C-03 | Prioritise sensitive flows for self-host | ADR-D3-13; 19.PFF-FA-AI-SECURITY.md §24 |
 
 ### 3.4 Assumptions
 
@@ -116,12 +116,12 @@ target/cost posture (ADR-D3-13); a fallback, not the base policy.
 
 | Option | Eliminated by |
 |---|---|
-| No boundary control | 19.PF-FT-AI-SECURITY.md §23; unacceptable |
+| No boundary control | 19.PFF-FA-AI-SECURITY.md §23; unacceptable |
 | Log external payloads in full | PII leakage (ADR-D7-04) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §22–§24, 18.PF-FT-AI-GUARDRAILS.md §70–§71, 15.PF-FT-AI-SLM.md §124–§126.
+**Method.** Weighted scoring against §4, informed by 19.PFF-FA-AI-SECURITY.md §22–§24, 18.PFF-FA-AI-GUARDRAILS.md §70–§71, 15.PFF-FA-AI-SLM.md §124–§126.
 
 | Criterion | Weight | A: Minimise+block sensitive | B: Send all | C: Block external | D: Anonymise all | E: Azure OpenAI |
 |---|---|---|---|---|---|---|
@@ -151,7 +151,7 @@ is unnecessary given the controls.
 
 ## 8. Architecture Detail
 
-- The external-SLM boundary guardrail (18.PF-FT-AI-GUARDRAILS.md §70; ADR-D6-09) inspects each payload:
+- The external-SLM boundary guardrail (18.PFF-FA-AI-GUARDRAILS.md §70; ADR-D6-09) inspects each payload:
   minimise (ADR-D6-06), redact PII, and hard-block special-category/children's/secret
   content; blocked flows are marked for self-host routing (ADR-D3-14 provider selection).
 - Transfers are logged (redacted) for audit (ADR-D6-17); egress restricted to the
@@ -216,7 +216,7 @@ is unnecessary given the controls.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 (external), 20 (self-host tighten) |
-| Repository paths | `src/pf_ft_ai/slm/` (boundary guardrail) |
+| Repository paths | `src/pff_fa_ai/slm/` (boundary guardrail) |
 | Configuration | Boundary policy; block lists |
 | Contracts / schemas | Payload inspection policy |
 | Migration | Tighten on self-host cutover |
@@ -263,10 +263,10 @@ is unnecessary given the controls.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 19.PF-FT-AI-SECURITY.md §22–§24; 18.PF-FT-AI-GUARDRAILS.md §70–§71; 15.PF-FT-AI-SLM.md §124–§126 |
+| Specification sections | 19.PFF-FA-AI-SECURITY.md §22–§24; 18.PFF-FA-AI-GUARDRAILS.md §70–§71; 15.PFF-FA-AI-SLM.md §124–§126 |
 | Requirement IDs | SEC-SLM-BND-* |
 | Build phases | 6, 20 |
-| Code paths | `src/pf_ft_ai/slm/` |
+| Code paths | `src/pff_fa_ai/slm/` |
 | Configuration | boundary policy |
 | Tests | boundary + egress suites |
 | Upstream ADRs | ADR-D3-13, D6-06 |

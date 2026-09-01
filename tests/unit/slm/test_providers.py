@@ -1,10 +1,10 @@
 import httpx
 import pytest
 
-from pf_ft_ai.common.exceptions import IntegrationError
-from pf_ft_ai.slm.models import SlmMessage, SlmRequest
-from pf_ft_ai.slm.providers import HuggingFaceSLMProvider, MockSLMProvider
-from pf_ft_ai.slm.states import ProviderHealthStatus
+from pff_fa_ai.common.exceptions import IntegrationError
+from pff_fa_ai.slm.models import SlmMessage, SlmRequest
+from pff_fa_ai.slm.providers import HuggingFaceSLMProvider, MockSLMProvider
+from pff_fa_ai.slm.states import ProviderHealthStatus
 
 
 def _request(text: str = "What documents are required?") -> SlmRequest:

@@ -15,12 +15,12 @@ superseded_by: []
 related_adrs: [ADR-D4-02, ADR-D4-03, ADR-D2-13, ADR-D2-15, ADR-D3-22]
 source_docs:
   - "MD files/0 Workflow/pff_affiliation_e2e_flow.md — Phase 8 (Scenarios 13, 15, 16, 17)"
-  - "MD files/3 Context & Integration/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16, §21, §84"
-  - "MD files/3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md §11, §55, §70"
+  - "MD files/3 Context & Integration/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §16, §21, §84"
+  - "MD files/3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md §11, §55, §70"
 build_phases: [4, 10]
 impacted_paths:
-  - src/pf_ft_ai/erc/
-  - src/pf_ft_ai/integration/
+  - src/pff_fa_ai/erc/
+  - src/pff_fa_ai/integration/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -36,7 +36,7 @@ database) hold parallel identities or diverge — notably the **PFF/WGS season-r
 gap** (PFF rolls June 1st, WGS July 1st) — the AI surfaces the enterprise-provided
 mapping and status faithfully, and never invents an affiliation number, guesses a
 cross-system mapping, or asserts a season state the enterprise has not confirmed
-(affiliation flow Phase 8; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16, §21).
+(affiliation flow Phase 8; 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §16, §21).
 
 ## 2. Context and Problem Statement
 
@@ -44,8 +44,8 @@ The affiliation flow's Phase 8 shows identifiers and reference data are enterpri
 concerns: WGS *generates* the affiliation number (Scenario 15), attaches teams to an
 existing WGS membership (Scenario 16), and there is a deliberate **1-month
 PFF/WGS season mismatch** during which "PFF = new season, WGS = old season"
-(Scenario 13), with last season shown as a static snapshot for 30 days. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §21
-maps enterprise responses to context; 8 PF-FT-AI-ERC-CONTEXT.md §55/§70 cover duplicate detection and
+(Scenario 13), with last season shown as a static snapshot for 30 days. 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §21
+maps enterprise responses to context; 8 PFF-FA-AI-ERC-CONTEXT.md §55/§70 cover duplicate detection and
 referential integrity. If the AI platform mints IDs, caches a stale season as
 current, or reconciles PFF↔WGS itself, it would be asserting business truth it does
 not own — a direct Golden-Rule violation with real-world consequences (wrong
@@ -56,11 +56,11 @@ reference-data handling.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Reference enterprise canonical IDs; never mint | affiliation Phase 8; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §21 |
+| DR-F-01 | Reference enterprise canonical IDs; never mint | affiliation Phase 8; 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §21 |
 | DR-F-02 | Represent PFF↔WGS mapping as provided, not inferred | affiliation Scenario 15–16 |
 | DR-F-03 | Handle season-rollover mismatch faithfully | affiliation Scenario 13 |
-| DR-C-01 | AI never asserts unconfirmed season/eligibility | CLAUDE.md; 8 PF-FT-AI-ERC-CONTEXT.md §66 |
-| DR-F-04 | Referential integrity across ERC sections | 8 PF-FT-AI-ERC-CONTEXT.md §70 |
+| DR-C-01 | AI never asserts unconfirmed season/eligibility | CLAUDE.md; 8 PFF-FA-AI-ERC-CONTEXT.md §66 |
+| DR-F-04 | Referential integrity across ERC sections | 8 PFF-FA-AI-ERC-CONTEXT.md §70 |
 
 ### 3.4 Assumptions
 
@@ -134,7 +134,7 @@ with short/volatility-aware TTL (ADR-D4-12) and event-driven invalidation
 ## 6. Evaluation Method and Decision Matrix
 
 **Method.** Weighted scoring against §4, informed by affiliation Phase 8 (Scenarios
-13, 15–17), 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §21 and 8 PF-FT-AI-ERC-CONTEXT.md §55/§70.
+13, 15–17), 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §21 and 8 PFF-FA-AI-ERC-CONTEXT.md §55/§70.
 
 | Criterion | Weight | A: Canonical ref | B: AI reconciles | C: AI mints | D: Cache-as-truth | E: Canonical + vol-aware cache |
 |---|---|---|---|---|---|---|
@@ -169,7 +169,7 @@ assumed season/eligibility. Minting (C), self-reconciliation (B) and cache-as-tr
 
 - Identifiers stored as opaque `CanonicalRef{system: PFF|WGS, entity_type, id,
   provenance}` inside ERC sections (ADR-D4-02); referential integrity checked across
-  sections (8 PF-FT-AI-ERC-CONTEXT.md §70) using these refs.
+  sections (8 PFF-FA-AI-ERC-CONTEXT.md §70) using these refs.
 - Season/eligibility read live from enterprise near any decision; the rollover gap
   (Scenario 13) surfaces both PFF and WGS states with explicit labels, never merged.
 - Affiliation number and WGS membership are read from enterprise responses (Scenario
@@ -236,7 +236,7 @@ assumed season/eligibility. Minting (C), self-reconciliation (B) and cache-as-tr
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 (ERC), 10 (WGS integration) |
-| Repository paths | `src/pf_ft_ai/erc/`, `src/pf_ft_ai/integration/` |
+| Repository paths | `src/pff_fa_ai/erc/`, `src/pff_fa_ai/integration/` |
 | Configuration | Reference-data volatility/TTL map |
 | Contracts / schemas | `CanonicalRef`; season-state model |
 | Migration | N/A |
@@ -283,10 +283,10 @@ assumed season/eligibility. Minting (C), self-reconciliation (B) and cache-as-tr
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-20 |
-| Specification sections | affiliation Phase 8 (Scenarios 13, 15–17); 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16, §21, §84; 8 PF-FT-AI-ERC-CONTEXT.md §11, §55, §70 |
+| Specification sections | affiliation Phase 8 (Scenarios 13, 15–17); 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §16, §21, §84; 8 PFF-FA-AI-ERC-CONTEXT.md §11, §55, §70 |
 | Requirement IDs | REF-ID-* |
 | Build phases | 4, 10 |
-| Code paths | `src/pf_ft_ai/erc/`, `src/pf_ft_ai/integration/` |
+| Code paths | `src/pff_fa_ai/erc/`, `src/pff_fa_ai/integration/` |
 | Configuration | reference-data volatility map |
 | Tests | identifier + season-rollover suites |
 | Upstream ADRs | ADR-D4-02, ADR-D2-13 |

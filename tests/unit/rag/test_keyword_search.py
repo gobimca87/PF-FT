@@ -1,5 +1,5 @@
-from pf_ft_ai.rag.keyword_search import TermOverlapKeywordSearch
-from pf_ft_ai.rag.models import Chunk
+from pff_fa_ai.rag.keyword_search import TermOverlapKeywordSearch
+from pff_fa_ai.rag.models import Chunk
 
 
 def _chunk(chunk_id: str, content: str, *, tenant_id: str = "tenant-1") -> Chunk:

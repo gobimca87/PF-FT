@@ -1,6 +1,6 @@
-from pf_ft_ai.evaluation.models import ExpectedOutcome, GoldenCase
-from pf_ft_ai.evaluation.runner import EvaluationRunner, check_expected_outcome
-from pf_ft_ai.evaluation.states import DatasetCategory, EvaluationStatus
+from pff_fa_ai.evaluation.models import ExpectedOutcome, GoldenCase
+from pff_fa_ai.evaluation.runner import EvaluationRunner, check_expected_outcome
+from pff_fa_ai.evaluation.states import DatasetCategory, EvaluationStatus
 
 
 def _case() -> GoldenCase:

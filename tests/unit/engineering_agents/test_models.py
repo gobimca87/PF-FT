@@ -1,13 +1,13 @@
 import pytest
 from pydantic import ValidationError
 
-from pf_ft_ai.engineering_agents.models import (
+from pff_fa_ai.engineering_agents.models import (
     EngineeringAgentDefinition,
     EngineeringAgentResult,
     EngineeringRun,
     Finding,
 )
-from pf_ft_ai.engineering_agents.states import (
+from pff_fa_ai.engineering_agents.states import (
     AgentLifecycleStatus,
     AgentResultStatus,
     ChangedComponent,
@@ -81,7 +81,7 @@ def test_engineering_agent_definition_should_default_model_id_to_none() -> None:
 
 
 def test_engineering_run_should_default_optional_collections() -> None:
-    run = EngineeringRun(run_id="eng-run-1", repository="pf-ft-ai", commit="abc123")
+    run = EngineeringRun(run_id="eng-run-1", repository="pff-fa-ai", commit="abc123")
 
     assert run.changed_components == ()
     assert run.agent_ids == ()
@@ -92,7 +92,7 @@ def test_engineering_run_should_default_optional_collections() -> None:
 def test_engineering_run_should_accept_changed_components() -> None:
     run = EngineeringRun(
         run_id="eng-run-1",
-        repository="pf-ft-ai",
+        repository="pff-fa-ai",
         commit="abc123",
         changed_components=(ChangedComponent.PROMPTS, ChangedComponent.RAG),
     )

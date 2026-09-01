@@ -1,10 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from pf_ft_ai.api import create_app
-from pf_ft_ai.api.dependencies import get_workflow_orchestrator
-from pf_ft_ai.application.workflows.orchestrator import OrchestrationRequest, OrchestrationResult
-from pf_ft_ai.application.workflows.states import OrchestrationStatus
+from pff_fa_ai.api import create_app
+from pff_fa_ai.api.dependencies import get_workflow_orchestrator
+from pff_fa_ai.application.workflows.orchestrator import OrchestrationRequest, OrchestrationResult
+from pff_fa_ai.application.workflows.states import OrchestrationStatus
 
 CLAIMS_HEADERS = {"x-subject": "user-1", "x-organization": "club-1"}
 

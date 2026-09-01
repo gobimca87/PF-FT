@@ -14,14 +14,14 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-08, ADR-D1-09, ADR-D2-05, ADR-D3-02, ADR-D3-06, ADR-D3-08, ADR-D6-14]
 source_docs:
-  - "MD files/2 Agent Runtime/7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13, §14"
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §14"
-  - "MD files/3 Context & Integration/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45, §48"
+  - "MD files/2 Agent Runtime/7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13, §14"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §14"
+  - "MD files/3 Context & Integration/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §45, §48"
   - "MD files/Examples/SampleWorkflowchat.md"
 build_phases: [4, 23]
 impacted_paths:
-  - src/pf_ft_ai/orchestration/supervisor/
-  - src/pf_ft_ai/agents/affiliation/
+  - src/pff_fa_ai/orchestration/supervisor/
+  - src/pff_fa_ai/agents/affiliation/
 classification: Internal
 review_due: 2027-02-21
 ---
@@ -38,18 +38,18 @@ act.
 
 ## 2. Context and Problem Statement
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 gives three confidence bands, with low and medium leading toward clarification. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 gives three confidence bands, with low and medium leading toward clarification. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14
 gives the rule — the supervisor should not guess when the wrong workflow could trigger an incorrect
-enterprise operation — with a registration example. 4. PF-FT-AI-RUNTIME.md §14 places the clarification path in the
-runtime. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45 and §48 cover idempotency and unknown transaction state, which bear on what
+enterprise operation — with a registration example. 4. PFF-FA-AI-RUNTIME.md §14 places the clarification path in the
+runtime. 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §45 and §48 cover idempotency and unknown transaction state, which bear on what
 "incorrect enterprise operation" costs. `SampleWorkflowchat.md` shows Adam offering explicit
 choices at decision points.
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14's rule is sound and incomplete. It says *when* not to guess. It does not say:
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14's rule is sound and incomplete. It says *when* not to guess. It does not say:
 
 **What to do when the platform is uncertain but nothing irreversible follows.** A user asks
 something the platform half-understands, and the worst case of guessing is an unhelpful answer the
-user corrects. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's bands would push a medium-confidence case toward clarification, and
+user corrects. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's bands would push a medium-confidence case toward clarification, and
 clarifying every uncertainty produces an assistant that interrogates rather than helps. ADR-D2-05
 §7.4's Gather band addresses some of this, but the underlying question — is uncertainty alone
 sufficient reason to ask? — is unresolved.
@@ -61,7 +61,7 @@ because submission is irreversible and consequential. Nothing in the specificati
 them, and conflating them means either confirming things that need no confirmation or submitting
 things that do.
 
-**How many times to ask.** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 permits clarification without bounding it. An assistant that
+**How many times to ask.** 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 permits clarification without bounding it. An assistant that
 clarifies a clarification is worse than one that guesses.
 
 The affiliation flow makes the stakes concrete on both sides. Submitting an application creates
@@ -75,10 +75,10 @@ mistargeted answer simply says so.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Do not guess where a wrong workflow could trigger an incorrect enterprise operation | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 |
-| DR-F-02 | Confidence bands drive routing behaviour | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13; ADR-D2-05 §7.4 |
+| DR-F-01 | Do not guess where a wrong workflow could trigger an incorrect enterprise operation | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 |
+| DR-F-02 | Confidence bands drive routing behaviour | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13; ADR-D2-05 §7.4 |
 | DR-F-03 | The user must know what is being asked and why | `CLAUDE.md` persona rule 3 |
-| DR-F-04 | State-changing operations must be intentional | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45, §48 |
+| DR-F-04 | State-changing operations must be intentional | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §45, §48 |
 | DR-F-05 | Clarification must terminate | Programme practice |
 
 ### 3.2 Non-functional drivers
@@ -110,7 +110,7 @@ mistargeted answer simply says so.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Prevention of unintended irreversible operations | 35 | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14's concern; a wrongly submitted affiliation needs county intervention to undo | Can an irreversible operation occur without explicit intent? |
+| EC-01 | Prevention of unintended irreversible operations | 35 | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14's concern; a wrongly submitted affiliation needs county intervention to undo | Can an irreversible operation occur without explicit intent? |
 | EC-02 | Conversational efficiency | 25 | Over-asking is the failure mode that makes an assistant worse than a form | Clarifications per conversation |
 | EC-03 | Clarity of what is being asked | 20 | An ambiguous clarification compounds the ambiguity | Can the user answer in one turn? |
 | EC-04 | Termination | 12 | Unbounded clarification is a trap | Is there a bound and an exit? |
@@ -123,11 +123,11 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ### 5.1 Option A — Clarify whenever confidence is below threshold
 
-**Description.** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's bands drive it: below the routing threshold, ask. No distinction
+**Description.** 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's bands drive it: below the routing threshold, ask. No distinction
 between reversible and irreversible consequences.
 
 **Strengths.**
-- Directly implements 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 (EC-05).
+- Directly implements 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 (EC-05).
 - Never proceeds on a low-confidence reading, so unintended operations are unlikely (EC-01,
   partially).
 - One rule, uniformly applied.
@@ -181,7 +181,7 @@ happen. The confirmation surfaces any misinterpretation.
 - Confirming a wrong interpretation wastes the whole intervening interaction. A user who wanted
   cup entry and got walked through affiliation pre-checks before being asked to confirm has had
   their time wasted (EC-02, EC-03).
-- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 is explicit that the supervisor should not guess where the wrong workflow could
+- 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 is explicit that the supervisor should not guess where the wrong workflow could
   trigger an incorrect operation — proceeding and confirming later still means the wrong context
   was assembled and the wrong reads were made.
 - Reads are not confirmed, so an out-of-scope read could occur before anyone asks.
@@ -304,7 +304,7 @@ worse than over-confirming, and DR-A-01's uncertainty resolves conservatively.
 
 ### 7.5 Clarification terminates
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 permits clarification without bounding it. The bound:
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 permits clarification without bounding it. The bound:
 
 - **At most two clarification turns** for a single ambiguity.
 - After the second, the platform states plainly what it can and cannot determine, offers the
@@ -419,7 +419,7 @@ offered and corrected.
 
 ### 9.3 Neutral
 
-- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's bands remain, as an input to clarification rather than its trigger.
+- 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's bands remain, as an input to clarification rather than its trigger.
 - ADR-D2-05 §7.4's Gather band still resolves some ambiguity without asking.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -486,7 +486,7 @@ are not being read, which is RSK-06 showing up in data.
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 (clarification path), 23 (affiliation confirmations) |
-| Repository paths | `src/pf_ft_ai/orchestration/supervisor/`, `src/pf_ft_ai/agents/affiliation/` |
+| Repository paths | `src/pff_fa_ai/orchestration/supervisor/`, `src/pff_fa_ai/agents/affiliation/` |
 | Configuration | Reversibility class in tool contracts; clarification bound in `config/base/agents.yaml` |
 | Contracts / schemas | Confirmation record on turn state; reversibility class on tool definitions |
 | Migration | None |
@@ -500,7 +500,7 @@ are not being read, which is RSK-06 showing up in data.
 | AC-01 | No `irreversible_write` or `reversible_write` executes without a confirmation in the preceding turn | Executor test against turn history; QM-01 |
 | AC-02 | Confirmation states operation, scope, cost and irreversibility exactly | Evaluation suite against §8.2's shape |
 | AC-03 | An ambiguity with a recoverable wrong reading proceeds rather than clarifying | §8.3 golden case; QM-03 |
-| AC-04 | An ambiguity between workflows clarifies rather than proceeding | Golden case per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 |
+| AC-04 | An ambiguity between workflows clarifies rather than proceeding | Golden case per 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 |
 | AC-05 | A third clarification on one ambiguity does not occur | Clarification bound test |
 | AC-06 | Clarifications present bounded options, not open questions | Evaluation suite |
 | AC-07 | A confirmed operation the user is not entitled to perform is still refused | ADR-D3-04 gate 4 test |
@@ -545,10 +545,10 @@ AC-07 is the check on §7.3's second property: confirmation is intent, not autho
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-14 Conversation Decision Architecture |
-| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 (Supervisor Confidence), §14 (Supervisor Clarification); 4. PF-FT-AI-RUNTIME.md §14 (Clarification Path); 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §45 (Idempotency), §48 (Unknown Transaction State); `Examples/SampleWorkflowchat.md`; `CLAUDE.md` persona rules 3, 6 |
+| Specification sections | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 (Supervisor Confidence), §14 (Supervisor Clarification); 4. PFF-FA-AI-RUNTIME.md §14 (Clarification Path); 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §45 (Idempotency), §48 (Unknown Transaction State); `Examples/SampleWorkflowchat.md`; `CLAUDE.md` persona rules 3, 6 |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-SEC` |
 | Build phases | 4, 23 |
-| Code paths | `src/pf_ft_ai/orchestration/supervisor/`, `src/pf_ft_ai/agents/affiliation/` |
+| Code paths | `src/pff_fa_ai/orchestration/supervisor/`, `src/pff_fa_ai/agents/affiliation/` |
 | Configuration | Tool reversibility classes; clarification bound |
 | Tests | AC-01 to AC-07 |
 | Upstream ADRs | ADR-D2-05, ADR-D3-05, ADR-D3-06 |

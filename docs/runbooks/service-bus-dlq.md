@@ -12,7 +12,7 @@ unavailable, DLQ growth.
 
 1. Identify topic/subscription — `config/base/service-bus.yaml`'s `topic` section
    (each entry documents its own purpose — Phase 12's explicit requirement).
-2. Check consumer health — `src/pf_ft_ai/messaging/service_bus/consumer.py` and
+2. Check consumer health — `src/pff_fa_ai/messaging/service_bus/consumer.py` and
    `processing.py`'s `EventProcessingService` (validate → idempotency → route →
    execute → record). A stuck backlog is usually a slow or failing step in that chain,
    not the Service Bus service itself.

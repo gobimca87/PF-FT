@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-11, ADR-D2-04, ADR-D2-09, ADR-D3-05, ADR-D3-06, ADR-D3-07, ADR-D3-17]
 source_docs:
-  - "MD files/2 Agent Runtime/7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5, §11, §12, §13, §14, §15, §22, §23, §24"
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §8"
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §13, §14"
+  - "MD files/2 Agent Runtime/7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §5, §11, §12, §13, §14, §15, §22, §23, §24"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §8"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §13, §14"
 build_phases: [4]
 impacted_paths:
-  - src/pf_ft_ai/orchestration/supervisor/
+  - src/pff_fa_ai/orchestration/supervisor/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -31,38 +31,38 @@ review_due: 2027-08-21
 The Supervisor produces a **schema-validated structured decision** — intent, workflow, agent,
 confidence, clarification flag — before any routing occurs. Confidence is a routing signal only,
 never a business authorization, and the thresholds are configurable and evaluated. Below the
-routing threshold the Supervisor clarifies rather than guessing, because 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 is explicit
+routing threshold the Supervisor clarifies rather than guessing, because 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 is explicit
 that a wrong workflow can trigger an incorrect enterprise operation.
 
 ## 2. Context and Problem Statement
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12 gives the Supervisor's output shape: a JSON object with `intent`, `workflow`, `agent`,
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12 gives the Supervisor's output shape: a JSON object with `intent`, `workflow`, `agent`,
 `confidence` and `clarification_required`, and states that *"this output must be schema validated
-before routing."* 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 gives a three-band confidence model — high routes, medium gathers
+before routing."* 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 gives a three-band confidence model — high routes, medium gathers
 context or clarifies, low clarifies — with *"thresholds must be configurable and evaluated."*
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 gives the clarification rule and its rationale.
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 gives the clarification rule and its rationale.
 
 Three things are underspecified in ways that matter.
 
-**What confidence actually means.** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's example shows `0.96`. A confidence number from a
+**What confidence actually means.** 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's example shows `0.96`. A confidence number from a
 language model is not a calibrated probability — it is a token the model produced because the
-prompt asked for one, and its relationship to actual correctness is unknown until measured. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md
+prompt asked for one, and its relationship to actual correctness is unknown until measured. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md
 §13's instruction that thresholds be *"evaluated"* is the acknowledgement of this. Treating an
 uncalibrated number as if it were a probability, and setting a threshold at 0.9 because that
 sounds high, is a common and quiet failure.
 
-**Where the bands sit and what happens between them.** 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's "medium confidence → additional
+**Where the bands sit and what happens between them.** 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's "medium confidence → additional
 context / clarification" offers two different responses without saying which applies when.
 Gathering more context and asking the user are very different actions with very different costs.
 
 **How the single-agent case behaves.** ADR-D1-11 builds one agent. With one candidate, a naive
 Supervisor routes everything to it, and confidence becomes decorative. That is exactly backwards:
 with one agent, the Supervisor's most important job is deciding what is **out of scope**, because
-most of what a county-football user might ask is not affiliation. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5's supervisor
-responsibilities and 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §24's agent selection assume a catalogue; the single-agent case needs
+most of what a county-football user might ask is not affiliation. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §5's supervisor
+responsibilities and 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §24's agent selection assume a catalogue; the single-agent case needs
 its own treatment.
 
-There is a security dimension too. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 says confidence is *"a routing signal, not a
+There is a security dimension too. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 says confidence is *"a routing signal, not a
 business authorization."* The Supervisor's decision selects which agent runs and therefore which
 tool allowlist applies. If the decision object were treated as authoritative for anything beyond
 routing — if, say, a high-confidence classification were allowed to widen a tool allowlist — a
@@ -74,12 +74,12 @@ model output would have become an authorization input, which ADR-D1-02's invaria
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | The Supervisor's output must be schema-validated before routing | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12 |
-| DR-F-02 | Confidence is a routing signal, never business authorization | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 |
-| DR-F-03 | Thresholds must be configurable and evaluated | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 |
-| DR-F-04 | The Supervisor must not guess where a wrong workflow could trigger an incorrect enterprise operation | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 |
-| DR-F-05 | Existing workflow associations must inform routing | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §15; ADR-D2-04 §7.2 |
-| DR-F-06 | Agent selection resolves from the capability registry | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §22–§24 |
+| DR-F-01 | The Supervisor's output must be schema-validated before routing | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12 |
+| DR-F-02 | Confidence is a routing signal, never business authorization | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 |
+| DR-F-03 | Thresholds must be configurable and evaluated | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 |
+| DR-F-04 | The Supervisor must not guess where a wrong workflow could trigger an incorrect enterprise operation | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 |
+| DR-F-05 | Existing workflow associations must inform routing | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §15; ADR-D2-04 §7.2 |
+| DR-F-06 | Agent selection resolves from the capability registry | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §22–§24 |
 
 ### 3.2 Non-functional drivers
 
@@ -95,8 +95,8 @@ model output would have become an authorization input, which ADR-D1-02's invaria
 |---|---|---|---|
 | DR-C-01 | Model output is never an authorization input | Platform | ADR-D1-02 I-2 |
 | DR-C-02 | One agent exists in the first pass | Organisational | ADR-D1-11 |
-| DR-C-03 | The Supervisor makes no business decision | Platform | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5; ADR-D1-01 |
-| DR-C-04 | Structured output must be schema-validated | Platform | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §71; ADR-D3-17 |
+| DR-C-03 | The Supervisor makes no business decision | Platform | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §5; ADR-D1-01 |
+| DR-C-04 | Structured output must be schema-validated | Platform | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §71; ADR-D3-17 |
 
 ### 3.4 Assumptions
 
@@ -110,7 +110,7 @@ model output would have become an authorization input, which ADR-D1-02's invaria
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Avoidance of wrong-workflow routing | 35 | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 names the consequence: an incorrect enterprise operation. This is the failure that costs a user a wrongly submitted application | Rate of routing to the wrong workflow |
+| EC-01 | Avoidance of wrong-workflow routing | 35 | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 names the consequence: an incorrect enterprise operation. This is the failure that costs a user a wrongly submitted application | Rate of routing to the wrong workflow |
 | EC-02 | Confidence treated honestly | 25 | An uncalibrated number used as a probability produces false safety | Is the threshold derived from measurement or from intuition? |
 | EC-03 | Out-of-scope reliability | 20 | With one agent this is most of the Supervisor's work | Rate of correct out-of-scope classification |
 | EC-04 | Clarification rate acceptable to users | 12 | Over-clarifying is a real failure, just a less dangerous one | Clarifications per conversation |
@@ -123,12 +123,12 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ### 5.1 Option A — Model classification with a fixed intuitive threshold
 
-**Description.** The model returns 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's decision object; route if `confidence >= 0.85`,
+**Description.** The model returns 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's decision object; route if `confidence >= 0.85`,
 otherwise clarify. The threshold is set by judgement and adjusted when complaints arrive.
 
 **Strengths.**
 - Simple and immediately implementable.
-- Matches 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's example shape directly.
+- Matches 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's example shape directly.
 - One number to tune.
 - Low latency and cost — one classification call.
 
@@ -136,7 +136,7 @@ otherwise clarify. The threshold is set by judgement and adjusted when complaint
 - The threshold is meaningless without calibration. If the model reports 0.9 on cases it gets
   right 70% of the time, an 0.85 threshold routes a third of borderline cases wrongly while
   appearing conservative (EC-02 fails).
-- Fails 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's requirement that thresholds be *evaluated*.
+- Fails 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's requirement that thresholds be *evaluated*.
 - Tuning by complaint is a slow feedback loop against a fast failure.
 
 **Cost / effort.** Lowest.
@@ -145,11 +145,11 @@ otherwise clarify. The threshold is set by judgement and adjusted when complaint
 
 **Description.** The model returns the decision object, schema-validated. Thresholds are derived
 from a labelled golden set by measuring actual routing accuracy at each confidence level, and
-are re-derived whenever the model or prompt changes. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's three bands are given distinct
+are re-derived whenever the model or prompt changes. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's three bands are given distinct
 actions. Out-of-scope is a first-class classification outcome, not a low-confidence side effect.
 
 **Strengths.**
-- Thresholds mean something measurable, satisfying 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 (EC-02).
+- Thresholds mean something measurable, satisfying 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 (EC-02).
 - Wrong-workflow rate is measured directly against the golden set rather than inferred (EC-01).
 - Out-of-scope is classified positively, so it is evaluable independently (EC-03).
 - Re-derivation on model or prompt change prevents silent drift when the underlying
@@ -175,7 +175,7 @@ plainly continuing message — and the model is invoked only when rules do not r
 
 **Weaknesses.**
 - Rules encoding "what the user meant" are a second intent classifier with worse coverage.
-  Keyword matching on "registration" is exactly the ambiguity 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 warns about.
+  Keyword matching on "registration" is exactly the ambiguity 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 warns about.
 - Two classifiers with different failure modes, and the rule layer's failures are silent.
 - Rule maintenance grows with the workflow catalogue.
 - The efficiency gain is real but small relative to a turn's total cost.
@@ -193,9 +193,9 @@ find the request inapplicable decline and the next is tried.
 - Degrades gracefully as the catalogue grows.
 
 **Weaknesses.**
-- Directly violates 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14. Invoking an agent means initialising its harness and potentially
+- Directly violates 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14. Invoking an agent means initialising its harness and potentially
   executing tools; "try it and see" against an enterprise write operation is the incorrect
-  enterprise operation 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 exists to prevent (EC-01 fails).
+  enterprise operation 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 exists to prevent (EC-01 fails).
 - Multiplies latency and cost by candidate count.
 - An agent declining after gathering context has already assembled data it should not have.
 
@@ -203,7 +203,7 @@ find the request inapplicable decline and the next is tried.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4. EC-01 assessed against 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14's stated consequence.
+**Method.** Weighted scoring against §4. EC-01 assessed against 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14's stated consequence.
 EC-02 assessed by asking whether each option can answer "what does confidence 0.85 mean?" with a
 measurement.
 
@@ -220,7 +220,7 @@ measurement.
 
 **Sensitivity.** B leads C by 160 points and dominates on the three highest-weighted criteria.
 Its only sub-maximum scores are clarification rate and cost, together worth 20 points — B would
-still lead if it scored 1 on both. D is excluded by 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 categorically: speculative agent
+still lead if it scored 1 on both. D is excluded by 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 categorically: speculative agent
 invocation against enterprise operations is the named failure. C's rule layer is not rejected
 outright and returns in §7.6 as a possible *pre-filter inside* the Supervisor, which is a
 different thing from a competing classifier.
@@ -243,7 +243,7 @@ resume_workflow_id: string | null   # if continuing an associated workflow
 reasoning: string              # for traces and evaluation; never shown to the user
 ```
 
-Two additions to 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's example are deliberate. `out_of_scope` is a positive flag rather
+Two additions to 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's example are deliberate. `out_of_scope` is a positive flag rather
 than an inference from `agent: null`, so it is evaluable in its own right (§7.5). `reasoning` is
 captured for traces and never surfaced — it is diagnostic, and exposing model reasoning to users
 would leak prompt structure.
@@ -254,7 +254,7 @@ salvaged by parsing prose.
 
 ### 7.2 Confidence is a routing signal only
 
-Per 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 and DR-C-01, `confidence` may influence exactly one thing: whether to route,
+Per 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 and DR-C-01, `confidence` may influence exactly one thing: whether to route,
 gather, or clarify. It may **not** influence:
 
 - which tools an agent may call — the allowlist is per agent, resolved from configuration
@@ -268,7 +268,7 @@ produce identical authority. This is I-2 applied at the routing boundary.
 
 ### 7.3 Thresholds are derived, not chosen
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 requires thresholds be configurable and evaluated. They are derived by measurement:
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 requires thresholds be configurable and evaluated. They are derived by measurement:
 
 1. A labelled golden set of routing cases is maintained (ADR-D7-13), covering in-scope,
    ambiguous and out-of-scope inputs.
@@ -285,13 +285,13 @@ alternative signal is required. RT-01 covers that case.
 
 ### 7.4 The three bands and their distinct actions
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's "additional context / clarification" is split into two distinct behaviours:
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's "additional context / clarification" is split into two distinct behaviours:
 
 | Band | Action | Rationale |
 |---|---|---|
 | **Route** (≥ route threshold) | Select the agent and proceed | Measured accuracy is adequate |
 | **Gather** (between thresholds) | Retrieve additional *available* context — active workflow associations, recent conversation summary, session state — and re-classify **once** | Ambiguity is sometimes resolvable from context the classifier did not have. Costs one extra inference, no user interruption |
-| **Clarify** (< clarify threshold, or still ambiguous after gathering) | Ask the user (ADR-D3-07) | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14: do not guess |
+| **Clarify** (< clarify threshold, or still ambiguous after gathering) | Ask the user (ADR-D3-07) | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14: do not guess |
 
 The Gather band re-classifies at most once. A second failure to reach the route threshold goes to
 Clarify — an unbounded gather loop would be a latency failure and would not converge, since the
@@ -364,8 +364,8 @@ associations as a fact and decides:
 | Situation | Decision |
 |---|---|
 | Message clearly continues an associated workflow | `resume_workflow_id` set; route to that workflow's agent |
-| Message clearly starts something new | New workflow; the existing association remains, per 6 PF-FT-AI-CONVERSATION-SESSION.md §23 |
-| Message could be either | Clarify. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 applies with full force — resuming the wrong workflow and starting a duplicate one are both incorrect enterprise operations |
+| Message clearly starts something new | New workflow; the existing association remains, per 6 PFF-FA-AI-CONVERSATION-SESSION.md §23 |
+| Message could be either | Clarify. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 applies with full force — resuming the wrong workflow and starting a duplicate one are both incorrect enterprise operations |
 | Message is out of scope entirely | `out_of_scope: true`, regardless of associations |
 
 The third row is the one that matters in affiliation. A user with a suspended PENDING CFA
@@ -387,7 +387,7 @@ because that is the production distribution.
 
 ### 9.1 Positive
 
-- Thresholds mean something measured, so 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's "evaluated" requirement is satisfied rather
+- Thresholds mean something measured, so 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's "evaluated" requirement is satisfied rather
   than nodded at.
 - Wrong-workflow routing is measured directly and is the primary tuning target.
 - Out-of-scope classification is evaluable, which matters because it is the majority outcome
@@ -407,7 +407,7 @@ because that is the production distribution.
 
 ### 9.3 Neutral
 
-- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's decision object is extended by two fields, both additive.
+- 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's decision object is extended by two fields, both additive.
 - Option C's rule layer is not rejected permanently; §7.6 readmits it as an internal signal if
   calibration fails.
 
@@ -423,7 +423,7 @@ because that is the production distribution.
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 marks workflow and agent selection as authoritative *AI* decisions — this is one of the few places the AI decides. It decides which capability runs, never any business outcome. |
+| Enterprise decides; AI orchestrates | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46 marks workflow and agent selection as authoritative *AI* decisions — this is one of the few places the AI decides. It decides which capability runs, never any business outcome. |
 | Authoritative-truth precedence | The routing decision is SLM output, authority 1, and is used only to select a code path. It never enters ERC and never becomes a business fact. |
 | Four-state separation | The Supervisor reads Conversation State (associations, summary) and Session State (claims); it writes Workflow State selection. It touches no Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Thresholds live in versioned configuration; the classifier prompt is a versioned artefact per ADR-D3-11; a threshold change is a release. |
@@ -472,7 +472,7 @@ clarification anyway, the band is cost without benefit and should collapse (RT-0
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 (supervisor and routing) |
-| Repository paths | `src/pf_ft_ai/orchestration/supervisor/` |
+| Repository paths | `src/pff_fa_ai/orchestration/supervisor/` |
 | Configuration | Thresholds in `config/base/agents.yaml`; classifier prompt in `prompts/system/` |
 | Contracts / schemas | Decision object schema (Pydantic); agent capability registry schema |
 | Migration | None |
@@ -529,10 +529,10 @@ clarification anyway, the band is cost without benefit and should collapse (RT-0
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-08 Workflow Orchestration Architecture |
-| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §5 (Supervisor Responsibility), §11 (Supervisor-to-Agent Flow), §12 (Supervisor Decision Model), §13 (Supervisor Confidence), §14 (Supervisor Clarification), §15 (Existing Workflow Detection), §22–§24 (Agent Capability Registry, Registry Example, Agent Selection), §71 (Structured Output); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §8 (Supervisor Layer); 4. PF-FT-AI-RUNTIME.md §13 (Supervisor Execution), §14 (Clarification Path); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 |
+| Specification sections | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §5 (Supervisor Responsibility), §11 (Supervisor-to-Agent Flow), §12 (Supervisor Decision Model), §13 (Supervisor Confidence), §14 (Supervisor Clarification), §15 (Existing Workflow Detection), §22–§24 (Agent Capability Registry, Registry Example, Agent Selection), §71 (Structured Output); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §8 (Supervisor Layer); 4. PFF-FA-AI-RUNTIME.md §13 (Supervisor Execution), §14 (Clarification Path); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46 |
 | Requirement IDs | `FR-A39-02`, `NFR-A38-REL` |
 | Build phases | 4 |
-| Code paths | `src/pf_ft_ai/orchestration/supervisor/` |
+| Code paths | `src/pff_fa_ai/orchestration/supervisor/` |
 | Configuration | `config/base/agents.yaml` thresholds; `prompts/system/` classifier prompt |
 | Tests | AC-01 to AC-07; routing golden set |
 | Upstream ADRs | ADR-D1-11, ADR-D2-04 |
@@ -542,4 +542,4 @@ clarification anyway, the band is cost without benefit and should collapse (RT-0
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Thresholds derived from measured accuracy rather than chosen; 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13's medium band split into Gather and Clarify with distinct actions; out-of-scope made a first-class classification outcome, reflecting that it is the majority outcome with one agent. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Thresholds derived from measured accuracy rather than chosen; 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13's medium band split into Gather and Clarify with distinct actions; out-of-scope made a first-class classification outcome, reflecting that it is the majority outcome with one agent. |

@@ -1,24 +1,24 @@
 from datetime import UTC, datetime
 from typing import Any
 
-from pf_ft_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
-from pf_ft_ai.domain.workflow.states import WaitingType, WorkflowStatus
-from pf_ft_ai.infrastructure.persistence.in_memory_workflow_repository import (
+from pff_fa_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
+from pff_fa_ai.domain.workflow.states import WaitingType, WorkflowStatus
+from pff_fa_ai.infrastructure.persistence.in_memory_workflow_repository import (
     InMemoryWorkflowRepository,
 )
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.registry import EventRoute, EventRouteRegistry
-from pf_ft_ai.messaging.events.states import EventProcessingStatus
-from pf_ft_ai.messaging.handlers.base import HandlerOutcome
-from pf_ft_ai.messaging.handlers.workflow_resume import (
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.registry import EventRoute, EventRouteRegistry
+from pff_fa_ai.messaging.events.states import EventProcessingStatus
+from pff_fa_ai.messaging.handlers.base import HandlerOutcome
+from pff_fa_ai.messaging.handlers.workflow_resume import (
     WorkflowResumeEventHandler,
     WorkflowResumeService,
 )
-from pf_ft_ai.messaging.reliability.dead_letter import InMemoryDeadLetterStore
-from pf_ft_ai.messaging.reliability.idempotency import InMemoryEventIdempotencyStore
-from pf_ft_ai.messaging.routing.router import EventRouter
-from pf_ft_ai.messaging.service_bus.consumer import EventConsumer
-from pf_ft_ai.messaging.service_bus.processing import EventProcessingService
+from pff_fa_ai.messaging.reliability.dead_letter import InMemoryDeadLetterStore
+from pff_fa_ai.messaging.reliability.idempotency import InMemoryEventIdempotencyStore
+from pff_fa_ai.messaging.routing.router import EventRouter
+from pff_fa_ai.messaging.service_bus.consumer import EventConsumer
+from pff_fa_ai.messaging.service_bus.processing import EventProcessingService
 
 
 class _ExplodingHandler:
@@ -113,7 +113,7 @@ async def _build_service() -> tuple[EventProcessingService, InMemoryWorkflowRepo
         known_sources=frozenset({"hil-service"}),
         handlers={"workflow.resume": handler},
         dead_letter=InMemoryDeadLetterStore(),
-        subscription_name="pf-ft-ai-runtime-dev",
+        subscription_name="pff-fa-ai-runtime-dev",
     )
     return service, repository
 
@@ -143,7 +143,7 @@ async def test_should_dead_letter_a_message_whose_handler_raises() -> None:
         known_sources=frozenset({"hil-service"}),
         handlers={"workflow.resume": _ExplodingHandler()},
         dead_letter=InMemoryDeadLetterStore(),
-        subscription_name="pf-ft-ai-runtime-dev",
+        subscription_name="pff-fa-ai-runtime-dev",
     )
     receiver = _FakeReceiver([_FakeMessage(_event_body())])
     consumer = EventConsumer(receiver=receiver, processing=service)

@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-04, ADR-D4-02, ADR-D2-11, ADR-D3-08, ADR-D2-12]
 source_docs:
-  - "MD files/3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md §24, §44, §45, §46, §47, §48, §49, §50, §51, §52, §71, §72, §73"
-  - "MD files/1 Foundation/5. PF-FT-AI-STATE-MODEL.md §66"
+  - "MD files/3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md §24, §44, §45, §46, §47, §48, §49, §50, §51, §52, §71, §72, §73"
+  - "MD files/1 Foundation/5. PFF-FA-AI-STATE-MODEL.md §66"
 build_phases: [4]
 impacted_paths:
-  - src/pf_ft_ai/erc/
+  - src/pff_fa_ai/erc/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -31,15 +31,15 @@ PFF AI will classify every context requirement as **mandatory** or **optional** 
 handle partial ERC-collection failures accordingly: a failed **mandatory** collection
 **fails the ERC build** (the workflow cannot safely proceed), while a failed
 **optional** collection degrades gracefully with the gap recorded in an explicit
-**completeness** structure (8 PF-FT-AI-ERC-CONTEXT.md §24, §44–§52, §71–§73). The platform never silently
+**completeness** structure (8 PFF-FA-AI-ERC-CONTEXT.md §24, §44–§52, §71–§73). The platform never silently
 proceeds on incomplete authoritative context, and never fabricates the missing piece.
 
 ## 2. Context and Problem Statement
 
-8 PF-FT-AI-ERC-CONTEXT.md §24 distinguishes mandatory vs optional context; §44–§48 define batch state,
+8 PFF-FA-AI-ERC-CONTEXT.md §24 distinguishes mandatory vs optional context; §44–§48 define batch state,
 retry and partial-batch failure; §49–§50 define mandatory- vs optional-collection
 failure; §51–§52 define completeness tracking and record completeness; §71–§73 define
-the ERC validation result with warnings/errors; 5. PF-FT-AI-STATE-MODEL.md §66 covers partial completion.
+the ERC validation result with warnings/errors; 5. PFF-FA-AI-STATE-MODEL.md §66 covers partial completion.
 The hazard: a collection partially fails (e.g. one official's record errors), and the
 platform either aborts a workflow that could proceed on optional data, or worse,
 proceeds on missing *mandatory* data and makes an unsafe decision. This ADR fixes the
@@ -49,11 +49,11 @@ semantics.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Mandatory vs optional per requirement | 8 PF-FT-AI-ERC-CONTEXT.md §24 |
-| DR-F-02 | Mandatory failure → fail build; optional → degrade + record | 8 PF-FT-AI-ERC-CONTEXT.md §49–§50 |
-| DR-F-03 | Completeness tracked and surfaced | 8 PF-FT-AI-ERC-CONTEXT.md §51–§52 |
-| DR-C-01 | Never proceed on missing mandatory context | 8 PF-FT-AI-ERC-CONTEXT.md §49; CLAUDE.md |
-| DR-C-02 | Never fabricate missing data | CLAUDE.md; 8 PF-FT-AI-ERC-CONTEXT.md §71–§73 |
+| DR-F-01 | Mandatory vs optional per requirement | 8 PFF-FA-AI-ERC-CONTEXT.md §24 |
+| DR-F-02 | Mandatory failure → fail build; optional → degrade + record | 8 PFF-FA-AI-ERC-CONTEXT.md §49–§50 |
+| DR-F-03 | Completeness tracked and surfaced | 8 PFF-FA-AI-ERC-CONTEXT.md §51–§52 |
+| DR-C-01 | Never proceed on missing mandatory context | 8 PFF-FA-AI-ERC-CONTEXT.md §49; CLAUDE.md |
+| DR-C-02 | Never fabricate missing data | CLAUDE.md; 8 PFF-FA-AI-ERC-CONTEXT.md §71–§73 |
 
 ### 3.4 Assumptions
 
@@ -111,7 +111,7 @@ DR-C-01.
 **Description.** Finer than binary: multiple severity levels driving different
 behaviours.
 **Strengths.** Nuanced degradation.
-**Weaknesses.** More complexity; 8 PF-FT-AI-ERC-CONTEXT.md frames it as mandatory/optional; extra tiers
+**Weaknesses.** More complexity; 8 PFF-FA-AI-ERC-CONTEXT.md frames it as mandatory/optional; extra tiers
 add classification burden for marginal benefit now.
 **Cost / effort.** Medium; premature nuance.
 
@@ -124,8 +124,8 @@ add classification burden for marginal benefit now.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 8 PF-FT-AI-ERC-CONTEXT.md §24/§44–§52/§71–§73 and
-5. PF-FT-AI-STATE-MODEL.md §66.
+**Method.** Weighted scoring against §4, informed by 8 PFF-FA-AI-ERC-CONTEXT.md §24/§44–§52/§71–§73 and
+5. PFF-FA-AI-STATE-MODEL.md §66.
 
 | Criterion | Weight | A: Mand/opt + degrade | B: All-or-nothing | C: Best-effort | D: Placeholder | E: Severity tiers |
 |---|---|---|---|---|---|---|
@@ -152,11 +152,11 @@ data. Unclassified requirements default to mandatory (fail-safe). All-or-nothing
 harms availability; best-effort (C) and placeholder (D) are unsafe; severity tiers (E)
 are deferred.
 
-**Status rationale.** `Accepted` — 8 PF-FT-AI-ERC-CONTEXT.md §49–§52 govern this.
+**Status rationale.** `Accepted` — 8 PFF-FA-AI-ERC-CONTEXT.md §49–§52 govern this.
 
 ## 8. Architecture Detail
 
-- Requirement model (8 PF-FT-AI-ERC-CONTEXT.md §23) carries `mandatory: bool`; collection results roll up
+- Requirement model (8 PFF-FA-AI-ERC-CONTEXT.md §23) carries `mandatory: bool`; collection results roll up
   into a `Completeness` structure (§51–§52) per section and record.
 - Retry within limits (§46–§47) using the shared client's policy (ADR-D5-16); on
   exhaustion, branch by mandatory/optional (§49–§50).
@@ -222,7 +222,7 @@ are deferred.
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 |
-| Repository paths | `src/pf_ft_ai/erc/` |
+| Repository paths | `src/pff_fa_ai/erc/` |
 | Configuration | Requirement mandatory/optional map; retry limits |
 | Contracts / schemas | Completeness + validation-result models (§71–§73) |
 | Migration | N/A |
@@ -269,10 +269,10 @@ are deferred.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-19 |
-| Specification sections | 8 PF-FT-AI-ERC-CONTEXT.md §24, §44–§52, §71–§73; 5. PF-FT-AI-STATE-MODEL.md §66 |
+| Specification sections | 8 PFF-FA-AI-ERC-CONTEXT.md §24, §44–§52, §71–§73; 5. PFF-FA-AI-STATE-MODEL.md §66 |
 | Requirement IDs | ERC-FAIL-* |
 | Build phases | 4 |
-| Code paths | `src/pf_ft_ai/erc/` |
+| Code paths | `src/pff_fa_ai/erc/` |
 | Configuration | mandatory/optional map, retry limits |
 | Tests | partial-failure + completeness suites |
 | Upstream ADRs | ADR-D4-04 |

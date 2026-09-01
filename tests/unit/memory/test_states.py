@@ -1,4 +1,4 @@
-from pf_ft_ai.memory.states import MemoryCategory
+from pff_fa_ai.memory.states import MemoryCategory
 
 
 def test_should_define_exactly_the_ten_documented_memory_categories() -> None:

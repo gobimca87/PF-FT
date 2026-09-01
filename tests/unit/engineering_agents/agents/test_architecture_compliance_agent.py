@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from pf_ft_ai.engineering_agents.agents.architecture_compliance_agent import (
+from pff_fa_ai.engineering_agents.agents.architecture_compliance_agent import (
     ArchitectureComplianceAgent,
 )
-from pf_ft_ai.engineering_agents.states import AgentResultStatus
+from pff_fa_ai.engineering_agents.states import AgentResultStatus
 
 
 async def test_should_pass_for_a_domain_module_with_no_forbidden_imports(tmp_path: Path) -> None:

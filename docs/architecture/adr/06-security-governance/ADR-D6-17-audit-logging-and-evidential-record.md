@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-02, ADR-D7-04, ADR-D6-14, ADR-D6-15, ADR-D7-03]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §29, §30, §71, §81, §99"
-  - "MD files/1 Foundation/5. PF-FT-AI-STATE-MODEL.md §60"
-  - "MD files/2 Agent Runtime/6 PF-FT-AI-CONVERSATION-SESSION.md §62"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §29, §30, §71, §81, §99"
+  - "MD files/1 Foundation/5. PFF-FA-AI-STATE-MODEL.md §60"
+  - "MD files/2 Agent Runtime/6 PFF-FA-AI-CONVERSATION-SESSION.md §62"
 build_phases: [10]
 impacted_paths:
-  - src/pf_ft_ai/observability/
+  - src/pff_fa_ai/observability/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -32,13 +32,13 @@ PFF AI will keep an **append-only, tamper-evident evidential record** of decisio
 consequential events — HIL decisions (ADR-D6-14), change approvals (ADR-D6-15),
 authorization decisions, tool/enterprise actions, state transitions and RAG/ACL
 outcomes — separate from operational logs, redacted of unnecessary PII, retained to a
-defined schedule, and queryable for compliance evidence (20.PF-FT-AI-GOVERNANCE.md §29–§30, §71, §81, §99;
-5. PF-FT-AI-STATE-MODEL.md §60; 6 PF-FT-AI-CONVERSATION-SESSION.md §62). Audit is for accountability, not debugging.
+defined schedule, and queryable for compliance evidence (20.PFF-FA-AI-GOVERNANCE.md §29–§30, §71, §81, §99;
+5. PFF-FA-AI-STATE-MODEL.md §60; 6 PFF-FA-AI-CONVERSATION-SESSION.md §62). Audit is for accountability, not debugging.
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §29–§30 traceability/auditability, §71 HIL evidence, §81 approval evidence, §99
-compliance evidence; 5. PF-FT-AI-STATE-MODEL.md §60 state-transition audit; 6 PF-FT-AI-CONVERSATION-SESSION.md §62 conversation audit.
+20.PFF-FA-AI-GOVERNANCE.md §29–§30 traceability/auditability, §71 HIL evidence, §81 approval evidence, §99
+compliance evidence; 5. PFF-FA-AI-STATE-MODEL.md §60 state-transition audit; 6 PFF-FA-AI-CONVERSATION-SESSION.md §62 conversation audit.
 Operational logs (ADR-D7-04) are for debugging and rotate quickly; compliance and
 safeguarding require a durable, tamper-evident record of *what was decided and by whom*.
 This ADR fixes the evidential-record model distinct from operational logging.
@@ -47,10 +47,10 @@ This ADR fixes the evidential-record model distinct from operational logging.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Append-only, tamper-evident audit trail | 20.PF-FT-AI-GOVERNANCE.md §30; 5. PF-FT-AI-STATE-MODEL.md §60 |
-| DR-F-02 | Capture decisions/consequential events | 20.PF-FT-AI-GOVERNANCE.md §71, §81; 6 PF-FT-AI-CONVERSATION-SESSION.md §62 |
+| DR-F-01 | Append-only, tamper-evident audit trail | 20.PFF-FA-AI-GOVERNANCE.md §30; 5. PFF-FA-AI-STATE-MODEL.md §60 |
+| DR-F-02 | Capture decisions/consequential events | 20.PFF-FA-AI-GOVERNANCE.md §71, §81; 6 PFF-FA-AI-CONVERSATION-SESSION.md §62 |
 | DR-C-01 | Redact unnecessary PII in audit | ADR-D7-04; UK GDPR |
-| DR-F-03 | Defined retention + queryable evidence | 20.PF-FT-AI-GOVERNANCE.md §99 |
+| DR-F-03 | Defined retention + queryable evidence | 20.PFF-FA-AI-GOVERNANCE.md §99 |
 
 ### 3.4 Assumptions
 
@@ -116,13 +116,13 @@ for monitoring/retention.
 
 | Option | Eliminated by |
 |---|---|
-| No audit trail | 20.PF-FT-AI-GOVERNANCE.md §30 |
+| No audit trail | 20.PFF-FA-AI-GOVERNANCE.md §30 |
 | Mutable audit records | Not evidential |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §29–§30/§71/§81/§99, 5. PF-FT-AI-STATE-MODEL.md
-§60, 6 PF-FT-AI-CONVERSATION-SESSION.md §62.
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §29–§30/§71/§81/§99, 5. PFF-FA-AI-STATE-MODEL.md
+§60, 6 PFF-FA-AI-CONVERSATION-SESSION.md §62.
 
 | Criterion | Weight | A: Dedicated audit | B: Ops logs | C: Langfuse | D: Enterprise-only | E: A+crypto+SIEM |
 |---|---|---|---|---|---|---|
@@ -151,12 +151,12 @@ enterprise-only audit (D) are rejected as the evidential record (they complement
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/observability/`: an audit writer emits structured, redacted audit events
+- `src/pff_fa_ai/observability/`: an audit writer emits structured, redacted audit events
   (with correlation id, ADR-D7-03) to an append-only/WORM store; hash-chaining/signing
   provides tamper-evidence.
-- Events: HIL (20.PF-FT-AI-GOVERNANCE.md §71; ADR-D6-14), approvals (§81; ADR-D6-15), authz decisions
-  (ADR-D6-02/03), tool/enterprise actions, state transitions (5. PF-FT-AI-STATE-MODEL.md §60), RAG/ACL
-  outcomes (ADR-D6-12), conversation audit (6 PF-FT-AI-CONVERSATION-SESSION.md §62).
+- Events: HIL (20.PFF-FA-AI-GOVERNANCE.md §71; ADR-D6-14), approvals (§81; ADR-D6-15), authz decisions
+  (ADR-D6-02/03), tool/enterprise actions, state transitions (5. PFF-FA-AI-STATE-MODEL.md §60), RAG/ACL
+  outcomes (ADR-D6-12), conversation audit (6 PFF-FA-AI-CONVERSATION-SESSION.md §62).
 - PII redaction (ADR-D7-04); retention schedule per classification (ADR-D4-07); SIEM
   export for monitoring; compliance queries supported (§99).
 - Audit is separate from operational logs (ADR-D7-04) and Langfuse traces (ADR-D7-02).
@@ -218,7 +218,7 @@ enterprise-only audit (D) are rejected as the evidential record (they complement
 | Aspect | Detail |
 |---|---|
 | Build phases | 10 |
-| Repository paths | `src/pf_ft_ai/observability/` |
+| Repository paths | `src/pff_fa_ai/observability/` |
 | Configuration | Audit event catalogue; retention; SIEM export |
 | Contracts / schemas | Audit event schema |
 | Migration | N/A |
@@ -265,10 +265,10 @@ enterprise-only audit (D) are rejected as the evidential record (they complement
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-29 |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §29–§30, §71, §81, §99; 5. PF-FT-AI-STATE-MODEL.md §60; 6 PF-FT-AI-CONVERSATION-SESSION.md §62 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §29–§30, §71, §81, §99; 5. PFF-FA-AI-STATE-MODEL.md §60; 6 PFF-FA-AI-CONVERSATION-SESSION.md §62 |
 | Requirement IDs | GOV-AUDIT-* |
 | Build phases | 10 |
-| Code paths | `src/pf_ft_ai/observability/` |
+| Code paths | `src/pff_fa_ai/observability/` |
 | Configuration | audit catalogue/retention |
 | Tests | integrity + coverage suites |
 | Upstream ADRs | ADR-D7-03, D6-14, D6-15 |

@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-10, ADR-D4-11, ADR-D4-12, ADR-D4-08, ADR-D4-07, ADR-D4-01]
 source_docs:
-  - "MD files/3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md §5, §15, §33, §34, §36, §37, §38, §39"
+  - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §5, §15, §33, §34, §36, §37, §38, §39"
 build_phases: [7]
 impacted_paths:
-  - src/pf_ft_ai/cache/
-  - src/pf_ft_ai/memory/
+  - src/pff_fa_ai/cache/
+  - src/pff_fa_ai/memory/
 classification: Internal
 review_due: 2027-08-23
 ---
@@ -31,13 +31,13 @@ Every cache and memory entry declares an explicit **scope** — `tenant` (the de
 namespaced by tenant/organization/user as ADR-D4-12 already requires) or `platform`
 (a small, reviewed set of genuinely tenant-invariant reference data, keyed once with
 no tenant/org segment and exempt from per-tenant isolation checks by design, not by
-omission). This closes a gap between 9 PF-FT-AI-MEMORY-CACHE.md §37's key scheme — written as if every
+omission). This closes a gap between 9 PFF-FA-AI-MEMORY-CACHE.md §37's key scheme — written as if every
 entry is tenant-scoped — and ADR-D4-12's own example of caching "stable reference
 data (leagues)," which is national, not club-specific.
 
 ## 2. Context and Problem Statement
 
-9 PF-FT-AI-MEMORY-CACHE.md §36–§37 define cache key design and key isolation: every key is built from
+9 PFF-FA-AI-MEMORY-CACHE.md §36–§37 define cache key design and key isolation: every key is built from
 `tenant + organization + resource + operation + parameters + version` (§37), with an
 explicit warning against using a bare identifier like `club:123` that "could exist
 across tenants/environments." §5–§19 enumerate ten memory categories — conversation,
@@ -79,7 +79,7 @@ cache and memory layer itself.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Every cache/memory entry must declare its scope explicitly | 9 PF-FT-AI-MEMORY-CACHE.md §36–§37 (implied by the unaddressed gap) |
+| DR-F-01 | Every cache/memory entry must declare its scope explicitly | 9 PFF-FA-AI-MEMORY-CACHE.md §36–§37 (implied by the unaddressed gap) |
 | DR-F-02 | Tenant-invariant reference data must not be duplicated per tenant | ADR-D4-12 §8's own example |
 | DR-F-03 | Cross-tenant isolation tests must be able to tell a legitimate global entry from a violation | ADR-D4-12 AC-04/QM-04 |
 | DR-F-04 | Platform-global data eligibility is a reviewed decision, not an implementer's ad hoc choice | Security posture — a `platform` scope is a control that can be misused |
@@ -125,7 +125,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 **Description.** Every cache/memory category and every cacheable operation in the API
 catalogue (ADR-D2-13) declares `scope: tenant` (default) or `scope: platform`. A
 `platform`-scoped entry's key omits the tenant/organization segments entirely
-(`pf-ft:<env>:cache:platform:<resource>:<operation>:<parameters>:<version>`) and is
+(`pff-fa:<env>:cache:platform:<resource>:<operation>:<parameters>:<version>`) and is
 excluded from per-tenant isolation tests by construction — there is no tenant segment
 to leak. Declaring `scope: platform` on a new operation requires the same review gate
 as any catalogue change (ADR-D2-13 §7); it is not a per-call-site decision left to a
@@ -145,7 +145,7 @@ the scope vocabulary (just two values) is a new concept to teach.
 
 ### 5.2 Option B — Status quo: force every entry through the tenant/org key scheme
 
-**Description.** Leave 9 PF-FT-AI-MEMORY-CACHE.md §37 as literally written; leagues and similar reference
+**Description.** Leave 9 PFF-FA-AI-MEMORY-CACHE.md §37 as literally written; leagues and similar reference
 data are cached per tenant/organization like everything else.
 
 **Strengths.** Nothing to design; §37 as written needs no amendment.
@@ -165,7 +165,7 @@ to platform-global data, physically separate from the tenant-scoped store.
 no risk of a scope field being ignored by a careless implementation.
 
 **Weaknesses.** A second store (or a hard namespace split) to provision, secure and
-operate for what 9 PF-FT-AI-MEMORY-CACHE.md's own examples suggest is a small dataset (leagues, seasons,
+operate for what 9 PFF-FA-AI-MEMORY-CACHE.md's own examples suggest is a small dataset (leagues, seasons,
 canonical reference data) — disproportionate infrastructure for the problem's actual
 size; ADR-D4-10 already chose one namespaced instance deliberately over a split-store
 model for exactly this kind of proportionality reason (ADR-D4-10 §6, Option E scored
@@ -260,8 +260,8 @@ else). It is never set by a tool implementation at call time.
 ### 7.2 Platform-scoped keys omit tenant/org segments entirely
 
 ```
-pf-ft:<env>:cache:platform:<resource>:<operation>:<parameters>:<version>
-pf-ft:<env>:cache:tenant:<tenant>:<organization>:<resource>:<operation>:<parameters>:<version>
+pff-fa:<env>:cache:platform:<resource>:<operation>:<parameters>:<version>
+pff-fa:<env>:cache:tenant:<tenant>:<organization>:<resource>:<operation>:<parameters>:<version>
 ```
 
 There is no tenant placeholder, sentinel, or wildcard in a platform-scoped key — the
@@ -285,13 +285,13 @@ failure direction, per ADR-D4-12's existing precedence-safety posture.
 
 A resource may be declared `scope: platform` only where the Security Architect (or
 delegate) confirms, per DR-A-01, that its value is genuinely identical across every
-tenant — not merely identical *today*. 9 PF-FT-AI-MEMORY-CACHE.md §15's "organizational context memory"
+tenant — not merely identical *today*. 9 PFF-FA-AI-MEMORY-CACHE.md §15's "organizational context memory"
 (club preferred terminology, known organizational identifiers) is explicitly **not**
 eligible — it is tenant-varying by definition and stays `tenant`-scoped. Canonical
 reference data governed by ADR-D4-08 (leagues, seasons, competition structures) is the
 expected initial catalogue.
 
-**Status rationale.** Accepted. Closes a gap found in a post-completion audit: 9 PF-FT-AI-MEMORY-CACHE.md
+**Status rationale.** Accepted. Closes a gap found in a post-completion audit: 9 PFF-FA-AI-MEMORY-CACHE.md
 §37's key scheme and the ten memory categories (§5–§19) are both written as
 tenant-scoped by default, but ADR-D4-12's own worked example (stable reference data
 such as leagues) is not tenant-scoped data, and no ADR reconciled the two.
@@ -319,13 +319,13 @@ flowchart TD
 |---|---|
 | Category | Reference data (ADR-D4-08), cached under ADR-D4-12's enterprise-API-response cache |
 | Scope | `platform` — reviewed and confirmed identical for every club/county |
-| Key | `pf-ft:<env>:cache:platform:leagues:list:v2` — one entry, platform-wide |
-| Before this ADR | Would key as `pf-ft:<env>:cache:<tenant>:<org>:leagues:list:v2` — one cold entry per tenant for identical data |
+| Key | `pff-fa:<env>:cache:platform:leagues:list:v2` — one entry, platform-wide |
+| Before this ADR | Would key as `pff-fa:<env>:cache:<tenant>:<org>:leagues:list:v2` — one cold entry per tenant for identical data |
 | Isolation test | Excluded from cross-tenant leakage check; included in a scope-eligibility audit (§7.4) at catalogue review time |
 
 ### 8.3 Memory categories unaffected in kind, clarified in scope
 
-9 PF-FT-AI-MEMORY-CACHE.md §15's "Organizational Context Memory" remains `tenant`-scoped — it is, by its
+9 PFF-FA-AI-MEMORY-CACHE.md §15's "Organizational Context Memory" remains `tenant`-scoped — it is, by its
 own definition, per-club/county content and was never a candidate for `platform` scope.
 This ADR does not add a new memory category; it clarifies that none of the existing
 ten (ADR-D4-11 §1) qualify as platform-global, and that any future category proposing
@@ -403,7 +403,7 @@ to hold tenant-invariant content must go through §7.4's review before being dec
 | Aspect | Detail |
 |---|---|
 | Build phases | 7 (memory/cache) |
-| Repository paths | `src/pf_ft_ai/cache/` (key builder, scope-aware); `src/pf_ft_ai/memory/` (category scope clarification) |
+| Repository paths | `src/pff_fa_ai/cache/` (key builder, scope-aware); `src/pff_fa_ai/memory/` (category scope clarification) |
 | Configuration | Scope declared per cache-backed resource / memory category |
 | Contracts / schemas | `CacheStore`/`MemoryStore` key-building extended with a `scope` field |
 | Migration | Existing tenant-scoped keys unaffected; leagues/reference-data keys re-keyed to `platform` scope on rollout |
@@ -452,10 +452,10 @@ to hold tenant-invariant content must go through §7.4's review before being dec
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-22 Memory/Cache/Store |
-| Specification sections | 9 PF-FT-AI-MEMORY-CACHE.md §5 (Memory Categories), §15 (Organizational Context Memory), §33–§34 (Cache Categories, Enterprise API Response Cache), §36–§39 (Cache Key Design, Key Isolation, TTL, TTL vs Volatility) |
+| Specification sections | 9 PFF-FA-AI-MEMORY-CACHE.md §5 (Memory Categories), §15 (Organizational Context Memory), §33–§34 (Cache Categories, Enterprise API Response Cache), §36–§39 (Cache Key Design, Key Isolation, TTL, TTL vs Volatility) |
 | Requirement IDs | `FR-P-06` |
 | Build phases | 7 |
-| Code paths | `src/pf_ft_ai/cache/`, `src/pf_ft_ai/memory/` |
+| Code paths | `src/pff_fa_ai/cache/`, `src/pff_fa_ai/memory/` |
 | Configuration | Per-resource `scope` declaration |
 | Tests | AC-01 to AC-04 |
 | Upstream ADRs | ADR-D4-10, ADR-D4-12, ADR-D4-08 |
@@ -465,4 +465,4 @@ to hold tenant-invariant content must go through §7.4's review before being dec
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-23 | AI Architecture Lead | Initial decision recorded, closing a gap found in a post-completion audit: 9 PF-FT-AI-MEMORY-CACHE.md §37's tenant-scoped key scheme and ADR-D4-12's own "stable reference data (leagues)" example were never reconciled, leaving no declared way to key or isolation-test genuinely platform-global cache/memory content. |
+| 1.0.0 | 2026-08-23 | AI Architecture Lead | Initial decision recorded, closing a gap found in a post-completion audit: 9 PFF-FA-AI-MEMORY-CACHE.md §37's tenant-scoped key scheme and ADR-D4-12's own "stable reference data (leagues)" example were never reconciled, leaving no declared way to key or isolation-test genuinely platform-global cache/memory content. |

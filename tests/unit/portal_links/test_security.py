@@ -1,4 +1,4 @@
-from pf_ft_ai.portal_links.security import assert_safe_url
+from pff_fa_ai.portal_links.security import assert_safe_url
 
 _ALLOWED = frozenset({"portal.example.com"})
 

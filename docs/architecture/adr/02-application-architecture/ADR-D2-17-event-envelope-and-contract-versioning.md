@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-03, ADR-D2-15, ADR-D2-16, ADR-D2-18, ADR-D5-06, ADR-D7-03]
 source_docs:
-  - "MD files/3 Context & Integration/11 PF-FT-AI-SERVICE-BUS.md §11, §12, §13, §14, §15, §16, §17, §18, §19, §20, §21, §22, §23, §24, §36, §37, §38, §39"
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §73, §74"
+  - "MD files/3 Context & Integration/11 PFF-FA-AI-SERVICE-BUS.md §11, §12, §13, §14, §15, §16, §17, §18, §19, §20, §21, §22, §23, §24, §36, §37, §38, §39"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §73, §74"
 build_phases: [12]
 impacted_paths:
-  - src/pf_ft_ai/messaging/events/
+  - src/pff_fa_ai/messaging/events/
   - contracts/events/
 classification: Internal
 review_due: 2027-08-21
@@ -36,10 +36,10 @@ refresh, which is worse than a visible failure.
 
 ## 2. Context and Problem Statement
 
-11 PF-FT-AI-SERVICE-BUS.md §11–§24 specify the event contract in detail: contract principles, envelope, event ID,
+11 PFF-FA-AI-SERVICE-BUS.md §11–§24 specify the event contract in detail: contract principles, envelope, event ID,
 type, version, source, timestamp, correlation ID, causation ID, workflow instance ID, entity
-identity, tenant and organisation context, and payload. 11 PF-FT-AI-SERVICE-BUS.md §36–§37 cover event and schema
-validation. 11 PF-FT-AI-SERVICE-BUS.md §38 covers unknown event version and §39 unknown event type. 20.PF-FT-AI-GOVERNANCE.md §73–§74
+identity, tenant and organisation context, and payload. 11 PFF-FA-AI-SERVICE-BUS.md §36–§37 cover event and schema
+validation. 11 PFF-FA-AI-SERVICE-BUS.md §38 covers unknown event version and §39 unknown event type. 20.PFF-FA-AI-GOVERNANCE.md §73–§74
 cover version governance and compatibility.
 
 The envelope is well specified. Three questions are not.
@@ -50,13 +50,13 @@ not say whether they are the platform's copy of enterprise contracts, a shared a
 from a registry service. That determines what happens when the enterprise changes a contract, and
 whether the platform can detect it.
 
-**What does "unknown version" mean in practice?** 11 PF-FT-AI-SERVICE-BUS.md §38 requires handling but not what the
+**What does "unknown version" mean in practice?** 11 PFF-FA-AI-SERVICE-BUS.md §38 requires handling but not what the
 handling is. Three postures are available — reject, best-effort process, or forward-compatible
 process — and they differ materially. An event at `v2` when the platform knows `v1` may be
 additively compatible, or may have changed the meaning of a field. From outside, they look
 identical.
 
-**How much does the platform depend on envelope fields it does not control?** 11 PF-FT-AI-SERVICE-BUS.md §21's
+**How much does the platform depend on envelope fields it does not control?** 11 PFF-FA-AI-SERVICE-BUS.md §21's
 `workflow_instance_id` is the resumption key. If the enterprise does not populate it — or
 populates it differently than expected — resumption breaks in a way that looks like missing
 events. The platform's dependency on enterprise-populated correlation is worth stating.
@@ -72,29 +72,29 @@ resume a workflow on a misread event.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Events must carry a defined envelope | 11 PF-FT-AI-SERVICE-BUS.md §13–§24 |
-| DR-F-02 | Events must be schema-validated | 11 PF-FT-AI-SERVICE-BUS.md §36–§37 |
-| DR-F-03 | Unknown versions and types must be handled explicitly | 11 PF-FT-AI-SERVICE-BUS.md §38–§39 |
-| DR-F-04 | Correlation and causation must propagate | 11 PF-FT-AI-SERVICE-BUS.md §19–§20; ADR-D7-03 |
-| DR-F-05 | Workflow instance identity must resolve a suspended workflow | 11 PF-FT-AI-SERVICE-BUS.md §21; ADR-D2-10 |
-| DR-F-06 | Tenant and organisation context must be present | 11 PF-FT-AI-SERVICE-BUS.md §23 |
+| DR-F-01 | Events must carry a defined envelope | 11 PFF-FA-AI-SERVICE-BUS.md §13–§24 |
+| DR-F-02 | Events must be schema-validated | 11 PFF-FA-AI-SERVICE-BUS.md §36–§37 |
+| DR-F-03 | Unknown versions and types must be handled explicitly | 11 PFF-FA-AI-SERVICE-BUS.md §38–§39 |
+| DR-F-04 | Correlation and causation must propagate | 11 PFF-FA-AI-SERVICE-BUS.md §19–§20; ADR-D7-03 |
+| DR-F-05 | Workflow instance identity must resolve a suspended workflow | 11 PFF-FA-AI-SERVICE-BUS.md §21; ADR-D2-10 |
+| DR-F-06 | Tenant and organisation context must be present | 11 PFF-FA-AI-SERVICE-BUS.md §23 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Validation must be fast enough for high event volume | ≤5 ms per event | ADR-D2-16 |
-| DR-N-02 | A contract change must be detectable | 0 undetected breaking changes | 20.PF-FT-AI-GOVERNANCE.md §74 |
-| DR-N-03 | Schemas must be versioned as artefacts | Immutable per version | 20.PF-FT-AI-GOVERNANCE.md §73 |
+| DR-N-02 | A contract change must be detectable | 0 undetected breaking changes | 20.PFF-FA-AI-GOVERNANCE.md §74 |
+| DR-N-03 | Schemas must be versioned as artefacts | Immutable per version | 20.PFF-FA-AI-GOVERNANCE.md §73 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The enterprise owns event contracts | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §28 |
+| DR-C-01 | The enterprise owns event contracts | Organisational | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §28 |
 | DR-C-02 | An event is a notification, not data | Platform | ADR-D2-03 §7.4 |
-| DR-C-03 | Payload content must never become prompt instruction | Platform | 11 PF-FT-AI-SERVICE-BUS.md §58 |
-| DR-C-04 | Versioned artefacts are immutable | Platform | 20.PF-FT-AI-GOVERNANCE.md §73; ADR-D0-02 §7.3 |
+| DR-C-03 | Payload content must never become prompt instruction | Platform | 11 PFF-FA-AI-SERVICE-BUS.md §58 |
+| DR-C-04 | Versioned artefacts are immutable | Platform | 20.PFF-FA-AI-GOVERNANCE.md §73; ADR-D0-02 §7.3 |
 
 ### 3.4 Assumptions
 
@@ -111,7 +111,7 @@ resume a workflow on a misread event.
 | EC-01 | Correctness of handling under version change | 30 | A misread event triggers a wrong refresh or a wrong resumption, which is silent and consequential | Can a partially-understood event be acted on? |
 | EC-02 | Detection of contract change | 25 | Undetected drift means the platform mishandles events while appearing healthy | Is a change detected, and how quickly? |
 | EC-03 | Operational impact of strictness | 20 | Rejecting everything unknown could suspend workflows en masse | Workflows stalled per contract change |
-| EC-04 | Schema artefact governance | 15 | 20.PF-FT-AI-GOVERNANCE.md §73 requires versioned immutable artefacts | Are schemas versioned and immutable? |
+| EC-04 | Schema artefact governance | 15 | 20.PFF-FA-AI-GOVERNANCE.md §73 requires versioned immutable artefacts | Are schemas versioned and immutable? |
 | EC-05 | Implementation and maintenance cost | 10 | Real but subordinate | Effort per event type |
 | | **Total** | **100** | | |
 
@@ -149,7 +149,7 @@ unknown version or type is rejected to the dead-letter queue with a distinct rea
 - A partially-understood event is never acted on (EC-01).
 - An unknown version is immediately visible as a dead-letter with a specific reason, detected in
   minutes (EC-02).
-- Schemas are versioned, immutable, diffable and reviewable, satisfying 20.PF-FT-AI-GOVERNANCE.md §73 (EC-04).
+- Schemas are versioned, immutable, diffable and reviewable, satisfying 20.PFF-FA-AI-GOVERNANCE.md §73 (EC-04).
 - Handlers receive typed payloads, so extraction is uniform.
 - Consistent with ADR-D2-15's posture for API contracts.
 
@@ -239,7 +239,7 @@ contracts/events/
 └── organization/    club, team, official change events
 ```
 
-A schema file is **immutable once merged**, per 20.PF-FT-AI-GOVERNANCE.md §73 and ADR-D0-02's identity principle. A
+A schema file is **immutable once merged**, per 20.PFF-FA-AI-GOVERNANCE.md §73 and ADR-D0-02's identity principle. A
 contract change is a new file at a new version, never an edit — so the platform can always
 interpret an event at the version it declares, including a version it has since superseded.
 
@@ -249,15 +249,15 @@ DR-C-01's enterprise ownership and the platform's need for a reviewable artefact
 
 ### 7.2 The envelope
 
-Per 11 PF-FT-AI-SERVICE-BUS.md §13–§24, every event carries:
+Per 11 PFF-FA-AI-SERVICE-BUS.md §13–§24, every event carries:
 
-| Field | 11 PF-FT-AI-SERVICE-BUS.md | Platform use |
+| Field | 11 PFF-FA-AI-SERVICE-BUS.md | Platform use |
 |---|---|---|
 | `event_id` | §14 | Deduplication key (ADR-D2-18) |
 | `event_type` | §15 | Handler resolution — a static registry lookup, never interpreted |
 | `event_version` | §16 | Schema selection; rejection if unknown (§7.3) |
 | `event_source` | §17 | Provenance and routing |
-| `timestamp` | §18 | Staleness detection (11 PF-FT-AI-SERVICE-BUS.md §47) |
+| `timestamp` | §18 | Staleness detection (11 PFF-FA-AI-SERVICE-BUS.md §47) |
 | `correlation_id` | §19 | Trace continuity (ADR-D7-03) |
 | `causation_id` | §20 | Causal chain |
 | `workflow_instance_id` | §21 | **Resumption key** (ADR-D2-10) |
@@ -266,7 +266,7 @@ Per 11 PF-FT-AI-SERVICE-BUS.md §13–§24, every event carries:
 | `payload` | §24 | Typed per event type and version |
 
 `event_type` selects a handler by static registry lookup. It is never parsed, pattern-matched or
-interpreted — which is part of what closes 11 PF-FT-AI-SERVICE-BUS.md §58's injection path (ADR-D2-03 §7.4).
+interpreted — which is part of what closes 11 PFF-FA-AI-SERVICE-BUS.md §58's injection path (ADR-D2-03 §7.4).
 
 ### 7.3 Unknown version or type is a rejection
 
@@ -285,7 +285,7 @@ or advancing a workflow on a status the platform misread. A dead-lettered event 
 diagnosable and replayable once the schema is added. A misprocessed event is none of those.
 
 Rejection is **not** dropping. Every rejected event sits in the dead-letter queue with its reason,
-monitored per ADR-D2-18, and can be replayed after the schema is added. 11 PF-FT-AI-SERVICE-BUS.md §39's requirement
+monitored per ADR-D2-18, and can be replayed after the schema is added. 11 PFF-FA-AI-SERVICE-BUS.md §39's requirement
 that unknown types be handled explicitly is satisfied by the reason code, not by silence.
 
 ### 7.4 Rejection does not stall a workflow indefinitely
@@ -304,7 +304,7 @@ So a version bump degrades resumption latency rather than breaking it, and it do
 
 ### 7.5 Correlation and the enterprise dependency
 
-`workflow_instance_id` (11 PF-FT-AI-SERVICE-BUS.md §21) is the resumption key. It exists only if the enterprise
+`workflow_instance_id` (11 PFF-FA-AI-SERVICE-BUS.md §21) is the resumption key. It exists only if the enterprise
 populates it, which requires the platform to have supplied it when initiating the operation, and
 the enterprise to echo it on resulting events.
 
@@ -319,14 +319,14 @@ distinction is diagnosable only if the fallback is explicit and instrumented (QM
 ### 7.6 Payload types are for extraction, not for prompts
 
 The typed payload gives handlers structured access to identifiers. It does not make payload
-content usable as prompt content. Per ADR-D2-03 §7.4 and 11 PF-FT-AI-SERVICE-BUS.md §58, handlers extract typed
+content usable as prompt content. Per ADR-D2-03 §7.4 and 11 PFF-FA-AI-SERVICE-BUS.md §58, handlers extract typed
 identifiers and use them to invalidate and refresh; no payload field reaches a prompt as
 instruction or as an ERC fact.
 
 Typing strengthens this rather than weakening it: a handler reads `application_id: str` from a
 validated schema, not free text from an untyped map.
 
-**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — eventing is a named 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
+**Status rationale.** Accepted. Tier 1 under ADR-D0-03 §7.1 — eventing is a named 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52
 category — ratified by the external ADF/ADR governance forum.
 
 ## 8. Architecture Detail
@@ -424,7 +424,7 @@ exactly what Option C could not see and a human review can.
 | Enterprise decides; AI orchestrates | Schemas describe what the enterprise publishes; the platform reads them. It does not extend or reinterpret a contract to make an event processable. |
 | Authoritative-truth precedence | §7.6: typed payloads give identifiers, not facts. Authoritative values come from the refresh, so no event field enters ERC at authority 5. |
 | Four-state separation | Envelope identifiers link to Workflow State and Conversation State; payload identifiers address Enterprise Business State for refresh. None is conflated. |
-| Versioned artefacts, never mutated in place | §7.1: schema files are immutable once merged; a change is a new version. This is 20.PF-FT-AI-GOVERNANCE.md §73 applied to event contracts. |
+| Versioned artefacts, never mutated in place | §7.1: schema files are immutable once merged; a change is a new version. This is 20.PFF-FA-AI-GOVERNANCE.md §73 applied to event contracts. |
 | Adam persona governs how, never what | Events produce no user-facing language directly. |
 
 ## 11. Risks and Mitigations
@@ -457,11 +457,11 @@ contract moved and the platform has not caught up.
 | Dimension | Impact |
 |---|---|
 | Attack surface change | Strict envelope and payload validation before any handler runs means malformed or unexpected messages cannot reach handler logic. Static `event_type` lookup means the type field cannot be used to reach unintended code. |
-| Data classification touched | Envelopes carry identifiers and tenant context; payloads carry identifiers by design (11 PF-FT-AI-SERVICE-BUS.md §24). |
+| Data classification touched | Envelopes carry identifiers and tenant context; payloads carry identifiers by design (11 PFF-FA-AI-SERVICE-BUS.md §24). |
 | Personal data / PII | Typed schemas make explicit what fields an event carries, so an event carrying unexpected personal data fails validation rather than being processed — a minimisation control at the boundary. |
 | Children's data and safeguarding | Compliance-related events carry identifiers, and the safeguarding status comes from the refresh. A `v2` compliance event redefining a field is exactly what §7.3's rejection prevents being misread — a misread clearance status is a safeguarding failure. |
-| UK GDPR lawful basis and rights impact | Tenant and organisation context (11 PF-FT-AI-SERVICE-BUS.md §23) enforces isolation; typed payloads support minimisation. |
-| Audit and evidential requirements | `correlation_id` and `causation_id` give an unbroken chain from enterprise decision to platform action (20.PF-FT-AI-GOVERNANCE.md §71's HIL evidence). |
+| UK GDPR lawful basis and rights impact | Tenant and organisation context (11 PFF-FA-AI-SERVICE-BUS.md §23) enforces isolation; typed payloads support minimisation. |
+| Audit and evidential requirements | `correlation_id` and `causation_id` give an unbroken chain from enterprise decision to platform action (20.PFF-FA-AI-GOVERNANCE.md §71's HIL evidence). |
 | Standards touched | ISO/IEC 27001 A.8.26 (application security requirements), A.8.28; ISO/IEC 42001 (data quality); UK GDPR Art. 5(1)(c), 32. |
 
 ## 14. Implementation Impact
@@ -469,7 +469,7 @@ contract moved and the platform has not caught up.
 | Aspect | Detail |
 |---|---|
 | Build phases | 12 |
-| Repository paths | `src/pf_ft_ai/messaging/events/` — models, envelope, validator, registry, serializer; `contracts/events/` |
+| Repository paths | `src/pff_fa_ai/messaging/events/` — models, envelope, validator, registry, serializer; `contracts/events/` |
 | Configuration | Handler registry mapping type and version to handler |
 | Contracts / schemas | Envelope schema; per-type per-version payload schemas |
 | Migration | None |
@@ -526,10 +526,10 @@ contract moved and the platform has not caught up.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-11 Event Notification & Real-Time Synchronization |
-| Specification sections | 11 PF-FT-AI-SERVICE-BUS.md §11–§12 (Event Contract, Principles), §13 (Envelope), §14–§18 (ID, Type, Version, Source, Timestamp), §19–§20 (Correlation, Causation), §21 (Workflow Instance ID), §22–§23 (Entity Identity, Tenant Context), §24 (Payload), §36–§37 (Event and Schema Validation), §38 (Unknown Event Version), §39 (Unknown Event Type), §58; 20.PF-FT-AI-GOVERNANCE.md §73–§74 (Version Governance, Compatibility); `DEVELOPMENT-GUIDE.md` §3 |
+| Specification sections | 11 PFF-FA-AI-SERVICE-BUS.md §11–§12 (Event Contract, Principles), §13 (Envelope), §14–§18 (ID, Type, Version, Source, Timestamp), §19–§20 (Correlation, Causation), §21 (Workflow Instance ID), §22–§23 (Entity Identity, Tenant Context), §24 (Payload), §36–§37 (Event and Schema Validation), §38 (Unknown Event Version), §39 (Unknown Event Type), §58; 20.PFF-FA-AI-GOVERNANCE.md §73–§74 (Version Governance, Compatibility); `DEVELOPMENT-GUIDE.md` §3 |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-VER` |
 | Build phases | 12 |
-| Code paths | `src/pf_ft_ai/messaging/events/`, `contracts/events/` |
+| Code paths | `src/pff_fa_ai/messaging/events/`, `contracts/events/` |
 | Configuration | Handler registry |
 | Tests | AC-01 to AC-07 |
 | Upstream ADRs | ADR-D2-16 |

@@ -1,6 +1,6 @@
-from pf_ft_ai.engineering_agents.models import EngineeringAgentDefinition, EngineeringAgentResult
-from pf_ft_ai.engineering_agents.registry import EngineeringAgentRegistry
-from pf_ft_ai.engineering_agents.states import (
+from pff_fa_ai.engineering_agents.models import EngineeringAgentDefinition, EngineeringAgentResult
+from pff_fa_ai.engineering_agents.registry import EngineeringAgentRegistry
+from pff_fa_ai.engineering_agents.states import (
     AgentLifecycleStatus,
     AgentResultStatus,
     ChangedComponent,
@@ -8,7 +8,7 @@ from pf_ft_ai.engineering_agents.states import (
     ExecutionMode,
     PermissionLevel,
 )
-from pf_ft_ai.engineering_agents.supervisor import (
+from pff_fa_ai.engineering_agents.supervisor import (
     EngineeringAgentSupervisor,
     select_agents_for_changes,
 )
@@ -87,13 +87,13 @@ async def test_supervisor_run_should_execute_selected_agents_and_collect_results
         )
 
     run = await supervisor.run(
-        repository="pf-ft-ai",
+        repository="pff-fa-ai",
         commit="abc123",
         changed_components=[ChangedComponent.TOOLS],
         agent_runners={"security-scan": fake_security_scan},
     )
 
-    assert run.repository == "pf-ft-ai"
+    assert run.repository == "pff-fa-ai"
     assert run.agent_ids == ("security-scan",)
     assert len(run.results) == 1
     assert run.results[0].status is AgentResultStatus.PASS
@@ -105,7 +105,7 @@ async def test_supervisor_run_should_mark_a_selected_agent_without_a_runner_as_s
     supervisor = EngineeringAgentSupervisor(registry)
 
     run = await supervisor.run(
-        repository="pf-ft-ai",
+        repository="pff-fa-ai",
         commit="abc123",
         changed_components=[ChangedComponent.TOOLS],
         agent_runners={},

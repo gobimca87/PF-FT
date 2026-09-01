@@ -1,5 +1,5 @@
-from pf_ft_ai.rag.citations import build_citation
-from pf_ft_ai.rag.models import Chunk
+from pff_fa_ai.rag.citations import build_citation
+from pff_fa_ai.rag.models import Chunk
 
 
 def test_should_build_a_citation_strictly_from_the_retrieved_chunk() -> None:

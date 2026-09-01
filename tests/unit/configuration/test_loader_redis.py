@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.configuration.loader import load_redis_configuration
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.configuration.loader import load_redis_configuration
 
 BASE_YAML = """
 redis:

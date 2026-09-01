@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-13, ADR-D3-15, ADR-D3-17, ADR-D3-18, ADR-D2-01, ADR-D2-13]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §6, §7, §13, §14, §15, §16, §56, §57, §58, §62, §63, §121, §122, §123"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §6, §7, §13, §14, §15, §16, §56, §57, §58, §62, §63, §121, §122, §123"
 build_phases: [6]
 impacted_paths:
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -28,14 +28,14 @@ review_due: 2027-08-22
 
 PFF AI will access all language models through a single **provider-neutral SLM
 abstraction** — a Python `Protocol` with Pydantic request/response contracts
-(15.PF-FT-AI-SLM.md §13–§15) — so that Hugging Face, self-hosted vLLM/TGI, or any future
+(15.PFF-FA-AI-SLM.md §13–§15) — so that Hugging Face, self-hosted vLLM/TGI, or any future
 provider are interchangeable behind one interface. No domain, orchestration or
 application code ever imports a provider SDK. This is what makes the ADR-D3-13
 migration a configuration change and enables provider/model fallback (ADR-D3-18).
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §6 mandates an SLM provider abstraction, §7 lists provider implementations,
+15.PFF-FA-AI-SLM.md §6 mandates an SLM provider abstraction, §7 lists provider implementations,
 §13–§15 fix a provider-neutral request/response contract, and §121–§123 restrict
 which models/endpoints are permitted. The layering rule (ADR-D2-01) forbids domain
 code importing a provider SDK. Without a formal abstraction, provider specifics
@@ -49,23 +49,23 @@ impossible. This ADR fixes the shape of that boundary.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | One interface for all providers | 15.PF-FT-AI-SLM.md §6, §15 |
-| DR-F-02 | Provider/model fallback support | 15.PF-FT-AI-SLM.md §62–§63; ADR-D3-18 |
-| DR-F-03 | Model allowlist + endpoint restriction enforced at the boundary | 15.PF-FT-AI-SLM.md §121–§123 |
+| DR-F-01 | One interface for all providers | 15.PFF-FA-AI-SLM.md §6, §15 |
+| DR-F-02 | Provider/model fallback support | 15.PFF-FA-AI-SLM.md §62–§63; ADR-D3-18 |
+| DR-F-03 | Model allowlist + endpoint restriction enforced at the boundary | 15.PFF-FA-AI-SLM.md §121–§123 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Provider swap without domain code change | 0 domain edits | 15.PF-FT-AI-SLM.md §15; ADR-D3-13 |
-| DR-N-02 | Boundary-typed contracts | Pydantic req/res | CLAUDE.md; 15.PF-FT-AI-SLM.md §13–§14 |
+| DR-N-01 | Provider swap without domain code change | 0 domain edits | 15.PFF-FA-AI-SLM.md §15; ADR-D3-13 |
+| DR-N-02 | Boundary-typed contracts | Pydantic req/res | CLAUDE.md; 15.PFF-FA-AI-SLM.md §13–§14 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | Domain code must not import provider SDKs | Architecture | ADR-D2-01 |
-| DR-C-02 | Only allowlisted models/endpoints callable | Security | 15.PF-FT-AI-SLM.md §121–§123 |
+| DR-C-02 | Only allowlisted models/endpoints callable | Security | 15.PFF-FA-AI-SLM.md §121–§123 |
 | DR-C-03 | Contract is a versioned artefact | Organisational | CLAUDE.md |
 
 ### 3.4 Assumptions
@@ -81,7 +81,7 @@ impossible. This ADR fixes the shape of that boundary.
 | EC-01 | Provider swappability | 28 | The core purpose | Domain edits to swap |
 | EC-02 | Contract clarity & type safety | 18 | Boundary correctness | Pydantic coverage |
 | EC-03 | Capability coverage (stream, tools, structured) | 18 | Must not lowest-common-denominator away features | Feature parity |
-| EC-04 | Security enforceability (allowlist/endpoint) | 16 | 15.PF-FT-AI-SLM.md §121–§123 | Enforced at boundary |
+| EC-04 | Security enforceability (allowlist/endpoint) | 16 | 15.PFF-FA-AI-SLM.md §121–§123 | Enforced at boundary |
 | EC-05 | Simplicity / maintainability | 12 | Avoid over-abstraction | LOC / concepts |
 | EC-06 | Testability (mock provider) | 8 | Deterministic tests | Mock exists |
 | | **Total** | **100** | | |
@@ -141,7 +141,7 @@ neutral facade; brittle to provider spec drift.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §6–§15 and layering
+**Method.** Weighted scoring against §4, informed by 15.PFF-FA-AI-SLM.md §6–§15 and layering
 rule ADR-D2-01.
 
 | Criterion | Weight | A: Protocol+adapters | B: Direct SDK | C: Heavy framework | D: Gateway service | E: Codegen clients |
@@ -165,25 +165,25 @@ changing domain code. A is robust for the current single-runtime design.
 
 **PFF AI will implement a thin provider-neutral `SLMProvider` protocol with
 Pydantic request/response contracts and per-provider adapters**, enforcing the
-model allowlist and endpoint restrictions (15.PF-FT-AI-SLM.md §121–§123) at the boundary and
+model allowlist and endpoint restrictions (15.PFF-FA-AI-SLM.md §121–§123) at the boundary and
 exposing capability flags so streaming/tool-calling/structured output are not
 flattened away. A deterministic mock provider supports testing. Direct SDK use (B)
 is forbidden by ADR-D2-01; a heavy framework (C) and codegen (E) are rejected for
 leaking provider-shaped types; a gateway service (D) is deferred to a multi-consumer
 future.
 
-**Status rationale.** `Accepted` — mandated by 15.PF-FT-AI-SLM.md §6/§15 and ADR-D2-01.
+**Status rationale.** `Accepted` — mandated by 15.PFF-FA-AI-SLM.md §6/§15 and ADR-D2-01.
 
 ## 8. Architecture Detail
 
-- **Protocol** `src/pf_ft_ai/slm/provider.py`: `generate(req: SLMRequest) ->
+- **Protocol** `src/pff_fa_ai/slm/provider.py`: `generate(req: SLMRequest) ->
   SLMResponse`, `stream(...)`, `generate_structured(..., schema)`; `capabilities()`.
-- **Contracts** (15.PF-FT-AI-SLM.md §13–§14): `SLMRequest` (messages, params, model id,
+- **Contracts** (15.PFF-FA-AI-SLM.md §13–§14): `SLMRequest` (messages, params, model id,
   purpose), `SLMResponse` (text/structured, usage, model+version, finish reason).
 - **Adapters**: `HuggingFaceProvider`, later `SelfHostedProvider` (ADR-D5-10).
-- **Policy** (15.PF-FT-AI-SLM.md §121–§123): allowlist + endpoint check enforced before any call;
+- **Policy** (15.PFF-FA-AI-SLM.md §121–§123): allowlist + endpoint check enforced before any call;
   non-allowlisted model raises `ModelError`.
-- **Fallback** (15.PF-FT-AI-SLM.md §62–§63; ADR-D3-18): the abstraction implements ordered
+- **Fallback** (15.PFF-FA-AI-SLM.md §62–§63; ADR-D3-18): the abstraction implements ordered
   fallback with logged, non-silent degradation.
 - **Config/secrets** (§16): endpoints + `*_secret_ref` (ADR-D5-07).
 
@@ -248,7 +248,7 @@ future.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 |
-| Repository paths | `src/pf_ft_ai/slm/` |
+| Repository paths | `src/pff_fa_ai/slm/` |
 | Configuration | Provider config, allowlist, secret refs |
 | Contracts / schemas | `SLMRequest`/`SLMResponse` Pydantic models |
 | Migration | New adapters implement the protocol |
@@ -296,10 +296,10 @@ future.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 |
-| Specification sections | 15.PF-FT-AI-SLM.md §6, §7, §13–§16, §56–§58, §62–§63, §121–§123 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §6, §7, §13–§16, §56–§58, §62–§63, §121–§123 |
 | Requirement IDs | SLM-ABS-* |
 | Build phases | 6 |
-| Code paths | `src/pf_ft_ai/slm/` |
+| Code paths | `src/pff_fa_ai/slm/` |
 | Configuration | provider config, allowlist |
 | Tests | provider contract suite, mock provider |
 | Upstream ADRs | ADR-D2-01, ADR-D3-13 |

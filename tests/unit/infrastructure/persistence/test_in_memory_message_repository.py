@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.domain.conversation.value_objects import Message, MessageRole
-from pf_ft_ai.infrastructure.persistence.in_memory_message_repository import (
+from pff_fa_ai.domain.conversation.value_objects import Message, MessageRole
+from pff_fa_ai.infrastructure.persistence.in_memory_message_repository import (
     InMemoryMessageRepository,
 )
 

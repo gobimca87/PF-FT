@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-14, ADR-D3-15, ADR-D3-18, ADR-D5-10, ADR-D5-11, ADR-D6-07]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §2, §3, §4, §5, §19, §20, §21, §85, §103, §104, §105, §124, §125, §126"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §2, §3, §4, §5, §19, §20, §21, §85, §103, §104, §105, §124, §125, §126"
 build_phases: [6, 20]
 impacted_paths:
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -37,7 +37,7 @@ abstraction, so the migration is a configuration change, not a rewrite.
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §5 defines "initial and future architecture" and §19–§21 describe the HF
+15.PFF-FA-AI-SLM.md §5 defines "initial and future architecture" and §19–§21 describe the HF
 integration now and self-hosted later; `CLAUDE.md` §Tech Stack fixes the direction
 "Hugging Face Inference API → internal self-hosted SLM (vLLM or HF TGI, GPU on
 AKS)." §124–§126 raise data-residency and minimisation concerns with external
@@ -53,33 +53,33 @@ the in-tenancy requirement without a rebuild.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Generate language for orchestration/communication (never business truth) | 15.PF-FT-AI-SLM.md §2, §4, §40 |
-| DR-F-02 | Provider-neutral access; swap providers without code change | 15.PF-FT-AI-SLM.md §6, §15; ADR-D3-14 |
-| DR-F-03 | Support fallback across providers/models | 15.PF-FT-AI-SLM.md §62; ADR-D3-18 |
+| DR-F-01 | Generate language for orchestration/communication (never business truth) | 15.PFF-FA-AI-SLM.md §2, §4, §40 |
+| DR-F-02 | Provider-neutral access; swap providers without code change | 15.PFF-FA-AI-SLM.md §6, §15; ADR-D3-14 |
+| DR-F-03 | Support fallback across providers/models | 15.PFF-FA-AI-SLM.md §62; ADR-D3-18 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Time-to-first-value | Weeks, not GPU-platform months | 15.PF-FT-AI-SLM.md §19 |
-| DR-N-02 | Data boundary control at scale | In-tenancy inference for sensitive flows | 15.PF-FT-AI-SLM.md §124–§126; ADR-D6-07 |
-| DR-N-03 | Unit cost at volume | Self-host cheaper per token at scale | 15.PF-FT-AI-SLM.md §103–§105 |
+| DR-N-01 | Time-to-first-value | Weeks, not GPU-platform months | 15.PFF-FA-AI-SLM.md §19 |
+| DR-N-02 | Data boundary control at scale | In-tenancy inference for sensitive flows | 15.PFF-FA-AI-SLM.md §124–§126; ADR-D6-07 |
+| DR-N-03 | Unit cost at volume | Self-host cheaper per token at scale | 15.PFF-FA-AI-SLM.md §103–§105 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Direction fixed: HF first → self-hosted target | Organisational | CLAUDE.md; 15.PF-FT-AI-SLM.md §5 |
-| DR-C-02 | SLM never executes business rules / makes authz | Regulatory/Arch | 15.PF-FT-AI-SLM.md §4, §40 |
-| DR-C-03 | Access only via provider abstraction | Architecture | 15.PF-FT-AI-SLM.md §6, §15; ADR-D3-14 |
-| DR-C-04 | Sensitive data minimised before external inference | Security | 15.PF-FT-AI-SLM.md §125, §126; ADR-D6-07 |
+| DR-C-01 | Direction fixed: HF first → self-hosted target | Organisational | CLAUDE.md; 15.PFF-FA-AI-SLM.md §5 |
+| DR-C-02 | SLM never executes business rules / makes authz | Regulatory/Arch | 15.PFF-FA-AI-SLM.md §4, §40 |
+| DR-C-03 | Access only via provider abstraction | Architecture | 15.PFF-FA-AI-SLM.md §6, §15; ADR-D3-14 |
+| DR-C-04 | Sensitive data minimised before external inference | Security | 15.PFF-FA-AI-SLM.md §125, §126; ADR-D6-07 |
 
 ### 3.4 Assumptions
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | An open SLM meets quality on PF-FT tasks | Consider larger/commercial model behind abstraction | SLM eval (15.PF-FT-AI-SLM.md §92) |
-| DR-A-02 | Volume grows enough to justify self-host | Stay on HF longer | Cost model (15.PF-FT-AI-SLM.md §106) |
+| DR-A-01 | An open SLM meets quality on PFF-FA tasks | Consider larger/commercial model behind abstraction | SLM eval (15.PFF-FA-AI-SLM.md §92) |
+| DR-A-02 | Volume grows enough to justify self-host | Stay on HF longer | Cost model (15.PFF-FA-AI-SLM.md §106) |
 
 ## 4. Evaluation Criteria and Weights
 
@@ -87,14 +87,14 @@ the in-tenancy requirement without a rebuild.
 |---|---|---|---|---|
 | EC-01 | Time-to-value (initial) | 18 | Ship the first workflow fast | Setup lead time |
 | EC-02 | Data-boundary control | 22 | FA/safeguarding data sensitivity | In-tenancy? minimisation? |
-| EC-03 | Quality on PF-FT tasks | 18 | Must be good enough | Eval scores (15.PF-FT-AI-SLM.md §97) |
-| EC-04 | Unit cost at target volume | 15 | Long-run economics | £/1k workflows (15.PF-FT-AI-SLM.md §106) |
+| EC-03 | Quality on PFF-FA tasks | 18 | Must be good enough | Eval scores (15.PFF-FA-AI-SLM.md §97) |
+| EC-04 | Unit cost at target volume | 15 | Long-run economics | £/1k workflows (15.PFF-FA-AI-SLM.md §106) |
 | EC-05 | Operational burden | 12 | GPU ops are heavy | Team effort/SRE load |
 | EC-06 | Portability / no lock-in | 10 | Swap providers freely | Abstraction conformance |
 | EC-07 | Scalability & latency control | 5 | Own the tuning knobs later | p95 control |
 | | **Total** | **100** | | |
 
-EC-02 = 22 is justified by the safeguarding/PII sensitivity of FA data (15.PF-FT-AI-SLM.md
+EC-02 = 22 is justified by the safeguarding/PII sensitivity of FA data (15.PFF-FA-AI-SLM.md
 §124–§126); it is the criterion most able to override raw convenience.
 
 ## 5. Alternatives Considered
@@ -114,7 +114,7 @@ abstraction discipline.
 **Description.** Stand up GPU serving immediately.
 **Strengths.** In-tenancy from the start; full control.
 **Weaknesses.** Heavy GPU ops before product validation; slow time-to-value;
-premature capacity/cost commitment (15.PF-FT-AI-SLM.md §85 warns against premature complexity).
+premature capacity/cost commitment (15.PFF-FA-AI-SLM.md §85 warns against premature complexity).
 **Cost / effort.** High up-front.
 
 ### 5.3 Option C — Commercial hosted LLM API only (e.g. OpenAI/Anthropic/Azure OpenAI)
@@ -138,7 +138,7 @@ strategy.
 
 ### 5.5 Option E — Hybrid routing: cheap self-host for common tasks, hosted API for hard tasks
 
-**Description.** Route by task class (15.PF-FT-AI-SLM.md §56–§60): self-host handles routine
+**Description.** Route by task class (15.PFF-FA-AI-SLM.md §56–§60): self-host handles routine
 generation, a hosted model handles rare complex cases.
 **Strengths.** Cost/quality balance; graceful capability ceiling.
 **Weaknesses.** Two providers permanently; more routing/eval/guardrail surface;
@@ -151,11 +151,11 @@ strategy.
 | Option | Eliminated by |
 |---|---|
 | No SLM (rules/templates only) | DR-F-01 — conversational orchestration needs generation |
-| Client-side / on-device model | Enterprise server-side architecture (15.PF-FT-AI-SLM.md §3) |
+| Client-side / on-device model | Enterprise server-side architecture (15.PFF-FA-AI-SLM.md §3) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §5, §19–§21, §85,
+**Method.** Weighted scoring against §4, informed by 15.PFF-FA-AI-SLM.md §5, §19–§21, §85,
 §103–§106, §124–§126 and the CLAUDE.md direction.
 
 | Criterion | Weight | A: HF→self-host | B: Self-host day 1 | C: Commercial API | D: Azure ML | E: Hybrid |
@@ -182,26 +182,26 @@ everything, which the data-boundary constraint forbids.
 **PFF AI will adopt the phased strategy: Hugging Face Inference API first, internal
 self-hosted SLM (vLLM/TGI on AKS GPU) as the target**, both behind the
 provider-neutral abstraction (ADR-D3-14). Cutover is per-workflow, gated on SLM
-evaluation (15.PF-FT-AI-SLM.md §92, §99), cost (§106) and data-boundary review (ADR-D6-07). The
+evaluation (15.PFF-FA-AI-SLM.md §92, §99), cost (§106) and data-boundary review (ADR-D6-07). The
 serving-stack (vLLM vs TGI vs Azure ML) is decided separately and remains OPEN in
 ADR-D5-10. Hybrid routing (E) is a documented future optimisation, not part of the
 initial build. C is rejected for boundary/cost/lock-in; B for premature ops.
 
-**Status rationale.** `Accepted` — the direction is fixed by CLAUDE.md and 15.PF-FT-AI-SLM.md
+**Status rationale.** `Accepted` — the direction is fixed by CLAUDE.md and 15.PFF-FA-AI-SLM.md
 §5; this ADR records the alternatives and gates. (The *self-host serving stack* is
 the open part and lives in ADR-D5-10 as `Proposed`.)
 
 ## 8. Architecture Detail
 
-- **Abstraction** (15.PF-FT-AI-SLM.md §6, §15; ADR-D3-14): `SLMProvider` protocol with
+- **Abstraction** (15.PFF-FA-AI-SLM.md §6, §15; ADR-D3-14): `SLMProvider` protocol with
   provider-neutral request/response contracts (§13–§14); `HuggingFaceProvider` now,
   `SelfHostedProvider` later; no caller imports a provider SDK.
-- **Config/secrets** (15.PF-FT-AI-SLM.md §16–§18): endpoints and `*_secret_ref` via Key Vault
+- **Config/secrets** (15.PFF-FA-AI-SLM.md §16–§18): endpoints and `*_secret_ref` via Key Vault
   (ADR-D5-07); per-environment config (§17).
-- **Data minimisation** (15.PF-FT-AI-SLM.md §125–§126; ADR-D6-07): sensitive fields minimised/
+- **Data minimisation** (15.PFF-FA-AI-SLM.md §125–§126; ADR-D6-07): sensitive fields minimised/
   redacted before any external inference call; safeguarding-sensitive flows
   prioritised for early self-host cutover.
-- **Fallback** (15.PF-FT-AI-SLM.md §62–§64; ADR-D3-18): fallback must not be silent; abstraction
+- **Fallback** (15.PFF-FA-AI-SLM.md §62–§64; ADR-D3-18): fallback must not be silent; abstraction
   supports provider/model fallback with logged degradation.
 - **Cutover**: shadow eval (§157) then canary (§158) per workflow; rollback by
   config (§159).
@@ -231,10 +231,10 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | SLM generates language only; never business truth/authz (15.PF-FT-AI-SLM.md §4, §40) |
+| Enterprise decides; AI orchestrates | SLM generates language only; never business truth/authz (15.PFF-FA-AI-SLM.md §4, §40) |
 | Precedence chain | SLM output is the lowest tier; never overrides ERC/enterprise |
 | Four-state separation | SLM is stateless compute; state lives elsewhere |
-| Versioned artefacts | Model + config versioned (ADR-D3-15; 15.PF-FT-AI-SLM.md §154–§155) |
+| Versioned artefacts | Model + config versioned (ADR-D3-15; 15.PFF-FA-AI-SLM.md §154–§155) |
 | Adam persona governs *how*, not *what* | Provider choice is invisible to persona/user |
 
 ## 11. Risks and Mitigations
@@ -250,7 +250,7 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 
 | ID | Measure | Target | Threshold (alert) | Source | Review cadence |
 |---|---|---|---|---|---|
-| QM-01 | SLM eval score on PF-FT tasks | ≥ gate | < gate | Eval (15.PF-FT-AI-SLM.md §97, §99) | Every model release |
+| QM-01 | SLM eval score on PFF-FA tasks | ≥ gate | < gate | Eval (15.PFF-FA-AI-SLM.md §97, §99) | Every model release |
 | QM-02 | p95 generation latency | within budget (ADR-D5-18) | breach | Langfuse | Continuous |
 | QM-03 | £ per 1k workflows | tracked vs model | > projection | FinOps (§106) | Monthly |
 | QM-04 | % sensitive flows on self-host | rising to 100% | stalled | Config audit | Quarterly |
@@ -261,7 +261,7 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 |---|---|
 | Attack surface change | External API dependency initially; reduced on self-host |
 | Data classification touched | Up to Confidential/Personal — minimised before external calls |
-| Personal data / PII | Minimised/redacted pre-inference (15.PF-FT-AI-SLM.md §126) |
+| Personal data / PII | Minimised/redacted pre-inference (15.PFF-FA-AI-SLM.md §126) |
 | Children's data and safeguarding | Safeguarding flows prioritised for in-tenancy inference |
 | UK GDPR lawful basis and rights impact | Transfer/processing assessed for external provider (ADR-D6-07) |
 | Audit and evidential requirements | Provider+model+version on every trace |
@@ -272,7 +272,7 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 (initial SLM), 20 (self-host cutover) |
-| Repository paths | `src/pf_ft_ai/slm/` |
+| Repository paths | `src/pff_fa_ai/slm/` |
 | Configuration | Provider/endpoint config; secret refs (§16–§18) |
 | Contracts / schemas | SLM request/response contracts (§13–§14) |
 | Migration | Per-workflow shadow→canary→cutover |
@@ -286,7 +286,7 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 | AC-01 | No caller imports a provider SDK directly | Import-linter (ADR-D2-01) |
 | AC-02 | Provider swap requires no domain code change | Contract test with two providers |
 | AC-03 | Sensitive fields minimised before external call | Data-flow test (ADR-D6-07) |
-| AC-04 | Fallback is logged, never silent | Test (15.PF-FT-AI-SLM.md §64) |
+| AC-04 | Fallback is logged, never silent | Test (15.PFF-FA-AI-SLM.md §64) |
 
 ## 16. Operational Impact
 
@@ -295,7 +295,7 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 | Monitoring | Latency/error/cost per provider; Langfuse spans (§131) |
 | Alerting | Provider outage, latency breach, error spike |
 | Runbook | `docs/runbooks/slm.md` |
-| Failure mode and degradation | Provider down → fallback → degraded mode (15.PF-FT-AI-SLM.md §163, §168) |
+| Failure mode and degradation | Provider down → fallback → degraded mode (15.PFF-FA-AI-SLM.md §163, §168) |
 | Rollback | Config revert to prior provider/model |
 | Support model impact | ML platform team; SRE for self-host phase |
 
@@ -303,8 +303,8 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 
 | Cost element | One-off | Recurring | Basis |
 |---|---|---|---|
-| HF Inference API | setup | usage-based | 15.PF-FT-AI-SLM.md §104 |
-| Self-hosted GPU (later) | platform build | GPU node hours | 15.PF-FT-AI-SLM.md §105; ADR-D5-11 |
+| HF Inference API | setup | usage-based | 15.PFF-FA-AI-SLM.md §104 |
+| Self-hosted GPU (later) | platform build | GPU node hours | 15.PFF-FA-AI-SLM.md §105; ADR-D5-11 |
 | Abstraction + eval harness | M | low | Shared tooling |
 
 ## 18. Revisit Triggers and Causal Analysis Hooks
@@ -322,10 +322,10 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 SLM |
-| Specification sections | 15.PF-FT-AI-SLM.md §2–§5, §19–§21, §85, §103–§106, §124–§126 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §2–§5, §19–§21, §85, §103–§106, §124–§126 |
 | Requirement IDs | SLM-STRAT-* |
 | Build phases | 6, 20 |
-| Code paths | `src/pf_ft_ai/slm/` |
+| Code paths | `src/pff_fa_ai/slm/` |
 | Configuration | provider/endpoint config |
 | Tests | provider contract + data-flow suites |
 | Upstream ADRs | ADR-D3-14 |

@@ -1,6 +1,6 @@
 import pytest
 
-from pf_ft_ai.context.erc.states import (
+from pff_fa_ai.context.erc.states import (
     ErcAuthority,
     ErcValidationStatus,
     FreshnessStatus,

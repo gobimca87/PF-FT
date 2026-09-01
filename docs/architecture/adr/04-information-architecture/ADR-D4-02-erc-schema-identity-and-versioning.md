@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-12, ADR-D4-03, ADR-D4-04, ADR-D4-05, ADR-D4-06, ADR-D2-07]
 source_docs:
-  - "MD files/3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md §8, §11, §12, §13, §14, §20, §21, §59, §67, §68, §69, §70, §71"
-  - "MD files/1 Foundation/5. PF-FT-AI-STATE-MODEL.md §23, §25, §59"
+  - "MD files/3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md §8, §11, §12, §13, §14, §20, §21, §59, §67, §68, §69, §70, §71"
+  - "MD files/1 Foundation/5. PFF-FA-AI-STATE-MODEL.md §23, §25, §59"
 build_phases: [4]
 impacted_paths:
-  - src/pf_ft_ai/erc/
+  - src/pff_fa_ai/erc/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -31,12 +31,12 @@ PFF AI will model the Enterprise Runtime Context (ERC) as a **strongly-typed,
 sectioned Pydantic structure** with a stable ERC identity, an overall ERC version and
 **independent section-level versions**, plus a schema version — so that individual
 context sections (club, teams, officials, insurance…) can be refreshed and validated
-independently without rebuilding the whole ERC (8 PF-FT-AI-ERC-CONTEXT.md §11–§14, §20–§21, §59).
+independently without rebuilding the whole ERC (8 PFF-FA-AI-ERC-CONTEXT.md §11–§14, §20–§21, §59).
 Validation is schema + cross-section + referential integrity (§67–§71).
 
 ## 2. Context and Problem Statement
 
-8 PF-FT-AI-ERC-CONTEXT.md §11–§14 define ERC identity, version, schema version and metadata; §20–§21
+8 PFF-FA-AI-ERC-CONTEXT.md §11–§14 define ERC identity, version, schema version and metadata; §20–§21
 define its high-level and dynamic-section structure; §59 defines section-level
 versioning; §67–§71 define validation. ERC is the AI's structured, provenance-bearing
 view of enterprise truth (ADR-D2-12) — but it is not the enterprise DB (§4), not
@@ -48,11 +48,11 @@ model, sections cannot be refreshed independently (§60–§64), provenance/fres
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Sectioned structure with per-section identity/version | 8 PF-FT-AI-ERC-CONTEXT.md §20–§21, §59 |
-| DR-F-02 | Stable ERC identity + version + schema version | 8 PF-FT-AI-ERC-CONTEXT.md §11–§13 |
-| DR-F-03 | Schema, cross-section and referential validation | 8 PF-FT-AI-ERC-CONTEXT.md §67–§71 |
+| DR-F-01 | Sectioned structure with per-section identity/version | 8 PFF-FA-AI-ERC-CONTEXT.md §20–§21, §59 |
+| DR-F-02 | Stable ERC identity + version + schema version | 8 PFF-FA-AI-ERC-CONTEXT.md §11–§13 |
+| DR-F-03 | Schema, cross-section and referential validation | 8 PFF-FA-AI-ERC-CONTEXT.md §67–§71 |
 | DR-C-01 | ERC is typed at the boundary (Pydantic) | CLAUDE.md; ADR-D2-07 |
-| DR-C-02 | ERC references enterprise truth; is not the DB | 8 PF-FT-AI-ERC-CONTEXT.md §4 |
+| DR-C-02 | ERC references enterprise truth; is not the DB | 8 PFF-FA-AI-ERC-CONTEXT.md §4 |
 
 ### 3.4 Assumptions
 
@@ -119,12 +119,12 @@ sections; versioning per node complex.
 
 | Option | Eliminated by |
 |---|---|
-| Reuse enterprise DTOs directly as ERC | 8 PF-FT-AI-ERC-CONTEXT.md §4/§33 — ERC needs normalization + AI metadata |
-| No schema version | 8 PF-FT-AI-ERC-CONTEXT.md §13 — evolution unmanageable |
+| Reuse enterprise DTOs directly as ERC | 8 PFF-FA-AI-ERC-CONTEXT.md §4/§33 — ERC needs normalization + AI metadata |
+| No schema version | 8 PFF-FA-AI-ERC-CONTEXT.md §13 — evolution unmanageable |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 8 PF-FT-AI-ERC-CONTEXT.md §11–§21/§59/§67–§71.
+**Method.** Weighted scoring against §4, informed by 8 PFF-FA-AI-ERC-CONTEXT.md §11–§21/§59/§67–§71.
 
 | Criterion | Weight | A: Typed sectioned | B: Flat typed | C: Untyped | D: Doc-native | E: Graph |
 |---|---|---|---|---|---|---|
@@ -152,15 +152,15 @@ refresh (ADR-D4-06). Untyped (C) violates boundary typing; flat (B) blocks
 independent refresh; doc-native (D) couples to enterprise schemas; graph (E) is
 over-engineered.
 
-**Status rationale.** `Accepted` — 8 PF-FT-AI-ERC-CONTEXT.md §11–§21 govern this.
+**Status rationale.** `Accepted` — 8 PFF-FA-AI-ERC-CONTEXT.md §11–§21 govern this.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/erc/`: `EnterpriseRuntimeContext` root (id, erc_version,
+- `src/pff_fa_ai/erc/`: `EnterpriseRuntimeContext` root (id, erc_version,
   schema_version, metadata) containing typed sections (e.g. `ClubSection`,
   `TeamsSection`, `OfficialsSection`), each with `section_version`, `provenance`,
   `freshness`, `authority_level` (ADR-D4-03).
-- **Validation** (8 PF-FT-AI-ERC-CONTEXT.md §67–§71): Pydantic schema validation, cross-section rules
+- **Validation** (8 PFF-FA-AI-ERC-CONTEXT.md §67–§71): Pydantic schema validation, cross-section rules
   (§69), referential integrity (§70), producing an ERC validation result with
   warnings/errors (§71–§73).
 - **Construction** feeds from ADR-D4-04 (collection/batching) and ADR-D2-12; sections
@@ -223,7 +223,7 @@ over-engineered.
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 |
-| Repository paths | `src/pf_ft_ai/erc/` |
+| Repository paths | `src/pff_fa_ai/erc/` |
 | Configuration | Section schema definitions |
 | Contracts / schemas | ERC + section Pydantic models |
 | Migration | Schema version migration |
@@ -270,10 +270,10 @@ over-engineered.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-19 |
-| Specification sections | 8 PF-FT-AI-ERC-CONTEXT.md §8, §11–§14, §20–§21, §59, §67–§71; 5. PF-FT-AI-STATE-MODEL.md §23, §25, §59 |
+| Specification sections | 8 PFF-FA-AI-ERC-CONTEXT.md §8, §11–§14, §20–§21, §59, §67–§71; 5. PFF-FA-AI-STATE-MODEL.md §23, §25, §59 |
 | Requirement IDs | ERC-SCHEMA-* |
 | Build phases | 4 |
-| Code paths | `src/pf_ft_ai/erc/` |
+| Code paths | `src/pff_fa_ai/erc/` |
 | Configuration | section schemas |
 | Tests | ERC validation suite |
 | Upstream ADRs | ADR-D2-12 |

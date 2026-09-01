@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-10, ADR-D4-06, ADR-D4-03, ADR-D4-01, ADR-D1-03, ADR-D2-18]
 source_docs:
-  - "MD files/3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md §33, §34, §35, §36, §37, §38, §39, §40, §41, §42, §43, §44, §45, §46, §47, §57, §58"
+  - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §33, §34, §35, §36, §37, §38, §39, §40, §41, §42, §43, §44, §45, §46, §47, §57, §58"
 build_phases: [7]
 impacted_paths:
-  - src/pf_ft_ai/cache/
+  - src/pff_fa_ai/cache/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -29,13 +29,13 @@ review_due: 2027-08-22
 PFF AI will cache enterprise-API responses and derived data using **cache-aside** with
 **namespaced, isolation-safe keys**, **volatility-aware TTLs**, **event-driven +
 TTL invalidation**, and protection against **stampede, penetration and poisoning**
-(9 PF-FT-AI-MEMORY-CACHE.md §33–§47). A hard rule: **transaction/command responses are never cached** as
-truth (9 PF-FT-AI-MEMORY-CACHE.md §35); the cache sits below ERC/enterprise in precedence and never serves
+(9 PFF-FA-AI-MEMORY-CACHE.md §33–§47). A hard rule: **transaction/command responses are never cached** as
+truth (9 PFF-FA-AI-MEMORY-CACHE.md §35); the cache sits below ERC/enterprise in precedence and never serves
 stale data as authoritative.
 
 ## 2. Context and Problem Statement
 
-9 PF-FT-AI-MEMORY-CACHE.md §33–§34 define cache categories and the enterprise-API response cache; §35 sets
+9 PFF-FA-AI-MEMORY-CACHE.md §33–§34 define cache categories and the enterprise-API response cache; §35 sets
 the transaction-cache rule; §36–§40 define key design, isolation, TTL and freshness;
 §41–§47 define cache-aside, invalidation, and stampede/penetration/poisoning
 protection; §57–§58 give cache-vs-memory and cache-vs-ERC matrices. Caching is
@@ -47,12 +47,12 @@ and a cold-cache burst stampedes the enterprise APIs. This ADR fixes the cache d
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Cache-aside for enterprise reads | 9 PF-FT-AI-MEMORY-CACHE.md §41 |
-| DR-C-01 | Never cache transaction/command results as truth | 9 PF-FT-AI-MEMORY-CACHE.md §35 |
-| DR-F-02 | Volatility-aware TTL + event invalidation | 9 PF-FT-AI-MEMORY-CACHE.md §38–§39, §44 |
-| DR-F-03 | Stampede/penetration/poisoning protection | 9 PF-FT-AI-MEMORY-CACHE.md §45–§47 |
-| DR-C-02 | Namespaced, isolation-safe keys | 9 PF-FT-AI-MEMORY-CACHE.md §36–§37 |
-| DR-C-03 | Cache ranks below ERC/enterprise | ADR-D1-03; 9 PF-FT-AI-MEMORY-CACHE.md §58 |
+| DR-F-01 | Cache-aside for enterprise reads | 9 PFF-FA-AI-MEMORY-CACHE.md §41 |
+| DR-C-01 | Never cache transaction/command results as truth | 9 PFF-FA-AI-MEMORY-CACHE.md §35 |
+| DR-F-02 | Volatility-aware TTL + event invalidation | 9 PFF-FA-AI-MEMORY-CACHE.md §38–§39, §44 |
+| DR-F-03 | Stampede/penetration/poisoning protection | 9 PFF-FA-AI-MEMORY-CACHE.md §45–§47 |
+| DR-C-02 | Namespaced, isolation-safe keys | 9 PFF-FA-AI-MEMORY-CACHE.md §36–§37 |
+| DR-C-03 | Cache ranks below ERC/enterprise | ADR-D1-03; 9 PFF-FA-AI-MEMORY-CACHE.md §58 |
 
 ### 3.4 Assumptions
 
@@ -120,12 +120,12 @@ premature for current scale. A useful *later* optimisation on top of A.
 
 | Option | Eliminated by |
 |---|---|
-| Cache transaction/command results | 9 PF-FT-AI-MEMORY-CACHE.md §35 |
-| Global (non-namespaced) cache keys | 9 PF-FT-AI-MEMORY-CACHE.md §36–§37 — isolation |
+| Cache transaction/command results | 9 PFF-FA-AI-MEMORY-CACHE.md §35 |
+| Global (non-namespaced) cache keys | 9 PFF-FA-AI-MEMORY-CACHE.md §36–§37 — isolation |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 9 PF-FT-AI-MEMORY-CACHE.md §33–§47/§57–§58 and the
+**Method.** Weighted scoring against §4, informed by 9 PFF-FA-AI-MEMORY-CACHE.md §33–§47/§57–§58 and the
 precedence chain.
 
 | Criterion | Weight | A: Cache-aside full | B: Simple TTL | C: Write-through | D: No cache | E: Tiered L1+L2 |
@@ -153,11 +153,11 @@ L1 (Option E) may be added later for hot keys. Simple-TTL (B) is too fragile;
 write-through (C) mismodels ownership; no-cache (D) is needlessly costly for stable
 reads.
 
-**Status rationale.** `Accepted` — 9 PF-FT-AI-MEMORY-CACHE.md §33–§47 govern this.
+**Status rationale.** `Accepted` — 9 PFF-FA-AI-MEMORY-CACHE.md §33–§47 govern this.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/cache/`: `CacheStore` over Redis (ADR-D4-10), `pf-ft:<env>:cache:...`
+- `src/pff_fa_ai/cache/`: `CacheStore` over Redis (ADR-D4-10), `pff-fa:<env>:cache:...`
   namespace with tenant/user/club isolation in the key (§36–§37).
 - TTL policy per datatype keyed to volatility (§38–§39); stable reference data (leagues)
   longer TTL, volatile data short/none (ADR-D4-08).
@@ -227,7 +227,7 @@ reads.
 | Aspect | Detail |
 |---|---|
 | Build phases | 7 |
-| Repository paths | `src/pf_ft_ai/cache/` |
+| Repository paths | `src/pff_fa_ai/cache/` |
 | Configuration | TTL-by-volatility map; protection settings |
 | Contracts / schemas | CacheStore protocol; key schema |
 | Migration | N/A |
@@ -275,10 +275,10 @@ reads.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-22 |
-| Specification sections | 9 PF-FT-AI-MEMORY-CACHE.md §33–§47, §57–§58 |
+| Specification sections | 9 PFF-FA-AI-MEMORY-CACHE.md §33–§47, §57–§58 |
 | Requirement IDs | CACHE-* |
 | Build phases | 7 |
-| Code paths | `src/pf_ft_ai/cache/` |
+| Code paths | `src/pff_fa_ai/cache/` |
 | Configuration | TTL/protection config |
 | Tests | cache + isolation + stampede suites |
 | Upstream ADRs | ADR-D4-10, ADR-D4-06 |

@@ -1,4 +1,4 @@
-from pf_ft_ai.common.correlation import CorrelationContext, new_id
+from pff_fa_ai.common.correlation import CorrelationContext, new_id
 
 
 def test_should_generate_a_prefixed_unique_id() -> None:

@@ -14,14 +14,14 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-02, ADR-D2-09, ADR-D2-10, ADR-D2-16, ADR-D2-18, ADR-D4-06]
 source_docs:
-  - "MD files/1 Foundation/1 PF-FT-AI-ARCHITECTURE.md §4, §5"
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §5, §46, §47, §48, §49"
-  - "MD files/3 Context & Integration/11 PF-FT-AI-SERVICE-BUS.md §5, §32, §33, §34, §55, §58"
+  - "MD files/1 Foundation/1 PFF-FA-AI-ARCHITECTURE.md §4, §5"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §5, §46, §47, §48, §49"
+  - "MD files/3 Context & Integration/11 PFF-FA-AI-SERVICE-BUS.md §5, §32, §33, §34, §55, §58"
 build_phases: [3, 12]
 impacted_paths:
-  - src/pf_ft_ai/api/
-  - src/pf_ft_ai/messaging/
-  - src/pf_ft_ai/orchestration/harness/
+  - src/pff_fa_ai/api/
+  - src/pff_fa_ai/messaging/
+  - src/pff_fa_ai/orchestration/harness/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -38,9 +38,9 @@ as an instruction to follow.
 
 ## 2. Context and Problem Statement
 
-1 PF-FT-AI-ARCHITECTURE.md §4 and §5 describe a request-driven runtime and an event-driven runtime as two runtimes.
-4. PF-FT-AI-RUNTIME.md §5 gives the request lifecycle across twenty-odd stages; 4. PF-FT-AI-RUNTIME.md §47–§49 give the Service Bus
-runtime, event-to-workflow mapping and HIL runtime. 11 PF-FT-AI-SERVICE-BUS.md §32–§34 give consumer architecture and
+1 PFF-FA-AI-ARCHITECTURE.md §4 and §5 describe a request-driven runtime and an event-driven runtime as two runtimes.
+4. PFF-FA-AI-RUNTIME.md §5 gives the request lifecycle across twenty-odd stages; 4. PFF-FA-AI-RUNTIME.md §47–§49 give the Service Bus
+runtime, event-to-workflow mapping and HIL runtime. 11 PFF-FA-AI-SERVICE-BUS.md §32–§34 give consumer architecture and
 responsibilities.
 
 Read quickly, "two runtimes" suggests two implementations. That reading produces a specific and
@@ -56,7 +56,7 @@ as an event: Scenario 6's CFA approval, Scenario 7 and 8's payment confirmations
 applied weaker checks than the request path, the platform's least-guarded code would handle its
 most authoritative inputs.
 
-There is a second, subtler problem that 11 PF-FT-AI-SERVICE-BUS.md §58 names precisely: *"Event Should Not Become
+There is a second, subtler problem that 11 PFF-FA-AI-SERVICE-BUS.md §58 names precisely: *"Event Should Not Become
 Prompt Instruction."* An event arriving from the Service Bus is external input. If its payload
 were assembled into a prompt as instruction-shaped content, the event bus would become an
 injection channel into the model — and unlike user input, events are not obviously untrusted to
@@ -74,27 +74,27 @@ under is not obvious and must be decided, not assumed.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Events must refresh ERC and resume workflows | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 12; 11 PF-FT-AI-SERVICE-BUS.md §50, §55 |
-| DR-F-02 | An event is a notification, not a data source or an instruction | 11 PF-FT-AI-SERVICE-BUS.md §25, §58 |
-| DR-F-03 | Guardrails apply at every boundary, on both paths | 18.PF-FT-AI-GUARDRAILS.md; ADR-D1-02 |
-| DR-F-04 | Long-running workflows survive request termination | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 13; 4. PF-FT-AI-RUNTIME.md §46 |
-| DR-F-05 | Event processing must be idempotent | 11 PF-FT-AI-SERVICE-BUS.md §40–§44 |
-| DR-F-06 | The consumer must not make business decisions | 11 PF-FT-AI-SERVICE-BUS.md §34 |
+| DR-F-01 | Events must refresh ERC and resume workflows | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 12; 11 PFF-FA-AI-SERVICE-BUS.md §50, §55 |
+| DR-F-02 | An event is a notification, not a data source or an instruction | 11 PFF-FA-AI-SERVICE-BUS.md §25, §58 |
+| DR-F-03 | Guardrails apply at every boundary, on both paths | 18.PFF-FA-AI-GUARDRAILS.md; ADR-D1-02 |
+| DR-F-04 | Long-running workflows survive request termination | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 13; 4. PFF-FA-AI-RUNTIME.md §46 |
+| DR-F-05 | Event processing must be idempotent | 11 PFF-FA-AI-SERVICE-BUS.md §40–§44 |
+| DR-F-06 | The consumer must not make business decisions | 11 PFF-FA-AI-SERVICE-BUS.md §34 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | No security or quality control may exist on one path only | 100% parity of controls | ADR-D1-02 |
-| DR-N-02 | Event processing must not block on a user | 0 user-waiting dependencies | 11 PF-FT-AI-SERVICE-BUS.md §5 |
+| DR-N-02 | Event processing must not block on a user | 0 user-waiting dependencies | 11 PFF-FA-AI-SERVICE-BUS.md §5 |
 | DR-N-03 | Both paths must be equally observable | Same trace model | ADR-D7-03 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Events carry no user authorization; the emitting system is not a user | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2; 11 PF-FT-AI-SERVICE-BUS.md §23 |
-| DR-C-02 | Event payloads are notifications; authoritative data comes from a subsequent API read | Platform | 11 PF-FT-AI-SERVICE-BUS.md §25, §26 |
+| DR-C-01 | Events carry no user authorization; the emitting system is not a user | Platform | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §5.2; 11 PFF-FA-AI-SERVICE-BUS.md §23 |
+| DR-C-02 | Event payloads are notifications; authoritative data comes from a subsequent API read | Platform | 11 PFF-FA-AI-SERVICE-BUS.md §25, §26 |
 | DR-C-03 | The platform implements no enterprise scheduled processing | Platform | ADR-D1-01 §7.3 |
 | DR-C-04 | Both paths run in the same image, as separate workloads | Platform | ADR-D2-02 §7.2 |
 
@@ -103,7 +103,7 @@ under is not obvious and must be decided, not assumed.
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
 | DR-A-01 | Every event that triggers work maps to a workflow whose original authorization context was captured | Event-triggered execution has no authority basis and must halt for user re-entry | Workflow state design, ADR-D2-10 |
-| DR-A-02 | Enterprise events are reliably delivered, if not reliably ordered | Reconciliation becomes the primary mechanism rather than the backstop | 11 PF-FT-AI-SERVICE-BUS.md §45–§48; ADR-D2-18 |
+| DR-A-02 | Enterprise events are reliably delivered, if not reliably ordered | Reconciliation becomes the primary mechanism rather than the backstop | 11 PFF-FA-AI-SERVICE-BUS.md §45–§48; ADR-D2-18 |
 | DR-A-03 | The same agent logic is correct on both paths | Path-specific agent behaviour is needed, weakening the shared core | Phase 23 resumption tests |
 
 ## 4. Evaluation Criteria and Weights
@@ -155,7 +155,7 @@ disposition.
 - Behaviour is identical because the code is identical (EC-02).
 - ADR-D1-02's invariants have one implementation and one test suite.
 - The authority gap is resolved in one place — the entry adapter — rather than diffused.
-- Matches 4. PF-FT-AI-RUNTIME.md's structure: §5's request lifecycle and §47's Service Bus runtime converge at
+- Matches 4. PFF-FA-AI-RUNTIME.md's structure: §5's request lifecycle and §47's Service Bus runtime converge at
   the harness.
 
 **Weaknesses.**
@@ -202,7 +202,7 @@ execution trigger. Requests emit events rather than executing directly.
   state (ADR-D1-01 §7.2); event sourcing pays off where the event log *is* the system of record,
   and here PFF is.
 - The platform would be event-sourcing its own orchestration state, which is low-value.
-- Contradicts 4. PF-FT-AI-RUNTIME.md §5's synchronous request lifecycle.
+- Contradicts 4. PFF-FA-AI-RUNTIME.md §5's synchronous request lifecycle.
 
 **Cost / effort.** High, for benefit the platform's scope does not need.
 
@@ -250,10 +250,10 @@ execution, guardrails, output validation. There is exactly one implementation of
 | Concern | Request adapter | Event adapter |
 |---|---|---|
 | Trigger | HTTP POST from the chat UI | Message on the AI subscription |
-| Identity | APIM-validated claims (3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2) | **None** — see §7.3 |
-| Correlation | Generated or continued from the request | Carried on the event envelope (11 PF-FT-AI-SERVICE-BUS.md §19) |
+| Identity | APIM-validated claims (3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §5.2) | **None** — see §7.3 |
+| Correlation | Generated or continued from the request | Carried on the event envelope (11 PFF-FA-AI-SERVICE-BUS.md §19) |
 | Deadline | HTTP timeout, user waiting | Message lock renewal, no user waiting |
-| Idempotency | Conversation turn semantics | Event ID deduplication (11 PF-FT-AI-SERVICE-BUS.md §40–§44) |
+| Idempotency | Conversation turn semantics | Event ID deduplication (11 PFF-FA-AI-SERVICE-BUS.md §40–§44) |
 | Output | Response to the user, possibly streamed | Workflow state update; user notified on next entry |
 | Failure | Error response to the user | Retry, then dead-letter (ADR-D2-18) |
 
@@ -282,20 +282,20 @@ fact is true regardless — but nothing further is executed on the user's behalf
 
 ### 7.4 An event is a notification, not data and not an instruction
 
-11 PF-FT-AI-SERVICE-BUS.md §25 and §26 establish the pattern; 11 PF-FT-AI-SERVICE-BUS.md §58 adds the injection prohibition. Both are
+11 PFF-FA-AI-SERVICE-BUS.md §25 and §26 establish the pattern; 11 PFF-FA-AI-SERVICE-BUS.md §58 adds the injection prohibition. Both are
 adopted as binding:
 
 - **Not data.** An event says *something changed*. Authoritative values come from a subsequent
-  enterprise API read (11 PF-FT-AI-SERVICE-BUS.md §26's event-to-API refresh pattern). An event payload's field
+  enterprise API read (11 PFF-FA-AI-SERVICE-BUS.md §26's event-to-API refresh pattern). An event payload's field
   values are never written into ERC as authoritative. This falls out of ADR-D1-03: an event has
   authority 5 for the *fact that a change occurred*, and the refreshed API response carries the
   changed values.
 - **Not an instruction.** Event payload content is never composed into a prompt as
   instruction-shaped text. The event's *type* selects a handler through a static registry
-  mapping (4. PF-FT-AI-RUNTIME.md §48); its payload provides identifiers for the refresh. No free text from an
+  mapping (4. PFF-FA-AI-RUNTIME.md §48); its payload provides identifiers for the refresh. No free text from an
   event reaches the model as directive content.
 
-The second rule is what closes the injection channel 11 PF-FT-AI-SERVICE-BUS.md §58 identifies. It is enforced
+The second rule is what closes the injection channel 11 PFF-FA-AI-SERVICE-BUS.md §58 identifies. It is enforced
 structurally: the handler registry maps event type to handler, and handlers extract typed
 identifiers from validated payloads. There is no code path from event payload to prompt
 instruction.
@@ -349,9 +349,9 @@ lives, and the `S` branch is what makes rule 2 safe rather than merely restricti
 
 A `AffiliationApproved` event arrives for a suspended workflow:
 
-1. Envelope validated; schema version checked (11 PF-FT-AI-SERVICE-BUS.md §37–§38).
-2. Deduplicated by event ID (11 PF-FT-AI-SERVICE-BUS.md §41).
-3. Workflow instance resolved from `workflow_instance_id` (11 PF-FT-AI-SERVICE-BUS.md §21).
+1. Envelope validated; schema version checked (11 PFF-FA-AI-SERVICE-BUS.md §37–§38).
+2. Deduplicated by event ID (11 PFF-FA-AI-SERVICE-BUS.md §41).
+3. Workflow instance resolved from `workflow_instance_id` (11 PFF-FA-AI-SERVICE-BUS.md §21).
 4. Captured authorization context loaded and validated (§7.3 rule 2).
 5. Event treated as notification: ERC's application section is **invalidated**, not overwritten
    from the payload (§7.4).
@@ -388,7 +388,7 @@ cannot be absent from either path.
 - Behaviour is identical regardless of how state changed, which is what users experience as
   consistency.
 - The authority gap is resolved explicitly rather than papered over with a synthetic identity.
-- The event-payload-to-prompt injection channel 11 PF-FT-AI-SERVICE-BUS.md §58 warns about is closed structurally.
+- The event-payload-to-prompt injection channel 11 PFF-FA-AI-SERVICE-BUS.md §58 warns about is closed structurally.
 - The event-to-API refresh pattern keeps event data out of ERC as authoritative values.
 
 ### 9.2 Negative
@@ -405,7 +405,7 @@ cannot be absent from either path.
 ### 9.3 Neutral
 
 - Both adapters run in the same image as separate workloads (ADR-D2-02 §7.2).
-- 1 PF-FT-AI-ARCHITECTURE.md §4 and §5's "two runtimes" is realised as two entries to one runtime, which is a
+- 1 PFF-FA-AI-ARCHITECTURE.md §4 and §5's "two runtimes" is realised as two entries to one runtime, which is a
   clarification of the specification rather than a departure from it.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -424,7 +424,7 @@ cannot be absent from either path.
 | Enterprise decides; AI orchestrates | §7.5: enterprise timers and decisions arrive as events; the platform schedules and decides nothing. §7.4: an event notifies, and the enterprise API states what is true. |
 | Authoritative-truth precedence | §7.4 and §8.2 apply it precisely: an event has authority 5 for the fact of a change; the refreshed API response carries the authoritative values. Writing payload values into ERC would conflate the two. |
 | Four-state separation | Both paths update Workflow State and read Enterprise Business State; neither writes enterprise state. Conversation and session state are touched only by the request path. |
-| Versioned artefacts, never mutated in place | Event contracts are versioned (11 PF-FT-AI-SERVICE-BUS.md §16); unknown versions handled per 11 PF-FT-AI-SERVICE-BUS.md §38. |
+| Versioned artefacts, never mutated in place | Event contracts are versioned (11 PFF-FA-AI-SERVICE-BUS.md §16); unknown versions handled per 11 PFF-FA-AI-SERVICE-BUS.md §38. |
 | Adam persona governs how, never what | Event-driven updates produce no immediate user output; the persona applies when the user next enters, on refreshed authoritative state. |
 
 ## 11. Risks and Mitigations
@@ -436,7 +436,7 @@ cannot be absent from either path.
 | RSK-03 | Event payload content reaches a prompt as instruction | Low | Very High | High | Static handler registry; typed identifier extraction; no free-text path from payload to prompt; AC-05 | Security Owner | Low |
 | RSK-04 | Captured authorization context used after entitlement changed | Medium | High | High | §7.3 rule 2 validation before use; state-only update on failure; QM-04 | Security Owner | Low |
 | RSK-05 | Workflows with no captured context (DR-A-01) | Low | Medium | Low | Context captured at suspension by design (ADR-D2-10); a workflow without it defers entirely to user re-entry | AI Engineering Lead | Low |
-| RSK-06 | Out-of-order or stale events advance workflow state incorrectly | Medium | Medium | Medium | Sequence and staleness handling per 11 PF-FT-AI-SERVICE-BUS.md §45–§47; reconciliation per ADR-D2-18 | AI Engineering Lead | Medium |
+| RSK-06 | Out-of-order or stale events advance workflow state incorrectly | Medium | Medium | Medium | Sequence and staleness handling per 11 PFF-FA-AI-SERVICE-BUS.md §45–§47; reconciliation per ADR-D2-18 | AI Engineering Lead | Medium |
 
 ## 12. Quantitative Targets and Measures
 
@@ -456,12 +456,12 @@ contexts are expiring too fast, which is a session-lifetime question, not a secu
 
 | Dimension | Impact |
 |---|---|
-| Attack surface change | The Service Bus subscription is an ingress point. §7.4's structural prohibition on payload-to-prompt paths closes the injection channel 11 PF-FT-AI-SERVICE-BUS.md §58 identifies; envelope and schema validation (11 PF-FT-AI-SERVICE-BUS.md §36–§37) close malformed-input paths. |
-| Data classification touched | Event payloads carry identifiers, not personal data by design (11 PF-FT-AI-SERVICE-BUS.md §24). Refreshed API responses carry the personal data. |
+| Attack surface change | The Service Bus subscription is an ingress point. §7.4's structural prohibition on payload-to-prompt paths closes the injection channel 11 PFF-FA-AI-SERVICE-BUS.md §58 identifies; envelope and schema validation (11 PFF-FA-AI-SERVICE-BUS.md §36–§37) close malformed-input paths. |
+| Data classification touched | Event payloads carry identifiers, not personal data by design (11 PFF-FA-AI-SERVICE-BUS.md §24). Refreshed API responses carry the personal data. |
 | Personal data / PII | Minimised on the event path: payloads carry identifiers and the refresh retrieves data under the captured entitlement. |
 | Children's data and safeguarding | Safeguarding state changes — a DBS clearance completing, a suspension lifting — arrive as events and are refreshed from the enterprise before being shown. §7.4 guarantees a safeguarding status displayed to a user came from an authoritative read, never from an event payload. |
 | UK GDPR lawful basis and rights impact | §7.3's authority model means no processing occurs outside the entitlement of the user whose workflow it is — an important property, since event-triggered processing has no live user to consent or object. |
-| Audit and evidential requirements | Correlation and causation IDs (11 PF-FT-AI-SERVICE-BUS.md §19–§20) link event to workflow to refresh to eventual user notification, giving an unbroken chain. |
+| Audit and evidential requirements | Correlation and causation IDs (11 PFF-FA-AI-SERVICE-BUS.md §19–§20) link event to workflow to refresh to eventual user notification, giving an unbroken chain. |
 | Standards touched | ISO/IEC 27001 A.5.15 (access control), A.8.28 (secure coding); ISO/IEC 42001 (AI system inputs); NIST AI RMF MEASURE 2.7 (security and resilience); EU AI Act Art. 15. |
 
 ## 14. Implementation Impact
@@ -469,9 +469,9 @@ contexts are expiring too fast, which is a session-lifetime question, not a secu
 | Aspect | Detail |
 |---|---|
 | Build phases | 3 (request adapter), 12 (event adapter and handlers) |
-| Repository paths | `src/pf_ft_ai/api/v1/`, `src/pf_ft_ai/messaging/`, `src/pf_ft_ai/orchestration/harness/` |
-| Configuration | Event-type-to-handler registry; subscription filters (11 PF-FT-AI-SERVICE-BUS.md §30) |
-| Contracts / schemas | Event envelope (11 PF-FT-AI-SERVICE-BUS.md §13); `ExecutionContext` model |
+| Repository paths | `src/pff_fa_ai/api/v1/`, `src/pff_fa_ai/messaging/`, `src/pff_fa_ai/orchestration/harness/` |
+| Configuration | Event-type-to-handler registry; subscription filters (11 PFF-FA-AI-SERVICE-BUS.md §30) |
+| Contracts / schemas | Event envelope (11 PFF-FA-AI-SERVICE-BUS.md §13); `ExecutionContext` model |
 | Migration | None |
 | Dependencies on other ADRs | ADR-D2-09 (harness), ADR-D2-10 (durable state and captured context), ADR-D2-16 (Service Bus) |
 | Effort estimate | Moderate — the shared core is built once for the request path and reused |
@@ -516,7 +516,7 @@ contexts are expiring too fast, which is a session-lifetime question, not a secu
 | RT-02 | QM-04 records execution on invalid captured authority | Daily audit | Governance incident; §7.3 rule 2 has failed |
 | RT-03 | QM-06 exceeds 10% deferral | Monthly review | Captured contexts expiring too quickly; review session lifetime, not the security rule |
 | RT-04 | Path conditionals in the shared core become numerous enough to obscure it | Architecture review | Consider a strategy boundary rather than conditionals; do not split the core |
-| RT-05 | Event ordering problems exceed reconciliation's capacity (DR-A-02) | Incident records | Strengthen sequence handling per 11 PF-FT-AI-SERVICE-BUS.md §45–§46 |
+| RT-05 | Event ordering problems exceed reconciliation's capacity (DR-A-02) | Incident records | Strengthen sequence handling per 11 PFF-FA-AI-SERVICE-BUS.md §45–§46 |
 | RT-06 | A need arises for platform-scheduled business work | Requirement | Refuse; DR-C-03 and ADR-D1-01 §7.3. Raise as an enterprise event requirement. |
 
 **Scheduled review:** 2027-08-21.
@@ -526,10 +526,10 @@ contexts are expiring too fast, which is a session-lifetime question, not a secu
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-07 Enterprise Reference Architecture |
-| Specification sections | 1 PF-FT-AI-ARCHITECTURE.md §4 (Request-driven Runtime), §5 (Event-driven Runtime), §39 criteria 12–13; 4. PF-FT-AI-RUNTIME.md §5 (Request Lifecycle), §46 (Long-Running Workflow), §47 (Service Bus Runtime), §48 (Event-to-Workflow Mapping), §49 (HIL Runtime); 11 PF-FT-AI-SERVICE-BUS.md §5 (Event-Driven Workflow Principle), §19–§21 (Correlation, Causation, Workflow Instance), §25–§26 (Event as Notification, Event-to-API Refresh), §32–§34 (Consumer Architecture, Responsibilities, Must Not), §40–§44 (Idempotency), §45–§48 (Ordering, Staleness), §55 (Workflow Resume), §58 (Event Should Not Become Prompt Instruction); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §5.2 |
+| Specification sections | 1 PFF-FA-AI-ARCHITECTURE.md §4 (Request-driven Runtime), §5 (Event-driven Runtime), §39 criteria 12–13; 4. PFF-FA-AI-RUNTIME.md §5 (Request Lifecycle), §46 (Long-Running Workflow), §47 (Service Bus Runtime), §48 (Event-to-Workflow Mapping), §49 (HIL Runtime); 11 PFF-FA-AI-SERVICE-BUS.md §5 (Event-Driven Workflow Principle), §19–§21 (Correlation, Causation, Workflow Instance), §25–§26 (Event as Notification, Event-to-API Refresh), §32–§34 (Consumer Architecture, Responsibilities, Must Not), §40–§44 (Idempotency), §45–§48 (Ordering, Staleness), §55 (Workflow Resume), §58 (Event Should Not Become Prompt Instruction); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §5.2 |
 | Requirement IDs | `FR-A39-12`, `FR-A39-13`, `NFR-A38-REL` |
 | Build phases | 3, 12 |
-| Code paths | `src/pf_ft_ai/api/v1/`, `src/pf_ft_ai/messaging/`, `src/pf_ft_ai/orchestration/harness/` |
+| Code paths | `src/pff_fa_ai/api/v1/`, `src/pff_fa_ai/messaging/`, `src/pff_fa_ai/orchestration/harness/` |
 | Configuration | Event handler registry; subscription filters |
 | Tests | AC-01 to AC-07 |
 | Upstream ADRs | ADR-D2-01, ADR-D2-02 |

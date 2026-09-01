@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D6-01, ADR-D5-08, ADR-D6-07, ADR-D5-07, ADR-D2-19]
 source_docs:
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §18, §19, §20, §21, §22"
-  - "MD files/6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §22, §23, §24, §25, §26"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §18, §19, §20, §21, §22"
+  - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §22, §23, §24, §25, §26"
 build_phases: [1]
 impacted_paths:
   - infra/
@@ -31,12 +31,12 @@ PFF AI will run on segmented private networks with **private endpoints to all Az
 (Key Vault, ACR, Service Bus, Redis, vector store), no public data-plane exposure, and
 default-deny egress** with an explicit allowlist for the few external destinations (HF
 API during the initial phase, enterprise APIs via APIM) — implementing the zero-trust
-network layer (19.PF-FT-AI-SECURITY.md §18–§22; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26). Only APIM is internet-facing inbound.
+network layer (19.PFF-FA-AI-SECURITY.md §18–§22; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26). Only APIM is internet-facing inbound.
 
 ## 2. Context and Problem Statement
 
-19.PF-FT-AI-SECURITY.md §18–§22 define network security, inbound traffic, FastAPI exposure, outbound
-security and SLM network security; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26 network architecture, segmentation,
+19.PFF-FA-AI-SECURITY.md §18–§22 define network security, inbound traffic, FastAPI exposure, outbound
+security and SLM network security; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26 network architecture, segmentation,
 private connectivity, egress control and DNS. Uncontrolled egress is a primary
 data-exfiltration path; public PaaS endpoints widen the attack surface. This ADR fixes
 segmentation, private connectivity and egress.
@@ -45,10 +45,10 @@ segmentation, private connectivity and egress.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Private endpoints; no public data plane | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §24; 19.PF-FT-AI-SECURITY.md §18 |
-| DR-C-02 | Default-deny egress + allowlist | 19.PF-FT-AI-SECURITY.md §21; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §25 |
-| DR-F-01 | Only APIM internet-facing inbound | 19.PF-FT-AI-SECURITY.md §19–§20 |
-| DR-F-02 | Segmentation between trust zones | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §23; ADR-D6-01 |
+| DR-C-01 | Private endpoints; no public data plane | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §24; 19.PFF-FA-AI-SECURITY.md §18 |
+| DR-C-02 | Default-deny egress + allowlist | 19.PFF-FA-AI-SECURITY.md §21; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §25 |
+| DR-F-01 | Only APIM internet-facing inbound | 19.PFF-FA-AI-SECURITY.md §19–§20 |
+| DR-F-02 | Segmentation between trust zones | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §23; ADR-D6-01 |
 
 ### 3.4 Assumptions
 
@@ -112,12 +112,12 @@ allowed destinations.
 
 | Option | Eliminated by |
 |---|---|
-| Public FastAPI (no APIM) | 19.PF-FT-AI-SECURITY.md §19–§20 |
-| Open network (no segmentation) | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §23; ADR-D6-01 |
+| Public FastAPI (no APIM) | 19.PFF-FA-AI-SECURITY.md §19–§20 |
+| Open network (no segmentation) | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §23; ADR-D6-01 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §18–§22 and 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26.
+**Method.** Weighted scoring against §4, informed by 19.PFF-FA-AI-SECURITY.md §18–§22 and 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26.
 
 | Criterion | Weight | A: PE+deny-egress | B: Public+FW | C: PE+open egress | D: Service endpoints | E: PE+egress proxy |
 |---|---|---|---|---|---|---|
@@ -148,7 +148,7 @@ service-endpoints-only (D) are rejected.
   Redis (ADR-D4-10), vector store (ADR-D3-24); private DNS zones.
 - Egress: default-deny NSG/Azure Firewall with an allowlist (HF API for the initial SLM
   phase — removed after self-host cutover, ADR-D3-13; enterprise APIs via APIM).
-- Inbound: only APIM public (ADR-D5-15); FastAPI not directly exposed (19.PF-FT-AI-SECURITY.md §20).
+- Inbound: only APIM public (ADR-D5-15); FastAPI not directly exposed (19.PFF-FA-AI-SECURITY.md §20).
 - Zone segmentation per ADR-D6-01; portal links resolved server-side (ADR-D2-19) so no
   arbitrary outbound from model output.
 
@@ -256,7 +256,7 @@ service-endpoints-only (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 19.PF-FT-AI-SECURITY.md §18–§22; 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26 |
+| Specification sections | 19.PFF-FA-AI-SECURITY.md §18–§22; 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §22–§26 |
 | Requirement IDs | SEC-NET-* |
 | Build phases | 1 |
 | Code paths | `infra/` |

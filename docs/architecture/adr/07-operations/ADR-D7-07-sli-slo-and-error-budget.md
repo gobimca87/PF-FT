@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-01, ADR-D5-18, ADR-D7-08, ADR-D8-05, ADR-D7-10]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §5, §6, §49, §50"
-  - "MD files/6 Production/26.PF-FT-AI-PERFORMANCE-COST.md §5, §8"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §5, §6, §49, §50"
+  - "MD files/6 Production/26.PFF-FA-AI-PERFORMANCE-COST.md §5, §8"
 build_phases: [10]
 impacted_paths:
   - docs/runbooks/
@@ -30,12 +30,12 @@ review_due: 2027-08-22
 PFF AI will define **SLIs** (availability, latency per ADR-D5-18, correctness/answer
 success, cost) and **SLOs** with an **error-budget policy** that governs the balance
 between shipping and reliability: when the budget is healthy the team ships; when it is
-exhausted, change slows and reliability work takes priority (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §5–§6, §49–§50; 26.PF-FT-AI-PERFORMANCE-COST.md §5, §8). SLOs are measured from the observability stack (ADR-D7-01) and drive alerting
+exhausted, change slows and reliability work takes priority (24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §5–§6, §49–§50; 26.PFF-FA-AI-PERFORMANCE-COST.md §5, §8). SLOs are measured from the observability stack (ADR-D7-01) and drive alerting
 (ADR-D7-08).
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §5–§6 pillars/four-questions, §49–§50 metrics/AI-quality-metrics; 26.PF-FT-AI-PERFORMANCE-COST.md §5/§8
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §5–§6 pillars/four-questions, §49–§50 metrics/AI-quality-metrics; 26.PFF-FA-AI-PERFORMANCE-COST.md §5/§8
 performance objectives/latency budget. Without SLOs and an error-budget policy, there's
 no shared definition of "reliable enough" and no principled way to decide when to slow
 change. This ADR fixes SLIs/SLOs and the error-budget policy.
@@ -44,8 +44,8 @@ change. This ADR fixes SLIs/SLOs and the error-budget policy.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Define SLIs (avail/latency/correctness/cost) | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49–§50; 26.PF-FT-AI-PERFORMANCE-COST.md §5 |
-| DR-F-02 | SLO targets + error budget | 26.PF-FT-AI-PERFORMANCE-COST.md §8 |
+| DR-F-01 | Define SLIs (avail/latency/correctness/cost) | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49–§50; 26.PFF-FA-AI-PERFORMANCE-COST.md §5 |
+| DR-F-02 | SLO targets + error budget | 26.PFF-FA-AI-PERFORMANCE-COST.md §8 |
 | DR-F-03 | Budget policy governs ship vs reliability | SRE practice |
 | DR-F-04 | SLOs drive alerting | ADR-D7-08 |
 
@@ -110,12 +110,12 @@ for precise, low-noise alerts.
 
 | Option | Eliminated by |
 |---|---|
-| No reliability targets | 26.PF-FT-AI-PERFORMANCE-COST.md §5 |
+| No reliability targets | 26.PFF-FA-AI-PERFORMANCE-COST.md §5 |
 | Vanity metrics as SLIs | Not user-relevant |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §49–§50, 26.PF-FT-AI-PERFORMANCE-COST.md §5/§8 and SRE
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §49–§50, 26.PFF-FA-AI-PERFORMANCE-COST.md §5/§8 and SRE
 error-budget practice.
 
 | Criterion | Weight | A: SLIs+SLO+budget | B: Avail+latency | C: Uptime-only | D: Business-KPI-only | E: A+burn-rate alerts |
@@ -252,7 +252,7 @@ governing change velocity vs reliability work, and multi-window burn-rate alerti
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §5–§6, §49–§50; 26.PF-FT-AI-PERFORMANCE-COST.md §5, §8 |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §5–§6, §49–§50; 26.PFF-FA-AI-PERFORMANCE-COST.md §5, §8 |
 | Requirement IDs | SLO-* |
 | Build phases | 10 |
 | Code paths | SLO catalogue + alerts |

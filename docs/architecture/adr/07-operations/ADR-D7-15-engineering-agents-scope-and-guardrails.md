@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-09, ADR-D6-15, ADR-D3-12, ADR-D7-13, ADR-D1-11]
 source_docs:
-  - "MD files/5 QualityGovernance/23.PF-FT-AI-ENGINEERING-AGENTS.md §2, §3, §4, §8, §9, §11, §12, §16, §23, §35, §48, §49"
+  - "MD files/5 QualityGovernance/23.PFF-FA-AI-ENGINEERING-AGENTS.md §2, §3, §4, §8, §9, §11, §12, §16, §23, §35, §48, §49"
 build_phases: [12]
 impacted_paths:
   - .github/workflows/
@@ -29,13 +29,13 @@ review_due: 2027-08-22
 PFF AI may use **AI engineering agents at development time** (code review, test/doc
 generation, security scan, prompt review, eval, architecture-compliance) as **advisory,
 least-privilege assistants that never merge, deploy, or bypass human review or CI gates**
-(23.PF-FT-AI-ENGINEERING-AGENTS.md §2–§4, §8–§12, §48–§49). Dev-time engineering agents are strictly separate from
+(23.PFF-FA-AI-ENGINEERING-AGENTS.md §2–§4, §8–§12, §48–§49). Dev-time engineering agents are strictly separate from
 the runtime AffiliationAgent (ADR-D1-11) and produce suggestions gated by the same CI/
 governance as any human change.
 
 ## 2. Context and Problem Statement
 
-23.PF-FT-AI-ENGINEERING-AGENTS.md §2–§4 principle/scope/architecture, §8–§9 change-impact analysis/selection, §11–§12
+23.PFF-FA-AI-ENGINEERING-AGENTS.md §2–§4 principle/scope/architecture, §8–§9 change-impact analysis/selection, §11–§12
 permission levels/least-privilege, §16 restrictions, §23 security-agent restrictions, §35
 doc-agent restrictions, §48–§49 architecture-compliance agent/rules. Engineering agents can
 accelerate development but, unbounded, could merge unsafe code or leak secrets. This ADR
@@ -45,9 +45,9 @@ fixes their scope and guardrails (distinct from runtime agents in Domain 1/3).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Advisory only; never merge/deploy | 23.PF-FT-AI-ENGINEERING-AGENTS.md §11–§12, §16 |
-| DR-C-02 | Least privilege | 23.PF-FT-AI-ENGINEERING-AGENTS.md §12 |
-| DR-F-01 | Change-impact-based agent selection | 23.PF-FT-AI-ENGINEERING-AGENTS.md §8–§9 |
+| DR-C-01 | Advisory only; never merge/deploy | 23.PFF-FA-AI-ENGINEERING-AGENTS.md §11–§12, §16 |
+| DR-C-02 | Least privilege | 23.PFF-FA-AI-ENGINEERING-AGENTS.md §12 |
+| DR-F-01 | Change-impact-based agent selection | 23.PFF-FA-AI-ENGINEERING-AGENTS.md §8–§9 |
 | DR-C-03 | Subject to CI gates + human review | ADR-D7-09, D6-15 |
 
 ### 3.4 Assumptions
@@ -72,7 +72,7 @@ fixes their scope and guardrails (distinct from runtime agents in Domain 1/3).
 ### 5.1 Option A — Advisory, least-privilege engineering agents, gated by CI + human review
 
 **Description.** Agents (code review, test/doc gen, security scan, prompt review, eval,
-architecture compliance) run with least privilege (23.PF-FT-AI-ENGINEERING-AGENTS.md §12), produce suggestions/PR
+architecture compliance) run with least privilege (23.PFF-FA-AI-ENGINEERING-AGENTS.md §12), produce suggestions/PR
 comments, never merge/deploy (§16); change-impact selects which run (§8–§9); all output
 gated by CI (ADR-D7-09) and human review (ADR-D6-15).
 **Strengths.** Safe, bounded, useful, governed.
@@ -83,7 +83,7 @@ gated by CI (ADR-D7-09) and human review (ADR-D6-15).
 
 **Description.** Agents merge/deploy approved changes.
 **Strengths.** Fastest.
-**Weaknesses.** Unsafe; bypasses human authority/CI; 23.PF-FT-AI-ENGINEERING-AGENTS.md §16 forbids.
+**Weaknesses.** Unsafe; bypasses human authority/CI; 23.PFF-FA-AI-ENGINEERING-AGENTS.md §16 forbids.
 **Cost / effort.** Low; forbidden.
 
 ### 5.3 Option C — No engineering agents (humans only)
@@ -112,12 +112,12 @@ never main, always PR/CI/human-gated, with least-privilege scoped tokens.
 
 | Option | Eliminated by |
 |---|---|
-| Agents that bypass CI/review | 23.PF-FT-AI-ENGINEERING-AGENTS.md §16 |
-| Agents with prod access | 23.PF-FT-AI-ENGINEERING-AGENTS.md §12 (least privilege) |
+| Agents that bypass CI/review | 23.PFF-FA-AI-ENGINEERING-AGENTS.md §16 |
+| Agents with prod access | 23.PFF-FA-AI-ENGINEERING-AGENTS.md §12 (least privilege) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 23.PF-FT-AI-ENGINEERING-AGENTS.md §2–§49.
+**Method.** Weighted scoring against §4, informed by 23.PFF-FA-AI-ENGINEERING-AGENTS.md §2–§49.
 
 | Criterion | Weight | A: Advisory | B: Autonomous | C: None | D: Write-access | E: Advisory+supervised auto-fix |
 |---|---|---|---|---|---|---|
@@ -145,7 +145,7 @@ rejected.
 
 ## 8. Architecture Detail
 
-- Engineering-agent supervisor (23.PF-FT-AI-ENGINEERING-AGENTS.md §6–§7) selects agents by change-impact (§8–§9);
+- Engineering-agent supervisor (23.PFF-FA-AI-ENGINEERING-AGENTS.md §6–§7) selects agents by change-impact (§8–§9);
   agents run with least-privilege scoped tokens (§12) — read code, comment on PRs, or
   (opt-in) commit to a feature branch only; never main/prod.
 - Outputs are suggestions gated by CI (ADR-D7-09) and human review (ADR-D6-15); security/
@@ -256,7 +256,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-32 |
-| Specification sections | 23.PF-FT-AI-ENGINEERING-AGENTS.md §2–§4, §8–§12, §16, §23, §35, §48–§49 |
+| Specification sections | 23.PFF-FA-AI-ENGINEERING-AGENTS.md §2–§4, §8–§12, §16, §23, §35, §48–§49 |
 | Requirement IDs | ENG-AGENT-* |
 | Build phases | 12 |
 | Code paths | `.github/workflows/` |

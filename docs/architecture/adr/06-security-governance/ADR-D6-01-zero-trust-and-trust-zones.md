@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D6-02, ADR-D6-04, ADR-D5-15, ADR-D6-09, ADR-D5-08]
 source_docs:
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §5, §6, §7, §8, §16, §17"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §5, §6, §7, §8, §16, §17"
 build_phases: [2]
 impacted_paths:
   - infra/
@@ -30,11 +30,11 @@ PFF AI will adopt a **zero-trust** security model: no request, service or networ
 location is trusted by default; every hop authenticates, authorizes and validates. The
 platform is divided into explicit **trust zones** (edge/APIM, AI runtime, integration,
 data/state, external SLM) with controlled, least-privilege transitions between them
-(19.PF-FT-AI-SECURITY.md §5–§8, §16–§17). Trust is never inferred from network position alone.
+(19.PFF-FA-AI-SECURITY.md §5–§8, §16–§17). Trust is never inferred from network position alone.
 
 ## 2. Context and Problem Statement
 
-19.PF-FT-AI-SECURITY.md §5–§6 define defense-in-depth and security boundaries, §7–§8 trust zones and the
+19.PFF-FA-AI-SECURITY.md §5–§6 define defense-in-depth and security boundaries, §7–§8 trust zones and the
 zero-trust principle, §16–§17 the APIM boundary and AI platform security
 responsibilities. Implicit trust ("it's inside the VNet, so it's safe") is the root of
 lateral-movement breaches. This ADR fixes the zero-trust posture and the trust-zone map
@@ -44,10 +44,10 @@ that the other security ADRs build on.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | No implicit trust by network location | 19.PF-FT-AI-SECURITY.md §8 |
-| DR-F-01 | Explicit trust zones + controlled transitions | 19.PF-FT-AI-SECURITY.md §6–§7 |
-| DR-F-02 | Every hop authNs/authZs/validates | 19.PF-FT-AI-SECURITY.md §5, §16 |
-| DR-N-01 | Least privilege between zones | 19.PF-FT-AI-SECURITY.md §17 |
+| DR-C-01 | No implicit trust by network location | 19.PFF-FA-AI-SECURITY.md §8 |
+| DR-F-01 | Explicit trust zones + controlled transitions | 19.PFF-FA-AI-SECURITY.md §6–§7 |
+| DR-F-02 | Every hop authNs/authZs/validates | 19.PFF-FA-AI-SECURITY.md §5, §16 |
+| DR-N-01 | Least privilege between zones | 19.PFF-FA-AI-SECURITY.md §17 |
 
 ### 3.4 Assumptions
 
@@ -73,7 +73,7 @@ that the other security ADRs build on.
 **Description.** Deny-by-default; each zone transition requires identity + authorization
 + validation; least-privilege network + RBAC; APIM as the entry authz boundary
 (ADR-D5-15).
-**Strengths.** Strong containment; enforceable; aligns with 19.PF-FT-AI-SECURITY.md.
+**Strengths.** Strong containment; enforceable; aligns with 19.PFF-FA-AI-SECURITY.md.
 **Weaknesses.** Per-hop checks add some latency/complexity.
 **Cost / effort.** Medium.
 
@@ -81,7 +81,7 @@ that the other security ADRs build on.
 
 **Description.** Hard edge, soft interior.
 **Strengths.** Simple; low internal overhead.
-**Weaknesses.** One breach → lateral movement; violates 19.PF-FT-AI-SECURITY.md §8.
+**Weaknesses.** One breach → lateral movement; violates 19.PFF-FA-AI-SECURITY.md §8.
 **Cost / effort.** Low; unsafe.
 
 ### 5.3 Option C — Network segmentation only (no identity zero-trust)
@@ -111,12 +111,12 @@ checks.
 
 | Option | Eliminated by |
 |---|---|
-| Implicit trust anywhere | 19.PF-FT-AI-SECURITY.md §8 |
+| Implicit trust anywhere | 19.PFF-FA-AI-SECURITY.md §8 |
 | VPN-only access control | Doesn't address per-request authz |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §5–§8/§16–§17.
+**Method.** Weighted scoring against §4, informed by 19.PFF-FA-AI-SECURITY.md §5–§8/§16–§17.
 
 | Criterion | Weight | A: Zero-trust+zones | B: Perimeter | C: Net-seg only | D: Mesh mTLS | E: ZT+microseg |
 |---|---|---|---|---|---|---|
@@ -142,7 +142,7 @@ private networking (ADR-D6-04) and RBAC enforce zone transitions; service-mesh m
 implement in-cluster hops. Microsegmentation/continuous verification (E) is a later
 hardening. Perimeter (B) and segmentation-only (C) are rejected.
 
-**Status rationale.** `Accepted` — 19.PF-FT-AI-SECURITY.md §8 mandates zero-trust.
+**Status rationale.** `Accepted` — 19.PFF-FA-AI-SECURITY.md §8 mandates zero-trust.
 
 ## 8. Architecture Detail
 
@@ -254,7 +254,7 @@ hardening. Perimeter (B) and segmentation-only (C) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 Security |
-| Specification sections | 19.PF-FT-AI-SECURITY.md §5–§8, §16–§17 |
+| Specification sections | 19.PFF-FA-AI-SECURITY.md §5–§8, §16–§17 |
 | Requirement IDs | SEC-ZT-* |
 | Build phases | 2 |
 | Code paths | `infra/` |

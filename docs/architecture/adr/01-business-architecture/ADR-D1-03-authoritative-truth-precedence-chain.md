@@ -14,13 +14,13 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-01, ADR-D1-02, ADR-D3-20, ADR-D3-25, ADR-D4-03, ADR-D4-12, ADR-D6-09]
 source_docs:
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47, §54, §55, §63"
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.5, §3.6"
-  - "MD files/3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md §7, §16, §17, §19, §65, §66"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47, §54, §55, §63"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.5, §3.6"
+  - "MD files/3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md §7, §16, §17, §19, §65, §66"
 build_phases: [5, 8, 11]
 impacted_paths:
-  - src/pf_ft_ai/context/projection/
-  - src/pf_ft_ai/guardrails/
+  - src/pff_fa_ai/context/projection/
+  - src/pff_fa_ai/guardrails/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -61,13 +61,13 @@ prompt-assembly code happened to place last, by which section the model attended
 whether a cache lookup preceded or followed an API call. The resolution is arbitrary and
 varies between turns.
 
-3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 states the ordering. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 gives five conflict-resolution rules covering the
-specific cases. 8 PF-FT-AI-ERC-CONTEXT.md §19 defines ERC authority levels. What none of them records is why this
+3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 states the ordering. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 gives five conflict-resolution rules covering the
+specific cases. 8 PFF-FA-AI-ERC-CONTEXT.md §19 defines ERC authority levels. What none of them records is why this
 particular ordering, what it costs, and — most importantly — how it is enforced. An ordering
 that exists only in documentation resolves nothing at runtime, because at runtime a fact is
 just a value in a dictionary with no memory of where it came from.
 
-There is also a scoping question the specifications address but easily gets lost. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.6
+There is also a scoping question the specifications address but easily gets lost. 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.6
 distinguishes knowledge from operational truth: RAG provides knowledge, enterprise APIs
 provide operational truth, and the two must remain distinguishable. Read carelessly, the
 precedence chain says RAG outranks the SLM and is outranked by everything else, which sounds
@@ -81,29 +81,29 @@ sources for operational truth only.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Conflicts between sources must resolve deterministically and identically on every turn | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 |
-| DR-F-02 | Enterprise operational state must win over any AI-held copy | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 Rule 1, Rule 4 |
-| DR-F-03 | Model output must never be treated as an authoritative data source | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 |
-| DR-F-04 | RAG content must never be presented as operational truth | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.6; 8 PF-FT-AI-ERC-CONTEXT.md §7 |
-| DR-F-05 | Every fact in context must carry its source, so precedence is computable | 8 PF-FT-AI-ERC-CONTEXT.md §15, §16 (Provenance) |
-| DR-F-06 | A human enterprise decision (HIL) outranks any AI suggestion | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 Rule 5 |
+| DR-F-01 | Conflicts between sources must resolve deterministically and identically on every turn | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 |
+| DR-F-02 | Enterprise operational state must win over any AI-held copy | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 Rule 1, Rule 4 |
+| DR-F-03 | Model output must never be treated as an authoritative data source | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 |
+| DR-F-04 | RAG content must never be presented as operational truth | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.6; 8 PFF-FA-AI-ERC-CONTEXT.md §7 |
+| DR-F-05 | Every fact in context must carry its source, so precedence is computable | 8 PFF-FA-AI-ERC-CONTEXT.md §15, §16 (Provenance) |
+| DR-F-06 | A human enterprise decision (HIL) outranks any AI suggestion | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 Rule 5 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Precedence resolution must not require an extra enterprise call per turn | 0 additional calls for resolution itself | ADR-D5-18 |
-| DR-N-02 | Conflicts must be observable, not silently resolved | 100% of resolved conflicts logged | 20.PF-FT-AI-GOVERNANCE.md §29 |
-| DR-N-03 | Freshness of authoritative state must be adequate for the workflow | Per-section freshness policy honoured | 8 PF-FT-AI-ERC-CONTEXT.md §17, §18 |
+| DR-N-02 | Conflicts must be observable, not silently resolved | 100% of resolved conflicts logged | 20.PFF-FA-AI-GOVERNANCE.md §29 |
+| DR-N-03 | Freshness of authoritative state must be adequate for the workflow | Per-section freshness policy honoured | 8 PFF-FA-AI-ERC-CONTEXT.md §17, §18 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | The ordering is fixed by specification and is not open for local variation | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63; `CLAUDE.md` |
-| DR-C-02 | ERC is not the enterprise database, not memory, not cache and not RAG | Platform | 8 PF-FT-AI-ERC-CONTEXT.md §4, §5, §6, §7 |
-| DR-C-03 | SLM output is never authoritative under any circumstance | Platform | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 |
-| DR-C-04 | Transaction outcomes may be genuinely uncertain and must not be resolved by inference | Platform | 8 PF-FT-AI-ERC-CONTEXT.md §66 |
+| DR-C-01 | The ordering is fixed by specification and is not open for local variation | Organisational | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63; `CLAUDE.md` |
+| DR-C-02 | ERC is not the enterprise database, not memory, not cache and not RAG | Platform | 8 PFF-FA-AI-ERC-CONTEXT.md §4, §5, §6, §7 |
+| DR-C-03 | SLM output is never authoritative under any circumstance | Platform | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 |
+| DR-C-04 | Transaction outcomes may be genuinely uncertain and must not be resolved by inference | Platform | 8 PFF-FA-AI-ERC-CONTEXT.md §66 |
 
 ### 3.4 Assumptions
 
@@ -165,7 +165,7 @@ no conflict can arise.
 - Enterprise API load multiplies by conversational turn count, which the enterprise has not
   sized for.
 - Contradicts DR-C-02's premise: ERC exists precisely because assembling context per turn is
-  not viable, per 8 PF-FT-AI-ERC-CONTEXT.md §2.
+  not viable, per 8 PFF-FA-AI-ERC-CONTEXT.md §2.
 - Still cannot resolve genuinely uncertain transaction outcomes (DR-C-04) — re-fetching an
   ambiguous payment state returns the same ambiguity.
 
@@ -187,7 +187,7 @@ assembly and re-checked at the output guardrail.
   head (EC-03).
 - No additional enterprise calls; resolution is local comparison (EC-04).
 - Provenance is available to explain a revision to the user (EC-05).
-- Directly implements 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 and 8 PF-FT-AI-ERC-CONTEXT.md §15–§19.
+- Directly implements 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 and 8 PFF-FA-AI-ERC-CONTEXT.md §15–§19.
 
 **Weaknesses.**
 - Requires provenance plumbing through the whole context pipeline — every collector,
@@ -196,7 +196,7 @@ assembly and re-checked at the output guardrail.
 - A stale-but-higher-authority fact can beat a fresher lower-authority one, which is
   occasionally wrong; §7.3's freshness interaction handles this.
 
-**Cost / effort.** Moderate; provenance is already required by 8 PF-FT-AI-ERC-CONTEXT.md §15–§16.
+**Cost / effort.** Moderate; provenance is already required by 8 PFF-FA-AI-ERC-CONTEXT.md §15–§16.
 
 ### 5.4 Option D — Confidence-weighted resolution
 
@@ -212,7 +212,7 @@ for model output, token-level confidence. Resolution selects the highest weighte
 - Non-deterministic in practice — scores shift with model behaviour, so identical inputs
   can resolve differently (EC-02 fails).
 - Permits SLM output to win a conflict if its confidence is high enough, violating DR-C-03
-  and 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 categorically. Model confidence is in any case a poor predictor of
+  and 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 categorically. Model confidence is in any case a poor predictor of
   correctness, and is highest precisely when the model is confidently wrong.
 - Unauditable: "why did the platform say that?" resolves to a score comparison rather than a
   source.
@@ -223,7 +223,7 @@ for model output, token-level confidence. Resolution selects the highest weighte
 ## 6. Evaluation Method and Decision Matrix
 
 **Method.** Weighted scoring against §4, assessed against the four concrete conflict cases in
-§2 and the five rules in 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47.
+§2 and the five rules in 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47.
 
 | Criterion | Weight | A: Recency | B: Always re-fetch | C: Fixed chain | D: Confidence-weighted |
 |---|---|---|---|---|---|
@@ -273,7 +273,7 @@ eligibility, fees, payment state, team affiliation, official compliance, debt.
 
 It does not rank sources for **knowledge**. For "what does the safeguarding policy require?"
 or "how does the insurance step work?", RAG is the appropriate source and no enterprise API
-competes with it. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.6 requires the two categories to remain distinguishable, and the
+competes with it. 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.6 requires the two categories to remain distinguishable, and the
 distinction is made at context assembly: a fact is tagged either `operational` or `knowledge`,
 and only `operational` facts are subject to the chain.
 
@@ -286,14 +286,14 @@ role in expressing one.
 Authority and freshness are independent properties and are both required. Authority decides
 who wins a conflict. Freshness decides whether a fact may be used at all.
 
-An ERC section past its freshness policy (8 PF-FT-AI-ERC-CONTEXT.md §17–§18) is not demoted to cache authority —
+An ERC section past its freshness policy (8 PFF-FA-AI-ERC-CONTEXT.md §17–§18) is not demoted to cache authority —
 it is **invalidated** and must be refreshed before use. This is the correct handling of the
 stale-but-authoritative case that Option D tried to solve by scoring: a stale enterprise fact
 does not lose to a fresh cached one, it is simply not used, and the platform refetches.
 
 Where refresh is impossible (enterprise API unavailable), the platform states that it cannot
 confirm current state. It does not fall back to the lower-authority value and present it as
-current. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §50 governs API-failure responsibility; ADR-D3-08 governs the wording.
+current. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §50 governs API-failure responsibility; ADR-D3-08 governs the wording.
 
 ### 7.4 Aggregated and derived facts
 
@@ -303,11 +303,11 @@ conservative by design: a derivation cannot be more trustworthy than the least t
 thing it was derived from, and the alternative — taking the strongest input's authority —
 would launder cached data into apparent authority. This resolves DR-A-02.
 
-### 7.5 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47's five rules as instances
+### 7.5 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47's five rules as instances
 
-The five conflict rules in 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 are consequences of §7.1, not separate rules:
+The five conflict rules in 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 are consequences of §7.1, not separate rules:
 
-| 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 rule | Instance of |
+| 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 rule | Instance of |
 |---|---|
 | Rule 1 — ERC vs Enterprise API → API wins | authority 5 > 4 |
 | Rule 2 — AI assumption vs APIM claims → claims win | authority 5 > 1; also I-2 of ADR-D1-02 |
@@ -320,7 +320,7 @@ conflict type not enumerated in §47 still resolves correctly, without needing a
 
 ### 7.6 Transaction uncertainty is not a conflict
 
-8 PF-FT-AI-ERC-CONTEXT.md §66 identifies a distinct case: a transaction whose outcome is genuinely unknown —
+8 PFF-FA-AI-ERC-CONTEXT.md §66 identifies a distinct case: a transaction whose outcome is genuinely unknown —
 affiliation Scenarios 21–27. This is not a disagreement between sources to be resolved by
 precedence. It is an absence of authoritative information, and the chain must not be used to
 manufacture an answer from a lower-authority source. The platform states the uncertainty.
@@ -333,7 +333,7 @@ boundaries — ratified by the external ADF/ADR governance forum.
 
 ### 8.1 Authority as a fact-level property
 
-Every fact entering context carries provenance, per 8 PF-FT-AI-ERC-CONTEXT.md §15–§16:
+Every fact entering context carries provenance, per 8 PFF-FA-AI-ERC-CONTEXT.md §15–§16:
 
 ```
 ContextFact
@@ -342,7 +342,7 @@ ContextFact
   authority        5 | 5 | 4 | 3 | 2 | 1
   truth_class      operational | knowledge
   collected_at     timestamp
-  freshness_policy the section's policy, per 8 PF-FT-AI-ERC-CONTEXT.md §18
+  freshness_policy the section's policy, per 8 PFF-FA-AI-ERC-CONTEXT.md §18
   source_ref       API operation, event ID, ERC section, cache key or document ID
 ```
 
@@ -391,8 +391,8 @@ that this is the only possible outcome, not the likely one.
 
 - Conflicts resolve identically every time, which makes the platform's answers testable.
 - SLM output can never win a conflict about business state, satisfying DR-C-03 structurally.
-- RAG cannot leak into operational answers, satisfying 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.6.
-- 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47's five rules become derivable rather than enumerated, so unforeseen conflict
+- RAG cannot leak into operational answers, satisfying 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.6.
+- 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47's five rules become derivable rather than enumerated, so unforeseen conflict
   types resolve correctly.
 - Provenance enables the platform to explain a revised answer, rather than appearing to
   contradict itself.
@@ -409,7 +409,7 @@ that this is the only possible outcome, not the likely one.
 
 ### 9.3 Neutral
 
-- The ordering itself was fixed by 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63; this decision concerns its implementation and
+- The ordering itself was fixed by 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63; this decision concerns its implementation and
   scoping, and records the rationale the specification omitted.
 - Knowledge-class facts sit outside the chain entirely, which is a scoping clarification
   rather than a change.
@@ -464,7 +464,7 @@ that this is the only possible outcome, not the likely one.
 | Personal data / PII | Provenance metadata references source operations and document IDs, not personal data. Conflict logs record field identity and authority levels, with values redacted per ADR-D7-04. |
 | Children's data and safeguarding | Direct. A safeguarding or DBS status is operational truth of the highest sensitivity. The chain guarantees that such a status shown to a user came from the enterprise, never from a cached copy presented as current, a knowledge document, or the model. Freshness invalidation (§7.3) means an out-of-date clearance status is refused rather than displayed. |
 | UK GDPR lawful basis and rights impact | Supports the accuracy principle (Art. 5(1)(d)) directly: personal data presented to a user is traceable to the controller's own record and is either current or withheld. |
-| Audit and evidential requirements | Provenance on every fact gives a complete lineage from enterprise source to displayed statement, satisfying 20.PF-FT-AI-GOVERNANCE.md §60 (Data Lineage) and §61 (Data Authority). |
+| Audit and evidential requirements | Provenance on every fact gives a complete lineage from enterprise source to displayed statement, satisfying 20.PFF-FA-AI-GOVERNANCE.md §60 (Data Lineage) and §61 (Data Authority). |
 | Standards touched | ISO/IEC 42001 (data provenance and quality for AI systems); ISO/IEC 27001 A.5.33 (protection of records); NIST AI RMF MAP 2.3, MEASURE 2.8 (data provenance); EU AI Act Art. 10 (data governance). |
 
 ## 14. Implementation Impact
@@ -472,12 +472,12 @@ that this is the only possible outcome, not the likely one.
 | Aspect | Detail |
 |---|---|
 | Build phases | 5 (ERC and provenance), 8 (RAG tagging), 11 (output guardrail check) |
-| Repository paths | `src/pf_ft_ai/context/erc/provenance.py`, `src/pf_ft_ai/context/projection/`, `src/pf_ft_ai/guardrails/` |
+| Repository paths | `src/pff_fa_ai/context/erc/provenance.py`, `src/pff_fa_ai/context/projection/`, `src/pff_fa_ai/guardrails/` |
 | Configuration | `config/base/source-precedence.yaml` (authority mapping), `config/base/erc.yaml` (freshness policies) |
 | Contracts / schemas | `ContextFact` provenance fields; context manifest schema |
 | Migration | None; foundational |
 | Dependencies on other ADRs | ADR-D1-01 (scope), ADR-D1-02 (I-1 depends on this chain to rank sources) |
-| Effort estimate | Moderate — provenance is already mandated by 8 PF-FT-AI-ERC-CONTEXT.md §15–§16, so the incremental work is the resolution and enforcement logic |
+| Effort estimate | Moderate — provenance is already mandated by 8 PFF-FA-AI-ERC-CONTEXT.md §15–§16, so the incremental work is the resolution and enforcement logic |
 
 ## 15. Validation and Verification
 
@@ -488,7 +488,7 @@ that this is the only possible outcome, not the likely one.
 | AC-03 | A fact past its freshness policy is invalidated, not demoted | ERC lifecycle test |
 | AC-04 | A derived fact carries the minimum authority of its inputs | Aggregation test |
 | AC-05 | A `truth_class: knowledge` fact cannot satisfy a business assertion at the output guardrail | Guardrail test with a RAG-sourced operational claim |
-| AC-06 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47's five rules each produce the specified outcome | Scenario tests, one per rule |
+| AC-06 | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47's five rules each produce the specified outcome | Scenario tests, one per rule |
 | AC-07 | An ambiguous transaction outcome produces an uncertainty statement, not a lower-authority answer | Affiliation Scenario 23 test |
 
 ## 16. Operational Impact
@@ -499,14 +499,14 @@ that this is the only possible outcome, not the likely one.
 | Alerting | QM-02, QM-03, QM-05 and QM-06 alert on any occurrence |
 | Runbook | `docs/runbooks/erc-batch-recovery.md`; `docs/runbooks/enterprise-api.md` for the refresh-impossible path |
 | Failure mode and degradation | When authoritative refresh is impossible, the platform states it cannot confirm current state. It does not degrade to the next source down — that would be exactly the failure this decision prevents. |
-| Rollback | The ordering is fixed by 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 and cannot be changed by configuration. `source-precedence.yaml` maps source types to levels; it cannot reorder them. |
+| Rollback | The ordering is fixed by 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 and cannot be changed by configuration. `source-precedence.yaml` maps source types to levels; it cannot reorder them. |
 | Support model impact | Conflict logs give support a precise account of what the platform knew and when, which shortens investigation of "it told me something different earlier". |
 
 ## 17. Cost Impact
 
 | Cost element | One-off | Recurring | Basis |
 |---|---|---|---|
-| Provenance plumbing | Part of Phase 5 | — | Largely required by 8 PF-FT-AI-ERC-CONTEXT.md §15–§16 regardless |
+| Provenance plumbing | Part of Phase 5 | — | Largely required by 8 PFF-FA-AI-ERC-CONTEXT.md §15–§16 regardless |
 | Resolution logic | Small | Negligible runtime | Local comparison, no I/O |
 | Refresh calls from freshness invalidation | — | Additional enterprise calls | Bounded by per-section policies; QM-04 |
 | Avoided cost | — | Ongoing | Option B's per-turn re-fetch would multiply enterprise API load by turn count |
@@ -519,7 +519,7 @@ that this is the only possible outcome, not the likely one.
 | RT-02 | QM-03 records a fact used past its freshness policy | Daily check | Incident; review whether the policy or the enforcement failed |
 | RT-03 | QM-04 shows §7.4 demotion driving over 20% of refreshes | Monthly review | Refine to per-field authority composition; the conservative rule is costing more than it protects |
 | RT-04 | QM-05 records knowledge-sourced business assertions | Weekly audit | Review `truth_class` tagging at ingestion; ADR-D3-20 |
-| RT-05 | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §63 or 8 PF-FT-AI-ERC-CONTEXT.md §19 amended | Change notice | Re-derive §7.1 and the authority mapping |
+| RT-05 | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §63 or 8 PFF-FA-AI-ERC-CONTEXT.md §19 amended | Change notice | Re-derive §7.1 and the authority mapping |
 | RT-06 | A new source type is introduced (e.g. an enterprise read model) | Architecture change | Assign its authority level explicitly; a new source without a level cannot enter context |
 
 **Scheduled review:** 2027-08-21.
@@ -529,10 +529,10 @@ that this is the only possible outcome, not the likely one.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-01 Executive Summary; WS-02 Business Vision, Problem Statement & Objectives |
-| Specification sections | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47 (Conflict Resolution Rules), §54 (Responsibility During RAG Conflict), §55 (Responsibility During Cache Conflict), §63 (Ownership of Authoritative Truth); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §3.5 (Context Before Reasoning), §3.6 (Knowledge vs Operational Truth); 8 PF-FT-AI-ERC-CONTEXT.md §7 (ERC Is Not RAG), §15–§16 (Source Provenance), §17–§18 (Freshness), §19 (ERC Authority Levels), §65 (ERC and Transaction State), §66 (Transaction Uncertainty) |
+| Specification sections | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47 (Conflict Resolution Rules), §54 (Responsibility During RAG Conflict), §55 (Responsibility During Cache Conflict), §63 (Ownership of Authoritative Truth); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.5 (Context Before Reasoning), §3.6 (Knowledge vs Operational Truth); 8 PFF-FA-AI-ERC-CONTEXT.md §7 (ERC Is Not RAG), §15–§16 (Source Provenance), §17–§18 (Freshness), §19 (ERC Authority Levels), §65 (ERC and Transaction State), §66 (Transaction Uncertainty) |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 5, 8, 11 |
-| Code paths | `src/pf_ft_ai/context/erc/provenance.py`, `src/pf_ft_ai/context/projection/`, `src/pf_ft_ai/guardrails/` |
+| Code paths | `src/pff_fa_ai/context/erc/provenance.py`, `src/pff_fa_ai/context/projection/`, `src/pff_fa_ai/guardrails/` |
 | Configuration | `config/base/source-precedence.yaml`, `config/base/erc.yaml` |
 | Tests | AC-01 to AC-07 |
 | Upstream ADRs | ADR-D1-01, ADR-D1-02 |
@@ -542,4 +542,4 @@ that this is the only possible outcome, not the likely one.
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Precedence implemented as fact-level authority; scoped to operational truth only; freshness handled by invalidation rather than demotion; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §47's rules derived rather than enumerated. Tier 1 — ratified by the external ADF/ADR forum. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Precedence implemented as fact-level authority; scoped to operational truth only; freshness handled by invalidation rather than demotion; 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §47's rules derived rather than enumerated. Tier 1 — ratified by the external ADF/ADR forum. |

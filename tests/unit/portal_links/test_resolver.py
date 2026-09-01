@@ -1,7 +1,7 @@
-from pf_ft_ai.portal_links.catalog import PortalRegistry
-from pf_ft_ai.portal_links.models import LinkRequest, Portal, PortalRoute
-from pf_ft_ai.portal_links.resolver import PortalLinkResolver
-from pf_ft_ai.portal_links.states import LinkResolutionStatus, PortalStatus
+from pff_fa_ai.portal_links.catalog import PortalRegistry
+from pff_fa_ai.portal_links.models import LinkRequest, Portal, PortalRoute
+from pff_fa_ai.portal_links.resolver import PortalLinkResolver
+from pff_fa_ai.portal_links.states import LinkResolutionStatus, PortalStatus
 
 _ALLOWED_DOMAINS = frozenset({"club-dev.example.com"})
 

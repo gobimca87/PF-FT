@@ -14,13 +14,13 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-15, ADR-D7-03, ADR-D7-05, ADR-D2-04, ADR-D2-17]
 source_docs:
-  - "MD files/3 Context & Integration/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16, §19, §20, §38, §39, §40, §84"
-  - "MD files/2 Agent Runtime/6 PF-FT-AI-CONVERSATION-SESSION.md §76"
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md"
+  - "MD files/3 Context & Integration/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §16, §19, §20, §38, §39, §40, §84"
+  - "MD files/2 Agent Runtime/6 PFF-FA-AI-CONVERSATION-SESSION.md §76"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md"
 build_phases: [2, 5]
 impacted_paths:
-  - src/pf_ft_ai/api/
-  - src/pf_ft_ai/common/
+  - src/pff_fa_ai/api/
+  - src/pff_fa_ai/common/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -33,15 +33,15 @@ PFF AI will use a **single standard response envelope** for its API — a typed
 Pydantic structure carrying `data`, a `metadata` block (correlation id, timestamps,
 versions, pagination) and a structured `error` block with a **stable, namespaced
 error-code taxonomy** aligned to the `PlatformError` hierarchy — so every client and
-log sees a consistent shape (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §19–§20, §38–§40, §84; 6 PF-FT-AI-CONVERSATION-SESSION.md §76; CLAUDE.md
+log sees a consistent shape (10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §19–§20, §38–§40, §84; 6 PFF-FA-AI-CONVERSATION-SESSION.md §76; CLAUDE.md
 exception hierarchy). Errors are translated at the boundary; internal exceptions never
 leak raw.
 
 ## 2. Context and Problem Statement
 
-10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §19–§20 define response contract/payload, §38–§40 define the tool/error
+10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §19–§20 define response contract/payload, §38–§40 define the tool/error
 contract, error translation and error categories, §84 defines the correlation id;
-6 PF-FT-AI-CONVERSATION-SESSION.md §76 defines the conversation API contract; CLAUDE.md fixes the `PlatformError`
+6 PFF-FA-AI-CONVERSATION-SESSION.md §76 defines the conversation API contract; CLAUDE.md fixes the `PlatformError`
 subclass hierarchy (`ValidationError`, `IntegrationError`, `ToolError`, …). Without a
 single envelope and error-code standard, each endpoint invents its own shape,
 correlation is inconsistent, clients special-case errors, and internal stack traces
@@ -51,11 +51,11 @@ leak. This ADR fixes the wire contract and error taxonomy.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | One response envelope (data/metadata/error) | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §19–§20; 6 PF-FT-AI-CONVERSATION-SESSION.md §76 |
-| DR-F-02 | Stable namespaced error codes ↔ PlatformError | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §38–§40; CLAUDE.md |
-| DR-F-03 | Correlation id + versions in metadata | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §84; ADR-D7-03 |
-| DR-C-01 | No raw internal exceptions to clients | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §39 |
-| DR-F-04 | Consistent pagination metadata | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §20 |
+| DR-F-01 | One response envelope (data/metadata/error) | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §19–§20; 6 PFF-FA-AI-CONVERSATION-SESSION.md §76 |
+| DR-F-02 | Stable namespaced error codes ↔ PlatformError | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §38–§40; CLAUDE.md |
+| DR-F-03 | Correlation id + versions in metadata | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §84; ADR-D7-03 |
+| DR-C-01 | No raw internal exceptions to clients | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §39 |
+| DR-F-04 | Consistent pagination metadata | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §20 |
 
 ### 3.4 Assumptions
 
@@ -122,12 +122,12 @@ differently.
 
 | Option | Eliminated by |
 |---|---|
-| Leak internal exception messages | DR-C-01/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §39 |
+| Leak internal exception messages | DR-C-01/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §39 |
 | Ad-hoc per-endpoint shapes | EC-01 — inconsistency |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §19–§20/§38–§40/§84, 6 PF-FT-AI-CONVERSATION-SESSION.md §76 and the PlatformError hierarchy.
+**Method.** Weighted scoring against §4, informed by 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §19–§20/§38–§40/§84, 6 PFF-FA-AI-CONVERSATION-SESSION.md §76 and the PlatformError hierarchy.
 
 | Criterion | Weight | A: Unified envelope | B: Bare+HTTP | C: RFC7807 errors | D: GraphQL-style | E: Per-family |
 |---|---|---|---|---|---|---|
@@ -154,18 +154,18 @@ exceptions (Option A).** The error block is RFC 7807-compatible in its field nam
 interoperability. Bare payloads (B), asymmetric problem-json (C), GraphQL-style (D)
 and per-family envelopes (E) are rejected.
 
-**Status rationale.** `Accepted` — 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §19–§40 and CLAUDE.md govern this.
+**Status rationale.** `Accepted` — 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §19–§40 and CLAUDE.md govern this.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/common/envelope.py`: `ApiResponse[T]{data: T | None, metadata:
+- `src/pff_fa_ai/common/envelope.py`: `ApiResponse[T]{data: T | None, metadata:
   ResponseMetadata, error: ApiError | None}`.
-- `ResponseMetadata`: `correlation_id` (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §84; ADR-D7-03), `timestamp`,
+- `ResponseMetadata`: `correlation_id` (10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §84; ADR-D7-03), `timestamp`,
   `api_version`, `schema_version`, `pagination` (§20).
 - `ApiError`: `code` (`PFF.<CATEGORY>.<NAME>`), `message` (safe), `details`,
   `retriable`, `trace_ref`.
 - Error translation: a boundary handler maps each `PlatformError` subclass (CLAUDE.md)
-  to a category/code (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §39–§40); unexpected exceptions map to a generic
+  to a category/code (10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §39–§40); unexpected exceptions map to a generic
   `PFF.INTERNAL.UNEXPECTED` with a trace ref, never a stack trace.
 - Event envelope (ADR-D2-17) shares the metadata conventions where applicable.
 
@@ -226,7 +226,7 @@ and per-family envelopes (E) are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 2 (API), 5 (integration errors) |
-| Repository paths | `src/pf_ft_ai/api/`, `src/pf_ft_ai/common/` |
+| Repository paths | `src/pff_fa_ai/api/`, `src/pff_fa_ai/common/` |
 | Configuration | Error-code registry |
 | Contracts / schemas | Envelope + error models |
 | Migration | N/A |
@@ -273,10 +273,10 @@ and per-family envelopes (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-21 Metadata/Envelope |
-| Specification sections | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §16, §19–§20, §38–§40, §84; 6 PF-FT-AI-CONVERSATION-SESSION.md §76; 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md |
+| Specification sections | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §16, §19–§20, §38–§40, §84; 6 PFF-FA-AI-CONVERSATION-SESSION.md §76; 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md |
 | Requirement IDs | API-ENV-* |
 | Build phases | 2, 5 |
-| Code paths | `src/pf_ft_ai/api/`, `src/pf_ft_ai/common/` |
+| Code paths | `src/pff_fa_ai/api/`, `src/pff_fa_ai/common/` |
 | Configuration | error-code registry |
 | Tests | envelope + error contract suites |
 | Upstream ADRs | ADR-D2-15 |

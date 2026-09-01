@@ -1,8 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
-from pf_ft_ai.agents.affiliation.models import ApplicationSummary, ClubSummary
-from pf_ft_ai.agents.affiliation.states import AffiliationApplicationStatus
+from pff_fa_ai.agents.affiliation.models import ApplicationSummary, ClubSummary
+from pff_fa_ai.agents.affiliation.states import AffiliationApplicationStatus
 
 
 def test_application_summary_should_default_optional_fields() -> None:

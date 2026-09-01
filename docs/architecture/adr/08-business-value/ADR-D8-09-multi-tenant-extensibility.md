@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-01, ADR-D6-12, ADR-D4-10, ADR-D1-07, ADR-D8-08]
 source_docs:
-  - "MD files/3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md §77, §78"
-  - "MD files/4 AI/13.FP-FT-AI-RAG.md §36, §37, §152, §153"
-  - "MD files/4 AI/14.PF-FT-AI-EMBEDDING-VECTOR.md §47, §48"
+  - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §77, §78"
+  - "MD files/4 AI/13.PFF-FA-AI-RAG.md §36, §37, §152, §153"
+  - "MD files/4 AI/14.PFF-FA-AI-EMBEDDING-VECTOR.md §47, §48"
 build_phases: [23]
 impacted_paths:
-  - src/pf_ft_ai/
+  - src/pff_fa_ai/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -32,13 +32,13 @@ PFF AI will support multiple CFAs (County Football Associations) as **logical te
 shared infrastructure with strict per-tenant isolation** — tenant-scoped keys/namespaces
 (memory/cache/session, ADR-D4-10), tenant-filtered RAG (ADR-D6-12), tenant in the
 authorization context (ADR-D6-03), and per-tenant configuration overlays — rather than a
-separate deployment per county (9 PF-FT-AI-MEMORY-CACHE.md §77–§78; 13.FP-FT-AI-RAG.md §36–§37, §152–§153; 14.PF-FT-AI-EMBEDDING-VECTOR.md §47–§48).
+separate deployment per county (9 PFF-FA-AI-MEMORY-CACHE.md §77–§78; 13.PFF-FA-AI-RAG.md §36–§37, §152–§153; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §47–§48).
 Isolation is enforced, not assumed.
 
 ## 2. Context and Problem Statement
 
-9 PF-FT-AI-MEMORY-CACHE.md §77–§78 cross-user/cross-club isolation; 13.FP-FT-AI-RAG.md §36–§37 tenant/org filtering, §152–§153
-multi-tenant RAG/tenant-isolation principle; 14.PF-FT-AI-EMBEDDING-VECTOR.md §47–§48 index partitioning/multi-tenant
+9 PFF-FA-AI-MEMORY-CACHE.md §77–§78 cross-user/cross-club isolation; 13.PFF-FA-AI-RAG.md §36–§37 tenant/org filtering, §152–§153
+multi-tenant RAG/tenant-isolation principle; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §47–§48 index partitioning/multi-tenant
 vector architecture. The FA has many county associations; the platform must serve them without
 data leakage between counties and without a costly deployment per county. This ADR fixes the
 multi-tenant model.
@@ -47,7 +47,7 @@ multi-tenant model.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Strict per-tenant isolation (no leakage) | 9 PF-FT-AI-MEMORY-CACHE.md §77–§78; 13.FP-FT-AI-RAG.md §153 |
+| DR-C-01 | Strict per-tenant isolation (no leakage) | 9 PFF-FA-AI-MEMORY-CACHE.md §77–§78; 13.PFF-FA-AI-RAG.md §153 |
 | DR-F-01 | Tenant in authz context + filters | ADR-D6-03/D6-12 |
 | DR-F-02 | Per-tenant config overlays | ADR-D5-06 |
 | DR-N-01 | Cost-efficient (shared infra) | FinOps |
@@ -74,8 +74,8 @@ multi-tenant model.
 ### 5.1 Option A — Shared infra + logical isolation (tenant-scoped keys/filters/authz/config)
 
 **Description.** One deployment; tenant id in the authz context (ADR-D6-03); tenant-scoped
-namespaces for memory/cache/session (9 PF-FT-AI-MEMORY-CACHE.md §77–§78; ADR-D4-10); tenant-filtered RAG (13.FP-FT-AI-RAG.md
-§36–§37; ADR-D6-12); shared or partitioned index (14.PF-FT-AI-EMBEDDING-VECTOR.md §47–§48); per-tenant config overlays
+namespaces for memory/cache/session (9 PFF-FA-AI-MEMORY-CACHE.md §77–§78; ADR-D4-10); tenant-filtered RAG (13.PFF-FA-AI-RAG.md
+§36–§37; ADR-D6-12); shared or partitioned index (14.PFF-FA-AI-EMBEDDING-VECTOR.md §47–§48); per-tenant config overlays
 (ADR-D5-06).
 **Strengths.** Strong logical isolation, cost-efficient, easy to add counties.
 **Weaknesses.** Isolation must be rigorously enforced/tested.
@@ -105,7 +105,7 @@ namespaces for memory/cache/session (9 PF-FT-AI-MEMORY-CACHE.md §77–§78; ADR
 ### 5.5 Option E — Shared infra + logical isolation + per-tenant isolation for sensitive data + isolation test suite
 
 **Description.** Option A with per-tenant isolated store/index only for the most sensitive
-data (e.g. safeguarding) (14.PF-FT-AI-EMBEDDING-VECTOR.md §48 hybrid) and a mandatory cross-tenant isolation test
+data (e.g. safeguarding) (14.PFF-FA-AI-EMBEDDING-VECTOR.md §48 hybrid) and a mandatory cross-tenant isolation test
 suite in CI.
 **Strengths.** A's efficiency + stronger isolation where it matters + proven isolation.
 **Weaknesses.** Mixed isolation model.
@@ -115,13 +115,13 @@ suite in CI.
 
 | Option | Eliminated by |
 |---|---|
-| No tenant isolation | 13.FP-FT-AI-RAG.md §153 |
+| No tenant isolation | 13.PFF-FA-AI-RAG.md §153 |
 | Tenant id from user input (spoofable) | ADR-D6-03 (server-owned) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 9 PF-FT-AI-MEMORY-CACHE.md §77–§78, 13.FP-FT-AI-RAG.md §36–§37/§152–§153,
-14.PF-FT-AI-EMBEDDING-VECTOR.md §47–§48.
+**Method.** Weighted scoring against §4, informed by 9 PFF-FA-AI-MEMORY-CACHE.md §77–§78, 13.PFF-FA-AI-RAG.md §36–§37/§152–§153,
+14.PFF-FA-AI-EMBEDDING-VECTOR.md §47–§48.
 
 | Criterion | Weight | A: Shared+logical | B: Deploy-per-county | C: No tenant model | D: Shared+isolated store | E: A+sensitive-isolation+tests |
 |---|---|---|---|---|---|---|
@@ -151,12 +151,12 @@ are rejected.
 ## 8. Architecture Detail
 
 - Tenant id derived from validated claims (ADR-D6-03), never user input; tenant-scoped keys
-  for memory/cache/session (9 PF-FT-AI-MEMORY-CACHE.md §77–§78; ADR-D4-10); RAG metadata filter includes tenant
-  (13.FP-FT-AI-RAG.md §36; ADR-D6-12); shared or partitioned index (14.PF-FT-AI-EMBEDDING-VECTOR.md §47), with an isolated index/
+  for memory/cache/session (9 PFF-FA-AI-MEMORY-CACHE.md §77–§78; ADR-D4-10); RAG metadata filter includes tenant
+  (13.PFF-FA-AI-RAG.md §36; ADR-D6-12); shared or partitioned index (14.PFF-FA-AI-EMBEDDING-VECTOR.md §47), with an isolated index/
   store for safeguarding-grade data (§48; ADR-D6-16).
 - Per-tenant config overlays (ADR-D5-06) for county differences (personas remain shared,
   ADR-D3-10); onboarding a county = config + registration, no core change (ADR-D8-08); a CI
-  isolation test suite (22.PF-FT-AI-TESTING.md §56) proves no cross-tenant access.
+  isolation test suite (22.PFF-FA-AI-TESTING.md §56) proves no cross-tenant access.
 
 ## 9. Consequences
 
@@ -215,7 +215,7 @@ are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 23 → multi-tenant rollout |
-| Repository paths | `src/pf_ft_ai/` (tenant scoping) |
+| Repository paths | `src/pff_fa_ai/` (tenant scoping) |
 | Configuration | Per-tenant overlays; isolation config |
 | Contracts / schemas | Tenant in authz context + metadata |
 | Migration | Single→multi-tenant enablement |
@@ -263,7 +263,7 @@ are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-37 |
-| Specification sections | 9 PF-FT-AI-MEMORY-CACHE.md §77–§78; 13.FP-FT-AI-RAG.md §36–§37, §152–§153; 14.PF-FT-AI-EMBEDDING-VECTOR.md §47–§48 |
+| Specification sections | 9 PFF-FA-AI-MEMORY-CACHE.md §77–§78; 13.PFF-FA-AI-RAG.md §36–§37, §152–§153; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §47–§48 |
 | Requirement IDs | MT-* |
 | Build phases | 23 → rollout |
 | Code paths | tenant scoping |

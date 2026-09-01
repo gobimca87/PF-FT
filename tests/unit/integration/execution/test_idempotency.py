@@ -1,8 +1,8 @@
-from pf_ft_ai.integration.execution.idempotency import (
+from pff_fa_ai.integration.execution.idempotency import (
     InMemoryIdempotencyStore,
     build_idempotency_key,
 )
-from pf_ft_ai.integration.execution.states import IdempotencyStatus
+from pff_fa_ai.integration.execution.states import IdempotencyStatus
 
 
 def test_should_build_key_from_workflow_and_operation_id() -> None:

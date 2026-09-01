@@ -2,9 +2,9 @@ import asyncio
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.configuration.models import ConcurrencyPoolSettings, ConcurrencySettings
-from pf_ft_ai.integration.execution.concurrency import ConcurrencyLimiter
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.configuration.models import ConcurrencyPoolSettings, ConcurrencySettings
+from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
 
 SETTINGS = ConcurrencySettings(
     global_max=20,

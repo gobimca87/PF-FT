@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-16, ADR-D5-17, ADR-D3-25, ADR-D3-19, ADR-D7-07]
 source_docs:
-  - "MD files/6 Production/26.PF-FT-AI-PERFORMANCE-COST.md §5, §6, §7, §8, §9, §10, §11, §16, §39, §52"
+  - "MD files/6 Production/26.PFF-FA-AI-PERFORMANCE-COST.md §5, §6, §7, §8, §9, §10, §11, §16, §39, §52"
 build_phases: [2, 8]
 impacted_paths:
-  - src/pf_ft_ai/
+  - src/pff_fa_ai/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -29,13 +29,13 @@ review_due: 2027-08-22
 PFF AI will define an **end-to-end latency budget** measured in **percentiles (p50/
 p95/p99)** and **decompose it into per-hop sub-budgets** — gateway, orchestration, ERC
 collection, retrieval, SLM generation, tool calls — each with an **owner** and an SLO,
-so latency regressions are attributable and enforceable (26.PF-FT-AI-PERFORMANCE-COST.md §5–§11, §16, §39,
+so latency regressions are attributable and enforceable (26.PFF-FA-AI-PERFORMANCE-COST.md §5–§11, §16, §39,
 §52). Time-to-first-token and time-to-complete are tracked separately for streamed
 responses.
 
 ## 2. Context and Problem Statement
 
-26.PF-FT-AI-PERFORMANCE-COST.md §5–§9 define performance objectives, end-to-end latency, percentiles and the
+26.PFF-FA-AI-PERFORMANCE-COST.md §5–§9 define performance objectives, end-to-end latency, percentiles and the
 latency budget; §9 latency-budget ownership; §10–§11 TTFT/time-to-complete; §16 API
 latency; §39 model latency; §52 RAG latency breakdown. Without a decomposed,
 owned budget, a slow end-to-end response has no attributable cause and no team is
@@ -45,10 +45,10 @@ accountable for a hop. This ADR fixes the budget model and per-hop allocation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | End-to-end budget in percentiles | 26.PF-FT-AI-PERFORMANCE-COST.md §6–§8 |
-| DR-F-02 | Per-hop sub-budgets with owners | 26.PF-FT-AI-PERFORMANCE-COST.md §8–§9 |
-| DR-F-03 | TTFT vs time-to-complete for streaming | 26.PF-FT-AI-PERFORMANCE-COST.md §10–§11; ADR-D3-19 |
-| DR-N-01 | Attributable regressions | 26.PF-FT-AI-PERFORMANCE-COST.md §52 |
+| DR-F-01 | End-to-end budget in percentiles | 26.PFF-FA-AI-PERFORMANCE-COST.md §6–§8 |
+| DR-F-02 | Per-hop sub-budgets with owners | 26.PFF-FA-AI-PERFORMANCE-COST.md §8–§9 |
+| DR-F-03 | TTFT vs time-to-complete for streaming | 26.PFF-FA-AI-PERFORMANCE-COST.md §10–§11; ADR-D3-19 |
+| DR-N-01 | Attributable regressions | 26.PFF-FA-AI-PERFORMANCE-COST.md §52 |
 
 ### 3.4 Assumptions
 
@@ -89,7 +89,7 @@ tool sub-budgets, each owned and alerted; TTFT and time-to-complete tracked for 
 
 **Description.** Track/target mean latency.
 **Strengths.** Simple metric.
-**Weaknesses.** Means hide tail latency users feel; 26.PF-FT-AI-PERFORMANCE-COST.md §7 wants percentiles.
+**Weaknesses.** Means hide tail latency users feel; 26.PFF-FA-AI-PERFORMANCE-COST.md §7 wants percentiles.
 **Cost / effort.** Low; misleading.
 
 ### 5.4 Option D — Per-hop budgets but no owners/gates (informational)
@@ -111,12 +111,12 @@ multi-step affiliation).
 
 | Option | Eliminated by |
 |---|---|
-| No latency targets | 26.PF-FT-AI-PERFORMANCE-COST.md §5–§6 |
+| No latency targets | 26.PFF-FA-AI-PERFORMANCE-COST.md §5–§6 |
 | Max-latency-only (no percentiles) | Hides typical UX |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 26.PF-FT-AI-PERFORMANCE-COST.md §5–§11/§16/§39/§52.
+**Method.** Weighted scoring against §4, informed by 26.PFF-FA-AI-PERFORMANCE-COST.md §5–§11/§16/§39/§52.
 
 | Criterion | Weight | A: Per-hop owned percentile | B: E2E only | C: Averages | D: Hops no-owner | E: Per-workflow |
 |---|---|---|---|---|---|---|
@@ -142,14 +142,14 @@ gates in CI perf tests (Option A).** Per-workflow-class budgets (E) will be laye
 as workflows diversify. E2E-only (B), averages (C) and owner-less hops (D) are
 rejected.
 
-**Status rationale.** `Accepted` — 26.PF-FT-AI-PERFORMANCE-COST.md §5–§11 govern this.
+**Status rationale.** `Accepted` — 26.PFF-FA-AI-PERFORMANCE-COST.md §5–§11 govern this.
 
 ## 8. Architecture Detail
 
-- Budget table maps each hop to a p95 sub-budget + owner (26.PF-FT-AI-PERFORMANCE-COST.md §9); the sum + overhead
+- Budget table maps each hop to a p95 sub-budget + owner (26.PFF-FA-AI-PERFORMANCE-COST.md §9); the sum + overhead
   ≤ the end-to-end p95 target.
 - Tracing (ADR-D7-02) tags spans per hop so SLIs are computed per hop; TTFT/complete
-  (ADR-D3-19) tracked for streams; RAG breakdown (26.PF-FT-AI-PERFORMANCE-COST.md §52) sub-decomposed
+  (ADR-D3-19) tracked for streams; RAG breakdown (26.PFF-FA-AI-PERFORMANCE-COST.md §52) sub-decomposed
   (embed/search/rerank).
 - CI perf tests assert hop budgets on representative flows; alerts fire on per-hop
   breach (ADR-D7-07/08). Context assembly (ADR-D3-25) and autoscaling (ADR-D5-17) use
@@ -260,7 +260,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-26 |
-| Specification sections | 26.PF-FT-AI-PERFORMANCE-COST.md §5–§11, §16, §39, §52 |
+| Specification sections | 26.PFF-FA-AI-PERFORMANCE-COST.md §5–§11, §16, §39, §52 |
 | Requirement IDs | LAT-* |
 | Build phases | 2, 8 |
 | Code paths | platform-wide |

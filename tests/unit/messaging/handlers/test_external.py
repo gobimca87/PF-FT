@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.registry import EventRoute
-from pf_ft_ai.messaging.handlers.external import ExternalEventHandler
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.registry import EventRoute
+from pff_fa_ai.messaging.handlers.external import ExternalEventHandler
 
 
 async def test_should_acknowledge_an_external_event() -> None:

@@ -1,10 +1,10 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import GuardrailError
-from pf_ft_ai.configuration.models import MemorySettings
-from pf_ft_ai.memory.models import MemoryScope, MemorySource, MemoryWriteRequest
-from pf_ft_ai.memory.policy import authorize_write, resolve_ttl_seconds
-from pf_ft_ai.memory.states import MemoryCategory, MemoryConfidence, MemorySourceType
+from pff_fa_ai.common.exceptions import GuardrailError
+from pff_fa_ai.configuration.models import MemorySettings
+from pff_fa_ai.memory.models import MemoryScope, MemorySource, MemoryWriteRequest
+from pff_fa_ai.memory.policy import authorize_write, resolve_ttl_seconds
+from pff_fa_ai.memory.states import MemoryCategory, MemoryConfidence, MemorySourceType
 
 _SCOPE = MemoryScope(tenant_id="tenant-1", user_id="user-1")
 

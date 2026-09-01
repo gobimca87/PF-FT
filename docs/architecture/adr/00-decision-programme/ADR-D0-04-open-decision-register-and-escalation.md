@@ -14,8 +14,8 @@ supersedes: ["docs/adr/0003-deferred-decisions-log.md"]
 superseded_by: []
 related_adrs: [ADR-D0-01, ADR-D0-02, ADR-D0-03, ADR-D3-24, ADR-D5-10, ADR-D5-12, ADR-D5-13, ADR-D8-06]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §18, §19, §20, §101, §102, §103, §104"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §73"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §18, §19, §20, §101, §102, §103, §104"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §73"
 build_phases: [0, 8, 19, 21]
 impacted_paths:
   - docs/architecture/adr/_register/open-decisions.md
@@ -56,7 +56,7 @@ open decision resolves itself badly:
 
 Deferral itself is not the problem. Deferring a vector store choice until the retrieval
 requirements are known is better engineering than picking one during architecture. The
-problem is deferral without a closing condition — which 20.PF-FT-AI-GOVERNANCE.md §103 identifies precisely,
+problem is deferral without a closing condition — which 20.PFF-FA-AI-GOVERNANCE.md §103 identifies precisely,
 in the context of governance exceptions: avoid permanent exceptions; if a control is
 permanently unsuitable, update the policy or redesign, rather than leaving an indefinite
 exception open.
@@ -74,9 +74,9 @@ reaching Phase 8 with the vector store still open learns only that it is still o
 |---|---|---|
 | DR-F-01 | Open decisions must be visible as open, not absent | `CLAUDE.md` §Confirmed Tech Stack |
 | DR-F-02 | An open decision must not be resolvable by implementation | `DEVELOPMENT-GUIDE.md` §2 |
-| DR-F-03 | Every deferral must carry a closing condition | 20.PF-FT-AI-GOVERNANCE.md §103 (Permanent Exceptions) |
-| DR-F-04 | Reaching the closing condition unresolved must escalate | 20.PF-FT-AI-GOVERNANCE.md §104 (Governance Escalation) |
-| DR-F-05 | An open decision must carry enough analysis that closing it is a choice, not a research project | 20.PF-FT-AI-GOVERNANCE.md §19 (Risk Treatment) |
+| DR-F-03 | Every deferral must carry a closing condition | 20.PFF-FA-AI-GOVERNANCE.md §103 (Permanent Exceptions) |
+| DR-F-04 | Reaching the closing condition unresolved must escalate | 20.PFF-FA-AI-GOVERNANCE.md §104 (Governance Escalation) |
+| DR-F-05 | An open decision must carry enough analysis that closing it is a choice, not a research project | 20.PFF-FA-AI-GOVERNANCE.md §19 (Risk Treatment) |
 
 ### 3.2 Non-functional drivers
 
@@ -93,7 +93,7 @@ reaching Phase 8 with the vector store still open learns only that it is still o
 | DR-C-01 | Four decisions are open by explicit instruction and must not be pre-resolved | Organisational | `CLAUDE.md`; `DEVELOPMENT-GUIDE.md` §2 |
 | DR-C-02 | `DEVELOPMENT-GUIDE.md` §4's 24 phases are the programme's schedule and are the natural closing conditions | Organisational | `DEVELOPMENT-GUIDE.md` §4 |
 | DR-C-03 | The status lifecycle is fixed by ADR-D0-02; no new status may be introduced | Organisational | ADR-D0-02 §7.2 |
-| DR-C-04 | Open architecture choices are built behind interfaces, so the choice stays reversible while open | Platform | `docs/adr/0004` §Context; 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 |
+| DR-C-04 | Open architecture choices are built behind interfaces, so the choice stays reversible while open | Platform | `docs/adr/0004` §Context; 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 |
 
 ### 3.4 Assumptions
 
@@ -108,7 +108,7 @@ reaching Phase 8 with the vector store still open learns only that it is still o
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Prevents resolution by implementation | 30 | The specific failure `CLAUDE.md` and `DEVELOPMENT-GUIDE.md` §2 both warn against, and the one with the highest reversal cost | Can code land that presumes an unmade choice without anyone noticing? |
-| EC-02 | Forces closure at the right time | 25 | Deferral without a closing condition is 20.PF-FT-AI-GOVERNANCE.md §103's indefinite exception | Is there a specific, detectable event that forces the question? |
+| EC-02 | Forces closure at the right time | 25 | Deferral without a closing condition is 20.PFF-FA-AI-GOVERNANCE.md §103's indefinite exception | Is there a specific, detectable event that forces the question? |
 | EC-03 | Decision-readiness when the moment arrives | 20 | An open decision with no analysis behind it becomes a research project at the worst moment | Can the approver decide in one sitting from what is recorded? |
 | EC-04 | Visibility | 15 | An open decision nobody can find is a made decision | Is it discoverable without reading the library? |
 | EC-05 | Cost to maintain | 10 | Tracking overhead should not exceed the value of tracking | Effort per open decision per cycle |
@@ -162,7 +162,7 @@ need them.
 **Description.** Each open decision is written as a complete ADR — criteria, alternatives,
 weighted matrix, recommendation — carrying `status: Proposed`. It names the build phase it
 must close by, is listed in `_register/open-decisions.md`, and reaching its phase unclosed
-escalates per 20.PF-FT-AI-GOVERNANCE.md §104.
+escalates per 20.PFF-FA-AI-GOVERNANCE.md §104.
 
 **Strengths.**
 - The analysis is done in calm conditions; closure at the phase is a ratification meeting,
@@ -184,7 +184,7 @@ escalates per 20.PF-FT-AI-GOVERNANCE.md §104.
 
 ### 5.4 Option D — Track open decisions as risks in the AI risk register
 
-**Description.** Enter each unmade decision in the 20.PF-FT-AI-GOVERNANCE.md §18 AI risk register, with
+**Description.** Enter each unmade decision in the 20.PFF-FA-AI-GOVERNANCE.md §18 AI risk register, with
 treatment per §19 and residual risk per §20.
 
 **Strengths.**
@@ -245,7 +245,7 @@ terms, that the recommendation is not a decision and that no implementation may 
 ### 7.2 Phase gating
 
 Every open decision names, in its §7 and in the register, the `DEVELOPMENT-GUIDE.md` §4
-build phase by which it must close. The phase is the closing condition 20.PF-FT-AI-GOVERNANCE.md §103 requires.
+build phase by which it must close. The phase is the closing condition 20.PFF-FA-AI-GOVERNANCE.md §103 requires.
 
 | Open decision | ADR | Must close by |
 |---|---|---|
@@ -264,7 +264,7 @@ Three rules hold:
 1. **Build behind an interface.** The open choice sits behind an abstraction — `VectorStore`,
    `MemoryStore`, and so on — so that closing the decision changes an adapter and no calling
    code (DR-C-04). This is the practice `docs/adr/0004` already established for the memory
-   store and 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 requires.
+   store and 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 requires.
 2. **No production dependency.** No production configuration, deployment manifest or
    release manifest may name a candidate for an open decision. A development-time default
    behind the interface is permitted and must be labelled as such in configuration.
@@ -274,7 +274,7 @@ Three rules hold:
 
 ### 7.4 Escalation
 
-Reaching a decision's closing phase without ratification is an escalation under 20.PF-FT-AI-GOVERNANCE.md §104:
+Reaching a decision's closing phase without ratification is an escalation under 20.PFF-FA-AI-GOVERNANCE.md §104:
 
 ```mermaid
 flowchart TD
@@ -284,13 +284,13 @@ flowchart TD
     D --> E{Can it be closed now?}
     E -- Yes --> F[Ratify per ADR-D0-03 tier.<br/>status: Accepted]
     E -- No --> G[Formal deferral: new closing phase,<br/>documented reason, compensating controls]
-    G --> H[Recorded as an exception per<br/>20.PF-FT-AI-GOVERNANCE.md §101-§102 with an expiry date]
+    G --> H[Recorded as an exception per<br/>20.PFF-FA-AI-GOVERNANCE.md §101-§102 with an expiry date]
     H --> I[Phase proceeds only on the parts that<br/>do not depend on the decision]
 ```
 
-A formal deferral under §7.4 is a governance exception in 20.PF-FT-AI-GOVERNANCE.md §101's sense and takes
+A formal deferral under §7.4 is a governance exception in 20.PFF-FA-AI-GOVERNANCE.md §101's sense and takes
 that shape — reason, risk, compensating controls, owner, approver, start date, expiry,
-review date. It is not a quiet slip of the date. Per 20.PF-FT-AI-GOVERNANCE.md §103, a decision deferred twice
+review date. It is not a quiet slip of the date. Per 20.PFF-FA-AI-GOVERNANCE.md §103, a decision deferred twice
 is escalated to the AI Platform Owner: two deferrals suggest the closing condition was
 wrong, or that nobody intends to decide.
 
@@ -307,7 +307,7 @@ The record keeps its ID. It does not become a new ADR on ratification — the `P
 version and the `Accepted` version are the same decision at two stages, and §20 carries the
 history.
 
-**Status rationale.** Accepted. Concerns how open decisions are tracked, not any 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
+**Status rationale.** Accepted. Concerns how open decisions are tracked, not any 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52
 category, so tier 3 under ADR-D0-03.
 
 ## 8. Architecture Detail
@@ -336,7 +336,7 @@ remains in place unmodified per ADR-D0-01 §8.4. Its content maps forward as:
 Three rows in `0003` recorded accepted decisions with the note "no dedicated ADR needed."
 Under ADR-D0-02 §7.4's significance test each qualifies — the environment model is
 cross-cutting, the agent catalogue scope is user-facing, and the deployment strategy is a
-2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 deployment-boundary decision — so each now has its own record.
+2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52 deployment-boundary decision — so each now has its own record.
 
 ### 8.3 Why the interface rule matters more than the register
 
@@ -354,7 +354,7 @@ buying nothing.
 - Open decisions are visible, analysed and dated; none of the three bad resolutions in §2
   can happen silently.
 - Closure at a phase gate is a ratification meeting rather than an evaluation project.
-- Deferral becomes a governed act with an expiry, matching 20.PF-FT-AI-GOVERNANCE.md §101–§103.
+- Deferral becomes a governed act with an expiry, matching 20.PFF-FA-AI-GOVERNANCE.md §101–§103.
 - `CLAUDE.md`'s "resolve via ADR, don't silently pick one" becomes enforceable at pull
   request review.
 - `docs/adr/0003`'s three "no dedicated ADR needed" decisions gain proper records.
@@ -379,7 +379,7 @@ buying nothing.
 | Given up | In exchange for | Accepted by |
 |---|---|---|
 | ~0.5 architect-day per open decision, ahead of the decision | Closure as a meeting rather than a project, at the moment of maximum time pressure | AI Solution Architect |
-| Freedom to defer indefinitely | Bounded deferral with an expiry, per 20.PF-FT-AI-GOVERNANCE.md §103 | AI Platform Owner |
+| Freedom to defer indefinitely | Bounded deferral with an expiry, per 20.PFF-FA-AI-GOVERNANCE.md §103 | AI Platform Owner |
 | An abstraction layer around each open choice | Reversibility while the choice is open | AI Engineering Lead |
 
 ## 10. Golden-Rule and Precedence Conformance
@@ -399,7 +399,7 @@ buying nothing.
 | RSK-01 | An open decision is resolved by implementation before its gate | Medium | High | High | §7.3 interface rule and review check; `Proposed` status makes the objection concrete at review; QM-01 | AI Engineering Lead | Low |
 | RSK-02 | The stated recommendation becomes the decision by inertia, never actually ratified | Medium | Medium | Medium | §7.1 requires the non-binding statement in §7; §7.5 requires a refresh of §5–§6 before ratification, forcing a fresh look | AI Solution Architect | Medium |
 | RSK-03 | Analysis goes stale between authoring and closure | High | Low | Medium | §7.5 step 1 mandates refresh at closure; accepted as the cost of early analysis | AI Solution Architect | Low |
-| RSK-04 | Decisions deferred repeatedly, becoming 20.PF-FT-AI-GOVERNANCE.md §103's permanent exception | Medium | High | High | §7.4 escalates a twice-deferred decision to the AI Platform Owner; every deferral carries an expiry | AI Platform Owner | Low |
+| RSK-04 | Decisions deferred repeatedly, becoming 20.PFF-FA-AI-GOVERNANCE.md §103's permanent exception | Medium | High | High | §7.4 escalates a twice-deferred decision to the AI Platform Owner; every deferral carries an expiry | AI Platform Owner | Low |
 | RSK-05 | Interface abstraction proves insufficient and the choice has leaked into calling code | Low | High | Medium | Verified at closure (DR-A-01); if leaked, the gate moves earlier and the leak is remediated before the phase proceeds | AI Engineering Lead | Medium |
 | RSK-06 | Open decisions accumulate beyond DR-N-03's limit of six | Low | Medium | Low | Monthly review per ADR-D0-03 §7.3 reviews the open list; QM-05 | AI Solution Architect | Low |
 
@@ -428,7 +428,7 @@ to right than the matrix suggested. Either reading is useful; neither is a failu
 | Personal data / PII | None. |
 | Children's data and safeguarding | Indirect but real: the vector store (ADR-D3-24) will hold embeddings derived from documents that may reference minors, and ACL enforcement depends on the chosen store's metadata filtering. §7.3's no-production-dependency rule prevents that being settled by an adapter written in a hurry. ADR-D6-12 carries the substantive control. |
 | UK GDPR lawful basis and rights impact | Indirect. Data-residency and processor obligations differ across vector store candidates; §7.5's refresh step keeps that assessment current at the point of decision. |
-| Audit and evidential requirements | Supports 20.PF-FT-AI-GOVERNANCE.md §102 by giving every deferral the required shape — reason, risk, compensating controls, owner, approver, expiry. |
+| Audit and evidential requirements | Supports 20.PFF-FA-AI-GOVERNANCE.md §102 by giving every deferral the required shape — reason, risk, compensating controls, owner, approver, expiry. |
 | Standards touched | ISO/IEC 42001 (AI management system — planning and change control); ISO 9001 §6.1 (actions to address risks and opportunities); CMMI-DEV DAR SP 1.2, RSKM, PP/PMC. |
 
 ## 14. Implementation Impact
@@ -436,7 +436,7 @@ to right than the matrix suggested. Either reading is useful; neither is a failu
 | Aspect | Detail |
 |---|---|
 | Build phases | 0 (establish), 8 and 19 (gates), 21 (governance artefacts) |
-| Repository paths | `docs/architecture/adr/_register/open-decisions.md`; interface modules `src/pf_ft_ai/embedding_vector/`, `src/pf_ft_ai/slm/providers/` |
+| Repository paths | `docs/architecture/adr/_register/open-decisions.md`; interface modules `src/pff_fa_ai/embedding_vector/`, `src/pff_fa_ai/slm/providers/` |
 | Configuration | §7.3 prohibits production configuration naming an open candidate; development defaults must be labelled as such |
 | Contracts / schemas | None new; relies on ADR-D0-02's `status` field |
 | Migration | `docs/adr/0003-deferred-decisions-log.md` superseded, not edited; its rows map forward per §8.2 |
@@ -452,7 +452,7 @@ to right than the matrix suggested. Either reading is useful; neither is a failu
 | AC-03 | Every `Proposed` ADR contains a complete §5 and §6 with a stated recommendation | Governance review sampling |
 | AC-04 | Every `Proposed` ADR's §7 states the recommendation is not binding | Grep for the non-binding statement |
 | AC-05 | No production configuration or deployment manifest names a candidate for an open decision | QM-01 grep, run per release |
-| AC-06 | Each open decision's subject is reached only through an interface, not a concrete type, in calling code | Import-boundary check over `src/pf_ft_ai/` |
+| AC-06 | Each open decision's subject is reached only through an interface, not a concrete type, in calling code | Import-boundary check over `src/pff_fa_ai/` |
 | AC-07 | `docs/adr/0003-deferred-decisions-log.md` is unmodified | `git log -- docs/adr/0003-deferred-decisions-log.md` |
 
 ## 16. Operational Impact
@@ -473,7 +473,7 @@ to right than the matrix suggested. Either reading is useful; neither is a failu
 | Register and process definition | ~0.25 architect-day | — | This record |
 | Authoring each `Proposed` ADR | ~0.5 architect-day each | — | Four currently open under DR-C-01 |
 | Refresh at closure | — | ~0.25 architect-day per closure | §7.5 step 1 |
-| Interface abstraction | Absorbed | — | Already required by 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 and existing practice |
+| Interface abstraction | Absorbed | — | Already required by 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 and existing practice |
 | Monthly review item | — | ~15 minutes per month | ADR-D0-03 §7.3 |
 
 ## 18. Revisit Triggers and Causal Analysis Hooks
@@ -494,10 +494,10 @@ to right than the matrix suggested. Either reading is useful; neither is a failu
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-36 Risks, Assumptions & Decision Register |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §18 (AI Risk Register), §19 (Risk Treatment), §20 (Residual Risk), §101 (Governance Exceptions), §102 (Exception Requirements), §103 (Permanent Exceptions), §104 (Governance Escalation); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §73 (Change Control); 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 (Provider Independence) |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §18 (AI Risk Register), §19 (Risk Treatment), §20 (Residual Risk), §101 (Governance Exceptions), §102 (Exception Requirements), §103 (Permanent Exceptions), §104 (Governance Escalation); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §73 (Change Control); 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 (Provider Independence) |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 8, 19, 21 |
-| Code paths | `src/pf_ft_ai/embedding_vector/`, `src/pf_ft_ai/slm/providers/` — interface boundaries protecting open choices |
+| Code paths | `src/pff_fa_ai/embedding_vector/`, `src/pff_fa_ai/slm/providers/` — interface boundaries protecting open choices |
 | Configuration | `config/environments/prod/` — subject to QM-01 |
 | Tests | AC-01 to AC-07 |
 | Upstream ADRs | ADR-D0-01, ADR-D0-02, ADR-D0-03 |
@@ -508,4 +508,4 @@ to right than the matrix suggested. Either reading is useful; neither is a failu
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Open decisions as `Proposed` ADRs, phase-gated closing conditions, escalation per 20.PF-FT-AI-GOVERNANCE.md §104, interface rule preserving reversibility. |
+| 1.0.0 | 2026-08-21 | AI Solution Architect | Initial decision recorded. Open decisions as `Proposed` ADRs, phase-gated closing conditions, escalation per 20.PFF-FA-AI-GOVERNANCE.md §104, interface rule preserving reversibility. |

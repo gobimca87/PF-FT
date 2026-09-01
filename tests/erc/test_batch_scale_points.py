@@ -1,4 +1,4 @@
-from pf_ft_ai.context.collection.batching import split_into_batches
+from pff_fa_ai.context.collection.batching import split_into_batches
 
 # doc 22 §52 / DEVELOPMENT-GUIDE Phase 17: ERC batching must be explicitly verified at
 # these named scale points, in addition to the general-purpose edge cases already

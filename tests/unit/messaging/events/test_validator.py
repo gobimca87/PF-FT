@@ -2,9 +2,9 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ValidationError
-from pf_ft_ai.messaging.events.models import EventEnvelope
-from pf_ft_ai.messaging.events.validator import validate_envelope
+from pff_fa_ai.common.exceptions import ValidationError
+from pff_fa_ai.messaging.events.models import EventEnvelope
+from pff_fa_ai.messaging.events.validator import validate_envelope
 
 
 def _envelope(**overrides: object) -> EventEnvelope:

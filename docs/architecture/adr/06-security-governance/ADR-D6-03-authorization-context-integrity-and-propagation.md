@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D6-02, ADR-D2-07, ADR-D3-04, ADR-D6-12, ADR-D2-09]
 source_docs:
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §12, §13, §14, §15"
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §34, §35, §36, §37"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §12, §13, §14, §15"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §34, §35, §36, §37"
 build_phases: [3]
 impacted_paths:
-  - src/pf_ft_ai/orchestration/
+  - src/pff_fa_ai/orchestration/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -30,13 +30,13 @@ review_due: 2027-08-22
 The validated **authorization context** (identity + claims from APIM, ADR-D6-02) will
 be carried as **immutable, server-owned state propagated through every LangGraph node,
 tool call and ERC/RAG access** — never re-derived from user input, never mutated by the
-model, and checked at each enforcement point (19.PF-FT-AI-SECURITY.md §12–§15; 18.PF-FT-AI-GUARDRAILS.md §34–§37). Tools
+model, and checked at each enforcement point (19.PFF-FA-AI-SECURITY.md §12–§15; 18.PFF-FA-AI-GUARDRAILS.md §34–§37). Tools
 and retrieval receive the same authorization context so access is consistent end-to-end.
 
 ## 2. Context and Problem Statement
 
-19.PF-FT-AI-SECURITY.md §12–§15 define authorization context, its integrity, propagation and boundary;
-18.PF-FT-AI-GUARDRAILS.md §34–§37 authorization-context enforcement, that it cannot be user-controlled, its
+19.PFF-FA-AI-SECURITY.md §12–§15 define authorization context, its integrity, propagation and boundary;
+18.PFF-FA-AI-GUARDRAILS.md §34–§37 authorization-context enforcement, that it cannot be user-controlled, its
 propagation and the authorization-context guardrail. In a multi-node agent graph, the
 authorization context must reach every node/tool/retrieval unchanged; if a node could
 alter it or a tool ran without it, privilege escalation or cross-tenant access follows.
@@ -46,10 +46,10 @@ This ADR fixes integrity + propagation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | Authz context immutable + server-owned | 18.PF-FT-AI-GUARDRAILS.md §35; 19.PF-FT-AI-SECURITY.md §13 |
-| DR-F-01 | Propagate to every node/tool/retrieval | 19.PF-FT-AI-SECURITY.md §14; 18.PF-FT-AI-GUARDRAILS.md §36 |
-| DR-F-02 | Enforced at each access (tool/ERC/RAG) | 18.PF-FT-AI-GUARDRAILS.md §37; ADR-D3-04, D6-12 |
-| DR-C-02 | Never re-derived from user input | 18.PF-FT-AI-GUARDRAILS.md §35 |
+| DR-C-01 | Authz context immutable + server-owned | 18.PFF-FA-AI-GUARDRAILS.md §35; 19.PFF-FA-AI-SECURITY.md §13 |
+| DR-F-01 | Propagate to every node/tool/retrieval | 19.PFF-FA-AI-SECURITY.md §14; 18.PFF-FA-AI-GUARDRAILS.md §36 |
+| DR-F-02 | Enforced at each access (tool/ERC/RAG) | 18.PFF-FA-AI-GUARDRAILS.md §37; ADR-D3-04, D6-12 |
+| DR-C-02 | Never re-derived from user input | 18.PFF-FA-AI-GUARDRAILS.md §35 |
 
 ### 3.4 Assumptions
 
@@ -74,7 +74,7 @@ This ADR fixes integrity + propagation.
 
 **Description.** Context injected once (from validated claims), stored immutably in
 graph state (ADR-D2-07), read by every node/tool/retrieval; enforcement at tool gate
-(ADR-D3-04) and RAG ACL (ADR-D6-12); an authorization-context guardrail (18.PF-FT-AI-GUARDRAILS.md §37)
+(ADR-D3-04) and RAG ACL (ADR-D6-12); an authorization-context guardrail (18.PFF-FA-AI-GUARDRAILS.md §37)
 verifies presence/integrity.
 **Strengths.** Tamper-proof; complete; consistent.
 **Weaknesses.** Must thread context everywhere (framework support helps).
@@ -120,7 +120,7 @@ crypto — good for cross-service hops.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §12–§15 and 18.PF-FT-AI-GUARDRAILS.md §34–§37.
+**Method.** Weighted scoring against §4, informed by 19.PFF-FA-AI-SECURITY.md §12–§15 and 18.PFF-FA-AI-GUARDRAILS.md §34–§37.
 
 | Criterion | Weight | A: Immutable in state | B: Re-derive | C: Mutable shared | D: Out-of-band store | E: Signed token |
 |---|---|---|---|---|---|---|
@@ -146,7 +146,7 @@ each access, with an authorization-context guardrail verifying its presence and
 integrity (Option A).** Signed context tokens (E) may be layered for cross-service hops.
 Re-derivation from user input (B) and mutable context (C) are forbidden.
 
-**Status rationale.** `Accepted` — 19.PF-FT-AI-SECURITY.md §12–§15 and 18.PF-FT-AI-GUARDRAILS.md §34–§37 mandate this.
+**Status rationale.** `Accepted` — 19.PFF-FA-AI-SECURITY.md §12–§15 and 18.PFF-FA-AI-GUARDRAILS.md §34–§37 mandate this.
 
 ## 8. Architecture Detail
 
@@ -154,7 +154,7 @@ Re-derivation from user input (B) and mutable context (C) are forbidden.
   field of TypedDict state (ADR-D2-07); nodes read, never write it.
 - Enforcement: the harness (ADR-D2-09) passes context to every tool and gates on it
   (ADR-D3-04); RAG retrieval filters by it (ADR-D6-12); ERC access respects it.
-- The authorization-context guardrail (18.PF-FT-AI-GUARDRAILS.md §37) fails closed if context is missing,
+- The authorization-context guardrail (18.PFF-FA-AI-GUARDRAILS.md §37) fails closed if context is missing,
   altered, or user-sourced.
 
 ## 9. Consequences
@@ -213,7 +213,7 @@ Re-derivation from user input (B) and mutable context (C) are forbidden.
 | Aspect | Detail |
 |---|---|
 | Build phases | 3 |
-| Repository paths | `src/pf_ft_ai/orchestration/` |
+| Repository paths | `src/pff_fa_ai/orchestration/` |
 | Configuration | Enforcement points |
 | Contracts / schemas | Immutable authz-context type |
 | Migration | N/A |
@@ -260,10 +260,10 @@ Re-derivation from user input (B) and mutable context (C) are forbidden.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 19.PF-FT-AI-SECURITY.md §12–§15; 18.PF-FT-AI-GUARDRAILS.md §34–§37 |
+| Specification sections | 19.PFF-FA-AI-SECURITY.md §12–§15; 18.PFF-FA-AI-GUARDRAILS.md §34–§37 |
 | Requirement IDs | SEC-CTX-* |
 | Build phases | 3 |
-| Code paths | `src/pf_ft_ai/orchestration/` |
+| Code paths | `src/pff_fa_ai/orchestration/` |
 | Configuration | enforcement points |
 | Tests | context integrity suites |
 | Upstream ADRs | ADR-D6-02, D2-07 |

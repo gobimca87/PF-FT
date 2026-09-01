@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from scripts.run_engineering_agents import main, print_report, run_all
 
-from pf_ft_ai.engineering_agents.states import GateStatus
+from pff_fa_ai.engineering_agents.states import GateStatus
 
 
 async def test_run_all_should_execute_the_four_wired_agents_against_the_real_repo() -> None:
@@ -38,9 +38,9 @@ def test_main_should_return_one_when_a_ruff_json_file_reports_a_critical_finding
 ) -> None:
     ruff_json = tmp_path / "ruff.json"
     ruff_json.write_text(
-        json.dumps(
-            [{"code": "S105", "filename": "x.py", "location": {"row": 1}, "message": "leak"}]
-        ),
+        json.dumps([
+            {"code": "S105", "filename": "x.py", "location": {"row": 1}, "message": "leak"}
+        ]),
         encoding="utf-8",
     )
 

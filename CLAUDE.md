@@ -6,7 +6,7 @@
 
 **FA-PFF** is the FA's ("The FA" — England's Football Association) county/club administration platform ("PFF"). It manages club affiliation, team registration, insurance, discipline, officials/safeguarding, county cups, and payments, and integrates with **WGS** (Whole Game System — the FA's national football database).
 
-**PFF AI** (doc prefix `PF-FT-AI-*`) is a conversational orchestration layer being built on top of PFF. It does not replace PFF's business logic, databases, or authority — it interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results. First end-to-end workflow: **Club Affiliation** (`MD files/0 Workflow/pff_affiliation_e2e_flow.md`).
+**PFF AI** (doc prefix `PFF-FA-AI-*`) is a conversational orchestration layer being built on top of PFF. It does not replace PFF's business logic, databases, or authority — it interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results. First end-to-end workflow: **Club Affiliation** (`MD files/0 Workflow/pff_affiliation_e2e_flow.md`).
 
 ## The Golden Rule (never violate — repeated in every spec doc)
 
@@ -181,7 +181,7 @@ Memory/session/cache store is **resolved: Azure Managed Redis** (`ADR-D4-10`; su
 - **Boundary models:** Pydantic everywhere data crosses a boundary (FastAPI req/res, tool req/res, config, event contracts, ERC schema, SLM req/res). **LangGraph internal state:** `TypedDict`.
 - **API versioning:** explicit in the path, e.g. `/api/v1/chat`.
 - **Layering (enforced, not just conventional):** API → Application → Orchestration → Domain → Infrastructure/Integrations. Domain code must never import FastAPI, Langfuse, Azure SDK, a provider SDK, or a DB driver directly.
-- **Canonical package:** `src/pf_ft_ai/`.
+- **Canonical package:** `src/pff_fa_ai/`.
 - **Constants example:** `MAX_ERC_BATCH_SIZE = 20`.
 - **Commits:** Conventional Commits — `feat(agent): add affiliation workflow routing`, `fix(erc): handle failed official batch`, `test(rag): add ACL retrieval tests`.
 

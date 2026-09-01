@@ -14,14 +14,14 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-02, ADR-D1-05, ADR-D1-09, ADR-D2-11, ADR-D2-18, ADR-D3-07, ADR-D6-09]
 source_docs:
-  - "MD files/3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md §65, §66"
-  - "MD files/3 Context & Integration/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48, §49"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36, §50"
+  - "MD files/3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md §65, §66"
+  - "MD files/3 Context & Integration/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §48, §49"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §36, §50"
   - "MD files/0 Workflow/pff_affiliation_e2e_flow.md — Scenarios 21-27"
 build_phases: [11, 23]
 impacted_paths:
-  - src/pf_ft_ai/guardrails/
-  - src/pf_ft_ai/agents/affiliation/
+  - src/pff_fa_ai/guardrails/
+  - src/pff_fa_ai/agents/affiliation/
 classification: Internal
 review_due: 2027-02-21
 ---
@@ -38,8 +38,8 @@ from a failed tool result.
 
 ## 2. Context and Problem Statement
 
-8 PF-FT-AI-ERC-CONTEXT.md §65 covers ERC and transaction state; §66 covers transaction uncertainty. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48 covers
-unknown transaction state and §49 transaction verification. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36 assigns transaction
+8 PFF-FA-AI-ERC-CONTEXT.md §65 covers ERC and transaction state; §66 covers transaction uncertainty. 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §48 covers
+unknown transaction state and §49 transaction verification. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §36 assigns transaction
 responsibility and §50 responsibility during API failure. The affiliation flow's Scenarios 21
 through 27 are seven distinct payment and submission failure modes, several of which leave the
 outcome genuinely indeterminate.
@@ -79,8 +79,8 @@ own failure.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Transaction uncertainty must be handled explicitly | 8 PF-FT-AI-ERC-CONTEXT.md §66; 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48 |
-| DR-F-02 | The platform must not silently guess at failed or ambiguous outcomes | `CLAUDE.md`; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §50 |
+| DR-F-01 | Transaction uncertainty must be handled explicitly | 8 PFF-FA-AI-ERC-CONTEXT.md §66; 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §48 |
+| DR-F-02 | The platform must not silently guess at failed or ambiguous outcomes | `CLAUDE.md`; 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §50 |
 | DR-F-03 | Errors and failures must remain factual, with impact and next action explicit | `CLAUDE.md` persona rule 7 |
 | DR-F-04 | No transaction may be celebrated before confirmation | `CLAUDE.md` persona rule 6; ADR-D1-02 I-4 |
 | DR-F-05 | The user must know what to do next | ADR-D1-08 §7.2 |
@@ -450,7 +450,7 @@ the persona rubric.
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | The platform reports what the enterprise's records show and what they do not. It forms no view on the transaction's outcome, which is 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36's transaction authority respected at the point it is most tempting to breach. |
+| Enterprise decides; AI orchestrates | The platform reports what the enterprise's records show and what they do not. It forms no view on the transaction's outcome, which is 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §36's transaction authority respected at the point it is most tempting to breach. |
 | Authoritative-truth precedence | `confirmed` items are authority-5 ERC facts stated exactly; `unknown` items are the absence of such facts. Nothing lower in the chain fills the gap. |
 | Four-state separation | The record is built from Enterprise Business State projections and Workflow State; it asserts nothing about either beyond what is held. |
 | Versioned artefacts, never mutated in place | Response requirements and golden cases are versioned. |
@@ -499,7 +499,7 @@ would be a communication problem to fix — not a reason to start asserting outc
 | Aspect | Detail |
 |---|---|
 | Build phases | 11 (guardrail content check), 23 (affiliation scenarios) |
-| Repository paths | `src/pf_ft_ai/guardrails/`, `src/pf_ft_ai/agents/affiliation/` |
+| Repository paths | `src/pff_fa_ai/guardrails/`, `src/pff_fa_ai/agents/affiliation/` |
 | Configuration | Uncertainty record schema; response element requirements |
 | Contracts / schemas | Uncertainty record model; content-class signal for register suppression |
 | Migration | None |
@@ -557,10 +557,10 @@ would be a communication problem to fix — not a reason to start asserting outc
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-14 Conversation Decision Architecture |
-| Specification sections | 8 PF-FT-AI-ERC-CONTEXT.md §65 (ERC and Transaction State), §66 (Transaction Uncertainty); 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §48 (Unknown Transaction State), §49 (Transaction Verification); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §36 (Transaction Responsibility), §50 (Responsibility During API Failure); affiliation flow Scenarios 21–27; `CLAUDE.md` persona rules 6, 7 |
+| Specification sections | 8 PFF-FA-AI-ERC-CONTEXT.md §65 (ERC and Transaction State), §66 (Transaction Uncertainty); 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §48 (Unknown Transaction State), §49 (Transaction Verification); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §36 (Transaction Responsibility), §50 (Responsibility During API Failure); affiliation flow Scenarios 21–27; `CLAUDE.md` persona rules 6, 7 |
 | Requirement IDs | `NFR-A38-REL`, `FR-AFF-21` to `FR-AFF-27` |
 | Build phases | 11, 23 |
-| Code paths | `src/pf_ft_ai/guardrails/`, `src/pf_ft_ai/agents/affiliation/` |
+| Code paths | `src/pff_fa_ai/guardrails/`, `src/pff_fa_ai/agents/affiliation/` |
 | Configuration | Uncertainty record schema; response element requirements |
 | Tests | AC-01 to AC-08; golden cases per §8.2 |
 | Upstream ADRs | ADR-D1-02, ADR-D2-11, ADR-D1-09 |

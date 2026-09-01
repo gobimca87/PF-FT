@@ -1,6 +1,6 @@
-from pf_ft_ai.evaluation.models import EvaluationResult, ExpectedOutcome, GoldenCase
-from pf_ft_ai.evaluation.states import DatasetCategory, EvaluationStatus, ScoreDimension
-from pf_ft_ai.evaluation.thresholds import EvaluationThresholds, evaluate_release_gate
+from pff_fa_ai.evaluation.models import EvaluationResult, ExpectedOutcome, GoldenCase
+from pff_fa_ai.evaluation.states import DatasetCategory, EvaluationStatus, ScoreDimension
+from pff_fa_ai.evaluation.thresholds import EvaluationThresholds, evaluate_release_gate
 
 
 def _case(case_id: str, category: DatasetCategory) -> GoldenCase:

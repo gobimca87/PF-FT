@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-07, ADR-D3-11, ADR-D3-15, ADR-D6-15, ADR-D5-14, ADR-D7-12]
 source_docs:
-  - "MD files/4 AI/17.PF-FT-AI-CONFIGURATION-VERSIONING.md §3, §11, §12, §13, §14, §15, §16, §18, §19, §20, §21, §22, §23, §57, §58, §59, §60, §61, §62, §63, §64"
+  - "MD files/4 AI/17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §3, §11, §12, §13, §14, §15, §16, §18, §19, §20, §21, §22, §23, §57, §58, §59, §60, §61, §62, §63, §64"
 build_phases: [0, 1]
 impacted_paths:
   - config/
@@ -30,12 +30,12 @@ PFF AI will use a **layered YAML configuration** (base + environment overlays) l
 **fail-fast** into an **immutable runtime configuration object**, with an **immutable
 release manifest as the single deployment truth** that pins every versioned artefact
 (prompts, models, RAG index, guardrails, agents, workflows, API contracts) plus a
-config hash/fingerprint for startup audit (17.PF-FT-AI-CONFIGURATION-VERSIONING.md §3, §11–§23, §57–§64). Secrets are
+config hash/fingerprint for startup audit (17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §3, §11–§23, §57–§64). Secrets are
 never in YAML — only `*_secret_ref` indirection (ADR-D5-07).
 
 ## 2. Context and Problem Statement
 
-17.PF-FT-AI-CONFIGURATION-VERSIONING.md §3/§11–§16 define the configuration architecture, repo structure, base/env
+17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §3/§11–§16 define the configuration architecture, repo structure, base/env
 layering, precedence and merge; §18–§23 define schema, validation, fail-fast loading
 and the immutable runtime config object; §57–§64 define the dependency + release
 manifest, release id, git-commit association, config hash and startup audit. CLAUDE.md
@@ -48,11 +48,11 @@ release-manifest model.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Layered base+env config with defined precedence | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §11–§15 |
-| DR-F-02 | Fail-fast validation + immutable runtime object | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §19–§23 |
-| DR-F-03 | Release manifest as deployment truth, pins all artefacts | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §57–§59 |
-| DR-F-04 | Config hash/fingerprint + startup audit | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §62–§64 |
-| DR-C-01 | Secrets by reference only | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §7, §10; ADR-D5-07 |
+| DR-F-01 | Layered base+env config with defined precedence | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §11–§15 |
+| DR-F-02 | Fail-fast validation + immutable runtime object | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §19–§23 |
+| DR-F-03 | Release manifest as deployment truth, pins all artefacts | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §57–§59 |
+| DR-F-04 | Config hash/fingerprint + startup audit | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §62–§64 |
+| DR-C-01 | Secrets by reference only | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §7, §10; ADR-D5-07 |
 
 ### 3.4 Assumptions
 
@@ -118,12 +118,12 @@ combinations can deploy; loses "deployment truth".
 
 | Option | Eliminated by |
 |---|---|
-| Mutable runtime config | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §23; CLAUDE.md |
-| Secrets in YAML | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §10; ADR-D5-07 |
+| Mutable runtime config | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §23; CLAUDE.md |
+| Secrets in YAML | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §10; ADR-D5-07 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §3–§64.
+**Method.** Weighted scoring against §4, informed by 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §3–§64.
 
 | Criterion | Weight | A: YAML+manifest | B: env vars | C: config service | D: baked image | E: YAML no-manifest |
 |---|---|---|---|---|---|---|
@@ -150,7 +150,7 @@ hash/fingerprint audited at startup (Option A).** Secrets appear only as
 `*_secret_ref` (ADR-D5-07). Env-only (B), runtime config service (C), baked-only (D)
 and manifest-less (E) are rejected.
 
-**Status rationale.** `Accepted` — 17.PF-FT-AI-CONFIGURATION-VERSIONING.md governs this.
+**Status rationale.** `Accepted` — 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md governs this.
 
 ## 8. Architecture Detail
 
@@ -267,7 +267,7 @@ and manifest-less (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | 17.PF-FT-AI-CONFIGURATION-VERSIONING.md §3, §11–§23, §56–§64 |
+| Specification sections | 17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §3, §11–§23, §56–§64 |
 | Requirement IDs | CFG-* |
 | Build phases | 0, 1 |
 | Code paths | `config/` |

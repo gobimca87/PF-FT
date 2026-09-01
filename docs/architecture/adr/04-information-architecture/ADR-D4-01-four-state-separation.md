@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-07, ADR-D2-12, ADR-D4-10, ADR-D4-11, ADR-D4-12, ADR-D1-03]
 source_docs:
-  - "MD files/1 Foundation/5. PF-FT-AI-STATE-MODEL.md §2, §3, §4, §5, §49, §50, §53, §54"
-  - "MD files/2 Agent Runtime/6 PF-FT-AI-CONVERSATION-SESSION.md §6, §54"
-  - "MD files/3 Context & Integration/9 PF-FT-AI-MEMORY-CACHE.md §3, §4"
+  - "MD files/1 Foundation/5. PFF-FA-AI-STATE-MODEL.md §2, §3, §4, §5, §49, §50, §53, §54"
+  - "MD files/2 Agent Runtime/6 PFF-FA-AI-CONVERSATION-SESSION.md §6, §54"
+  - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §3, §4"
 build_phases: [3, 7]
 impacted_paths:
-  - src/pf_ft_ai/state/
+  - src/pff_fa_ai/state/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -33,12 +33,12 @@ lifecycle**: Conversation State, Session State, Workflow/Agent State and Enterpr
 Business State — never conflating them, never letting one masquerade as another.
 Enterprise Business State is owned entirely by PFF and is only *referenced* (via ERC),
 never copied as truth. This is the information-architecture backbone that makes the
-Golden Rule and precedence chain enforceable (5. PF-FT-AI-STATE-MODEL.md §2–§5; CLAUDE.md).
+Golden Rule and precedence chain enforceable (5. PFF-FA-AI-STATE-MODEL.md §2–§5; CLAUDE.md).
 
 ## 2. Context and Problem Statement
 
-5. PF-FT-AI-STATE-MODEL.md §2–§5 define the state hierarchy and ownership boundary; §49–§54 define the
-composite runtime state, consistency rules and state-store separation; 9 PF-FT-AI-MEMORY-CACHE.md §3–§4
+5. PFF-FA-AI-STATE-MODEL.md §2–§5 define the state hierarchy and ownership boundary; §49–§54 define the
+composite runtime state, consistency rules and state-store separation; 9 PFF-FA-AI-MEMORY-CACHE.md §3–§4
 draw the memory/cache/ERC boundary; CLAUDE.md mandates the four states "never be
 conflated in code." The failure this prevents: a developer stashes an enterprise fact
 (e.g. affiliation status) in conversation memory or session state, and the platform
@@ -50,9 +50,9 @@ the boundary erodes silently.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Four states distinguishable by type, store and lifecycle | 5. PF-FT-AI-STATE-MODEL.md §4, §54 |
-| DR-C-01 | Enterprise state owned by PFF; only referenced, never copied as truth | 5. PF-FT-AI-STATE-MODEL.md §5; 9 PF-FT-AI-MEMORY-CACHE.md §17; ADR-D1-03 |
-| DR-C-02 | Each state has its own ownership, TTL, classification | 5. PF-FT-AI-STATE-MODEL.md §55–§56 |
+| DR-F-01 | Four states distinguishable by type, store and lifecycle | 5. PFF-FA-AI-STATE-MODEL.md §4, §54 |
+| DR-C-01 | Enterprise state owned by PFF; only referenced, never copied as truth | 5. PFF-FA-AI-STATE-MODEL.md §5; 9 PFF-FA-AI-MEMORY-CACHE.md §17; ADR-D1-03 |
+| DR-C-02 | Each state has its own ownership, TTL, classification | 5. PFF-FA-AI-STATE-MODEL.md §55–§56 |
 | DR-N-01 | Boundary enforced, not merely documented | CLAUDE.md |
 
 ### 3.4 Assumptions
@@ -98,7 +98,7 @@ enterprise copies inevitable; violates CLAUDE.md.
 session/workflow.
 **Strengths.** Protects enterprise truth boundary.
 **Weaknesses.** Conflates conversation/session/workflow — different lifecycles/TTLs/
-owners; 5. PF-FT-AI-STATE-MODEL.md requires four.
+owners; 5. PFF-FA-AI-STATE-MODEL.md requires four.
 **Cost / effort.** Low-medium; insufficient.
 
 ### 5.4 Option D — Separation by convention only (docs, no enforcement)
@@ -121,11 +121,11 @@ enterprise truth must not be event-sourced here (it's PFF's). Over-engineered no
 | Option | Eliminated by |
 |---|---|
 | Copy enterprise state into memory for speed | DR-C-01 — stale truth (use cache with TTL instead, ADR-D4-12) |
-| Merge session into conversation | Different lifetimes (6 PF-FT-AI-CONVERSATION-SESSION.md §16) |
+| Merge session into conversation | Different lifetimes (6 PFF-FA-AI-CONVERSATION-SESSION.md §16) |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 5. PF-FT-AI-STATE-MODEL.md §2–§5/§49–§56 and 9 PF-FT-AI-MEMORY-CACHE.md
+**Method.** Weighted scoring against §4, informed by 5. PFF-FA-AI-STATE-MODEL.md §2–§5/§49–§56 and 9 PFF-FA-AI-MEMORY-CACHE.md
 §3–§4.
 
 | Criterion | Weight | A: 4 typed + enforced | B: Unified blob | C: Two-way | D: Convention | E: Event-sourced |
@@ -153,18 +153,18 @@ the other three. Cross-contamination and enterprise-truth-in-AI-state are blocke
 architecture-fitness tests. Options B/C/D fail enforcement or completeness; E is
 deferred as over-engineered.
 
-**Status rationale.** `Accepted` — mandated by 5. PF-FT-AI-STATE-MODEL.md and CLAUDE.md; ADR records
+**Status rationale.** `Accepted` — mandated by 5. PFF-FA-AI-STATE-MODEL.md and CLAUDE.md; ADR records
 enforcement design.
 
 ## 8. Architecture Detail
 
 - **Models** (ADR-D2-07): TypedDict for LangGraph-internal workflow/agent state;
-  Pydantic at boundaries; distinct types per state class in `src/pf_ft_ai/state/`.
-- **Stores** (5. PF-FT-AI-STATE-MODEL.md §53–§54; ADR-D4-10): conversation/session/memory/cache on the
+  Pydantic at boundaries; distinct types per state class in `src/pff_fa_ai/state/`.
+- **Stores** (5. PFF-FA-AI-STATE-MODEL.md §53–§54; ADR-D4-10): conversation/session/memory/cache on the
   Redis-namespaced store; workflow instance state persisted for suspend/resume
   (ADR-D2-10); enterprise state never persisted as truth (only ERC references +
   cache with TTL, ADR-D4-12).
-- **Consistency rules** (5. PF-FT-AI-STATE-MODEL.md §50): the seven state-consistency rules are encoded as
+- **Consistency rules** (5. PFF-FA-AI-STATE-MODEL.md §50): the seven state-consistency rules are encoded as
   invariants/tests.
 - **Enforcement**: import-linter + a fitness test asserting no enterprise-authoritative
   field is written into conversation/session/workflow stores.
@@ -191,16 +191,16 @@ enforcement design.
 | Enterprise decides; AI orchestrates | Enterprise state owned by PFF; AI holds only references |
 | Precedence chain | Separation prevents low-authority state posing as enterprise truth |
 | Four-state separation | This ADR *is* that principle, made enforceable |
-| Versioned artefacts | State schemas versioned (5. PF-FT-AI-STATE-MODEL.md §51–§52) |
+| Versioned artefacts | State schemas versioned (5. PFF-FA-AI-STATE-MODEL.md §51–§52) |
 | Adam persona governs *how*, not *what* | Persona holds no state |
 
 ## 11. Risks and Mitigations
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
-| RSK-01 | Enterprise fact cached as truth in memory | Med | High | H | CI fitness test; use ERC-ref memory (9 PF-FT-AI-MEMORY-CACHE.md §16) | AI Arch Lead | Low |
-| RSK-02 | State schemas drift/incompatible | Low | Med | M | State versioning + migration (5. PF-FT-AI-STATE-MODEL.md §51–§52) | Backend Lead | Low |
-| RSK-03 | Cross-tenant/user state leakage | Low | High | M | Namespace isolation + tests (9 PF-FT-AI-MEMORY-CACHE.md §77–§79) | Security Architect | Low |
+| RSK-01 | Enterprise fact cached as truth in memory | Med | High | H | CI fitness test; use ERC-ref memory (9 PFF-FA-AI-MEMORY-CACHE.md §16) | AI Arch Lead | Low |
+| RSK-02 | State schemas drift/incompatible | Low | Med | M | State versioning + migration (5. PFF-FA-AI-STATE-MODEL.md §51–§52) | Backend Lead | Low |
+| RSK-03 | Cross-tenant/user state leakage | Low | High | M | Namespace isolation + tests (9 PFF-FA-AI-MEMORY-CACHE.md §77–§79) | Security Architect | Low |
 
 ## 12. Quantitative Targets and Measures
 
@@ -215,11 +215,11 @@ enforcement design.
 | Dimension | Impact |
 |---|---|
 | Attack surface change | Isolation reduces cross-contamination/leak surface |
-| Data classification touched | Each state class classified independently (5. PF-FT-AI-STATE-MODEL.md §56) |
+| Data classification touched | Each state class classified independently (5. PFF-FA-AI-STATE-MODEL.md §56) |
 | Personal data / PII | Retention/TTL set per state class |
 | Children's data and safeguarding | Enterprise safeguarding data stays in PFF; not copied |
 | UK GDPR lawful basis and rights impact | Per-state retention enables rights handling |
-| Audit and evidential requirements | State-transition audit (5. PF-FT-AI-STATE-MODEL.md §60) |
+| Audit and evidential requirements | State-transition audit (5. PFF-FA-AI-STATE-MODEL.md §60) |
 | Standards touched | ISO/IEC 27001, 42001 |
 
 ## 14. Implementation Impact
@@ -227,10 +227,10 @@ enforcement design.
 | Aspect | Detail |
 |---|---|
 | Build phases | 3 (state model), 7 (stores) |
-| Repository paths | `src/pf_ft_ai/state/` |
+| Repository paths | `src/pff_fa_ai/state/` |
 | Configuration | Per-state TTL/classification |
 | Contracts / schemas | Four state models + versions |
-| Migration | State migration policy (5. PF-FT-AI-STATE-MODEL.md §52) |
+| Migration | State migration policy (5. PFF-FA-AI-STATE-MODEL.md §52) |
 | Dependencies on other ADRs | ADR-D2-07, ADR-D2-12, ADR-D4-10 |
 | Effort estimate | M |
 
@@ -275,10 +275,10 @@ enforcement design.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-19 Information/State |
-| Specification sections | 5. PF-FT-AI-STATE-MODEL.md §2–§5, §49–§56, §60; 6 PF-FT-AI-CONVERSATION-SESSION.md §6, §54; 9 PF-FT-AI-MEMORY-CACHE.md §3–§4 |
+| Specification sections | 5. PFF-FA-AI-STATE-MODEL.md §2–§5, §49–§56, §60; 6 PFF-FA-AI-CONVERSATION-SESSION.md §6, §54; 9 PFF-FA-AI-MEMORY-CACHE.md §3–§4 |
 | Requirement IDs | STATE-* |
 | Build phases | 3, 7 |
-| Code paths | `src/pf_ft_ai/state/` |
+| Code paths | `src/pff_fa_ai/state/` |
 | Configuration | per-state TTL/classification |
 | Tests | separation fitness suite |
 | Upstream ADRs | ADR-D1-03, ADR-D2-07 |

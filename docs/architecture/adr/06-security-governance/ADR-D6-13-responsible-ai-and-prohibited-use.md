@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-02, ADR-D6-14, ADR-D6-16, ADR-D6-18, ADR-D3-06]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §21, §22, §23, §24, §25, §26, §27, §28, §29, §30, §13, §14, §15"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §21, §22, §23, §24, §25, §26, §27, §28, §29, §30, §13, §14, §15"
 build_phases: [9, 12]
 impacted_paths:
   - docs/governance/
@@ -27,7 +27,7 @@ review_due: 2027-08-22
 ## 1. Summary
 
 PFF AI will adopt an explicit **Responsible AI framework** — fairness, reliability,
-safety, privacy, transparency, explainability, traceability, auditability (20.PF-FT-AI-GOVERNANCE.md
+safety, privacy, transparency, explainability, traceability, auditability (20.PFF-FA-AI-GOVERNANCE.md
 §21–§30) — and a **prohibited-use boundary** defining what the platform must not do
 (no autonomous business decisions, no unsupported claims, no profiling of children
 beyond legitimate football administration, no use outside its stated scope). These
@@ -36,7 +36,7 @@ guardrails, HIL) rather than left as a poster.
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §21–§30 define Responsible AI principles and their scope; §13–§15 AI suitability
+20.PFF-FA-AI-GOVERNANCE.md §21–§30 define Responsible AI principles and their scope; §13–§15 AI suitability
 and risk classification. Without an explicit, enforceable RAI framework and a
 prohibited-use boundary, "responsible AI" is aspirational and the platform has no clear
 line for what it will refuse to do. This ADR fixes the RAI principles and the
@@ -46,10 +46,10 @@ prohibited-use boundary, mapped to concrete controls.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Adopt the 8 RAI principles | 20.PF-FT-AI-GOVERNANCE.md §21–§30 |
-| DR-F-02 | Define a prohibited-use boundary | 20.PF-FT-AI-GOVERNANCE.md §22, §14 |
+| DR-F-01 | Adopt the 8 RAI principles | 20.PFF-FA-AI-GOVERNANCE.md §21–§30 |
+| DR-F-02 | Define a prohibited-use boundary | 20.PFF-FA-AI-GOVERNANCE.md §22, §14 |
 | DR-C-01 | Principles enforced via controls, not text | ADR-D1-02, D6-09, D6-14 |
-| DR-F-03 | Risk-classify AI uses | 20.PF-FT-AI-GOVERNANCE.md §15–§17 |
+| DR-F-03 | Risk-classify AI uses | 20.PFF-FA-AI-GOVERNANCE.md §15–§17 |
 
 ### 3.4 Assumptions
 
@@ -104,7 +104,7 @@ Better as the conformance target (ADR-D6-18).
 ### 5.5 Option E — RAI controls + continuous RAI metrics/dashboards + periodic review
 
 **Description.** Option A plus RAI metrics (fairness/quality/persona) monitored on a
-dashboard (20.PF-FT-AI-GOVERNANCE.md §87–§89) with periodic governance review.
+dashboard (20.PFF-FA-AI-GOVERNANCE.md §87–§89) with periodic governance review.
 **Strengths.** Ongoing assurance, not point-in-time.
 **Weaknesses.** Metric definition/upkeep.
 **Cost / effort.** Medium.
@@ -113,12 +113,12 @@ dashboard (20.PF-FT-AI-GOVERNANCE.md §87–§89) with periodic governance revie
 
 | Option | Eliminated by |
 |---|---|
-| No RAI framework | 20.PF-FT-AI-GOVERNANCE.md §21 |
+| No RAI framework | 20.PFF-FA-AI-GOVERNANCE.md §21 |
 | RAI as marketing only | Not enforceable |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §13–§30/§87–§89.
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §13–§30/§87–§89.
 
 | Criterion | Weight | A: Mapped controls | B: Policy doc | C: NIST verbatim | D: Human-only | E: A+metrics |
 |---|---|---|---|---|---|---|
@@ -150,9 +150,9 @@ ISO/IEC 42001 are conformance targets (ADR-D6-18). Policy-only (B) and human-rev
   (ADR-D3-22) + persona honesty (ADR-D1-09); traceability/auditability→Langfuse +
   audit (ADR-D6-17, D7-02).
 - Prohibited-use list maintained in `docs/governance/`; out-of-scope intents refused
-  (ADR-D3-06 closed intent set); risk classification (20.PF-FT-AI-GOVERNANCE.md §15–§17) gates new AI uses.
+  (ADR-D3-06 closed intent set); risk classification (20.PFF-FA-AI-GOVERNANCE.md §15–§17) gates new AI uses.
 - RAI metrics (fairness proxies, quality, persona adherence, refusal correctness) on a
-  governance dashboard (20.PF-FT-AI-GOVERNANCE.md §87–§89); periodic review (§90).
+  governance dashboard (20.PFF-FA-AI-GOVERNANCE.md §87–§89); periodic review (§90).
 
 ## 9. Consequences
 
@@ -258,7 +258,7 @@ ISO/IEC 42001 are conformance targets (ADR-D6-18). Policy-only (B) and human-rev
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-28 Governance |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §13–§17, §21–§30, §87–§90 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §13–§17, §21–§30, §87–§90 |
 | Requirement IDs | GOV-RAI-* |
 | Build phases | 9, 12 |
 | Code paths | governance + controls |

@@ -14,8 +14,8 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-08, ADR-D5-10, ADR-D5-17, ADR-D3-13]
 source_docs:
-  - "MD files/6 Production/25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12, §19, §20, §21, §51, §52"
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §70, §71, §72, §78, §79"
+  - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12, §19, §20, §21, §51, §52"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §70, §71, §72, §78, §79"
 build_phases: [20]
 impacted_paths:
   - infra/
@@ -29,14 +29,14 @@ review_due: 2027-08-22
 
 PFF AI will run CPU workloads (API, orchestration, workers) and GPU workloads
 (self-hosted SLM/embedding inference) on **separate AKS node pools**, with the GPU pool
-**independently autoscaled** and provisioned only when self-hosting is active (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md
-§12, §19–§21, §51–§52; 15.PF-FT-AI-SLM.md §70–§79). This keeps expensive GPUs saturated by
+**independently autoscaled** and provisioned only when self-hosting is active (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md
+§12, §19–§21, §51–§52; 15.PFF-FA-AI-SLM.md §70–§79). This keeps expensive GPUs saturated by
 inference alone and lets the cheap CPU tier scale on request load independently.
 
 ## 2. Context and Problem Statement
 
-25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12 requires workload separation, §19 resource requests/limits, §20–§21 CPU/GPU
-strategy and SLM infrastructure, §51–§52 scaling/autoscaling; 15.PF-FT-AI-SLM.md §70–§79 GPU/VRAM/
+25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12 requires workload separation, §19 resource requests/limits, §20–§21 CPU/GPU
+strategy and SLM infrastructure, §51–§52 scaling/autoscaling; 15.PFF-FA-AI-SLM.md §70–§79 GPU/VRAM/
 scaling. Mixing CPU and GPU workloads on one pool wastes GPU (idle while serving HTTP)
 or starves inference; it also couples unrelated scaling signals. This ADR fixes the
 node-pool topology and CPU/GPU separation.
@@ -45,9 +45,9 @@ node-pool topology and CPU/GPU separation.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Separate CPU and GPU node pools | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12, §20 |
-| DR-F-02 | Independent autoscaling per pool | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §51–§52; ADR-D5-17 |
-| DR-N-01 | GPU utilisation / VRAM efficiency | 15.PF-FT-AI-SLM.md §70–§77 |
+| DR-F-01 | Separate CPU and GPU node pools | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12, §20 |
+| DR-F-02 | Independent autoscaling per pool | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §51–§52; ADR-D5-17 |
+| DR-N-01 | GPU utilisation / VRAM efficiency | 15.PFF-FA-AI-SLM.md §70–§77 |
 | DR-C-01 | GPU provisioned only for self-host phase | ADR-D3-13 (phased) |
 
 ### 3.4 Assumptions
@@ -118,7 +118,7 @@ on A.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12/§20–§21/§51–§52 and 15.PF-FT-AI-SLM.md §70–§79.
+**Method.** Weighted scoring against §4, informed by 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12/§20–§21/§51–§52 and 15.PFF-FA-AI-SLM.md §70–§79.
 
 | Criterion | Weight | A: Separate pools | B: Mixed pool | C: GPU on Azure ML | D: Serverless GPU | E: Pools + MIG |
 |---|---|---|---|---|---|---|
@@ -138,20 +138,20 @@ small models (RT-01); C aligns if ADR-D5-10 selects Azure ML. B is clearly waste
 
 **PFF AI will use separate CPU and GPU node pools on AKS, independently autoscaled,
 with the GPU pool provisioned at the self-host phase (Option A).** GPU scheduling uses
-taints/tolerations + node selectors; VRAM/quantisation planning per 15.PF-FT-AI-SLM.md §70–§77. GPU
+taints/tolerations + node selectors; VRAM/quantisation planning per 15.PFF-FA-AI-SLM.md §70–§77. GPU
 partitioning (E) may be added for small models; if ADR-D5-10 selects Azure ML, GPU
 serving moves there (C) while CPU stays on AKS. Mixed pool (B) is rejected.
 
-**Status rationale.** `Accepted` — 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12/§20 mandate separation. (GPU *engine* is
+**Status rationale.** `Accepted` — 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12/§20 mandate separation. (GPU *engine* is
 open in ADR-D5-10; the *topology* here is settled.)
 
 ## 8. Architecture Detail
 
-- Node pools: `system`, `cpu-workload`, `gpu-workload` (25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §11–§12); GPU nodes
+- Node pools: `system`, `cpu-workload`, `gpu-workload` (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §11–§12); GPU nodes
   tainted so only inference pods schedule there; resource requests/limits set (§19).
-- GPU pool autoscaler tuned to inference queue/utilisation (ADR-D5-17; 15.PF-FT-AI-SLM.md §79);
-  warm-up on scale-up (15.PF-FT-AI-SLM.md §80).
-- VRAM planning + quantisation (15.PF-FT-AI-SLM.md §72–§77) sizes the GPU SKU.
+- GPU pool autoscaler tuned to inference queue/utilisation (ADR-D5-17; 15.PFF-FA-AI-SLM.md §79);
+  warm-up on scale-up (15.PFF-FA-AI-SLM.md §80).
+- VRAM planning + quantisation (15.PFF-FA-AI-SLM.md §72–§77) sizes the GPU SKU.
 
 ## 9. Consequences
 
@@ -257,7 +257,7 @@ open in ADR-D5-10; the *topology* here is settled.)
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-24 |
-| Specification sections | 25.PF-FT-AI-INFRASTRUCTURE-OPERATIONS.md §12, §19–§21, §51–§52; 15.PF-FT-AI-SLM.md §70–§79 |
+| Specification sections | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §12, §19–§21, §51–§52; 15.PFF-FA-AI-SLM.md §70–§79 |
 | Requirement IDs | INFRA-GPU-* |
 | Build phases | 20 |
 | Code paths | `infra/` |

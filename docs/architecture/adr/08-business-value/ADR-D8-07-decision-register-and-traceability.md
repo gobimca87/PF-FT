@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D0-01, ADR-D0-02, ADR-D1-12, ADR-D8-06, ADR-D6-18]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §29, §115, §116"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §29, §115, §116"
 build_phases: [21]
 impacted_paths:
   - docs/architecture/adr/_register/
@@ -29,12 +29,12 @@ review_due: 2027-08-22
 PFF AI will maintain a **decision register and a traceability matrix** linking every ADR to
 its WS sheet, source-doc sections, requirement IDs (ADR-D1-12), build phases, code paths and
 related decisions — so any decision can be traced from business need to implementation and
-back (20.PF-FT-AI-GOVERNANCE.md §29, §115–§116). This ADR governs the `_register/` artefacts created by the ADR
+back (20.PFF-FA-AI-GOVERNANCE.md §29, §115–§116). This ADR governs the `_register/` artefacts created by the ADR
 programme (ADR-D0-01).
 
 ## 2. Context and Problem Statement
 
-20.PF-FT-AI-GOVERNANCE.md §29 traceability, §115 governance traceability matrix, §116 governance DoD. The ADR
+20.PFF-FA-AI-GOVERNANCE.md §29 traceability, §115 governance traceability matrix, §116 governance DoD. The ADR
 library holds 136 decisions across 8 domains; without a register + traceability matrix,
 navigating and auditing them (and proving requirement coverage) is impractical. This ADR
 fixes the decision register and traceability model.
@@ -43,8 +43,8 @@ fixes the decision register and traceability model.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Central decision register (all ADRs) | 20.PF-FT-AI-GOVERNANCE.md §115; ADR-D0-01 |
-| DR-F-02 | Traceability: WS↔doc↔req↔phase↔code | 20.PF-FT-AI-GOVERNANCE.md §29, §115 |
+| DR-F-01 | Central decision register (all ADRs) | 20.PFF-FA-AI-GOVERNANCE.md §115; ADR-D0-01 |
+| DR-F-02 | Traceability: WS↔doc↔req↔phase↔code | 20.PFF-FA-AI-GOVERNANCE.md §29, §115 |
 | DR-F-03 | Bidirectional (need→impl and back) | traceability practice |
 | DR-C-01 | Kept current with the ADR library | ADR-D0-02 |
 
@@ -109,12 +109,12 @@ to ≥1 ADR, and status/register consistency holds (verification checks per the 
 
 | Option | Eliminated by |
 |---|---|
-| No register | 20.PF-FT-AI-GOVERNANCE.md §115; ADR-D0-01 |
+| No register | 20.PFF-FA-AI-GOVERNANCE.md §115; ADR-D0-01 |
 | Traceability by memory | Unauditable |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 20.PF-FT-AI-GOVERNANCE.md §29/§115–§116 and the ADR
+**Method.** Weighted scoring against §4, informed by 20.PFF-FA-AI-GOVERNANCE.md §29/§115–§116 and the ADR
 programme (ADR-D0-01/02).
 
 | Criterion | Weight | A: Auto-gen | B: Manual | C: Register-only | D: External tool | E: Auto-gen+CI |
@@ -254,7 +254,7 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-36 |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §29, §115–§116 |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §29, §115–§116 |
 | Requirement IDs | TRACE-* |
 | Build phases | 21 |
 | Code paths | `_register/` |

@@ -10,7 +10,7 @@ unexpectedly permissive behavior, unexpected `BLOCK` on legitimate requests.
 
 ## Diagnostic steps
 
-1. Identify the boundary — `GuardrailBoundary` (`src/pf_ft_ai/guardrails/states.py`):
+1. Identify the boundary — `GuardrailBoundary` (`src/pff_fa_ai/guardrails/states.py`):
    `INPUT`, `INJECTION`, `AUTHORIZATION_CONTEXT`, `DATA`, `PROMPT`, `TOOL`, `MODEL`,
    `OUTPUT`, `RESPONSE`.
 2. Check whether the boundary is mandatory-fail-closed —

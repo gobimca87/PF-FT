@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ValidationError
-from pf_ft_ai.context.collection.batching import BatchRange, split_into_batches
+from pff_fa_ai.common.exceptions import ValidationError
+from pff_fa_ai.context.collection.batching import BatchRange, split_into_batches
 
 
 def test_should_split_103_teams_into_6_batches_with_partial_final_batch() -> None:

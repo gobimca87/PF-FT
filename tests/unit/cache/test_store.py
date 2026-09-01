@@ -3,9 +3,9 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from fakeredis import FakeAsyncRedis
 
-from pf_ft_ai.cache.models import CacheEntry, CacheMetadata
-from pf_ft_ai.cache.states import CacheCategory
-from pf_ft_ai.cache.store import RedisCacheStore
+from pff_fa_ai.cache.models import CacheEntry, CacheMetadata
+from pff_fa_ai.cache.states import CacheCategory
+from pff_fa_ai.cache.store import RedisCacheStore
 
 
 def _entry(

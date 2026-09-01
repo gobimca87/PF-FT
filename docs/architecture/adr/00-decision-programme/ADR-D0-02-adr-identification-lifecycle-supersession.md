@@ -14,9 +14,9 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D0-01, ADR-D0-03, ADR-D0-04, ADR-D5-06, ADR-D8-07]
 source_docs:
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §73, §74, §76, §77, §114"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §73"
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §43, §52"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §73, §74, §76, §77, §114"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §73"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §43, §52"
 build_phases: [0, 21]
 impacted_paths:
   - docs/architecture/adr/
@@ -31,7 +31,7 @@ review_due: 2027-02-21
 ADRs are identified as `ADR-D<domain>-<sequence>`, domain-prefixed rather than globally
 sequential. Records move through a five-state lifecycle (Proposed → Accepted → Superseded
 / Deprecated / Rejected), are never edited in substance once Accepted, and are replaced by
-a superseding record rather than rewritten — the same immutability rule 20.PF-FT-AI-GOVERNANCE.md §73 applies
+a superseding record rather than rewritten — the same immutability rule 20.PFF-FA-AI-GOVERNANCE.md §73 applies
 to every other versioned platform artefact.
 
 ## 2. Context and Problem Statement
@@ -47,8 +47,8 @@ either collide on a number or wait on each other.
 **Silent rewriting.** The most damaging failure mode for a decision library is editing an
 Accepted record to say something new. The record then describes the present but the commit
 history is the only trace that it ever said otherwise, and any downstream document citing
-it is silently wrong. 20.PF-FT-AI-GOVERNANCE.md §73 states the general principle for platform artefacts:
-versions are immutable and changes are released, not mutated. 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §43 applies it to
+it is silently wrong. 20.PFF-FA-AI-GOVERNANCE.md §73 states the general principle for platform artefacts:
+versions are immutable and changes are released, not mutated. 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §43 applies it to
 prompts, models, configuration and agent definitions. Decision records are the same class
 of artefact and need the same rule made explicit.
 
@@ -69,9 +69,9 @@ qualified.
 |---|---|---|
 | DR-F-01 | IDs must be allocatable without central coordination, so concurrent authoring does not collide | Programme practice |
 | DR-F-02 | A reader must be able to tell settled from unsettled decisions without opening the file | `CLAUDE.md` §Confirmed Tech Stack |
-| DR-F-03 | Decision history must survive revision — what was decided, when, and what replaced it | 20.PF-FT-AI-GOVERNANCE.md §73, §114; 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §73 |
+| DR-F-03 | Decision history must survive revision — what was decided, when, and what replaced it | 20.PFF-FA-AI-GOVERNANCE.md §73, §114; 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §73 |
 | DR-F-04 | A significance test must exist so the library's scope is decidable rather than argued | ADR-D0-01 DR-A-03 |
-| DR-F-05 | Change classification must align with the platform's existing change-management model | 20.PF-FT-AI-GOVERNANCE.md §76, §77 |
+| DR-F-05 | Change classification must align with the platform's existing change-management model | 20.PFF-FA-AI-GOVERNANCE.md §76, §77 |
 
 ### 3.2 Non-functional drivers
 
@@ -79,7 +79,7 @@ qualified.
 |---|---|---|---|
 | DR-N-01 | Cross-reference legibility — an ID should convey its domain without a lookup | Domain identifiable from the ID alone | Programme convention |
 | DR-N-02 | Scale — the scheme must hold to several hundred records | No renumbering required to add a decision | ADR-D0-01 §2 |
-| DR-N-03 | Link stability — a cited ADR path must not move | 0 renames after Accepted | 20.PF-FT-AI-GOVERNANCE.md §114 |
+| DR-N-03 | Link stability — a cited ADR path must not move | 0 renames after Accepted | 20.PFF-FA-AI-GOVERNANCE.md §114 |
 
 ### 3.3 Constraints
 
@@ -100,7 +100,7 @@ qualified.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | History integrity — can a superseded decision still be read as it stood? | 30 | The single failure this policy exists to prevent; 20.PF-FT-AI-GOVERNANCE.md §73 makes immutability a platform-wide rule | Is the prior text recoverable without reading Git diffs? |
+| EC-01 | History integrity — can a superseded decision still be read as it stood? | 30 | The single failure this policy exists to prevent; 20.PFF-FA-AI-GOVERNANCE.md §73 makes immutability a platform-wide rule | Is the prior text recoverable without reading Git diffs? |
 | EC-02 | Concurrent authorability without collision | 20 | 136 records across eight domains authored in parallel | Can two authors allocate IDs independently? |
 | EC-03 | Cross-reference legibility | 20 | Every ADR cites others; opaque IDs make review slower | Is the domain readable from the ID? |
 | EC-04 | Scale to several hundred records | 15 | The library grows for the platform's life | Does adding a record force renumbering? |
@@ -191,7 +191,7 @@ domain. Accepted records frozen; changes by superseding record.
 ## 6. Evaluation Method and Decision Matrix
 
 **Method.** Weighted scoring against §4. EC-01 is assessed against the immutability
-requirement in 20.PF-FT-AI-GOVERNANCE.md §73 and §114. EC-02 to EC-04 are assessed against the library's known
+requirement in 20.PFF-FA-AI-GOVERNANCE.md §73 and §114. EC-02 to EC-04 are assessed against the library's known
 end state of 136 records across eight domains.
 
 | Criterion | Weight | A: Seq + mutable | B: Seq + immutable | C: Domain + immutable | D: Date-based |
@@ -261,10 +261,10 @@ A `Proposed` record is not a weaker `Accepted`. It is a live question, and it ap
 
 ### 7.3 Immutability, supersession and amendment
 
-**An Accepted ADR is never edited in substance.** This mirrors 20.PF-FT-AI-GOVERNANCE.md §73 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §43,
+**An Accepted ADR is never edited in substance.** This mirrors 20.PFF-FA-AI-GOVERNANCE.md §73 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §43,
 which forbid mutating a released version of any platform artefact.
 
-Changes are classified as follows, aligning with 20.PF-FT-AI-GOVERNANCE.md §77:
+Changes are classified as follows, aligning with 20.PFF-FA-AI-GOVERNANCE.md §77:
 
 | Change class | Example | Mechanism | Version |
 |---|---|---|---|
@@ -284,7 +284,7 @@ immutability, and is itself an additive change.
 
 A choice is recorded as an ADR when **any** of the following holds:
 
-1. It touches one of the 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52 categories — system boundaries, data ownership, agent
+1. It touches one of the 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52 categories — system boundaries, data ownership, agent
    architecture, LangGraph architecture, ERC, SLM, security, tool/MCP, eventing, state, AI
    evaluation, deployment boundaries.
 2. It is costly to reverse — a schema, a persisted data shape, a public contract, a vendor
@@ -299,7 +299,7 @@ A choice meeting **none** of these is not an ADR. Local implementation choices, 
 within a module, and anything already fixed by `CLAUDE.md` §Coding Conventions belong in
 code or in `CLAUDE.md`, not here.
 
-**Status rationale.** Accepted. Concerns how decisions are recorded, not any 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §52
+**Status rationale.** Accepted. Concerns how decisions are recorded, not any 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §52
 architecture category, so it sits with the AI Solution Architect under ADR-D0-03.
 
 ## 8. Architecture Detail
@@ -377,7 +377,7 @@ without collision: no ID in one scheme can be mistaken for an ID in the other.
 | Enterprise decides; AI orchestrates | Not applicable — governs document identity, not runtime behaviour. |
 | Authoritative-truth precedence | Not applicable — no runtime data path. |
 | Four-state separation | Not applicable — no runtime state. |
-| Versioned artefacts, never mutated in place in production | This ADR *is* that rule applied to decision records. §7.3 mirrors 20.PF-FT-AI-GOVERNANCE.md §73 and 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §43 exactly: immutable versions, changes released as new versions, prior versions retained. |
+| Versioned artefacts, never mutated in place in production | This ADR *is* that rule applied to decision records. §7.3 mirrors 20.PFF-FA-AI-GOVERNANCE.md §73 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §43 exactly: immutable versions, changes released as new versions, prior versions retained. |
 | Adam persona governs how, never what | Not applicable. |
 
 ## 11. Risks and Mitigations
@@ -409,7 +409,7 @@ without collision: no ID in one scheme can be mistaken for an ID in the other.
 | Personal data / PII | None. Author identity is recorded by role, not by name, so the library holds no personal data. |
 | Children's data and safeguarding | Not applicable. |
 | UK GDPR lawful basis and rights impact | None — recording roles rather than named individuals avoids creating a personal-data record. |
-| Audit and evidential requirements | Substantial and positive. Immutability is what makes the library admissible as evidence: an auditor can be shown what was decided on a date, not a reconstruction. Supports 20.PF-FT-AI-GOVERNANCE.md §30 (Auditability) and §99 (Compliance Evidence). |
+| Audit and evidential requirements | Substantial and positive. Immutability is what makes the library admissible as evidence: an auditor can be shown what was decided on a date, not a reconstruction. Supports 20.PFF-FA-AI-GOVERNANCE.md §30 (Auditability) and §99 (Compliance Evidence). |
 | Standards touched | ISO 9001 §7.5.3 (control of documented information — identification, version control, preservation); ISO/IEC 27001 A.5.37; ISO/IEC 42001 (AI management system documentation); CMMI-DEV CM (Configuration Management). |
 
 ## 14. Implementation Impact
@@ -473,7 +473,7 @@ without collision: no ID in one scheme can be mistaken for an ID in the other.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-36 Risks, Assumptions & Decision Register |
-| Specification sections | 20.PF-FT-AI-GOVERNANCE.md §73 (Version Governance), §74 (Version Compatibility), §76 (Change Management), §77 (Change Classification), §114 (Governance Documentation Version); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §73 (Change Control); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §43 (Versioning Architecture), §52 (Architecture Governance) |
+| Specification sections | 20.PFF-FA-AI-GOVERNANCE.md §73 (Version Governance), §74 (Version Compatibility), §76 (Change Management), §77 (Change Classification), §114 (Governance Documentation Version); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §73 (Change Control); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §43 (Versioning Architecture), §52 (Architecture Governance) |
 | Requirement IDs | Per ADR-D1-12 |
 | Build phases | 0, 21 |
 | Code paths | None |

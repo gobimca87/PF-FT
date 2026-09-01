@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-22, ADR-D3-04, ADR-D3-05, ADR-D2-09, ADR-D4-12, ADR-D5-18]
 source_docs:
-  - "MD files/4 AI/13.FP-FT-AI-RAG.md §105, §106, §107, §108, §109, §110, §111, §112, §113, §114, §115"
+  - "MD files/4 AI/13.PFF-FA-AI-RAG.md §105, §106, §107, §108, §109, §110, §111, §112, §113, §114, §115"
 build_phases: [8]
 impacted_paths:
-  - src/pf_ft_ai/rag/retrieval/
-  - src/pf_ft_ai/harness/
+  - src/pff_fa_ai/rag/retrieval/
+  - src/pff_fa_ai/harness/
 classification: Internal
 review_due: 2027-08-23
 ---
@@ -30,9 +30,9 @@ review_due: 2027-08-23
 PFF AI will expose RAG retrieval as a **harness-gated tool (`rag.search`)** with an
 explicit input contract and limits, invoked either by deterministic supervisor routing
 or by the agent within its declared scope (never by free-form model text) — and once
-invoked, retrieval **executes deterministically** inside the RAG service (13.FP-FT-AI-RAG.md
+invoked, retrieval **executes deterministically** inside the RAG service (13.PFF-FA-AI-RAG.md
 §106, §110). Iterative "agentic" retrieval is supported but **bounded to a fixed
-`max_iterations`** (13.FP-FT-AI-RAG.md §108–§109) to prevent retrieval loops and uncontrolled
+`max_iterations`** (13.PFF-FA-AI-RAG.md §108–§109) to prevent retrieval loops and uncontrolled
 cost. This closes a gap in [ADR-D3-22](ADR-D3-22-retrieval-reranking-and-citation.md),
 which fixes what happens *once* retrieval runs but not how it is *called*.
 
@@ -40,7 +40,7 @@ which fixes what happens *once* retrieval runs but not how it is *called*.
 
 ADR-D3-22 fixes the retrieval pipeline (ACL filter → hybrid search → fusion → rerank →
 threshold → context selection) but leaves open exactly how that pipeline is triggered
-within a conversation turn. 13.FP-FT-AI-RAG.md §106 defines a `rag.search` tool contract; §107 sets
+within a conversation turn. 13.PFF-FA-AI-RAG.md §106 defines a `rag.search` tool contract; §107 sets
 tool limits (max query length, max `top_k`, max filters, max query expansions, max
 retrieval rounds, max context tokens); §108–§109 describe optional agentic (iterative)
 RAG bounded by `max_iterations`; §110 states that the *decision* to retrieve may be
@@ -55,10 +55,10 @@ specific contract to gate against.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | RAG exposed as a formal, harness-gated tool contract | 13.FP-FT-AI-RAG.md §106 |
-| DR-F-02 | Tool limits enforced (query length, top_k, filters, expansions, rounds, tokens) | 13.FP-FT-AI-RAG.md §107 |
-| DR-C-01 | Retrieval execution deterministic once invoked | 13.FP-FT-AI-RAG.md §110 |
-| DR-F-03 | Agentic/iterative retrieval bounded by max_iterations | 13.FP-FT-AI-RAG.md §108–§109 |
+| DR-F-01 | RAG exposed as a formal, harness-gated tool contract | 13.PFF-FA-AI-RAG.md §106 |
+| DR-F-02 | Tool limits enforced (query length, top_k, filters, expansions, rounds, tokens) | 13.PFF-FA-AI-RAG.md §107 |
+| DR-C-01 | Retrieval execution deterministic once invoked | 13.PFF-FA-AI-RAG.md §110 |
+| DR-F-03 | Agentic/iterative retrieval bounded by max_iterations | 13.PFF-FA-AI-RAG.md §108–§109 |
 | DR-C-02 | No arbitrary/free-form retrieval invocation by the model | ADR-D3-04 |
 
 ### 3.4 Assumptions
@@ -82,7 +82,7 @@ specific contract to gate against.
 
 ### 5.1 Option A — Harness-gated `rag.search` tool, deterministic execution, bounded agentic loop (max_iterations = 2)
 
-**Description.** RAG is registered as a tool (13.FP-FT-AI-RAG.md §106) callable either by
+**Description.** RAG is registered as a tool (13.PFF-FA-AI-RAG.md §106) callable either by
 deterministic supervisor routing (ADR-D3-05, for clear knowledge-intents) or by the
 agent within its declared tool scope (ADR-D3-03/D3-04); every call passes through the
 harness gate (ADR-D2-09) which enforces the tool limits (§107); once invoked, the
@@ -102,7 +102,7 @@ tool-call surface at all.
 **Strengths.** Simplest; fully deterministic; no agentic-loop risk.
 **Weaknesses.** Cannot adapt mid-turn if the first retrieval is insufficient (no
 evidence-sufficiency check); wastes a retrieval call on turns where the model
-determines context isn't actually needed; doesn't match 13.FP-FT-AI-RAG.md §110's framing of RAG
+determines context isn't actually needed; doesn't match 13.PFF-FA-AI-RAG.md §110's framing of RAG
 as something the Supervisor/agent *may* invoke.
 **Cost / effort.** Low; less capable.
 
@@ -112,7 +112,7 @@ as something the Supervisor/agent *may* invoke.
 by a downstream regex/heuristic into a retrieval call.
 **Strengths.** No tool-schema plumbing.
 **Weaknesses.** Not deterministic; not gated (ADR-D3-04 requires structured tool calls,
-not parsed text); injection-prone; violates 13.FP-FT-AI-RAG.md §110's determinism requirement.
+not parsed text); injection-prone; violates 13.PFF-FA-AI-RAG.md §110's determinism requirement.
 **Cost / effort.** Low; unsafe — the exact anti-pattern ADR-D3-04 exists to prevent.
 
 ### 5.4 Option D — Always-on RAG for every turn (unconditional retrieval, no invocation decision)
@@ -139,12 +139,12 @@ small, low-churn corpus (ADR-D3-21), the win is modest.
 
 | Option | Eliminated by |
 |---|---|
-| Unbounded agentic RAG (no iteration cap) | 13.FP-FT-AI-RAG.md §109 — explicit loop-limit requirement |
+| Unbounded agentic RAG (no iteration cap) | 13.PFF-FA-AI-RAG.md §109 — explicit loop-limit requirement |
 | RAG invoked directly by any node without harness gating | ADR-D3-04 — mandatory tool-validation boundary |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 13.FP-FT-AI-RAG.md §105–§115 and the tool-gate
+**Method.** Weighted scoring against §4, informed by 13.PFF-FA-AI-RAG.md §105–§115 and the tool-gate
 model of ADR-D3-04.
 
 | Criterion | Weight | A: Gated tool + bounded loop | B: Deterministic pre-fetch | C: Free-form model invocation | D: Always-on | E: A + semantic cache |
@@ -168,22 +168,22 @@ precise anti-pattern the tool-validation boundary (ADR-D3-04) exists to close.
 ## 7. Decision
 
 **PFF AI will expose RAG retrieval as a harness-gated tool (`rag.search`) with the
-input contract and limits of 13.FP-FT-AI-RAG.md §106–§107, invocable by deterministic supervisor
+input contract and limits of 13.PFF-FA-AI-RAG.md §106–§107, invocable by deterministic supervisor
 routing or by the agent within its declared scope, executing deterministically once
 invoked, with agentic (iterative) retrieval bounded to `max_iterations = 2` (Option
 A).** A semantic result cache (Option E) is a documented future optimisation, not
 required at launch. Deterministic pre-fetch (B), free-form model invocation (C) and
 always-on retrieval (D) are rejected.
 
-**Status rationale.** `Accepted` — 13.FP-FT-AI-RAG.md §106–§110 fix the tool-contract and
+**Status rationale.** `Accepted` — 13.PFF-FA-AI-RAG.md §106–§110 fix the tool-contract and
 determinism requirements directly; this ADR records the alternatives and the chosen
 iteration bound.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/rag/retrieval/tool.py`: registers `rag.search(query: str, filters:
+- `src/pff_fa_ai/rag/retrieval/tool.py`: registers `rag.search(query: str, filters:
   dict, top_k: int) -> RetrievalResult` with the tool registry (ADR-D3-03); limits
-  (13.FP-FT-AI-RAG.md §107) enforced at the harness gate (ADR-D2-09, ADR-D3-04 gate 3 — semantic
+  (13.PFF-FA-AI-RAG.md §107) enforced at the harness gate (ADR-D2-09, ADR-D3-04 gate 3 — semantic
   parameter validation) before the call reaches the retrieval pipeline (ADR-D3-22).
 - **Invocation path**: for intents the intent classifier (ADR-D3-06) resolves
   deterministically to "needs knowledge", the supervisor calls `rag.search` directly
@@ -191,7 +191,7 @@ iteration bound.
   whether knowledge is needed mid-reasoning, the agent calls the same tool through the
   harness (model-decided branch) — both paths converge on one gated tool, never a
   bespoke code path.
-- **Agentic loop** (13.FP-FT-AI-RAG.md §108–§109): after a retrieval round, an evidence-
+- **Agentic loop** (13.PFF-FA-AI-RAG.md §108–§109): after a retrieval round, an evidence-
   sufficiency check (grounded in the citation/threshold logic of ADR-D3-22 §69–§71)
   may trigger exactly one further round if evidence is insufficient; a hard counter
   enforces `max_iterations = 2`; on exhaustion, the platform answers with what it has
@@ -263,7 +263,7 @@ iteration bound.
 | Aspect | Detail |
 |---|---|
 | Build phases | 8 |
-| Repository paths | `src/pf_ft_ai/rag/retrieval/`, `src/pf_ft_ai/harness/` |
+| Repository paths | `src/pff_fa_ai/rag/retrieval/`, `src/pff_fa_ai/harness/` |
 | Configuration | Tool limits, `max_iterations` |
 | Contracts / schemas | `rag.search` tool schema |
 | Migration | N/A |
@@ -311,10 +311,10 @@ iteration bound.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-17 RAG & Retrieval |
-| Specification sections | 13.FP-FT-AI-RAG.md §105–§115 |
+| Specification sections | 13.PFF-FA-AI-RAG.md §105–§115 |
 | Requirement IDs | RAG-INVOKE-* |
 | Build phases | 8 |
-| Code paths | `src/pf_ft_ai/rag/retrieval/`, `src/pf_ft_ai/harness/` |
+| Code paths | `src/pff_fa_ai/rag/retrieval/`, `src/pff_fa_ai/harness/` |
 | Configuration | tool limits, iteration bound |
 | Tests | harness-gate + loop-bound suites |
 | Upstream ADRs | ADR-D3-22, D3-04, D3-05 |

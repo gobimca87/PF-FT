@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-13, ADR-D2-14, ADR-D4-09, ADR-D5-03, ADR-D7-09]
 source_docs:
-  - "MD files/3 Context & Integration/10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §15, §16, §17, §18, §19, §20, §21, §22, §23, §24, §36, §38, §39, §40"
-  - "MD files/1 Foundation/3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67, §68"
-  - "MD files/5 QualityGovernance/20.PF-FT-AI-GOVERNANCE.md §74"
+  - "MD files/3 Context & Integration/10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §15, §16, §17, §18, §19, §20, §21, §22, §23, §24, §36, §38, §39, §40"
+  - "MD files/1 Foundation/3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §67, §68"
+  - "MD files/5 QualityGovernance/20.PFF-FA-AI-GOVERNANCE.md §74"
 build_phases: [6]
 impacted_paths:
-  - src/pf_ft_ai/integration/api/
+  - src/pff_fa_ai/integration/api/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -31,24 +31,24 @@ review_due: 2027-08-21
 Every enterprise response is validated against a platform-owned contract and mapped
 deterministically into ERC shapes — never passed through raw. The platform pins explicit API
 versions rather than following "latest", and treats an unexpected response as a **failure**
-rather than something to tolerate, because 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §22 requires the mapping to be deterministic
+rather than something to tolerate, because 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §22 requires the mapping to be deterministic
 and a tolerated surprise is a silent behaviour change.
 
 ## 2. Context and Problem Statement
 
-10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §15–§24 cover API versioning, contracts, request and response payloads,
+10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §15–§24 cover API versioning, contracts, request and response payloads,
 response-to-context mapping, why the mapping must be deterministic, data transformation and raw
-response handling. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36 covers tool output validation and §38–§40 the error contract and
-its categories. 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67–§68 assign responsibility for payload transformation and version
-compatibility. 20.PF-FT-AI-GOVERNANCE.md §74 covers version compatibility governance.
+response handling. 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §36 covers tool output validation and §38–§40 the error contract and
+its categories. 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §67–§68 assign responsibility for payload transformation and version
+compatibility. 20.PFF-FA-AI-GOVERNANCE.md §74 covers version compatibility governance.
 
-10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §22 is unusually direct: the response-to-context mapping *must* be deterministic. It does
+10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §22 is unusually direct: the response-to-context mapping *must* be deterministic. It does
 not say what happens when a response does not fit the mapping, and that gap is where the real
 decision sits.
 
 Three related problems.
 
-**Raw responses are dangerous in a way that is easy to miss.** 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §24 covers raw response
+**Raw responses are dangerous in a way that is easy to miss.** 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §24 covers raw response
 handling. An enterprise response passed into ERC unmapped brings whatever fields the service
 happens to return today — including fields the platform never asked for, does not need, and may
 not be entitled to show. It also means a service adding a field changes what reaches the model,
@@ -56,7 +56,7 @@ with no code change on the platform side and nothing to review.
 
 **Version pinning versus tolerance is a real trade-off.** Following "latest" means the platform
 adapts automatically to enterprise improvements and breaks unpredictably. Pinning means the
-platform is stable and requires deliberate work to adopt changes. 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §15 requires versioning
+platform is stable and requires deliberate work to adopt changes. 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §15 requires versioning
 without stating which posture.
 
 **Unexpected responses have two plausible handlings.** A response with a missing field, an
@@ -78,18 +78,18 @@ determine the status, which is honest.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Response-to-context mapping must be deterministic | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §21–§22 |
-| DR-F-02 | API versions must be explicit | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §15 |
-| DR-F-03 | Tool and API outputs must be validated | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §36 |
-| DR-F-04 | Errors must map to a platform error contract | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §38–§40 |
-| DR-F-05 | Payload transformation responsibility is the platform's | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67 |
-| DR-F-06 | Version compatibility must be governed | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §68; 20.PF-FT-AI-GOVERNANCE.md §74 |
+| DR-F-01 | Response-to-context mapping must be deterministic | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §21–§22 |
+| DR-F-02 | API versions must be explicit | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §15 |
+| DR-F-03 | Tool and API outputs must be validated | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §36 |
+| DR-F-04 | Errors must map to a platform error contract | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §38–§40 |
+| DR-F-05 | Payload transformation responsibility is the platform's | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §67 |
+| DR-F-06 | Version compatibility must be governed | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §68; 20.PFF-FA-AI-GOVERNANCE.md §74 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | A contract change must be detected before it reaches users | 0 undetected breaking changes | 20.PF-FT-AI-GOVERNANCE.md §74 |
+| DR-N-01 | A contract change must be detected before it reaches users | 0 undetected breaking changes | 20.PFF-FA-AI-GOVERNANCE.md §74 |
 | DR-N-02 | Validation overhead must be small | ≤5 ms per response | ADR-D5-18 |
 | DR-N-03 | Only mapped fields may enter ERC | 0 unmapped fields | UK GDPR Art. 5(1)(c) |
 
@@ -97,7 +97,7 @@ determine the status, which is honest.
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Enterprise owns its API contracts | Organisational | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §4; ADR-D2-14 §7.3 |
+| DR-C-01 | Enterprise owns its API contracts | Organisational | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §4; ADR-D2-14 §7.3 |
 | DR-C-02 | Pydantic at every boundary | Platform | `CLAUDE.md`; ADR-D5-03 |
 | DR-C-03 | Behavioural coupling is forbidden | Platform | ADR-D2-14 §7.3 |
 | DR-C-04 | Facts entering ERC carry provenance and must be what they claim | Platform | ADR-D1-03 |
@@ -115,7 +115,7 @@ determine the status, which is honest.
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Detection of contract change | 30 | An undetected change means the platform tells users wrong things while appearing healthy | Is a breaking change detected before users see its effect? |
-| EC-02 | Determinism of mapping | 25 | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §22 requires it; non-deterministic mapping makes ERC untrustworthy | Same response, same ERC content, always? |
+| EC-02 | Determinism of mapping | 25 | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §22 requires it; non-deterministic mapping makes ERC untrustworthy | Same response, same ERC content, always? |
 | EC-03 | Field-level minimisation | 20 | Only what the platform mapped should enter context | Can an unmapped field reach ERC? |
 | EC-04 | Operational tolerance | 15 | A platform that fails on every enterprise wobble is unusable | Failure rate from non-breaking changes |
 | EC-05 | Adoption effort for enterprise changes | 10 | Real but subordinate | Work to adopt a new API version |
@@ -140,7 +140,7 @@ as returned, and default or ignore anything unexpected.
 - A breaking change surfaces as wrong user-facing behaviour rather than as an error (EC-01
   fails). The seventh affiliation status is presented as unknown, and nobody knows why.
 - Unmapped fields flow into ERC, so the enterprise controls what reaches the model (EC-03 fails).
-- Mapping is not deterministic in the 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §22 sense — what ends up in ERC depends on what the
+- Mapping is not deterministic in the 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §22 sense — what ends up in ERC depends on what the
   service returned that day.
 - Defaulting a missing field manufactures a fact with authority 5 that the enterprise never
   asserted, which is a precedence-chain violation.
@@ -236,11 +236,11 @@ three criteria. B's weakness on operational tolerance is real and is addressed s
 
 ### 7.1 Versions are pinned explicitly
 
-Each catalogue entry names an explicit API version (10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §9's `version: v1`). The platform never
+Each catalogue entry names an explicit API version (10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §9's `version: v1`). The platform never
 calls an unversioned or "latest" endpoint.
 
 Adopting a new version is deliberate work: a new catalogue entry, a new contract, updated mapping,
-and a release. 20.PF-FT-AI-GOVERNANCE.md §74's version-compatibility governance applies. The old version continues to
+and a release. 20.PFF-FA-AI-GOVERNANCE.md §74's version-compatibility governance applies. The old version continues to
 be used until the new one is adopted, so an enterprise release cannot change platform behaviour
 without a platform release — which is DR-N-01 satisfied structurally.
 
@@ -251,7 +251,7 @@ for the response. These are the **platform's** expectations, not a copy of the e
 schema. The distinction matters: the platform's contract declares what it needs and will use, and
 an enterprise field the platform does not map does not appear in it.
 
-3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67 assigns payload transformation to the platform, and this is what that means in practice:
+3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §67 assigns payload transformation to the platform, and this is what that means in practice:
 the enterprise returns its shapes, and the platform maps them into ERC shapes it controls. ERC
 section models are stable across enterprise contract changes, so an enterprise field rename is an
 integration-layer change and touches nothing above it.
@@ -292,7 +292,7 @@ deployment.
 
 ### 7.5 Errors map to a platform error contract
 
-Per 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §38–§40, enterprise errors are translated into the platform's own error taxonomy
+Per 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §38–§40, enterprise errors are translated into the platform's own error taxonomy
 (ADR-D7-05) at the integration boundary. Two rules:
 
 - **Translation is from status codes and structured error codes**, never from error message text.
@@ -372,7 +372,7 @@ on a contract mismatch, giving detection in hours rather than at the next user c
 
 - A breaking enterprise change fails at the integration boundary rather than producing wrong
   user-facing behaviour.
-- Mapping is explicit and deterministic, satisfying 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §22.
+- Mapping is explicit and deterministic, satisfying 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §22.
 - Only mapped fields reach ERC, so the enterprise cannot widen what the model sees by adding a
   field.
 - ERC section models are stable across enterprise contract changes.
@@ -407,7 +407,7 @@ on a contract mismatch, giving detection in hours rather than at the next user c
 | Enterprise decides; AI orchestrates | The platform maps and validates what the enterprise returns; it never supplies a value the enterprise did not. §7.3's no-defaulting rule is this principle at the field level. |
 | Authoritative-truth precedence | Central. A defaulted field would enter ERC at authority 5 while being the platform's invention. Failing instead is what keeps authority 5 meaning "the enterprise said so". |
 | Four-state separation | The platform contract and ERC shapes are the platform's projection; the enterprise shape is the enterprise's. |
-| Versioned artefacts, never mutated in place | API versions pinned; contracts versioned with the catalogue (ADR-D5-06); adoption is a release, per 20.PF-FT-AI-GOVERNANCE.md §74. |
+| Versioned artefacts, never mutated in place | API versions pinned; contracts versioned with the catalogue (ADR-D5-06); adoption is a release, per 20.PFF-FA-AI-GOVERNANCE.md §74. |
 | Adam persona governs how, never what | A validation failure produces an honest inability statement (ADR-D3-08), not a persona-smoothed guess. |
 
 ## 11. Risks and Mitigations
@@ -453,7 +453,7 @@ enterprise problem.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 (integration layer) |
-| Repository paths | `src/pf_ft_ai/integration/api/contracts.py`, `mappings.py`, `client.py`; `src/pf_ft_ai/integration/errors/` |
+| Repository paths | `src/pff_fa_ai/integration/api/contracts.py`, `mappings.py`, `client.py`; `src/pff_fa_ai/integration/errors/` |
 | Configuration | Pinned versions in `config/enterprise/api-catalog/` |
 | Contracts / schemas | Pydantic request and response models per operation; ERC mapping definitions |
 | Migration | None |
@@ -510,10 +510,10 @@ enterprise problem.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-10 Integration & 18-Microservice Matrix |
-| Specification sections | 10 PF-FT-AI-ENTERPRISE-INTEGRATION.md §15 (API Versioning), §16–§20 (API Contract, Request/Response Contract and Payload), §21 (Response-to-Context Mapping), §22 (Why Mapping Must Be Deterministic), §23–§24 (Data Transformation, Raw Response Handling), §36 (Tool Output Validation), §38–§40 (Error Contract, Translation, Categories); 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §67 (Responsibility for API Payload Transformation), §68 (Responsibility for Version Compatibility); 20.PF-FT-AI-GOVERNANCE.md §74 (Version Compatibility) |
+| Specification sections | 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §15 (API Versioning), §16–§20 (API Contract, Request/Response Contract and Payload), §21 (Response-to-Context Mapping), §22 (Why Mapping Must Be Deterministic), §23–§24 (Data Transformation, Raw Response Handling), §36 (Tool Output Validation), §38–§40 (Error Contract, Translation, Categories); 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §67 (Responsibility for API Payload Transformation), §68 (Responsibility for Version Compatibility); 20.PFF-FA-AI-GOVERNANCE.md §74 (Version Compatibility) |
 | Requirement IDs | `NFR-A38-REL`, `NFR-A38-MAINT` |
 | Build phases | 6 |
-| Code paths | `src/pf_ft_ai/integration/api/`, `src/pf_ft_ai/integration/errors/` |
+| Code paths | `src/pff_fa_ai/integration/api/`, `src/pff_fa_ai/integration/errors/` |
 | Configuration | `config/enterprise/api-catalog/` |
 | Tests | AC-01 to AC-07; scheduled contract tests |
 | Upstream ADRs | ADR-D2-13, ADR-D2-14 |

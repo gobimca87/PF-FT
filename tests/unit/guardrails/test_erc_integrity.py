@@ -1,6 +1,6 @@
-from pf_ft_ai.context.collection.aggregator import aggregate_records
-from pf_ft_ai.guardrails.erc_integrity import validate_erc_batch_integrity
-from pf_ft_ai.guardrails.states import GuardrailDecision
+from pff_fa_ai.context.collection.aggregator import aggregate_records
+from pff_fa_ai.guardrails.erc_integrity import validate_erc_batch_integrity
+from pff_fa_ai.guardrails.states import GuardrailDecision
 
 
 def test_should_allow_a_complete_uncontaminated_batch() -> None:

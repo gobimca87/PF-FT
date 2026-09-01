@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D2-05, ADR-D3-03, ADR-D3-05, ADR-D3-07, ADR-D3-17, ADR-D7-13]
 source_docs:
-  - "MD files/2 Agent Runtime/7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12, §13, §14, §22, §24"
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §13, §14"
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §42, §43"
+  - "MD files/2 Agent Runtime/7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12, §13, §14, §22, §24"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §13, §14"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §42, §43"
 build_phases: [4, 16]
 impacted_paths:
-  - src/pf_ft_ai/orchestration/supervisor/
+  - src/pff_fa_ai/orchestration/supervisor/
 classification: Internal
 review_due: 2027-02-21
 ---
@@ -35,12 +35,12 @@ product evidence for choosing workflow two.
 
 ## 2. Context and Problem Statement
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12 shows the supervisor's decision object with an `intent` field. 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §13 gives confidence
-bands, §14 clarification, §22 the agent capability registry, §24 agent selection. 4. PF-FT-AI-RUNTIME.md §13–§14
-place supervisor execution and the clarification path in the runtime. 16.PF-FT-AI-PROMPT-ENGINEERING.md §42–§43 cover
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12 shows the supervisor's decision object with an `intent` field. 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §13 gives confidence
+bands, §14 clarification, §22 the agent capability registry, §24 agent selection. 4. PFF-FA-AI-RUNTIME.md §13–§14
+place supervisor execution and the clarification path in the runtime. 16.PFF-FA-AI-PROMPT-ENGINEERING.md §42–§43 cover
 structured output and output schema.
 
-7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's example shows `"intent": "club_affiliation"` — a string. Whether that string comes from
+7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's example shows `"intent": "club_affiliation"` — a string. Whether that string comes from
 a fixed set or is free-form is not stated, and the difference is substantial.
 
 **Open-set classification** lets the model name any intent it perceives. It handles novelty
@@ -60,7 +60,7 @@ negative with no structure, and nothing can be learned from it.
 
 Third, there is a subtle coupling risk. Intent strings appear in the supervisor's decision object,
 which is model output. If agents declared intents freely and the supervisor matched on string
-similarity, the match would be an inference — a second model-like judgement in a place 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46
+similarity, the match would be an inference — a second model-like judgement in a place 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46
 marks as an authoritative AI decision but ADR-D3-05 §7.3 requires to be bounded by a deterministic
 registry lookup.
 
@@ -70,11 +70,11 @@ registry lookup.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Intent must be produced as part of a schema-validated decision object | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12; 16.PF-FT-AI-PROMPT-ENGINEERING.md §42–§43 |
-| DR-F-02 | Intent must resolve to candidate agents via the registry | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §22, §24 |
+| DR-F-01 | Intent must be produced as part of a schema-validated decision object | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §42–§43 |
+| DR-F-02 | Intent must resolve to candidate agents via the registry | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §22, §24 |
 | DR-F-03 | Out-of-scope must be handled explicitly | ADR-D2-05 §7.5 |
 | DR-F-04 | Classification accuracy must be measurable | ADR-D2-05 §7.3 |
-| DR-F-05 | Ambiguity must reach clarification rather than a guess | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14 |
+| DR-F-05 | Ambiguity must reach clarification rather than a guess | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14 |
 
 ### 3.2 Non-functional drivers
 
@@ -194,7 +194,7 @@ specific intent within it.
   pre-check problem and matches no keyword rule.
 - Rule maintenance grows combinatorially with intents and phrasings (EC-05).
 - Handles novelty by failing to match, with no graceful degradation (EC-04).
-- 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12's decision object presumes a model-produced intent with a confidence.
+- 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12's decision object presumes a model-produced intent with a confidence.
 
 **Cost / effort.** Low initially, high and growing to maintain.
 
@@ -275,7 +275,7 @@ DR-A-02's case, and ADR-D3-02 §7.3's constraint that one agent runs per turn. C
 produces a **single** primary intent plus an optional `secondary_intents` list.
 
 The primary drives routing. The secondary list drives clarification: where a secondary intent maps
-to a different agent, the supervisor clarifies rather than proceeding (7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §14). Where secondary
+to a different agent, the supervisor clarifies rather than proceeding (7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14). Where secondary
 intents map to the same agent, they are context for the agent, not additional routing.
 
 Single-label routing with a multi-label signal keeps ADR-D3-02's one-agent-per-turn constraint
@@ -411,7 +411,7 @@ value per ADR-D1-04 §7.1.
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides; AI orchestrates | 3. PF-FT-AI-RESPONSIBILITY-MATRIX.md §46 marks workflow selection an authoritative AI decision; §7.2 keeps it bounded by a deterministic registry so it selects among options rather than defining them. |
+| Enterprise decides; AI orchestrates | 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46 marks workflow selection an authoritative AI decision; §7.2 keeps it bounded by a deterministic registry so it selects among options rather than defining them. |
 | Authoritative-truth precedence | Intent is model output at authority 1 and decides only which code path runs; it never becomes a business fact. |
 | Four-state separation | Classification reads Conversation State (message, summary) and Workflow State (associations); it writes neither. |
 | Versioned artefacts, never mutated in place | The intent set derives from versioned agent declarations; the classifier prompt is a versioned artefact (ADR-D3-11). |
@@ -460,7 +460,7 @@ distribution rather than any particular level.
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 (classification), 16 (golden set and threshold derivation) |
-| Repository paths | `src/pf_ft_ai/orchestration/supervisor/` |
+| Repository paths | `src/pff_fa_ai/orchestration/supervisor/` |
 | Configuration | Intent set derived from `config/base/agents.yaml`; classifier prompt in `prompts/system/` |
 | Contracts / schemas | Decision object with intent as an enum (ADR-D2-05 §7.1) |
 | Migration | None |
@@ -506,7 +506,7 @@ distribution rather than any particular level.
 | RT-01 | QM-01 accuracy below 90% | Per release | Review phrasing coverage in the golden set before changing the approach |
 | RT-02 | QM-04 unclear rate above 15% | Weekly | Apply §7.6's analysis; do not add intents speculatively |
 | RT-03 | Intent set grows past the point single-stage accuracy holds | Quarterly, once several agents exist | Reconsider Option C's hierarchical classification |
-| RT-04 | QM-06 records adversarial influence | Per release | Injection incident path; strengthen the classifier prompt's trust labelling (16.PF-FT-AI-PROMPT-ENGINEERING.md §57) |
+| RT-04 | QM-06 records adversarial influence | Per release | Injection incident path; strengthen the classifier prompt's trust labelling (16.PFF-FA-AI-PROMPT-ENGINEERING.md §57) |
 | RT-05 | QM-07 shows a dominant unserved domain | Quarterly | Feed to ADR-D1-10 §7.3's workflow-two prioritisation |
 | RT-06 | QM-05 shows multi-agent secondary intents above 10% | Monthly, once a second agent exists | ADR-D3-02 §7.3's clarification load is high; review workflow boundaries |
 
@@ -517,10 +517,10 @@ distribution rather than any particular level.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-14 Conversation Decision Architecture |
-| Specification sections | 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §12 (Supervisor Decision Model), §13 (Confidence), §14 (Clarification), §22 (Agent Capability Registry), §24 (Agent Selection); 4. PF-FT-AI-RUNTIME.md §13–§14; 16.PF-FT-AI-PROMPT-ENGINEERING.md §42–§43 (Structured Output, Output Schema), §57 (Prompt Trust Labels) |
+| Specification sections | 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §12 (Supervisor Decision Model), §13 (Confidence), §14 (Clarification), §22 (Agent Capability Registry), §24 (Agent Selection); 4. PFF-FA-AI-RUNTIME.md §13–§14; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §42–§43 (Structured Output, Output Schema), §57 (Prompt Trust Labels) |
 | Requirement IDs | `FR-A39-02` |
 | Build phases | 4, 16 |
-| Code paths | `src/pf_ft_ai/orchestration/supervisor/` |
+| Code paths | `src/pff_fa_ai/orchestration/supervisor/` |
 | Configuration | `config/base/agents.yaml`; `prompts/system/` |
 | Tests | AC-01 to AC-07; routing golden set |
 | Upstream ADRs | ADR-D2-05, ADR-D3-03, ADR-D3-05 |

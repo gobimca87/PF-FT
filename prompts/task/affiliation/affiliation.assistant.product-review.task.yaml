@@ -7,7 +7,7 @@ description: Task instructions for presenting pre-matched products, insurance, a
 risk: MEDIUM
 compatibility:
   model:
-    - pf-ft-slm-primary: ">=1.0.0"
+    - pff-fa-slm-primary: ">=1.0.0"
 variables:
   - erc_context
   - team_count

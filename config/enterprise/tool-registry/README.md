@@ -1,6 +1,6 @@
 # Tool Registry
 
-`load_tool_registry()` in `src/pf_ft_ai/integration/tools/registry.py` recursively loads
+`load_tool_registry()` in `src/pff_fa_ai/integration/tools/registry.py` recursively loads
 every `*.yaml` file under here (doc 10 §28: `tool-registry/<domain>/<name>.yaml`) into a
 `ToolRegistry`, and — if given an `ApiCatalog` — validates each tool's `source.api_id`
 actually exists (doc 10 §128).

@@ -1,6 +1,6 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import (
+from pff_fa_ai.common.exceptions import (
     ConfigurationError,
     GuardrailError,
     IntegrationError,
@@ -11,7 +11,7 @@ from pf_ft_ai.common.exceptions import (
     ValidationError,
     WorkflowError,
 )
-from pf_ft_ai.observability.errors import ErrorCategory, classify_platform_error
+from pff_fa_ai.observability.errors import ErrorCategory, classify_platform_error
 
 
 @pytest.mark.parametrize(

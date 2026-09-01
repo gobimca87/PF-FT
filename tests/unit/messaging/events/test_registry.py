@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.messaging.events.registry import EventRoute, EventRouteRegistry
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.messaging.events.registry import EventRoute, EventRouteRegistry
 
 
 def test_should_register_and_resolve_a_route() -> None:

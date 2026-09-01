@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D6-10, ADR-D2-13, ADR-D6-08, ADR-D6-09, ADR-D3-04]
 source_docs:
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §30, §47, §48, §49, §50"
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §61, §62, §63, §64"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §30, §47, §48, §49, §50"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §61, §62, §63, §64"
 build_phases: [9]
 impacted_paths:
-  - src/pf_ft_ai/integration/mcp/
+  - src/pff_fa_ai/integration/mcp/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -31,13 +31,13 @@ MCP (Model Context Protocol) servers will be treated as **semi-trusted external
 integrations**: only **allowlisted MCP servers and tools** with **pinned version
 compatibility** may be used, all MCP **responses are validated and treated as untrusted
 content** (injection-checked, schema-validated) before use, and MCP calls go through the
-same harness allowlist/authorization as any tool (18.PF-FT-AI-GUARDRAILS.md §30, §47–§50; 19.PF-FT-AI-SECURITY.md §61–§64).
+same harness allowlist/authorization as any tool (18.PFF-FA-AI-GUARDRAILS.md §30, §47–§50; 19.PFF-FA-AI-SECURITY.md §61–§64).
 An MCP server is never implicitly trusted.
 
 ## 2. Context and Problem Statement
 
-18.PF-FT-AI-GUARDRAILS.md §30 MCP injection defence, §47–§50 MCP restrictions/server-allowlist/tool-
-allowlist/version-compatibility; 19.PF-FT-AI-SECURITY.md §61–§64 MCP security/server-trust/tool-security/
+18.PFF-FA-AI-GUARDRAILS.md §30 MCP injection defence, §47–§50 MCP restrictions/server-allowlist/tool-
+allowlist/version-compatibility; 19.PFF-FA-AI-SECURITY.md §61–§64 MCP security/server-trust/tool-security/
 response-security. MCP extends the platform with external capability servers — powerful
 but a supply-chain and injection risk if trusted blindly. This ADR fixes the MCP trust
 model and response validation (a specialisation of ADR-D6-10 for MCP).
@@ -46,9 +46,9 @@ model and response validation (a specialisation of ADR-D6-10 for MCP).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Allowlist MCP servers + tools | 18.PF-FT-AI-GUARDRAILS.md §48–§49; 19.PF-FT-AI-SECURITY.md §62 |
-| DR-F-02 | Version compatibility pinned | 18.PF-FT-AI-GUARDRAILS.md §50 |
-| DR-F-03 | MCP responses validated + untrusted | 18.PF-FT-AI-GUARDRAILS.md §30; 19.PF-FT-AI-SECURITY.md §64 |
+| DR-F-01 | Allowlist MCP servers + tools | 18.PFF-FA-AI-GUARDRAILS.md §48–§49; 19.PFF-FA-AI-SECURITY.md §62 |
+| DR-F-02 | Version compatibility pinned | 18.PFF-FA-AI-GUARDRAILS.md §50 |
+| DR-F-03 | MCP responses validated + untrusted | 18.PFF-FA-AI-GUARDRAILS.md §30; 19.PFF-FA-AI-SECURITY.md §64 |
 | DR-C-01 | MCP calls via harness authz/allowlist | ADR-D6-10, D3-04 |
 
 ### 3.4 Assumptions
@@ -72,8 +72,8 @@ model and response validation (a specialisation of ADR-D6-10 for MCP).
 
 ### 5.1 Option A — Allowlisted, version-pinned MCP servers/tools + response validation + harness authz
 
-**Description.** Only approved MCP servers/tools (18.PF-FT-AI-GUARDRAILS.md §48–§49); versions pinned
-(§50); responses validated + injection-checked + treated as untrusted (§30; 19.PF-FT-AI-SECURITY.md §64);
+**Description.** Only approved MCP servers/tools (18.PFF-FA-AI-GUARDRAILS.md §48–§49); versions pinned
+(§50); responses validated + injection-checked + treated as untrusted (§30; 19.PFF-FA-AI-SECURITY.md §64);
 calls go through harness allowlist/authorization (ADR-D6-10).
 **Strengths.** Controls supply-chain + injection; consistent with tool security.
 **Weaknesses.** Onboarding process per server.
@@ -112,12 +112,12 @@ no access to sensitive zones).
 
 | Option | Eliminated by |
 |---|---|
-| Implicit MCP trust | 19.PF-FT-AI-SECURITY.md §62 |
-| Unpinned MCP versions | 18.PF-FT-AI-GUARDRAILS.md §50 |
+| Implicit MCP trust | 19.PFF-FA-AI-SECURITY.md §62 |
+| Unpinned MCP versions | 18.PFF-FA-AI-GUARDRAILS.md §50 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 18.PF-FT-AI-GUARDRAILS.md §30/§47–§50 and 19.PF-FT-AI-SECURITY.md
+**Method.** Weighted scoring against §4, informed by 18.PFF-FA-AI-GUARDRAILS.md §30/§47–§50 and 19.PFF-FA-AI-SECURITY.md
 §61–§64.
 
 | Criterion | Weight | A: Allowlist+validate | B: Trust responses | C: Any server+validate | D: No MCP | E: A+sandbox |
@@ -147,11 +147,11 @@ Trusting responses (B) and open server sets (C) are rejected.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/integration/mcp/`: MCP client restricted to allowlisted servers/tools
-  (18.PF-FT-AI-GUARDRAILS.md §48–§49) with pinned versions (§50); calls routed through the harness
+- `src/pff_fa_ai/integration/mcp/`: MCP client restricted to allowlisted servers/tools
+  (18.PFF-FA-AI-GUARDRAILS.md §48–§49) with pinned versions (§50); calls routed through the harness
   (ADR-D6-10) with authorization (ADR-D6-03).
 - Responses validated (schema + safety) and passed through the injection guardrail
-  (ADR-D6-08/D6-09) before reasoning (19.PF-FT-AI-SECURITY.md §64).
+  (ADR-D6-08/D6-09) before reasoning (19.PFF-FA-AI-SECURITY.md §64).
 - Sensitive/less-trusted MCP servers invoked from an isolated egress path (ADR-D6-04)
   with no access to sensitive zones.
 - Server onboarding is a governed change (ADR-D6-15).
@@ -213,7 +213,7 @@ Trusting responses (B) and open server sets (C) are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 9 |
-| Repository paths | `src/pf_ft_ai/integration/mcp/` |
+| Repository paths | `src/pff_fa_ai/integration/mcp/` |
 | Configuration | Server/tool allowlist; versions; sandbox |
 | Contracts / schemas | MCP response validation |
 | Migration | N/A |
@@ -261,10 +261,10 @@ Trusting responses (B) and open server sets (C) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 18.PF-FT-AI-GUARDRAILS.md §30, §47–§50; 19.PF-FT-AI-SECURITY.md §61–§64 |
+| Specification sections | 18.PFF-FA-AI-GUARDRAILS.md §30, §47–§50; 19.PFF-FA-AI-SECURITY.md §61–§64 |
 | Requirement IDs | SEC-MCP-* |
 | Build phases | 9 |
-| Code paths | `src/pf_ft_ai/integration/mcp/` |
+| Code paths | `src/pff_fa_ai/integration/mcp/` |
 | Configuration | server/tool allowlist |
 | Tests | MCP security suites |
 | Upstream ADRs | ADR-D6-10, D2-13 |

@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-20, ADR-D3-21, ADR-D3-22, ADR-D3-24, ADR-D3-13, ADR-D3-14, ADR-D4-08]
 source_docs:
-  - "MD files/4 AI/14.PF-FT-AI-EMBEDDING-VECTOR.md §5, §7, §12, §13, §14, §15, §16, §17, §18, §19, §79, §80, §81, §99, §100, §103, §104, §105, §106, §107, §153"
-  - "MD files/4 AI/13.FP-FT-AI-RAG.md §5, §8"
+  - "MD files/4 AI/14.PFF-FA-AI-EMBEDDING-VECTOR.md §5, §7, §12, §13, §14, §15, §16, §17, §18, §19, §79, §80, §81, §99, §100, §103, §104, §105, §106, §107, §153"
+  - "MD files/4 AI/13.PFF-FA-AI-RAG.md §5, §8"
 build_phases: [8]
 impacted_paths:
-  - src/pf_ft_ai/rag/embedding/
+  - src/pff_fa_ai/rag/embedding/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -27,7 +27,7 @@ review_due: 2027-08-22
 
 ## 1. Summary
 
-PFF AI will select its embedding model through a PF-FT-specific retrieval
+PFF AI will select its embedding model through a PFF-FA-specific retrieval
 evaluation rather than benchmark reputation, and will treat the chosen model as a
 versioned artefact bound to a specific vector index. For the initial build we
 **recommend a Hugging Face-hosted general-purpose 768-dimension English model
@@ -37,17 +37,17 @@ documented migration path to a self-hosted equivalent. Because the knowledge
 corpus changes only 5–20 documents per year, re-embedding cost is negligible and
 the decision is dominated by retrieval quality, dimension economy and the ability
 to change models later without corrupting the index. This ADR is `Proposed`
-pending the retrieval-evaluation run that 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 mandates.
+pending the retrieval-evaluation run that 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 mandates.
 
 ## 2. Context and Problem Statement
 
-14.PF-FT-AI-EMBEDDING-VECTOR.md §12 lists fifteen embedding-selection criteria and §13 states plainly that
-"PF-FT-specific retrieval evaluation must determine the winner" — no model may be
+14.PFF-FA-AI-EMBEDDING-VECTOR.md §12 lists fifteen embedding-selection criteria and §13 states plainly that
+"PFF-FA-specific retrieval evaluation must determine the winner" — no model may be
 chosen because its dimension is high, its public benchmark score is high, or it is
 popular. Yet the platform cannot build the RAG ingestion pipeline
 ([ADR-D3-21](ADR-D3-21-document-ingestion-and-chunking-strategy.md)) or the vector
 index ([ADR-D3-24](ADR-D3-24-vector-store-selection.md)) until an embedding model —
-and therefore a **dimension** — is fixed, because 14.PF-FT-AI-EMBEDDING-VECTOR.md §18 makes dimension an
+and therefore a **dimension** — is fixed, because 14.PFF-FA-AI-EMBEDDING-VECTOR.md §18 makes dimension an
 architecture constraint the index is created around.
 
 What is blocked until this is decided:
@@ -60,7 +60,7 @@ What is blocked until this is decided:
 
 What goes wrong if left implicit: an engineer picks a model ad hoc (typically the
 largest or most fashionable), the index is built at that dimension, and changing
-it later forces a full index rebuild (14.PF-FT-AI-EMBEDDING-VECTOR.md §80–§81). Choosing deliberately, and
+it later forces a full index rebuild (14.PFF-FA-AI-EMBEDDING-VECTOR.md §80–§81). Choosing deliberately, and
 recording that dimension migration is a rebuild not an edit, is the whole point of
 this ADR.
 
@@ -76,30 +76,30 @@ retrieval quality and future changeability.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Model must serve both document-embedding and query-embedding with matched semantics | 14.PF-FT-AI-EMBEDDING-VECTOR.md §7 |
-| DR-F-02 | Must retrieve accurately over FA/PFF domain knowledge (affiliation, insurance, discipline, safeguarding) | 14.PF-FT-AI-EMBEDDING-VECTOR.md §105 |
-| DR-F-03 | Must be reachable through the provider-neutral embedding abstraction, not called directly | 14.PF-FT-AI-EMBEDDING-VECTOR.md §9; ADR-D3-14 |
-| DR-F-04 | Must handle exact-identifier tokens (club IDs, WGS IDs) acceptably or defer them to hybrid/lexical search | 14.PF-FT-AI-EMBEDDING-VECTOR.md §103; ADR-D3-22 |
+| DR-F-01 | Model must serve both document-embedding and query-embedding with matched semantics | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §7 |
+| DR-F-02 | Must retrieve accurately over FA/PFF domain knowledge (affiliation, insurance, discipline, safeguarding) | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §105 |
+| DR-F-03 | Must be reachable through the provider-neutral embedding abstraction, not called directly | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §9; ADR-D3-14 |
+| DR-F-04 | Must handle exact-identifier tokens (club IDs, WGS IDs) acceptably or defer them to hybrid/lexical search | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §103; ADR-D3-22 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Retrieval quality on PF-FT eval set | Recall@5 ≥ 0.90 on the golden set | 14.PF-FT-AI-EMBEDDING-VECTOR.md §100, §107 |
-| DR-N-02 | Query-embedding latency | p95 ≤ 80 ms (single query) | 14.PF-FT-AI-EMBEDDING-VECTOR.md §88 (retrieval budget) |
-| DR-N-03 | Dimension economy (storage + search cost) | ≤ 1024; prefer 768 | 14.PF-FT-AI-EMBEDDING-VECTOR.md §17, §91 |
-| DR-N-04 | Data-boundary safety for what text leaves the tenancy | Only non-personal knowledge text embedded externally | 14.PF-FT-AI-EMBEDDING-VECTOR.md §121; ADR-D6-07 |
-| DR-N-05 | Cost | Initial embed + annual re-embed within RAG budget | 14.PF-FT-AI-EMBEDDING-VECTOR.md §95, §96 |
+| DR-N-01 | Retrieval quality on PFF-FA eval set | Recall@5 ≥ 0.90 on the golden set | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §100, §107 |
+| DR-N-02 | Query-embedding latency | p95 ≤ 80 ms (single query) | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §88 (retrieval budget) |
+| DR-N-03 | Dimension economy (storage + search cost) | ≤ 1024; prefer 768 | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §17, §91 |
+| DR-N-04 | Data-boundary safety for what text leaves the tenancy | Only non-personal knowledge text embedded externally | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §121; ADR-D6-07 |
+| DR-N-05 | Cost | Initial embed + annual re-embed within RAG budget | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §95, §96 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Selection must be evaluation-driven, not reputation-driven | Organisational | 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 |
-| DR-C-02 | Dimension fixes the index; changing it requires a new index | Platform | 14.PF-FT-AI-EMBEDDING-VECTOR.md §18, §81 |
-| DR-C-03 | Document and query embeddings must use the same model+version | Platform | 14.PF-FT-AI-EMBEDDING-VECTOR.md §7, §46 |
-| DR-C-04 | Model is a versioned artefact with status lifecycle | Organisational | 14.PF-FT-AI-EMBEDDING-VECTOR.md §15, §16; ADR-D3-15 |
-| DR-C-05 | RAG embeds knowledge/FAQ content only — never enterprise business truth | Regulatory/Arch | 13.FP-FT-AI-RAG.md §5; ADR-D3-20 |
+| DR-C-01 | Selection must be evaluation-driven, not reputation-driven | Organisational | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 |
+| DR-C-02 | Dimension fixes the index; changing it requires a new index | Platform | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §18, §81 |
+| DR-C-03 | Document and query embeddings must use the same model+version | Platform | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §7, §46 |
+| DR-C-04 | Model is a versioned artefact with status lifecycle | Organisational | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §15, §16; ADR-D3-15 |
+| DR-C-05 | RAG embeds knowledge/FAQ content only — never enterprise business truth | Regulatory/Arch | 13.PFF-FA-AI-RAG.md §5; ADR-D3-20 |
 
 ### 3.4 Assumptions
 
@@ -107,15 +107,15 @@ retrieval quality and future changeability.
 |---|---|---|---|
 | DR-A-01 | Corpus is English-dominant | Multilingual model needed; re-score with DR under §6.1 | Corpus language audit at ingestion |
 | DR-A-02 | 5–20 docs/year churn holds | Re-embedding cost rises; still low at this scale | Annual review (`review_due`) |
-| DR-A-03 | A 768-dim general model clears Recall@5 ≥ 0.90 on the eval set | Escalate to a high-quality 1024-dim model | Retrieval eval gate, 14.PF-FT-AI-EMBEDDING-VECTOR.md §153 |
+| DR-A-03 | A 768-dim general model clears Recall@5 ≥ 0.90 on the eval set | Escalate to a high-quality 1024-dim model | Retrieval eval gate, 14.PFF-FA-AI-EMBEDDING-VECTOR.md §153 |
 
 ## 4. Evaluation Criteria and Weights
 
-Criteria fixed before scoring, per CMMI DAR SP 1.1 and 14.PF-FT-AI-EMBEDDING-VECTOR.md §12.
+Criteria fixed before scoring, per CMMI DAR SP 1.1 and 14.PFF-FA-AI-EMBEDDING-VECTOR.md §12.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Retrieval quality on PF-FT eval set | 30 | 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 makes this the deciding factor | Recall@5 / MRR on golden set |
+| EC-01 | Retrieval quality on PFF-FA eval set | 30 | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 makes this the deciding factor | Recall@5 / MRR on golden set |
 | EC-02 | Domain & identifier robustness | 15 | FA domain terms + exact IDs must retrieve | Domain + exact-ID eval slices (§103, §105) |
 | EC-03 | Dimension / storage economy | 10 | Sets index cost for the life of the corpus | Dimension; storage per §91 |
 | EC-04 | Data-boundary & privacy safety | 15 | External embedding is a data egress; safeguarding context | Egress review vs ADR-D6-07 |
@@ -125,8 +125,8 @@ Criteria fixed before scoring, per CMMI DAR SP 1.1 and 14.PF-FT-AI-EMBEDDING-VEC
 | EC-08 | Licence & portability | 5 | Avoid lock-in; permit self-hosting | Licence class; export terms |
 | | **Total** | **100** | | |
 
-EC-01 carries 30 because 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 explicitly subordinates every other signal to
-PF-FT retrieval quality; the weight is the spec's instruction, not a thumb on the
+EC-01 carries 30 because 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 explicitly subordinates every other signal to
+PFF-FA retrieval quality; the weight is the spec's instruction, not a thumb on the
 scale. EC-07 is deliberately low (5): §6.1 shows the decision does not move even if
 cost is trebled, which is the direct consequence of the small static corpus.
 
@@ -134,7 +134,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ## 5. Alternatives Considered
 
-Per 14.PF-FT-AI-EMBEDDING-VECTOR.md §14, the option space spans general-purpose, high-quality,
+Per 14.PFF-FA-AI-EMBEDDING-VECTOR.md §14, the option space spans general-purpose, high-quality,
 small/low-cost, multilingual, domain-specific, API-hosted and self-hosted models.
 Five concrete, viable candidates are scored.
 
@@ -145,7 +145,7 @@ Five concrete, viable candidates are scored.
 embedding abstraction, later self-hostable on the same weights.
 
 **Strengths.**
-- Strong retrieval quality per public MTEB, to be confirmed on the PF-FT set.
+- Strong retrieval quality per public MTEB, to be confirmed on the PFF-FA set.
 - 768 dims → economical index and search.
 - Open licence; identical weights self-hostable, so HF→internal cutover is a
   provider swap, not a model change (no re-embed if version is pinned).
@@ -200,7 +200,7 @@ terms at this corpus size.
 - Cheapest storage and fastest query embedding; trivially self-hostable on CPU.
 
 **Weaknesses.**
-- Lower retrieval quality — the one axis 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 says must win.
+- Lower retrieval quality — the one axis 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 says must win.
 - 384 dims risk under-separating near-duplicate FA policy passages.
 
 **Cost / effort.** Lowest, but buys a saving the corpus size makes irrelevant while
@@ -218,7 +218,7 @@ best-possible domain retrieval.
 - Requires a labelled domain training set that does not yet exist.
 - Fine-tuned weights become a bespoke versioned artefact needing its own
   eval/regression pipeline — heavy for a 20k-chunk corpus.
-- Premature: 14.PF-FT-AI-EMBEDDING-VECTOR.md §13 wants evaluation first; fine-tuning is a later optimisation
+- Premature: 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 wants evaluation first; fine-tuning is a later optimisation
   if an off-the-shelf model fails the gate.
 
 **Cost / effort.** High one-off (data + training + eval harness); ongoing model
@@ -234,9 +234,9 @@ ownership cost. Disproportionate at this stage.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 14.PF-FT-AI-EMBEDDING-VECTOR.md §12–§13 criteria, the
+**Method.** Weighted scoring against §4, informed by 14.PFF-FA-AI-EMBEDDING-VECTOR.md §12–§13 criteria, the
 corpus profile from ADR-D3-21, and public retrieval benchmarks used only as a prior
-to be confirmed by the mandated PF-FT retrieval evaluation (14.PF-FT-AI-EMBEDDING-VECTOR.md §153). Scores
+to be confirmed by the mandated PFF-FA retrieval evaluation (14.PFF-FA-AI-EMBEDDING-VECTOR.md §153). Scores
 below are the pre-evaluation expectation; the `Proposed` status is discharged when
 the eval run confirms or revises Option A's EC-01/EC-02 rows.
 
@@ -281,7 +281,7 @@ C is rejected on data-boundary and portability grounds despite strong quality;
 Option D is rejected because it trades away the one criterion the spec says must
 win, to save costs the corpus size renders trivial.
 
-**Status rationale.** `Proposed` because 14.PF-FT-AI-EMBEDDING-VECTOR.md §13/§153 require the PF-FT
+**Status rationale.** `Proposed` because 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13/§153 require the PFF-FA
 retrieval evaluation to determine the winner. The ADR states the recommendation and
 its fallback so the index and ingestion pipeline can be built against dimension 768
 immediately; ARB sign-off follows the eval run, which either confirms A or promotes
@@ -290,21 +290,21 @@ which is why the choice must clear the gate *before* the index is built).
 
 ## 8. Architecture Detail
 
-- **Embedding abstraction.** `src/pf_ft_ai/rag/embedding/embedder.py` exposes an
+- **Embedding abstraction.** `src/pff_fa_ai/rag/embedding/embedder.py` exposes an
   `Embedder` protocol with `embed_documents()` / `embed_query()`; concrete
   `HuggingFaceEmbedder` and (later) `SelfHostedEmbedder` implement it. Callers
   never import a provider SDK (ADR-D3-14, layering rule ADR-D2-01).
-- **Model registry entry** (14.PF-FT-AI-EMBEDDING-VECTOR.md §15) records `model_id`, `provider`, `version`,
+- **Model registry entry** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §15) records `model_id`, `provider`, `version`,
   `dimension: 768`, `max_tokens`, `languages`, `status` (ACTIVE/TESTING/…, §16),
   bound into the release manifest as a versioned artefact (ADR-D3-15, ADR-D5-06).
-- **Dimension guard** (14.PF-FT-AI-EMBEDDING-VECTOR.md §19): `embed_*` and index write/search assert
+- **Dimension guard** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §19): `embed_*` and index write/search assert
   `len(vector) == configured_dimension` and raise `EmbeddingDimensionMismatch`
   (a `RAGError` subclass) on mismatch — fail-closed.
-- **Query/document parity** (14.PF-FT-AI-EMBEDDING-VECTOR.md §7, §46): the same `model_id@version` embeds
+- **Query/document parity** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §7, §46): the same `model_id@version` embeds
   both sides; the index stores the embedding model version in its metadata so a
   query embedded with a different version is rejected before search.
-- **Re-embedding** (14.PF-FT-AI-EMBEDDING-VECTOR.md §80–§81): a model or dimension change is realised as a
-  **new index + blue/green cutover** (14.PF-FT-AI-EMBEDDING-VECTOR.md §77–§78), never an in-place edit.
+- **Re-embedding** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §80–§81): a model or dimension change is realised as a
+  **new index + blue/green cutover** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77–§78), never an in-place edit.
   Given 5–20 docs/year, routine churn re-embeds only changed documents on upsert.
 
 ```mermaid
@@ -346,10 +346,10 @@ flowchart LR
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides & executes; AI interprets/orchestrates | Embeddings power retrieval of *knowledge*, never business truth; no decision authority (13.FP-FT-AI-RAG.md §5). |
+| Enterprise decides & executes; AI interprets/orchestrates | Embeddings power retrieval of *knowledge*, never business truth; no decision authority (13.PFF-FA-AI-RAG.md §5). |
 | Precedence: Enterprise API/Event > ERC > Cache > RAG > SLM | RAG (and thus embeddings) sit below ERC/enterprise; retrieved knowledge never overrides authoritative state (ADR-D3-20). |
 | Four-state separation | Embedding artefacts belong to the knowledge/RAG plane; no conversation/session/enterprise state is embedded. |
-| Versioned artefacts, never mutated in place | Model is registry-versioned; changes ship as a new index via blue/green (14.PF-FT-AI-EMBEDDING-VECTOR.md §77, §80). |
+| Versioned artefacts, never mutated in place | Model is registry-versioned; changes ship as a new index via blue/green (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77, §80). |
 | Adam persona governs *how*, never *what* | Not applicable — embedding selection is upstream of language generation. |
 
 ## 11. Risks and Mitigations
@@ -365,7 +365,7 @@ flowchart LR
 
 | ID | Measure | Target | Threshold (alert) | Source | Review cadence |
 |---|---|---|---|---|---|
-| QM-01 | Recall@5 on golden set | ≥ 0.90 | < 0.85 | Eval pipeline (14.PF-FT-AI-EMBEDDING-VECTOR.md §100, §107) | Every index build |
+| QM-01 | Recall@5 on golden set | ≥ 0.90 | < 0.85 | Eval pipeline (14.PFF-FA-AI-EMBEDDING-VECTOR.md §100, §107) | Every index build |
 | QM-02 | Query-embed p95 latency | ≤ 80 ms | > 150 ms | Langfuse / App Insights | Continuous |
 | QM-03 | Exact-ID retrieval accuracy | ≥ 0.95 (via hybrid) | < 0.90 | Eval slice (§103) | Every index build |
 | QM-04 | Annual re-embed cost | ≤ £20 | > £50 | FinOps | Annual |
@@ -379,7 +379,7 @@ flowchart LR
 | Personal data / PII | Documents: none. Queries: possible — redaction + boundary policy applies |
 | Children's data and safeguarding | Safeguarding *knowledge* may be embedded; safeguarding *records* never are (ADR-D3-20) |
 | UK GDPR lawful basis and rights impact | No personal data in the index → minimal; query handling covered by ADR-D6-06/07 |
-| Audit and evidential requirements | Model id+version stamped on every vector; index build audited (14.PF-FT-AI-EMBEDDING-VECTOR.md §174) |
+| Audit and evidential requirements | Model id+version stamped on every vector; index build audited (14.PFF-FA-AI-EMBEDDING-VECTOR.md §174) |
 | Standards touched | ISO/IEC 42001 (model lifecycle), 27001 (egress/secrets), NIST AI RMF |
 
 ## 14. Implementation Impact
@@ -387,10 +387,10 @@ flowchart LR
 | Aspect | Detail |
 |---|---|
 | Build phases | 8 (RAG subsystem) |
-| Repository paths | `src/pf_ft_ai/rag/embedding/` |
-| Configuration | Embedding config example (14.PF-FT-AI-EMBEDDING-VECTOR.md §128); `dimension`, `model_id@version` in release manifest |
-| Contracts / schemas | `Embedder` protocol; vector record schema incl. `embedding_model_version` (14.PF-FT-AI-EMBEDDING-VECTOR.md §22) |
-| Migration | Model/dimension change ⇒ new index + blue/green (14.PF-FT-AI-EMBEDDING-VECTOR.md §77, §80–§81) |
+| Repository paths | `src/pff_fa_ai/rag/embedding/` |
+| Configuration | Embedding config example (14.PFF-FA-AI-EMBEDDING-VECTOR.md §128); `dimension`, `model_id@version` in release manifest |
+| Contracts / schemas | `Embedder` protocol; vector record schema incl. `embedding_model_version` (14.PFF-FA-AI-EMBEDDING-VECTOR.md §22) |
+| Migration | Model/dimension change ⇒ new index + blue/green (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77, §80–§81) |
 | Dependencies on other ADRs | ADR-D3-14 (abstraction), ADR-D3-24 (index dimension), ADR-D3-21 (chunks) |
 | Effort estimate | S — reference embedding integration; the cost is the eval harness, shared with ADR-D3-22 |
 
@@ -399,27 +399,27 @@ flowchart LR
 | ID | Acceptance criterion | Verification method |
 |---|---|---|
 | AC-01 | No caller imports a provider embedding SDK directly | CI import-linter check (ADR-D2-01) |
-| AC-02 | Index build blocked unless Recall@5 ≥ 0.90 | CI eval gate (14.PF-FT-AI-EMBEDDING-VECTOR.md §153) |
-| AC-03 | Dimension mismatch raises `EmbeddingDimensionMismatch` | Unit test (14.PF-FT-AI-EMBEDDING-VECTOR.md §19) |
-| AC-04 | Query embedded with wrong model version is rejected pre-search | Integration test (14.PF-FT-AI-EMBEDDING-VECTOR.md §7) |
-| AC-05 | Model id+version present on every stored vector | Index audit (14.PF-FT-AI-EMBEDDING-VECTOR.md §174) |
+| AC-02 | Index build blocked unless Recall@5 ≥ 0.90 | CI eval gate (14.PFF-FA-AI-EMBEDDING-VECTOR.md §153) |
+| AC-03 | Dimension mismatch raises `EmbeddingDimensionMismatch` | Unit test (14.PFF-FA-AI-EMBEDDING-VECTOR.md §19) |
+| AC-04 | Query embedded with wrong model version is rejected pre-search | Integration test (14.PFF-FA-AI-EMBEDDING-VECTOR.md §7) |
+| AC-05 | Model id+version present on every stored vector | Index audit (14.PFF-FA-AI-EMBEDDING-VECTOR.md §174) |
 
 ## 16. Operational Impact
 
 | Aspect | Detail |
 |---|---|
-| Monitoring | Embedding latency/error metrics; Langfuse embedding spans (14.PF-FT-AI-EMBEDDING-VECTOR.md §109, §111) |
+| Monitoring | Embedding latency/error metrics; Langfuse embedding spans (14.PFF-FA-AI-EMBEDDING-VECTOR.md §109, §111) |
 | Alerting | Recall regression, embed error-rate, dimension-mismatch count |
 | Runbook | `docs/runbooks/rag-embedding.md` — model promotion, re-embed, cutover |
-| Failure mode and degradation | Embed failure ⇒ ingestion queued/retried (14.PF-FT-AI-EMBEDDING-VECTOR.md §159); query-embed failure ⇒ RAG degraded, retrieval skipped, answer falls back (14.PF-FT-AI-EMBEDDING-VECTOR.md §157–§158) |
-| Rollback | Model rollback = point index alias back to previous index (14.PF-FT-AI-EMBEDDING-VECTOR.md §175–§176) |
+| Failure mode and degradation | Embed failure ⇒ ingestion queued/retried (14.PFF-FA-AI-EMBEDDING-VECTOR.md §159); query-embed failure ⇒ RAG degraded, retrieval skipped, answer falls back (14.PFF-FA-AI-EMBEDDING-VECTOR.md §157–§158) |
+| Rollback | Model rollback = point index alias back to previous index (14.PFF-FA-AI-EMBEDDING-VECTOR.md §175–§176) |
 | Support model impact | Adds embedding-model ownership to the AI platform team |
 
 ## 17. Cost Impact
 
 | Cost element | One-off | Recurring | Basis |
 |---|---|---|---|
-| Initial embedding of corpus | £5–40 | — | ~4k–20k chunks × HF API rate (14.PF-FT-AI-EMBEDDING-VECTOR.md §95) |
+| Initial embedding of corpus | £5–40 | — | ~4k–20k chunks × HF API rate (14.PFF-FA-AI-EMBEDDING-VECTOR.md §95) |
 | Annual re-embedding (churn) | — | £5–20/yr | 2–10% churn (ADR-D3-21 corpus profile) |
 | Self-hosted embedding (later) | GPU share | Folded into ADR-D5-11 | Deferred until self-host cutover |
 
@@ -441,12 +441,12 @@ plus a new index, never an in-place model swap on the live index.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-17 RAG & Retrieval |
-| Specification sections | 14.PF-FT-AI-EMBEDDING-VECTOR.md §5, §7, §12–§19, §79–§81, §99–§107, §153; 13.FP-FT-AI-RAG.md §5, §8 |
+| Specification sections | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §5, §7, §12–§19, §79–§81, §99–§107, §153; 13.PFF-FA-AI-RAG.md §5, §8 |
 | Requirement IDs | RAG-EMB-* (per ADR-D1-12 scheme) |
 | Build phases | 8 |
-| Code paths | `src/pf_ft_ai/rag/embedding/` |
-| Configuration | Embedding config (14.PF-FT-AI-EMBEDDING-VECTOR.md §128); release manifest model entry |
-| Tests | embedding unit/integration/eval suites (14.PF-FT-AI-EMBEDDING-VECTOR.md §143–§153) |
+| Code paths | `src/pff_fa_ai/rag/embedding/` |
+| Configuration | Embedding config (14.PFF-FA-AI-EMBEDDING-VECTOR.md §128); release manifest model entry |
+| Tests | embedding unit/integration/eval suites (14.PFF-FA-AI-EMBEDDING-VECTOR.md §143–§153) |
 | Upstream ADRs | ADR-D3-14, ADR-D3-20, ADR-D3-21 |
 | Downstream ADRs | ADR-D3-22, ADR-D3-24 |
 

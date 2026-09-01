@@ -1,5 +1,5 @@
-from pf_ft_ai.agents.affiliation.classifier import AffiliationIntentClassifier
-from pf_ft_ai.orchestration.supervisor.classifier import UNKNOWN_INTENT
+from pff_fa_ai.agents.affiliation.classifier import AffiliationIntentClassifier
+from pff_fa_ai.orchestration.supervisor.classifier import UNKNOWN_INTENT
 
 
 async def test_should_classify_an_affiliation_status_question() -> None:

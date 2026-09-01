@@ -1,7 +1,7 @@
 import pytest
 
-from pf_ft_ai.cache.policy import assert_cacheable_method
-from pf_ft_ai.common.exceptions import GuardrailError
+from pff_fa_ai.cache.policy import assert_cacheable_method
+from pff_fa_ai.common.exceptions import GuardrailError
 
 
 @pytest.mark.parametrize("method", ["GET", "get", "HEAD", "OPTIONS"])

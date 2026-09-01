@@ -6,11 +6,11 @@ authorization and on secret leakage — exercised end-to-end through the real
 import pytest
 from pydantic import ValidationError
 
-from pf_ft_ai.guardrails.authorization import AuthorizationContextPolicy
-from pf_ft_ai.guardrails.models import GuardrailContext
-from pf_ft_ai.guardrails.pipeline import GuardrailPipeline
-from pf_ft_ai.guardrails.secrets import SecretDetectionPolicy
-from pf_ft_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
+from pff_fa_ai.guardrails.authorization import AuthorizationContextPolicy
+from pff_fa_ai.guardrails.models import GuardrailContext
+from pff_fa_ai.guardrails.pipeline import GuardrailPipeline
+from pff_fa_ai.guardrails.secrets import SecretDetectionPolicy
+from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 from tests.fixtures.factories import make_claims
 
 

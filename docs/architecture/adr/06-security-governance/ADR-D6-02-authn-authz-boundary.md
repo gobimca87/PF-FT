@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-15, ADR-D6-03, ADR-D6-01, ADR-D1-02, ADR-D3-04]
 source_docs:
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §10, §11, §12, §16, §17"
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §33, §34, §35, §60"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §10, §11, §12, §16, §17"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §33, §34, §35, §60"
 build_phases: [2]
 impacted_paths:
-  - src/pf_ft_ai/api/
+  - src/pff_fa_ai/api/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -30,14 +30,14 @@ review_due: 2027-08-22
 Authentication and the *validation* of authorization are performed at the APIM/
 enterprise boundary; the AI platform **consumes already-validated authorization claims
 and never authenticates a request, mints authority, or lets a model output become an
-authorization decision** (19.PF-FT-AI-SECURITY.md §10–§12, §16–§17; 18.PF-FT-AI-GUARDRAILS.md §33–§35, §60; CLAUDE.md
+authorization decision** (19.PFF-FA-AI-SECURITY.md §10–§12, §16–§17; 18.PFF-FA-AI-GUARDRAILS.md §33–§35, §60; CLAUDE.md
 Golden Rule). Authorization decisions that gate actions remain deterministic and
 enterprise-owned.
 
 ## 2. Context and Problem Statement
 
-19.PF-FT-AI-SECURITY.md §10–§12 define authentication, authorization and authorization context;
-§16–§17 the APIM boundary and AI responsibilities; 18.PF-FT-AI-GUARDRAILS.md §33–§35 the authorization
+19.PFF-FA-AI-SECURITY.md §10–§12 define authentication, authorization and authorization context;
+§16–§17 the APIM boundary and AI responsibilities; 18.PFF-FA-AI-GUARDRAILS.md §33–§35 the authorization
 boundary and that authorization context cannot be user-controlled, §60 that decision
 authority is not the model's. CLAUDE.md forbids the AI authenticating/authorizing or
 letting a model output become an authorization decision. Blurring this is the most
@@ -48,10 +48,10 @@ fixes the boundary.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-C-01 | AI consumes validated claims; never authenticates | CLAUDE.md; 19.PF-FT-AI-SECURITY.md §16–§17 |
-| DR-C-02 | Model output is never an authz decision | 18.PF-FT-AI-GUARDRAILS.md §60; CLAUDE.md |
-| DR-C-03 | Authz context not user-controllable | 18.PF-FT-AI-GUARDRAILS.md §35 |
-| DR-F-01 | Deterministic authz enforcement | 19.PF-FT-AI-SECURITY.md §11 |
+| DR-C-01 | AI consumes validated claims; never authenticates | CLAUDE.md; 19.PFF-FA-AI-SECURITY.md §16–§17 |
+| DR-C-02 | Model output is never an authz decision | 18.PFF-FA-AI-GUARDRAILS.md §60; CLAUDE.md |
+| DR-C-03 | Authz context not user-controllable | 18.PFF-FA-AI-GUARDRAILS.md §35 |
+| DR-F-01 | Deterministic authz enforcement | 19.PFF-FA-AI-SECURITY.md §11 |
 
 ### 3.4 Assumptions
 
@@ -92,7 +92,7 @@ authorization; the model never gates an action.
 
 **Description.** Use the model to interpret access rules.
 **Strengths.** Handles fuzzy policies.
-**Weaknesses.** Non-deterministic authz; model output as decision (18.PF-FT-AI-GUARDRAILS.md §60
+**Weaknesses.** Non-deterministic authz; model output as decision (18.PFF-FA-AI-GUARDRAILS.md §60
 violation); catastrophic if wrong.
 **Cost / effort.** Low; forbidden.
 
@@ -118,12 +118,12 @@ where AI-side gating is complex.
 
 | Option | Eliminated by |
 |---|---|
-| Trust user-supplied authz context | 18.PF-FT-AI-GUARDRAILS.md §35 |
+| Trust user-supplied authz context | 18.PFF-FA-AI-GUARDRAILS.md §35 |
 | Cache authz decisions long-term | Staleness/precedence risk |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 19.PF-FT-AI-SECURITY.md §10–§17, 18.PF-FT-AI-GUARDRAILS.md §33–§35/§60
+**Method.** Weighted scoring against §4, informed by 19.PFF-FA-AI-SECURITY.md §10–§17, 18.PFF-FA-AI-GUARDRAILS.md §33–§35/§60
 and CLAUDE.md.
 
 | Criterion | Weight | A: APIM+claims+deterministic | B: AI authNs/Zs | C: Model-assisted | D: Enterprise enforces all | E: Policy engine |
@@ -151,14 +151,14 @@ decision (Option A).** Where an enterprise API enforces authorization on a gated
 (D), that is preferred and the AI relies on it. A declarative policy engine (E) may be
 introduced for complex deterministic gating. Options B and C are forbidden.
 
-**Status rationale.** `Accepted` — CLAUDE.md and 19.PF-FT-AI-SECURITY.md / 18.PF-FT-AI-GUARDRAILS.md mandate this.
+**Status rationale.** `Accepted` — CLAUDE.md and 19.PFF-FA-AI-SECURITY.md / 18.PFF-FA-AI-GUARDRAILS.md mandate this.
 
 ## 8. Architecture Detail
 
 - APIM validates JWT/claims (ADR-D5-15); the AI reads a validated authorization context
-  (ADR-D6-03) that is not user-controllable (18.PF-FT-AI-GUARDRAILS.md §35).
+  (ADR-D6-03) that is not user-controllable (18.PFF-FA-AI-GUARDRAILS.md §35).
 - Any AI-side gate is deterministic code checking claims; the model may *explain* an
-  authorization outcome but never *make* it (18.PF-FT-AI-GUARDRAILS.md §60); tool calls are gated by the
+  authorization outcome but never *make* it (18.PFF-FA-AI-GUARDRAILS.md §60); tool calls are gated by the
   harness (ADR-D3-04) against claims, not model whim.
 - Gated business actions call enterprise APIs that enforce authorization (D) where
   available.
@@ -220,7 +220,7 @@ introduced for complex deterministic gating. Options B and C are forbidden.
 | Aspect | Detail |
 |---|---|
 | Build phases | 2 |
-| Repository paths | `src/pf_ft_ai/api/`, harness |
+| Repository paths | `src/pff_fa_ai/api/`, harness |
 | Configuration | Claims mapping; (optional) policy |
 | Contracts / schemas | Authorization context (ADR-D6-03) |
 | Migration | N/A |
@@ -267,10 +267,10 @@ introduced for complex deterministic gating. Options B and C are forbidden.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 19.PF-FT-AI-SECURITY.md §10–§12, §16–§17; 18.PF-FT-AI-GUARDRAILS.md §33–§35, §60 |
+| Specification sections | 19.PFF-FA-AI-SECURITY.md §10–§12, §16–§17; 18.PFF-FA-AI-GUARDRAILS.md §33–§35, §60 |
 | Requirement IDs | SEC-AUTHZ-* |
 | Build phases | 2 |
-| Code paths | `src/pf_ft_ai/api/`, harness |
+| Code paths | `src/pff_fa_ai/api/`, harness |
 | Configuration | claims mapping |
 | Tests | authz boundary suites |
 | Upstream ADRs | ADR-D5-15, D1-02 |

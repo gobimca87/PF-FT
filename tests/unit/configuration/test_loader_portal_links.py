@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.configuration.loader import load_portal_link_configuration
-from pf_ft_ai.configuration.models import ALLOWED_ENVIRONMENTS
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.configuration.loader import load_portal_link_configuration
+from pff_fa_ai.configuration.models import ALLOWED_ENVIRONMENTS
 
 
 def test_should_load_portal_link_configuration_from_the_real_config_repository() -> None:

@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D1-01, ADR-D1-02, ADR-D2-02, ADR-D5-01, ADR-D5-03, ADR-D7-09]
 source_docs:
-  - "MD files/1 Foundation/4. PF-FT-AI-RUNTIME.md §3, §4"
-  - "MD files/1 Foundation/2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1, §48"
-  - "MD files/6 Production/27.PF-FT-AI-DEVELOPMENT-STANDARDS.md"
+  - "MD files/1 Foundation/4. PFF-FA-AI-RUNTIME.md §3, §4"
+  - "MD files/1 Foundation/2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §6.1, §48"
+  - "MD files/6 Production/27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md"
 build_phases: [0, 2, 3]
 impacted_paths:
-  - src/pf_ft_ai/
+  - src/pff_fa_ai/
 classification: Internal
 review_due: 2027-08-21
 ---
@@ -38,28 +38,28 @@ broken somewhere.
 
 `CLAUDE.md` states the rule: *"Layering (enforced, not just conventional): API → Application →
 Orchestration → Domain → Infrastructure/Integrations. Domain code must never import FastAPI,
-Langfuse, Azure SDK, a provider SDK, or a DB driver directly."* 4. PF-FT-AI-RUNTIME.md §3 and §4 give the runtime
-components; 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1 assigns the API layer its boundary responsibility.
+Langfuse, Azure SDK, a provider SDK, or a DB driver directly."* 4. PFF-FA-AI-RUNTIME.md §3 and §4 give the runtime
+components; 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §6.1 assigns the API layer its boundary responsibility.
 
 The parenthetical "enforced, not just conventional" is the whole decision, and it is asserted
 without a mechanism. That gap matters here more than in a typical application, for three
 specific reasons.
 
-**The domain must stay testable without infrastructure.** 5. PF-FT-AI-STATE-MODEL.md's state model and 6 PF-FT-AI-CONVERSATION-SESSION.md's
+**The domain must stay testable without infrastructure.** 5. PFF-FA-AI-STATE-MODEL.md's state model and 6 PFF-FA-AI-CONVERSATION-SESSION.md's
 conversation and session entities carry the platform's core logic. If a domain entity imports
 `redis.asyncio` or `azure.servicebus`, testing it requires those services, and the fast test
 suite that makes iteration possible stops being fast.
 
-**Provider independence is a stated requirement, not a preference.** 15.PF-FT-AI-SLM.md §6 requires an SLM
-provider abstraction so that, per 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9, *"SLM provider can change without
-rewriting agents"*. 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 requires the same for memory and cache stores. 14.PF-FT-AI-EMBEDDING-VECTOR.md
+**Provider independence is a stated requirement, not a preference.** 15.PFF-FA-AI-SLM.md §6 requires an SLM
+provider abstraction so that, per 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 9, *"SLM provider can change without
+rewriting agents"*. 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 requires the same for memory and cache stores. 14.PFF-FA-AI-EMBEDDING-VECTOR.md
 requires it for vector stores — a decision still open under ADR-D0-04. Every one of these
 guarantees is a layering guarantee: it holds if and only if no code above the infrastructure
 layer imports a provider SDK. There is no other mechanism that delivers it.
 
 **The Golden Rule's enforcement depends on it.** ADR-D1-02's invariant I-6 prohibits business
 rule evaluation in the platform, and names an architecture-fitness test over
-`src/pf_ft_ai/domain/` as the mechanism. That test presupposes a domain layer that is
+`src/pff_fa_ai/domain/` as the mechanism. That test presupposes a domain layer that is
 identifiable and separate. If the layering is nominal, I-6 has nothing to assert on.
 
 The failure mode of convention-only layering is well understood and undramatic: one import
@@ -74,16 +74,16 @@ a property of the code, and restoring them is a refactor nobody has time for.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Domain code must not import FastAPI, Langfuse, Azure SDKs, provider SDKs or DB drivers | `CLAUDE.md` §Coding Conventions |
-| DR-F-02 | SLM provider must be changeable without rewriting agents | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9; 15.PF-FT-AI-SLM.md §6 |
-| DR-F-03 | Memory, cache and vector stores must sit behind interfaces | 9 PF-FT-AI-MEMORY-CACHE.md §137–§138; ADR-D0-04 §7.3 |
-| DR-F-04 | The API layer holds no business logic | 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1 |
+| DR-F-02 | SLM provider must be changeable without rewriting agents | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 9; 15.PFF-FA-AI-SLM.md §6 |
+| DR-F-03 | Memory, cache and vector stores must sit behind interfaces | 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138; ADR-D0-04 §7.3 |
+| DR-F-04 | The API layer holds no business logic | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §6.1 |
 | DR-F-05 | The domain layer must be identifiable for ADR-D1-02's I-6 check | ADR-D1-02 §7.1 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Domain tests run without external services | 100% of domain tests are pure | 22.PF-FT-AI-TESTING.md (Testing) |
+| DR-N-01 | Domain tests run without external services | 100% of domain tests are pure | 22.PFF-FA-AI-TESTING.md (Testing) |
 | DR-N-02 | Violations detected before merge, not at review | Build fails on violation | `CLAUDE.md` |
 | DR-N-03 | The rule must be expressible without ambiguity | Every module maps to exactly one layer | Programme practice |
 
@@ -92,7 +92,7 @@ a property of the code, and restoring them is a refactor nobody has time for.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | The five layers and their order are fixed by `CLAUDE.md` | Organisational | `CLAUDE.md` |
-| DR-C-02 | The canonical package is `src/pf_ft_ai/` | Organisational | `CLAUDE.md`; 6 PF-FT-AI-CONVERSATION-SESSION.md §102 |
+| DR-C-02 | The canonical package is `src/pff_fa_ai/` | Organisational | `CLAUDE.md`; 6 PFF-FA-AI-CONVERSATION-SESSION.md §102 |
 | DR-C-03 | Pydantic at boundaries, TypedDict for LangGraph internal state | Platform | `CLAUDE.md`; ADR-D2-07 |
 | DR-C-04 | Agents are logical capabilities in one runtime, not services | Platform | ADR-D1-11 §8.3 |
 
@@ -100,7 +100,7 @@ a property of the code, and restoring them is a refactor nobody has time for.
 
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
-| DR-A-01 | Every module in `src/pf_ft_ai/` maps unambiguously to one layer | The enforcement tool needs per-module exceptions, which erode the rule | Layer mapping audit at Phase 2 |
+| DR-A-01 | Every module in `src/pff_fa_ai/` maps unambiguously to one layer | The enforcement tool needs per-module exceptions, which erode the rule | Layer mapping audit at Phase 2 |
 | DR-A-02 | Import-level enforcement catches the violations that matter | Runtime coupling passes the check while breaking the intent | Reviewed against provider-swap tests |
 
 ## 4. Evaluation Criteria and Weights
@@ -200,7 +200,7 @@ startup.
 
 **Method.** Weighted scoring against §4. EC-02 tested concretely: could `RedisMemoryStore` be
 replaced with a different implementation under each option without touching
-`src/pf_ft_ai/application/` or `src/pf_ft_ai/domain/`, and would anything detect it if the
+`src/pff_fa_ai/application/` or `src/pff_fa_ai/domain/`, and would anything detect it if the
 answer were no?
 
 | Criterion | Weight | A: Convention | B: Import test | C: Separate packages | D: DI container |
@@ -227,7 +227,7 @@ in §7.4 as the response if DR-A-02 proves false.
 
 | Layer | Package roots | Responsibility | May import |
 |---|---|---|---|
-| **API** | `api/` | HTTP boundary only: routing, request/response models, status codes. No business logic (2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1). | Application, Domain |
+| **API** | `api/` | HTTP boundary only: routing, request/response models, status codes. No business logic (2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §6.1). | Application, Domain |
 | **Application** | `application/` | Use-case orchestration: commands, queries, DTOs, transaction scripts. No I/O detail. | Orchestration, Domain |
 | **Orchestration** | `orchestration/`, `agents/` | Supervisor, harness, LangGraph, agents. The AI execution machinery. | Domain, and infrastructure **interfaces** only |
 | **Domain** | `domain/` | Entities, value objects, state enums, domain rules about the platform's own concepts. | Nothing outside `domain/` and the standard library |
@@ -276,7 +276,7 @@ this mapping is unambiguous.
 ### 7.4 The composition root
 
 Exactly one place wires concrete implementations to interfaces: the application startup in
-`src/pf_ft_ai/api/` (FastAPI lifespan). It is the only module permitted to import concrete
+`src/pff_fa_ai/api/` (FastAPI lifespan). It is the only module permitted to import concrete
 infrastructure types alongside orchestration and application types, and it is explicitly
 exempted in the layer map.
 
@@ -324,8 +324,8 @@ infrastructure layer changed:
 
 | Interface | Production implementation | Test substitution | Protects |
 |---|---|---|---|
-| `MemoryStore` / `CacheStore` | `RedisMemoryStore` (ADR-D4-10) | `fakeredis` async client | 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 |
-| `SLMProvider` | Hugging Face client (ADR-D3-13) | Deterministic mock provider | 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9 |
+| `MemoryStore` / `CacheStore` | `RedisMemoryStore` (ADR-D4-10) | `fakeredis` async client | 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 |
+| `SLMProvider` | Hugging Face client (ADR-D3-13) | Deterministic mock provider | 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 9 |
 | `VectorStore` | **Open** (ADR-D3-24) | In-memory stub | The open decision itself |
 
 The vector store row is the important one: the substitution passing is the evidence that
@@ -334,7 +334,7 @@ ADR-D3-24 is still genuinely open.
 ### 8.3 Relationship to ADR-D1-02's invariant I-6
 
 I-6 prohibits business rule evaluation in the platform and names an architecture-fitness test
-over `src/pf_ft_ai/domain/`. That test is a sibling of this one and depends on it: a domain
+over `src/pff_fa_ai/domain/`. That test is a sibling of this one and depends on it: a domain
 layer that is identifiable and framework-free is what makes "does this evaluate a business
 rule?" a tractable question. Without §7.1's layer map, I-6 would have no defined surface to
 check.
@@ -344,7 +344,7 @@ check.
 ### 9.1 Positive
 
 - `CLAUDE.md`'s "enforced, not just conventional" becomes true rather than aspirational.
-- Provider independence is verified by test, so 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9 and 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 are
+- Provider independence is verified by test, so 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 9 and 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 are
   demonstrable rather than asserted.
 - The open vector store decision stays open, provably, until it is decided.
 - Domain tests run without external services, keeping the fast suite fast.
@@ -421,7 +421,7 @@ check.
 | Aspect | Detail |
 |---|---|
 | Build phases | 0 (rule and tooling), 2 (domain layer), 3 (API and application layers) |
-| Repository paths | All of `src/pf_ft_ai/`; layer map alongside the test |
+| Repository paths | All of `src/pff_fa_ai/`; layer map alongside the test |
 | Configuration | Layer map as a declarative file consumed by the test |
 | Contracts / schemas | Interfaces at each layer boundary; Pydantic at API and integration boundaries per DR-C-03 |
 | Migration | None; established at Phase 0 |
@@ -435,7 +435,7 @@ check.
 | AC-01 | No module under `domain/` imports FastAPI, Langfuse, an Azure SDK, a provider SDK or a DB driver | Import-boundary test |
 | AC-02 | No module under `orchestration/` or `agents/` imports a concrete infrastructure implementation | Import-boundary test; QM-04 |
 | AC-03 | Each abstracted provider can be substituted with no change above the infrastructure layer | Provider-swap tests per §8.2 |
-| AC-04 | Every module in `src/pf_ft_ai/` is mapped to exactly one layer | Layer map completeness check; QM-03 |
+| AC-04 | Every module in `src/pff_fa_ai/` is mapped to exactly one layer | Layer map completeness check; QM-03 |
 | AC-05 | The composition root is the only standing exemption | Layer map review; QM-02 |
 | AC-06 | Domain tests execute with no external service available | Test suite run with network and services disabled; QM-06 |
 | AC-07 | A deliberately introduced upward import fails the build | Negative test in CI |
@@ -479,10 +479,10 @@ AC-07 is the check that the check works. A guard nobody has seen fail is not kno
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-07 Enterprise Reference Architecture |
-| Specification sections | 4. PF-FT-AI-RUNTIME.md §3 (Runtime Architecture), §4 (Runtime Responsibilities); 2. PF-FT-AI-ARCHITECTURE-DETAILED.md §6.1 (API Layer), §48 (Anti-Patterns); 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md (Development Standards); 9 PF-FT-AI-MEMORY-CACHE.md §137–§138 (Provider Independence); 1 PF-FT-AI-ARCHITECTURE.md §39 criterion 9; `CLAUDE.md` §Coding Conventions |
+| Specification sections | 4. PFF-FA-AI-RUNTIME.md §3 (Runtime Architecture), §4 (Runtime Responsibilities); 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §6.1 (API Layer), §48 (Anti-Patterns); 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md (Development Standards); 9 PFF-FA-AI-MEMORY-CACHE.md §137–§138 (Provider Independence); 1 PFF-FA-AI-ARCHITECTURE.md §39 criterion 9; `CLAUDE.md` §Coding Conventions |
 | Requirement IDs | `FR-A39-09`, `NFR-A38-MAINT`, `NFR-A38-TEST` |
 | Build phases | 0, 2, 3 |
-| Code paths | `src/pf_ft_ai/` |
+| Code paths | `src/pff_fa_ai/` |
 | Configuration | Layer map |
 | Tests | AC-01 to AC-07; import-boundary test; provider-swap tests |
 | Upstream ADRs | ADR-D1-01, ADR-D1-02 |

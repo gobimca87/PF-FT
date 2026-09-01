@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D5-02, ADR-D2-07, ADR-D4-09, ADR-D3-17]
 source_docs:
-  - "MD files/6 Production/27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16, §17, §36"
+  - "MD files/6 Production/27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16, §17, §36"
 build_phases: [1]
 impacted_paths:
-  - src/pf_ft_ai/
+  - src/pff_fa_ai/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -28,13 +28,13 @@ review_due: 2027-08-22
 
 PFF AI will use **Pydantic v2** for all data crossing a boundary — FastAPI
 request/response, tool req/res, config, event contracts, ERC schema, SLM req/res —
-while **LangGraph-internal state uses `TypedDict`** (27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17, §36; CLAUDE.md).
+while **LangGraph-internal state uses `TypedDict`** (27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16–§17, §36; CLAUDE.md).
 Pydantic v2's Rust-core performance and strict validation make it the single boundary
 validation standard.
 
 ## 2. Context and Problem Statement
 
-CLAUDE.md fixes Pydantic for boundaries and TypedDict for LangGraph state; 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16
+CLAUDE.md fixes Pydantic for boundaries and TypedDict for LangGraph state; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16
 sets the Pydantic standard and §17 the validation standard, §36 the typed graph state.
 Without one validation standard, boundaries validate inconsistently (some ad hoc, some
 dataclasses), weakening the type guarantees mypy (ADR-D5-02) provides and the envelope
@@ -45,9 +45,9 @@ Pydantic/TypedDict split.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Validate all boundary data | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17; CLAUDE.md |
-| DR-F-02 | TypedDict for LangGraph internal state | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §36; CLAUDE.md |
-| DR-N-01 | High-performance validation | 26.PF-FT-AI-PERFORMANCE-COST.md §14 |
+| DR-F-01 | Validate all boundary data | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16–§17; CLAUDE.md |
+| DR-F-02 | TypedDict for LangGraph internal state | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §36; CLAUDE.md |
+| DR-N-01 | High-performance validation | 26.PFF-FA-AI-PERFORMANCE-COST.md §14 |
 | DR-N-02 | mypy plugin support | ADR-D5-02 |
 
 ### 3.4 Assumptions
@@ -110,12 +110,12 @@ intentional.
 
 | Option | Eliminated by |
 |---|---|
-| No boundary validation | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §17 |
-| Pydantic everywhere incl. graph state | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §36 — TypedDict for LangGraph |
+| No boundary validation | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §17 |
+| Pydantic everywhere incl. graph state | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §36 — TypedDict for LangGraph |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17/§36 and CLAUDE.md.
+**Method.** Weighted scoring against §4, informed by 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16–§17/§36 and CLAUDE.md.
 
 | Criterion | Weight | A: Pydantic v2 | B: dataclasses | C: attrs+cattrs | D: Pydantic v1 | E: marshmallow |
 |---|---|---|---|---|---|---|
@@ -138,7 +138,7 @@ internal state (Option A).** This is CLAUDE.md's rule; Pydantic v2's performance
 FastAPI/mypy integration and JSON-schema output make it the standard. Dataclasses (B),
 attrs (C), Pydantic v1 (D) and marshmallow (E) are rejected.
 
-**Status rationale.** `Accepted` — confirmed in CLAUDE.md and 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md.
+**Status rationale.** `Accepted` — confirmed in CLAUDE.md and 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md.
 
 ## 8. Architecture Detail
 
@@ -203,7 +203,7 @@ attrs (C), Pydantic v1 (D) and marshmallow (E) are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 1 |
-| Repository paths | `src/pf_ft_ai/` |
+| Repository paths | `src/pff_fa_ai/` |
 | Configuration | pydantic settings |
 | Contracts / schemas | All boundary models |
 | Migration | N/A |
@@ -248,10 +248,10 @@ attrs (C), Pydantic v1 (D) and marshmallow (E) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-23 |
-| Specification sections | 27.PF-FT-AI-DEVELOPMENT-STANDARDS.md §16–§17, §36 |
+| Specification sections | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16–§17, §36 |
 | Requirement IDs | TECH-VAL-* |
 | Build phases | 1 |
-| Code paths | `src/pf_ft_ai/` |
+| Code paths | `src/pff_fa_ai/` |
 | Configuration | pydantic |
 | Tests | validation suites |
 | Upstream ADRs | ADR-D5-02 |

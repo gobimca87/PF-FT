@@ -14,7 +14,7 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-09, ADR-D1-09, ADR-D3-11, ADR-D3-16, ADR-D3-25]
 source_docs:
-  - "MD files/4 AI/16.PF-FT-AI-PROMPT-ENGINEERING.md §11, §12, §5, §6, §40, §41, §81, §82, §120, §121"
+  - "MD files/4 AI/16.PFF-FA-AI-PROMPT-ENGINEERING.md §11, §12, §5, §6, §40, §41, §81, §82, §120, §121"
   - "MD files/Examples/SampleWorkflowchat.md"
 build_phases: [6]
 impacted_paths:
@@ -37,7 +37,7 @@ independently-testable artefact instead of tone duplicated into every task promp
 
 ## 2. Context and Problem Statement
 
-16.PF-FT-AI-PROMPT-ENGINEERING.md §11 defines a distinct "Persona Prompt" and §12 states the persona "does not
+16.PFF-FA-AI-PROMPT-ENGINEERING.md §11 defines a distinct "Persona Prompt" and §12 states the persona "does not
 define authorization"; `CLAUDE.md` §Adam rule 12 requires the persona to be "a
 dedicated, versioned prompt layer … reusable across workflows … do not embed the
 entire business workflow into the persona prompt." Without an explicit decision,
@@ -53,24 +53,24 @@ shared layer can guarantee.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | One consistent Adam voice across affiliation, discipline, officials, etc. | CLAUDE.md §Adam 12; 16.PF-FT-AI-PROMPT-ENGINEERING.md §11 |
+| DR-F-01 | One consistent Adam voice across affiliation, discipline, officials, etc. | CLAUDE.md §Adam 12; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11 |
 | DR-F-02 | Persona reusable without re-authoring per workflow | CLAUDE.md §Adam 12 |
-| DR-F-03 | Persona must not carry authorization or business rules | 16.PF-FT-AI-PROMPT-ENGINEERING.md §12; CLAUDE.md §Adam 5, 9 |
+| DR-F-03 | Persona must not carry authorization or business rules | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §12; CLAUDE.md §Adam 5, 9 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
 | DR-N-01 | Persona independently testable | Persona eval suite separate from workflow tests | CLAUDE.md §Persona Quality |
-| DR-N-02 | Tone change is one edit, one release | Single artefact, versioned | 16.PF-FT-AI-PROMPT-ENGINEERING.md §35, §40 |
+| DR-N-02 | Tone change is one edit, one release | Single artefact, versioned | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §35, §40 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Prompt layering order is fixed by ADR-D3-09 | Architecture | ADR-D3-09; 16.PF-FT-AI-PROMPT-ENGINEERING.md §5, §20 |
-| DR-C-02 | Enterprise truth overrides persona | Regulatory/Arch | CLAUDE.md §Adam 5; 16.PF-FT-AI-PROMPT-ENGINEERING.md §138 |
-| DR-C-03 | Persona is a versioned artefact, immutable in prod | Organisational | 16.PF-FT-AI-PROMPT-ENGINEERING.md §35, §39 |
+| DR-C-01 | Prompt layering order is fixed by ADR-D3-09 | Architecture | ADR-D3-09; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §5, §20 |
+| DR-C-02 | Enterprise truth overrides persona | Regulatory/Arch | CLAUDE.md §Adam 5; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §138 |
+| DR-C-03 | Persona is a versioned artefact, immutable in prod | Organisational | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §35, §39 |
 
 ### 3.4 Assumptions
 
@@ -83,7 +83,7 @@ shared layer can guarantee.
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
 | EC-01 | Voice consistency across workflows | 25 | The core goal | Persona eval variance across workflows |
-| EC-02 | Separation from workflow/business logic | 25 | 16.PF-FT-AI-PROMPT-ENGINEERING.md §12; safety-critical | Ablation: remove persona, workflow still correct |
+| EC-02 | Separation from workflow/business logic | 25 | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §12; safety-critical | Ablation: remove persona, workflow still correct |
 | EC-03 | Maintainability (edit-once) | 20 | Tone will iterate | # edit sites per tone change |
 | EC-04 | Testability in isolation | 15 | Persona quality judged separately | Standalone persona suite exists |
 | EC-05 | Reusability across future workflows | 15 | Many workflows planned (ADR-D1-10) | New workflow reuses persona unchanged |
@@ -108,23 +108,23 @@ persona never needs workflow specifics.
 **Description.** Each workflow prompt includes its own tone instructions.
 **Strengths.** Simple to start; per-workflow tone tuning.
 **Weaknesses.** Voice drift; N-place edits; persona not testable in isolation;
-tone and business logic entangled (violates 16.PF-FT-AI-PROMPT-ENGINEERING.md §12).
+tone and business logic entangled (violates 16.PFF-FA-AI-PROMPT-ENGINEERING.md §12).
 **Cost / effort.** Low to start, high to maintain.
 
 ### 5.3 Option C — Persona folded into the system prompt
 
 **Description.** Put Adam tone in the single system prompt.
 **Strengths.** Always present; one place.
-**Weaknesses.** 16.PF-FT-AI-PROMPT-ENGINEERING.md §9 forbids frequently-changing data in the system prompt;
+**Weaknesses.** 16.PFF-FA-AI-PROMPT-ENGINEERING.md §9 forbids frequently-changing data in the system prompt;
 conflates stable platform rules with iterating tone; system-prompt changes are the
-highest-risk change class (16.PF-FT-AI-PROMPT-ENGINEERING.md §41). Reduces reuse granularity.
+highest-risk change class (16.PFF-FA-AI-PROMPT-ENGINEERING.md §41). Reduces reuse granularity.
 **Cost / effort.** Low, but high blast radius per tone edit.
 
 ### 5.4 Option D — Fine-tune the SLM to embody the persona
 
 **Description.** Bake the voice into model weights.
 **Strengths.** Consistent tone without prompt tokens.
-**Weaknesses.** 15.PF-FT-AI-SLM.md §85 — fine-tuning must not be the first step; couples tone to
+**Weaknesses.** 15.PFF-FA-AI-SLM.md §85 — fine-tuning must not be the first step; couples tone to
 a model version; every tone iteration is a re-train + eval; can't A/B tone cheaply.
 **Cost / effort.** High; premature.
 
@@ -145,7 +145,7 @@ soften errors (violates CLAUDE.md §Adam 7); harder to guarantee factual fidelit
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 16.PF-FT-AI-PROMPT-ENGINEERING.md §5–§12 and the
+**Method.** Weighted scoring against §4, informed by 16.PFF-FA-AI-PROMPT-ENGINEERING.md §5–§12 and the
 `SampleWorkflowchat.md` reference.
 
 | Criterion | Weight | A: Shared layer | B: In task prompt | C: In system prompt | D: Fine-tune | E: Rewriter pass |
@@ -174,17 +174,17 @@ zones; it contains no workflow steps, no business rules, and no authorization
 logic. Options B/C are rejected for entangling tone with platform/workflow layers;
 D and E for cost, coupling and fidelity risk.
 
-**Status rationale.** `Accepted` — mandated by CLAUDE.md §Adam 12 and 16.PF-FT-AI-PROMPT-ENGINEERING.md §11–§12;
+**Status rationale.** `Accepted` — mandated by CLAUDE.md §Adam 12 and 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11–§12;
 this ADR records the reasoning behind a settled requirement.
 
 ## 8. Architecture Detail
 
-- **Artefact.** `prompts/persona/adam.vMAJOR.MINOR.PATCH.md` with metadata (16.PF-FT-AI-PROMPT-ENGINEERING.md
-  §33): `id`, `status` (16.PF-FT-AI-PROMPT-ENGINEERING.md §34), `version`, `owner`, `risk_class` (16.PF-FT-AI-PROMPT-ENGINEERING.md §41 —
+- **Artefact.** `prompts/persona/adam.vMAJOR.MINOR.PATCH.md` with metadata (16.PFF-FA-AI-PROMPT-ENGINEERING.md
+  §33): `id`, `status` (16.PFF-FA-AI-PROMPT-ENGINEERING.md §34), `version`, `owner`, `risk_class` (16.PFF-FA-AI-PROMPT-ENGINEERING.md §41 —
   persona is high-risk since it shapes all output), `model_compatibility` (§82).
-- **Composition.** The prompt composer (ADR-D3-09; 16.PF-FT-AI-PROMPT-ENGINEERING.md §21) inserts the persona
+- **Composition.** The prompt composer (ADR-D3-09; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §21) inserts the persona
   layer after the system prompt and before the task prompt; ordering is deterministic
-  (16.PF-FT-AI-PROMPT-ENGINEERING.md §22).
+  (16.PFF-FA-AI-PROMPT-ENGINEERING.md §22).
 - **Trust tier.** Persona is platform-authored trusted content (T0/T1 per ADR-D3-09);
   it is never assembled from user or retrieved text.
 - **Exclusion zones** (from ADR-D1-09 X-1…X-6): the layer explicitly instructs Adam
@@ -200,7 +200,7 @@ this ADR records the reasoning behind a settled requirement.
 
 ### 9.2 Negative
 - Requires composer discipline: the persona must stay free of workflow specifics,
-  enforced by review (16.PF-FT-AI-PROMPT-ENGINEERING.md §157) and a lint rule (§113).
+  enforced by review (16.PFF-FA-AI-PROMPT-ENGINEERING.md §157) and a lint rule (§113).
 
 ### 9.3 Neutral
 - Persona iteration becomes a normal versioned release like any prompt.
@@ -216,16 +216,16 @@ this ADR records the reasoning behind a settled requirement.
 | Constraint | Conformance |
 |---|---|
 | Enterprise decides; AI orchestrates | Persona shapes wording only; no decision or execution authority |
-| Precedence chain | Persona is at SLM-output tier; it never overrides ERC/enterprise truth (16.PF-FT-AI-PROMPT-ENGINEERING.md §138) |
+| Precedence chain | Persona is at SLM-output tier; it never overrides ERC/enterprise truth (16.PFF-FA-AI-PROMPT-ENGINEERING.md §138) |
 | Four-state separation | Persona is a prompt artefact; carries no state |
-| Versioned artefacts | Persona is versioned, immutable in prod (16.PF-FT-AI-PROMPT-ENGINEERING.md §35, §39) |
+| Versioned artefacts | Persona is versioned, immutable in prod (16.PFF-FA-AI-PROMPT-ENGINEERING.md §35, §39) |
 | Adam persona governs *how*, not *what* | This ADR is the structural guarantee of exactly that |
 
 ## 11. Risks and Mitigations
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
-| RSK-01 | Workflow logic leaks into persona | Med | High | H | Lint + review gate (16.PF-FT-AI-PROMPT-ENGINEERING.md §113, §157) | Prompt Eng | Low |
+| RSK-01 | Workflow logic leaks into persona | Med | High | H | Lint + review gate (16.PFF-FA-AI-PROMPT-ENGINEERING.md §113, §157) | Prompt Eng | Low |
 | RSK-02 | Football tone reduces clarity of critical info | Med | Med | M | Persona eval for clarity; CLAUDE.md §Adam 3 | Conversation Designer | Low |
 | RSK-03 | Persona celebrates unconfirmed transaction | Low | High | M | Guardrail (ADR-D6-09) + persona rule X-? | Security Architect | Low |
 
@@ -246,7 +246,7 @@ this ADR records the reasoning behind a settled requirement.
 | Personal data / PII | None in the artefact |
 | Children's data and safeguarding | Persona must not trivialise safeguarding messaging — eval-checked |
 | UK GDPR lawful basis and rights impact | None |
-| Audit and evidential requirements | Persona version stamped on each trace (16.PF-FT-AI-PROMPT-ENGINEERING.md §90) |
+| Audit and evidential requirements | Persona version stamped on each trace (16.PFF-FA-AI-PROMPT-ENGINEERING.md §90) |
 | Standards touched | ISO/IEC 42001 (artefact lifecycle) |
 
 ## 14. Implementation Impact
@@ -255,8 +255,8 @@ this ADR records the reasoning behind a settled requirement.
 |---|---|
 | Build phases | 6 (prompt engineering) |
 | Repository paths | `prompts/persona/` |
-| Configuration | Persona version pinned in release manifest (16.PF-FT-AI-PROMPT-ENGINEERING.md §161) |
-| Contracts / schemas | Prompt metadata schema (16.PF-FT-AI-PROMPT-ENGINEERING.md §33) |
+| Configuration | Persona version pinned in release manifest (16.PFF-FA-AI-PROMPT-ENGINEERING.md §161) |
+| Contracts / schemas | Prompt metadata schema (16.PFF-FA-AI-PROMPT-ENGINEERING.md §33) |
 | Migration | N/A (new) |
 | Dependencies on other ADRs | ADR-D3-09 (composition), ADR-D1-09 (charter) |
 | Effort estimate | S |
@@ -267,8 +267,8 @@ this ADR records the reasoning behind a settled requirement.
 |---|---|---|
 | AC-01 | Persona is a single artefact reused by ≥2 workflows | Composition trace inspection |
 | AC-02 | Removing persona leaves workflow correctness intact | Ablation test (ADR-D1-02 style) |
-| AC-03 | No business rule/URL/authz text in persona | Prompt lint (16.PF-FT-AI-PROMPT-ENGINEERING.md §113) + review |
-| AC-04 | Persona adherence eval runs in CI | CI eval gate (16.PF-FT-AI-PROMPT-ENGINEERING.md §155) |
+| AC-03 | No business rule/URL/authz text in persona | Prompt lint (16.PFF-FA-AI-PROMPT-ENGINEERING.md §113) + review |
+| AC-04 | Persona adherence eval runs in CI | CI eval gate (16.PFF-FA-AI-PROMPT-ENGINEERING.md §155) |
 
 ## 16. Operational Impact
 
@@ -277,8 +277,8 @@ this ADR records the reasoning behind a settled requirement.
 | Monitoring | Persona version in Langfuse traces; adherence metric |
 | Alerting | Adherence regression on release |
 | Runbook | `docs/runbooks/prompt-release.md` |
-| Failure mode and degradation | If persona load fails, composition fails closed (16.PF-FT-AI-PROMPT-ENGINEERING.md §29) |
-| Rollback | Repoint persona version pointer (16.PF-FT-AI-PROMPT-ENGINEERING.md §103) |
+| Failure mode and degradation | If persona load fails, composition fails closed (16.PFF-FA-AI-PROMPT-ENGINEERING.md §29) |
+| Rollback | Repoint persona version pointer (16.PFF-FA-AI-PROMPT-ENGINEERING.md §103) |
 | Support model impact | Owned by prompt engineering |
 
 ## 17. Cost Impact
@@ -286,7 +286,7 @@ this ADR records the reasoning behind a settled requirement.
 | Cost element | One-off | Recurring | Basis |
 |---|---|---|---|
 | Persona authoring + eval harness | S | negligible | Shared with prompt tooling |
-| Persona tokens per request | — | small | One layer, compressed (16.PF-FT-AI-PROMPT-ENGINEERING.md §72) |
+| Persona tokens per request | — | small | One layer, compressed (16.PFF-FA-AI-PROMPT-ENGINEERING.md §72) |
 
 ## 18. Revisit Triggers and Causal Analysis Hooks
 
@@ -303,7 +303,7 @@ this ADR records the reasoning behind a settled requirement.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-15 Prompt Engineering |
-| Specification sections | 16.PF-FT-AI-PROMPT-ENGINEERING.md §5, §6, §11, §12, §20, §35, §41, §81, §82, §138 |
+| Specification sections | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §5, §6, §11, §12, §20, §35, §41, §81, §82, §138 |
 | Requirement IDs | PROMPT-PERSONA-* |
 | Build phases | 6 |
 | Code paths | `prompts/persona/` |

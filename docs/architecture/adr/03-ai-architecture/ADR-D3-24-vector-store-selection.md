@@ -14,12 +14,12 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-20, ADR-D3-21, ADR-D3-22, ADR-D3-23, ADR-D4-10, ADR-D4-12, ADR-D5-08, ADR-D5-15, ADR-D6-04, ADR-D6-12, ADR-D0-04]
 source_docs:
-  - "MD files/4 AI/14.PF-FT-AI-EMBEDDING-VECTOR.md §31, §32, §33, §34, §35, §36, §37, §47, §48, §49, §50, §51, §57, §58, §84, §88, §91, §95, §97, §122, §124, §160"
-  - "MD files/4 AI/13.FP-FT-AI-RAG.md §5"
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md"
+  - "MD files/4 AI/14.PFF-FA-AI-EMBEDDING-VECTOR.md §31, §32, §33, §34, §35, §36, §37, §47, §48, §49, §50, §51, §57, §58, §84, §88, §91, §95, §97, §122, §124, §160"
+  - "MD files/4 AI/13.PFF-FA-AI-RAG.md §5"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md"
 build_phases: [8]
 impacted_paths:
-  - src/pf_ft_ai/rag/vector_store/
+  - src/pff_fa_ai/rag/vector_store/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -46,7 +46,7 @@ as Accepted.
 
 ## 2. Context and Problem Statement
 
-14.PF-FT-AI-EMBEDDING-VECTOR.md §31 defines the vector database boundary and §32 lists ten candidate
+14.PFF-FA-AI-EMBEDDING-VECTOR.md §31 defines the vector database boundary and §32 lists ten candidate
 technologies, then states explicitly that **"the final selection should be an ADR
 decision outside this document."** `CLAUDE.md` reinforces that the vector store is
 still open and must be resolved via ADR, not silently picked. This is that ADR.
@@ -54,7 +54,7 @@ still open and must be resolved via ADR, not silently picked. This is that ADR.
 Blocked until resolved: the RAG index cannot be provisioned, so ingestion
 (ADR-D3-21), embedding (ADR-D3-23) and retrieval (ADR-D3-22) have nowhere to write
 or read; IaC for the RAG subsystem cannot be authored; security review of the
-retrieval-time ACL path (14.PF-FT-AI-EMBEDDING-VECTOR.md §49, ADR-D6-12) has no concrete target.
+retrieval-time ACL path (14.PFF-FA-AI-EMBEDDING-VECTOR.md §49, ADR-D6-12) has no concrete target.
 
 What goes wrong if left implicit: a team stands up whatever vector DB is nearest to
 hand (often a self-hosted open-source engine on a VM), inheriting operational
@@ -64,7 +64,7 @@ the scale advantages that justify a specialist engine ever materialise.
 
 **Decisive scale fact (from ADR-D3-21 corpus profile).** ~4k–20k chunks → ~4k–20k
 vectors; 5–20 doc updates/year; 2–10% annual churn; single-digit concurrent RAG
-queries expected. 14.PF-FT-AI-EMBEDDING-VECTOR.md §36 notes ANN (HNSW/IVF/PQ) is "normally used for large
+queries expected. 14.PFF-FA-AI-EMBEDDING-VECTOR.md §36 notes ANN (HNSW/IVF/PQ) is "normally used for large
 vector collections" — at 20k vectors even exact/flat search is sub-millisecond, so
 ANN sophistication, sharding, quantisation (§92, §97) and throughput (§89) — the
 axes on which Milvus/Qdrant/Weaviate differentiate — carry almost no weight here.
@@ -77,31 +77,31 @@ not a vector-performance one.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Vector similarity search over 768-dim embeddings | 14.PF-FT-AI-EMBEDDING-VECTOR.md §35, §52; ADR-D3-23 |
-| DR-F-02 | Metadata filtering incl. ACL/security metadata at query time | 14.PF-FT-AI-EMBEDDING-VECTOR.md §27, §49, §50 |
-| DR-F-03 | Hybrid (lexical + vector) search for exact identifiers | 14.PF-FT-AI-EMBEDDING-VECTOR.md §57, §58; ADR-D3-22 |
-| DR-F-04 | Filter-injection-safe filter construction | 14.PF-FT-AI-EMBEDDING-VECTOR.md §51 |
-| DR-F-05 | Blue/green index + alias cutover for re-embedding | 14.PF-FT-AI-EMBEDDING-VECTOR.md §77, §78, §84 |
+| DR-F-01 | Vector similarity search over 768-dim embeddings | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §35, §52; ADR-D3-23 |
+| DR-F-02 | Metadata filtering incl. ACL/security metadata at query time | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §27, §49, §50 |
+| DR-F-03 | Hybrid (lexical + vector) search for exact identifiers | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §57, §58; ADR-D3-22 |
+| DR-F-04 | Filter-injection-safe filter construction | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §51 |
+| DR-F-05 | Blue/green index + alias cutover for re-embedding | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §77, §78, §84 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Retrieval latency | p95 vector search ≤ 120 ms | 14.PF-FT-AI-EMBEDDING-VECTOR.md §88 |
-| DR-N-02 | Availability | ≥ 99.9% (managed SLA) | 14.PF-FT-AI-EMBEDDING-VECTOR.md §33 |
-| DR-N-03 | Private networking / no public data-plane | Private endpoint only | 14.PF-FT-AI-EMBEDDING-VECTOR.md §34, §122 |
-| DR-N-04 | Identity-based access, no shared keys | Entra ID RBAC | 14.PF-FT-AI-EMBEDDING-VECTOR.md §34, §124 |
-| DR-N-05 | Backup / DR | Managed backup + rebuild path | 14.PF-FT-AI-EMBEDDING-VECTOR.md §33, §160; §86 |
+| DR-N-01 | Retrieval latency | p95 vector search ≤ 120 ms | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §88 |
+| DR-N-02 | Availability | ≥ 99.9% (managed SLA) | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §33 |
+| DR-N-03 | Private networking / no public data-plane | Private endpoint only | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §34, §122 |
+| DR-N-04 | Identity-based access, no shared keys | Entra ID RBAC | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §34, §124 |
+| DR-N-05 | Backup / DR | Managed backup + rebuild path | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §33, §160; §86 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | Azure is the platform; prefer Azure-native, private-endpoint-capable services | Platform | CLAUDE.md; ADR-D5-08 |
-| DR-C-02 | Index holds knowledge/FAQ only — never enterprise business truth | Regulatory/Arch | 13.FP-FT-AI-RAG.md §5; ADR-D3-20 |
-| DR-C-03 | Vectors are sensitive (invertible to text) — must be encrypted & access-controlled | Security | 14.PF-FT-AI-EMBEDDING-VECTOR.md §121, §122, §124 |
-| DR-C-04 | Selection is an ADR decision, ship as Proposed until signed off | Organisational | 14.PF-FT-AI-EMBEDDING-VECTOR.md §32; ADR-D0-04 |
-| DR-C-05 | Cache/memory store is a *separate* concern from the vector store | Architecture | 9 PF-FT-AI-MEMORY-CACHE.md; ADR-D4-10, ADR-D4-12 |
+| DR-C-02 | Index holds knowledge/FAQ only — never enterprise business truth | Regulatory/Arch | 13.PFF-FA-AI-RAG.md §5; ADR-D3-20 |
+| DR-C-03 | Vectors are sensitive (invertible to text) — must be encrypted & access-controlled | Security | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §121, §122, §124 |
+| DR-C-04 | Selection is an ADR decision, ship as Proposed until signed off | Organisational | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §32; ADR-D0-04 |
+| DR-C-05 | Cache/memory store is a *separate* concern from the vector store | Architecture | 9 PFF-FA-AI-MEMORY-CACHE.md; ADR-D4-10, ADR-D4-12 |
 
 ### 3.4 Assumptions
 
@@ -109,11 +109,11 @@ not a vector-performance one.
 |---|---|---|---|
 | DR-A-01 | Corpus stays ≤ ~20k vectors for the foreseeable horizon | Scale criteria regain weight; re-score (§6.1) | Index size metric, annual |
 | DR-A-02 | Azure AI Search hybrid quality meets Recall@5 gate | Add external reranker or reconsider engine | Retrieval eval, ADR-D3-22 |
-| DR-A-03 | 768-dim is fixed by ADR-D3-23 | Index dimension changes ⇒ new index | Dimension guard, 14.PF-FT-AI-EMBEDDING-VECTOR.md §18 |
+| DR-A-03 | 768-dim is fixed by ADR-D3-23 | Index dimension changes ⇒ new index | Dimension guard, 14.PFF-FA-AI-EMBEDDING-VECTOR.md §18 |
 
 ## 4. Evaluation Criteria and Weights
 
-Criteria fixed before scoring (CMMI DAR SP 1.1), drawn from 14.PF-FT-AI-EMBEDDING-VECTOR.md §33 and §34 and
+Criteria fixed before scoring (CMMI DAR SP 1.1), drawn from 14.PFF-FA-AI-EMBEDDING-VECTOR.md §33 and §34 and
 **re-weighted for the actual corpus scale** — the central analytical move of this
 ADR.
 
@@ -142,7 +142,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ## 5. Alternatives Considered
 
-Five candidates scored from the 14.PF-FT-AI-EMBEDDING-VECTOR.md §32 list, spanning managed-Azure-native,
+Five candidates scored from the 14.PFF-FA-AI-EMBEDDING-VECTOR.md §32 list, spanning managed-Azure-native,
 managed-SaaS, self-hosted-specialist, in-database and reuse-existing postures.
 
 ### 5.1 Option A — Azure AI Search (vector + hybrid)
@@ -153,7 +153,7 @@ customer-managed keys and managed backup/HA.
 
 **Strengths.**
 - Azure-native: private endpoint, Entra RBAC, Key Vault, Monitor/App Insights,
-  data residency — satisfies every 14.PF-FT-AI-EMBEDDING-VECTOR.md §34 enterprise consideration out of the
+  data residency — satisfies every 14.PFF-FA-AI-EMBEDDING-VECTOR.md §34 enterprise consideration out of the
   box.
 - **Native hybrid search** (lexical + vector + semantic ranker) directly serves the
   exact-identifier requirement (ADR-D3-22) with no second system.
@@ -219,7 +219,7 @@ cluster.
   than a first-class feature → more retrieval engineering (EC-04).
 - HNSW in pgvector is capable but less turnkey than a search service; index tuning
   is manual.
-- Risks blurring the 9 PF-FT-AI-MEMORY-CACHE.md separation if the same Postgres is reused for other state
+- Risks blurring the 9 PFF-FA-AI-MEMORY-CACHE.md separation if the same Postgres is reused for other state
   (kept distinct by DR-C-05).
 
 **Cost / effort.** Low cost, moderate build effort for hybrid; low ops (managed).
@@ -233,7 +233,7 @@ Redis supports vector similarity — reuse it for the RAG index too.
 - No new datastore; Azure-native; low latency.
 
 **Weaknesses.**
-- **Conflates two architectural concerns** 9 PF-FT-AI-MEMORY-CACHE.md keeps separate — the ephemeral
+- **Conflates two architectural concerns** 9 PFF-FA-AI-MEMORY-CACHE.md keeps separate — the ephemeral
   cache/memory plane and the durable knowledge index (DR-C-05). A cache eviction or
   memory-pressure event must never risk the knowledge index.
 - Redis vector search lacks first-class lexical/hybrid and rich metadata-filter
@@ -253,7 +253,7 @@ violates a stated separation.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 14.PF-FT-AI-EMBEDDING-VECTOR.md §33–§34 criteria, the
+**Method.** Weighted scoring against §4, informed by 14.PFF-FA-AI-EMBEDDING-VECTOR.md §33–§34 criteria, the
 corpus scale from ADR-D3-21, Azure service documentation for networking/identity,
 and the ADR-D3-22 hybrid-retrieval requirement.
 
@@ -309,9 +309,9 @@ reopens it if the corpus grows > 10×.
 **PFF AI will use Azure AI Search (vector + hybrid) as the knowledge/FAQ vector
 store**, provisioned with a private endpoint, Entra ID RBAC, customer-managed
 encryption keys and managed backup, holding 768-dimension embeddings (ADR-D3-23) in
-a blue/green-aliased index (14.PF-FT-AI-EMBEDDING-VECTOR.md §77–§78). Hybrid lexical+vector search serves
+a blue/green-aliased index (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77–§78). Hybrid lexical+vector search serves
 exact-identifier retrieval (ADR-D3-22); OData metadata filters enforce ACLs at
-query time (ADR-D6-12), constructed parametrically to resist filter injection (14.PF-FT-AI-EMBEDDING-VECTOR.md §51).
+query time (ADR-D6-12), constructed parametrically to resist filter injection (14.PFF-FA-AI-EMBEDDING-VECTOR.md §51).
 
 Option D (pgvector on Azure Postgres) is the designated fallback if Azure AI Search
 cost or hybrid quality proves unsatisfactory — it shares the Azure-native and
@@ -328,22 +328,22 @@ provisioned. It is **not** Accepted and must appear in
 
 ## 8. Architecture Detail
 
-- **Boundary.** `src/pf_ft_ai/rag/vector_store/` exposes a `VectorStore` protocol
+- **Boundary.** `src/pff_fa_ai/rag/vector_store/` exposes a `VectorStore` protocol
   (`upsert`, `search`, `delete`, `swap_alias`); an `AzureAISearchStore` implements
   it. Domain/orchestration code never imports the Azure SDK directly (ADR-D2-01).
-- **Index shape** (14.PF-FT-AI-EMBEDDING-VECTOR.md §35): dimension 768, cosine metric (matched to embedding,
+- **Index shape** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §35): dimension 768, cosine metric (matched to embedding,
   §44/§46), HNSW profile (default; irrelevant tuning at this scale), metadata fields
   for `chunk_id`, `document_id`, `document_version`, `source_id` (§21) plus security
   metadata for ACL (§27, §49) and business metadata (§28).
-- **Hybrid search** (14.PF-FT-AI-EMBEDDING-VECTOR.md §57–§58): vector query + BM25 over the chunk text, fused
+- **Hybrid search** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §57–§58): vector query + BM25 over the chunk text, fused
   by the service's ranker; the vector layer contributes semantic recall, lexical
   contributes exact-ID precision.
-- **ACL at query time** (14.PF-FT-AI-EMBEDDING-VECTOR.md §49–§51; ADR-D6-12): the caller's authorisation
+- **ACL at query time** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §49–§51; ADR-D6-12): the caller's authorisation
   context (ADR-D6-03) is translated into an OData `$filter`; filter values are bound,
   never string-concatenated, to prevent filter injection.
 - **Re-embedding / model change**: build a new index, embed into it, evaluate, then
-  atomically repoint the alias (14.PF-FT-AI-EMBEDDING-VECTOR.md §78, §84) — no in-place mutation.
-- **Networking/identity** (14.PF-FT-AI-EMBEDDING-VECTOR.md §34, §122, §124): private endpoint only; Entra ID
+  atomically repoint the alias (14.PFF-FA-AI-EMBEDDING-VECTOR.md §78, §84) — no in-place mutation.
+- **Networking/identity** (14.PFF-FA-AI-EMBEDDING-VECTOR.md §34, §122, §124): private endpoint only; Entra ID
   RBAC; secrets/keys via Key Vault (ADR-D5-07).
 
 ```mermaid
@@ -363,7 +363,7 @@ flowchart LR
 ### 9.1 Positive
 - One managed Azure-native service covers vector + lexical + hybrid + filtering with
   private networking and Entra RBAC — no cluster to operate.
-- Clean separation from the cache/memory plane (9 PF-FT-AI-MEMORY-CACHE.md) preserved.
+- Clean separation from the cache/memory plane (9 PFF-FA-AI-MEMORY-CACHE.md) preserved.
 - Blue/green alias makes re-embedding safe and reversible.
 
 ### 9.2 Negative
@@ -388,7 +388,7 @@ flowchart LR
 
 | Constraint | Conformance |
 |---|---|
-| Enterprise decides & executes; AI interprets/orchestrates | Vector store serves *knowledge* retrieval only; it holds no business truth and makes no decision (13.FP-FT-AI-RAG.md §5, ADR-D3-20). |
+| Enterprise decides & executes; AI interprets/orchestrates | Vector store serves *knowledge* retrieval only; it holds no business truth and makes no decision (13.PFF-FA-AI-RAG.md §5, ADR-D3-20). |
 | Precedence: Enterprise API/Event > ERC > Cache > RAG > SLM | The store sits at the RAG tier — below ERC/Cache; retrieved content never overrides authoritative state. |
 | Four-state separation | Knowledge index is distinct from Conversation/Session/Enterprise state; explicitly *not* co-located with the cache/memory store (DR-C-05). |
 | Versioned artefacts, never mutated in place | Index changes ship via blue/green alias swap (§77–§78, §84), never in-place edits. |
@@ -431,8 +431,8 @@ flowchart LR
 | Aspect | Detail |
 |---|---|
 | Build phases | 8 |
-| Repository paths | `src/pf_ft_ai/rag/vector_store/` |
-| Configuration | Vector store + index config (14.PF-FT-AI-EMBEDDING-VECTOR.md §129, §130); private-endpoint & RBAC in IaC (ADR-D5-12) |
+| Repository paths | `src/pff_fa_ai/rag/vector_store/` |
+| Configuration | Vector store + index config (14.PFF-FA-AI-EMBEDDING-VECTOR.md §129, §130); private-endpoint & RBAC in IaC (ADR-D5-12) |
 | Contracts / schemas | `VectorStore` protocol; vector record + metadata schema (§22, §26–§28) |
 | Migration | Blue/green index + alias (§77–§78, §84); rebuild from canonical docs (§86) |
 | Dependencies on other ADRs | ADR-D3-23 (dimension), ADR-D3-22 (hybrid/rerank), ADR-D6-12 (ACL), ADR-D5-08/D5-15 (Azure/APIM) |
@@ -487,12 +487,12 @@ superseding ADR, not an in-place edit of §7.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-17 RAG & Retrieval |
-| Specification sections | 14.PF-FT-AI-EMBEDDING-VECTOR.md §31–§37, §47–§51, §57–§58, §84–§86, §88, §91, §95, §122, §124, §160; 13.FP-FT-AI-RAG.md §5 |
+| Specification sections | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §31–§37, §47–§51, §57–§58, §84–§86, §88, §91, §95, §122, §124, §160; 13.PFF-FA-AI-RAG.md §5 |
 | Requirement IDs | RAG-VDB-* (per ADR-D1-12 scheme) |
 | Build phases | 8 |
-| Code paths | `src/pf_ft_ai/rag/vector_store/` |
-| Configuration | Vector store & index config (14.PF-FT-AI-EMBEDDING-VECTOR.md §129–§130) |
-| Tests | vector store integration + security + eval suites (14.PF-FT-AI-EMBEDDING-VECTOR.md §144–§153) |
+| Code paths | `src/pff_fa_ai/rag/vector_store/` |
+| Configuration | Vector store & index config (14.PFF-FA-AI-EMBEDDING-VECTOR.md §129–§130) |
+| Tests | vector store integration + security + eval suites (14.PFF-FA-AI-EMBEDDING-VECTOR.md §144–§153) |
 | Upstream ADRs | ADR-D3-20, ADR-D3-21, ADR-D3-23, ADR-D0-04 |
 | Downstream ADRs | ADR-D3-22, ADR-D6-12 |
 

@@ -1,6 +1,6 @@
 # Golden Evaluation Dataset
 
-Empty by design. `src/pf_ft_ai/evaluation/dataset.py`'s `load_golden_dataset()` loads
+Empty by design. `src/pff_fa_ai/evaluation/dataset.py`'s `load_golden_dataset()` loads
 every `*.yaml` file in this directory into a `GoldenDatasetRegistry` — the loader,
 registry, deterministic-assertion runner, and retrieval metrics are fully built and
 tested (see `tests/unit/evaluation/`), but populating it with real cases across the 16

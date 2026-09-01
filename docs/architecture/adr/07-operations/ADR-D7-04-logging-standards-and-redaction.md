@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D7-01, ADR-D7-03, ADR-D6-06, ADR-D6-17, ADR-D5-07]
 source_docs:
-  - "MD files/6 Production/24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §11, §12, §13, §14"
+  - "MD files/6 Production/24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §11, §12, §13, §14"
 build_phases: [2]
 impacted_paths:
-  - src/pf_ft_ai/observability/
+  - src/pff_fa_ai/observability/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -29,12 +29,12 @@ review_due: 2027-08-22
 PFF AI will emit **structured JSON logs** with consistent **levels** and **mandatory
 redaction of PII/secrets**, carrying the correlation id (ADR-D7-03), to Log Analytics
 (ADR-D7-01) — with logs treated as operational (debugging), distinct from the tamper-
-evident audit record (ADR-D6-17) (24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §11–§14). No secrets or unnecessary personal
+evident audit record (ADR-D6-17) (24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §11–§14). No secrets or unnecessary personal
 data ever reach logs.
 
 ## 2. Context and Problem Statement
 
-24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §11 application logs, §12 structured logging, §13 log levels, §14 sensitive-data
+24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §11 application logs, §12 structured logging, §13 log levels, §14 sensitive-data
 logging. Unstructured or unredacted logs are both an operability failure and a breach
 vector. This ADR fixes logging format, levels and redaction.
 
@@ -42,9 +42,9 @@ vector. This ADR fixes logging format, levels and redaction.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Structured JSON logs with correlation id | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §12; ADR-D7-03 |
-| DR-F-02 | Consistent log levels | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §13 |
-| DR-C-01 | Redact PII/secrets | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §14; ADR-D6-06, D5-07 |
+| DR-F-01 | Structured JSON logs with correlation id | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §12; ADR-D7-03 |
+| DR-F-02 | Consistent log levels | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §13 |
+| DR-C-01 | Redact PII/secrets | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §14; ADR-D6-06, D5-07 |
 | DR-C-02 | Logs ≠ audit record | ADR-D6-17 |
 
 ### 3.4 Assumptions
@@ -86,7 +86,7 @@ every line; ship to Log Analytics.
 
 **Description.** Freeform log strings.
 **Strengths.** Easy to write.
-**Weaknesses.** Poor query; hard to redact reliably; 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §12 wants structured.
+**Weaknesses.** Poor query; hard to redact reliably; 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §12 wants structured.
 **Cost / effort.** Low; weak.
 
 ### 5.4 Option D — Log everything verbosely (debug in prod)
@@ -108,12 +108,12 @@ of high-volume debug logs.
 
 | Option | Eliminated by |
 |---|---|
-| Secrets/PII in logs | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §14 |
+| Secrets/PII in logs | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §14 |
 | Logs as the audit trail | ADR-D6-17 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §11–§14.
+**Method.** Weighted scoring against §4, informed by 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §11–§14.
 
 | Criterion | Weight | A: Allowlist redaction | B: Denylist | C: Plaintext | D: Verbose | E: A+dynamic level+sampling |
 |---|---|---|---|---|---|---|
@@ -203,7 +203,7 @@ Denylist redaction (B), plaintext (C) and always-verbose (D) are rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 2 |
-| Repository paths | `src/pf_ft_ai/observability/` |
+| Repository paths | `src/pff_fa_ai/observability/` |
 | Configuration | Redaction allowlist; levels; sampling |
 | Contracts / schemas | Log schema |
 | Migration | N/A |
@@ -249,10 +249,10 @@ Denylist redaction (B), plaintext (C) and always-verbose (D) are rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-31 |
-| Specification sections | 24.PF-FT-AI-OBSERVABILITY-RESILIENCE.md §11–§14 |
+| Specification sections | 24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md §11–§14 |
 | Requirement IDs | OBS-LOG-* |
 | Build phases | 2 |
-| Code paths | `src/pf_ft_ai/observability/` |
+| Code paths | `src/pff_fa_ai/observability/` |
 | Configuration | redaction/levels |
 | Tests | log leak + structure suites |
 | Upstream ADRs | ADR-D7-01, D6-06 |

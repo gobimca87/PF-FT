@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-13, ADR-D3-14, ADR-D3-16, ADR-D3-18, ADR-D5-06, ADR-D6-15]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §8, §9, §10, §11, §12, §56, §58, §83, §151, §152, §153, §154, §155"
-  - "MD files/4 AI/14.PF-FT-AI-EMBEDDING-VECTOR.md §15, §16"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §8, §9, §10, §11, §12, §56, §58, §83, §151, §152, §153, §154, §155"
+  - "MD files/4 AI/14.PFF-FA-AI-EMBEDDING-VECTOR.md §15, §16"
 build_phases: [6]
 impacted_paths:
-  - src/pf_ft_ai/slm/registry/
+  - src/pff_fa_ai/slm/registry/
   - config/models/
 classification: Internal
 review_due: 2027-08-22
@@ -31,16 +31,16 @@ review_due: 2027-08-22
 PFF AI will maintain a **declarative model registry** (config-as-code, Git-versioned)
 that records every language and embedding model by `id@version` with its
 **capabilities**, **purpose/task class**, **status** lifecycle (ACTIVE/TESTING/
-DEPRECATED/RETIRED/BLOCKED) and compatibility metadata (15.PF-FT-AI-SLM.md §8–§12, §154–§155;
-14.PF-FT-AI-EMBEDDING-VECTOR.md §15–§16). Model routing (ADR-D3-16), fallback (ADR-D3-18) and provider
+DEPRECATED/RETIRED/BLOCKED) and compatibility metadata (15.PFF-FA-AI-SLM.md §8–§12, §154–§155;
+14.PFF-FA-AI-EMBEDDING-VECTOR.md §15–§16). Model routing (ADR-D3-16), fallback (ADR-D3-18) and provider
 selection (ADR-D3-14) all read from this single registry; no model is callable
 unless it is registered and ACTIVE.
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §8–§12 define a model registry with responsibilities, status, capability and
+15.PFF-FA-AI-SLM.md §8–§12 define a model registry with responsibilities, status, capability and
 purpose; §151–§155 cover promotion, release artefact and immutable production
-versions; 14.PF-FT-AI-EMBEDDING-VECTOR.md §15–§16 mirror this for embeddings. Without a formal registry,
+versions; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §15–§16 mirror this for embeddings. Without a formal registry,
 model choice is scattered across code and config, routing/fallback cannot reason
 about capabilities, and there is no controlled promotion or allowlist. This ADR
 fixes what the registry is, where it lives, and how it is versioned.
@@ -51,24 +51,24 @@ fixes what the registry is, where it lives, and how it is versioned.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Resolve model by id@version with capability+purpose | 15.PF-FT-AI-SLM.md §8–§12 |
-| DR-F-02 | Drive routing and fallback from declared capabilities | 15.PF-FT-AI-SLM.md §56, §58; ADR-D3-16/18 |
-| DR-F-03 | Status lifecycle gates which models are usable | 15.PF-FT-AI-SLM.md §10 |
+| DR-F-01 | Resolve model by id@version with capability+purpose | 15.PFF-FA-AI-SLM.md §8–§12 |
+| DR-F-02 | Drive routing and fallback from declared capabilities | 15.PFF-FA-AI-SLM.md §56, §58; ADR-D3-16/18 |
+| DR-F-03 | Status lifecycle gates which models are usable | 15.PFF-FA-AI-SLM.md §10 |
 
 ### 3.2 Non-functional drivers
 
 | ID | Driver | Target | Source |
 |---|---|---|---|
-| DR-N-01 | Immutable production model versions | No in-place edit | 15.PF-FT-AI-SLM.md §155 |
-| DR-N-02 | Auditable promotion | Versioned change history | 15.PF-FT-AI-SLM.md §151–§152 |
+| DR-N-01 | Immutable production model versions | No in-place edit | 15.PFF-FA-AI-SLM.md §155 |
+| DR-N-02 | Auditable promotion | Versioned change history | 15.PFF-FA-AI-SLM.md §151–§152 |
 
 ### 3.3 Constraints
 
 | ID | Constraint | Type | Source |
 |---|---|---|---|
-| DR-C-01 | Registry is a versioned artefact | Organisational | CLAUDE.md; 15.PF-FT-AI-SLM.md §154 |
-| DR-C-02 | Only registered+ACTIVE models callable (allowlist) | Security | 15.PF-FT-AI-SLM.md §121; ADR-D3-14 |
-| DR-C-03 | Same model+version for doc & query embeddings | Platform | 14.PF-FT-AI-EMBEDDING-VECTOR.md §7; ADR-D3-23 |
+| DR-C-01 | Registry is a versioned artefact | Organisational | CLAUDE.md; 15.PFF-FA-AI-SLM.md §154 |
+| DR-C-02 | Only registered+ACTIVE models callable (allowlist) | Security | 15.PFF-FA-AI-SLM.md §121; ADR-D3-14 |
+| DR-C-03 | Same model+version for doc & query embeddings | Platform | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §7; ADR-D3-23 |
 
 ### 3.4 Assumptions
 
@@ -80,7 +80,7 @@ fixes what the registry is, where it lives, and how it is versioned.
 
 | ID | Criterion | Weight | Rationale | Measurement |
 |---|---|---|---|---|
-| EC-01 | Immutability & version integrity | 24 | 15.PF-FT-AI-SLM.md §155 | Runtime mutation possible? |
+| EC-01 | Immutability & version integrity | 24 | 15.PFF-FA-AI-SLM.md §155 | Runtime mutation possible? |
 | EC-02 | Capability/purpose expressiveness | 20 | Feeds routing/fallback | Fields present |
 | EC-03 | Governance & audit | 18 | Promotion control (ADR-D6-15) | Review/history |
 | EC-04 | Simplicity / ops | 16 | Avoid a bespoke service | # systems |
@@ -92,7 +92,7 @@ fixes what the registry is, where it lives, and how it is versioned.
 
 ### 5.1 Option A — Declarative config-as-code registry in Git, loaded into memory
 
-**Description.** `config/models/*.yaml` (15.PF-FT-AI-SLM.md §15 shape) versioned in Git, promoted
+**Description.** `config/models/*.yaml` (15.PFF-FA-AI-SLM.md §15 shape) versioned in Git, promoted
 via release manifest, loaded into an in-memory registry at startup.
 **Strengths.** Immutable in prod; reviewable/auditable; fast in-memory resolve;
 one mechanism for SLM + embedding + reranker; no extra service.
@@ -140,7 +140,7 @@ BLOCKED without a full release (for incident response).
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §8–§12/§151–§155.
+**Method.** Weighted scoring against §4, informed by 15.PFF-FA-AI-SLM.md §8–§12/§151–§155.
 
 | Criterion | Weight | A: Git config | B: DB+API | C: Provider catalogue | D: Langfuse/MLflow | E: Git + kill-switch |
 |---|---|---|---|---|---|---|
@@ -165,26 +165,26 @@ tightly-governed BLOCK flag**.
 (config-as-code) loaded in-memory, extended with a narrowly-scoped, fully-audited
 runtime BLOCK kill-switch for incident response (Option E).** The registry records
 every SLM/embedding/reranker model by `id@version` with capabilities, purpose/task
-class, status (15.PF-FT-AI-SLM.md §10) and compatibility (§153); routing (ADR-D3-16), fallback
+class, status (15.PFF-FA-AI-SLM.md §10) and compatibility (§153); routing (ADR-D3-16), fallback
 (ADR-D3-18) and the provider allowlist (ADR-D3-14) read from it. Normal model
 changes go through versioned promotion (ADR-D6-15); only an emergency BLOCK may be
 applied at runtime, and it is logged and reconciled back into Git. Options B/C/D
 rejected for mutability/semantics/coupling.
 
-**Status rationale.** `Accepted` — registry is mandated by 15.PF-FT-AI-SLM.md §8; the
+**Status rationale.** `Accepted` — registry is mandated by 15.PFF-FA-AI-SLM.md §8; the
 kill-switch is a governed refinement.
 
 ## 8. Architecture Detail
 
-- **Schema** (15.PF-FT-AI-SLM.md §15, §11–§12; 14.PF-FT-AI-EMBEDDING-VECTOR.md §15): `model_id`, `provider`, `version`,
+- **Schema** (15.PFF-FA-AI-SLM.md §15, §11–§12; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §15): `model_id`, `provider`, `version`,
   `type` (slm/embedding/reranker), `capabilities` (streaming, tools, structured,
   max_tokens, dimension), `purpose`/task-class, `status`, `model_compatibility`.
-- **Loader** `src/pf_ft_ai/slm/registry/`: validates on load; unknown/BLOCKED model
+- **Loader** `src/pff_fa_ai/slm/registry/`: validates on load; unknown/BLOCKED model
   resolution raises `ModelError`.
 - **BLOCK switch**: an audited control (via config service / feature flag) that can
   only *demote* a model to BLOCKED; it can never introduce or promote a model;
   every use is logged (ADR-D6-17) and must be reconciled into Git within SLA.
-- **Promotion** (15.PF-FT-AI-SLM.md §151–§152, §155): status transitions ACTIVE⇄TESTING⇄
+- **Promotion** (15.PFF-FA-AI-SLM.md §151–§152, §155): status transitions ACTIVE⇄TESTING⇄
   DEPRECATED→RETIRED via release; prod versions immutable.
 
 ## 9. Consequences
@@ -220,7 +220,7 @@ kill-switch is a governed refinement.
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | Kill-switch misused to bypass promotion | Low | High | M | Switch can only BLOCK; audited; reconciled | Security Architect | Low |
-| RSK-02 | Stale registry vs deployed models | Low | Med | M | Startup validation; smoke test (15.PF-FT-AI-SLM.md §82) | ML Eng | Low |
+| RSK-02 | Stale registry vs deployed models | Low | Med | M | Startup validation; smoke test (15.PFF-FA-AI-SLM.md §82) | ML Eng | Low |
 | RSK-03 | Capability mis-declared → bad routing | Med | Med | M | Contract tests per model | ML Eng | Low |
 
 ## 12. Quantitative Targets and Measures
@@ -248,7 +248,7 @@ kill-switch is a governed refinement.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 |
-| Repository paths | `src/pf_ft_ai/slm/registry/`, `config/models/` |
+| Repository paths | `src/pff_fa_ai/slm/registry/`, `config/models/` |
 | Configuration | Model YAML; release manifest pins |
 | Contracts / schemas | Model registry Pydantic schema |
 | Migration | N/A |
@@ -296,10 +296,10 @@ kill-switch is a governed refinement.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 |
-| Specification sections | 15.PF-FT-AI-SLM.md §8–§12, §56, §58, §83, §151–§155; 14.PF-FT-AI-EMBEDDING-VECTOR.md §15–§16 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §8–§12, §56, §58, §83, §151–§155; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §15–§16 |
 | Requirement IDs | SLM-REG-* |
 | Build phases | 6 |
-| Code paths | `src/pf_ft_ai/slm/registry/`, `config/models/` |
+| Code paths | `src/pff_fa_ai/slm/registry/`, `config/models/` |
 | Configuration | model YAML, release manifest |
 | Tests | registry unit + contract suites |
 | Upstream ADRs | ADR-D3-14, ADR-D5-06 |

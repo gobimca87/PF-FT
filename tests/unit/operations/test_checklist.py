@@ -1,10 +1,10 @@
 import pytest
 
-from pf_ft_ai.common.exceptions import ConfigurationError
-from pf_ft_ai.engineering_agents.models import EngineeringAgentResult
-from pf_ft_ai.engineering_agents.states import AgentResultStatus
-from pf_ft_ai.operations.checklist import OperationalCheck, OperationalChecklistRunner
-from pf_ft_ai.operations.states import CheckFrequency
+from pff_fa_ai.common.exceptions import ConfigurationError
+from pff_fa_ai.engineering_agents.models import EngineeringAgentResult
+from pff_fa_ai.engineering_agents.states import AgentResultStatus
+from pff_fa_ai.operations.checklist import OperationalCheck, OperationalChecklistRunner
+from pff_fa_ai.operations.states import CheckFrequency
 
 
 async def _fake_pass() -> EngineeringAgentResult:

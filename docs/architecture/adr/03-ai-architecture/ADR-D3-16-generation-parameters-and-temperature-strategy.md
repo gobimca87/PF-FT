@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-15, ADR-D3-17, ADR-D3-10, ADR-D3-05]
 source_docs:
-  - "MD files/4 AI/15.PF-FT-AI-SLM.md §33, §34, §35, §36, §37, §38, §39, §40"
+  - "MD files/4 AI/15.PFF-FA-AI-SLM.md §33, §34, §35, §36, §37, §38, §39, §40"
 build_phases: [6]
 impacted_paths:
   - config/models/
-  - src/pf_ft_ai/slm/
+  - src/pff_fa_ai/slm/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -32,12 +32,12 @@ sequences) to a **declared task class**, not to ad-hoc call sites: deterministic
 tasks (structured extraction, routing rationale, tool-argument formatting) run at
 **temperature 0 / low top-p**, while user-facing persona narration runs at a
 **low-but-non-zero temperature** for natural tone. Parameters are declared per task
-class in config (15.PF-FT-AI-SLM.md §33–§36), never hard-coded, and never used to compensate for
+class in config (15.PFF-FA-AI-SLM.md §33–§36), never hard-coded, and never used to compensate for
 missing structure or validation.
 
 ## 2. Context and Problem Statement
 
-15.PF-FT-AI-SLM.md §33–§36 define output-token budget and a temperature strategy; §37–§40 tie
+15.PFF-FA-AI-SLM.md §33–§36 define output-token budget and a temperature strategy; §37–§40 tie
 structured output to validation and state the SLM "must not execute business rules."
 Uncontrolled temperature is a correctness and safety hazard: high randomness in a
 routing or extraction step produces non-reproducible, sometimes invalid results;
@@ -48,11 +48,11 @@ site picks its own parameters, defeating reproducibility, eval and cost control.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Deterministic tasks must be reproducible | 15.PF-FT-AI-SLM.md §36, §38 |
+| DR-F-01 | Deterministic tasks must be reproducible | 15.PFF-FA-AI-SLM.md §36, §38 |
 | DR-F-02 | Persona narration must feel natural | CLAUDE.md §Adam; ADR-D3-10 |
-| DR-F-03 | Output-token budget enforced per workflow | 15.PF-FT-AI-SLM.md §33–§34 |
-| DR-N-01 | Parameters declared, versioned, not hard-coded | 15.PF-FT-AI-SLM.md §35; CLAUDE.md |
-| DR-C-01 | Temperature never substitutes for validation | 15.PF-FT-AI-SLM.md §39–§40 |
+| DR-F-03 | Output-token budget enforced per workflow | 15.PFF-FA-AI-SLM.md §33–§34 |
+| DR-N-01 | Parameters declared, versioned, not hard-coded | 15.PFF-FA-AI-SLM.md §35; CLAUDE.md |
+| DR-C-01 | Temperature never substitutes for validation | 15.PFF-FA-AI-SLM.md §39–§40 |
 
 ### 3.4 Assumptions
 
@@ -122,7 +122,7 @@ default doesn't fit.
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 15.PF-FT-AI-SLM.md §33–§40.
+**Method.** Weighted scoring against §4, informed by 15.PFF-FA-AI-SLM.md §33–§40.
 
 | Criterion | Weight | A: Task-class config | B: Global | C: Ad-hoc | D: Model-decided | E: Class + overrides |
 |---|---|---|---|---|---|---|
@@ -146,11 +146,11 @@ audit properties, so E is selected.
 config, with narrow governed per-workflow overrides (Option E).** Deterministic
 classes (extraction, routing, tool-argument formatting, structured output) run at
 temperature 0; persona narration runs at a low non-zero temperature tuned for tone;
-output-token budgets are set per workflow (15.PF-FT-AI-SLM.md §34). Parameters are never
+output-token budgets are set per workflow (15.PFF-FA-AI-SLM.md §34). Parameters are never
 hard-coded, and temperature is never raised to mask missing validation or structure
-(15.PF-FT-AI-SLM.md §39–§40). B/C/D rejected.
+(15.PFF-FA-AI-SLM.md §39–§40). B/C/D rejected.
 
-**Status rationale.** `Accepted` — 15.PF-FT-AI-SLM.md §33–§40 govern this; ADR records the
+**Status rationale.** `Accepted` — 15.PFF-FA-AI-SLM.md §33–§40 govern this; ADR records the
 rationale.
 
 ## 8. Architecture Detail
@@ -219,7 +219,7 @@ rationale.
 | Aspect | Detail |
 |---|---|
 | Build phases | 6 |
-| Repository paths | `config/models/`, `src/pf_ft_ai/slm/` |
+| Repository paths | `config/models/`, `src/pff_fa_ai/slm/` |
 | Configuration | Task-class parameter map; overrides |
 | Contracts / schemas | Params in `SLMRequest` |
 | Migration | N/A |
@@ -267,10 +267,10 @@ rationale.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-16 |
-| Specification sections | 15.PF-FT-AI-SLM.md §33–§40 |
+| Specification sections | 15.PFF-FA-AI-SLM.md §33–§40 |
 | Requirement IDs | SLM-GEN-* |
 | Build phases | 6 |
-| Code paths | `config/models/`, `src/pf_ft_ai/slm/` |
+| Code paths | `config/models/`, `src/pff_fa_ai/slm/` |
 | Configuration | generation.yaml, overrides |
 | Tests | repeatability + persona eval |
 | Upstream ADRs | ADR-D3-14, ADR-D3-15 |

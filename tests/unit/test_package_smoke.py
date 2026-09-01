@@ -1,4 +1,4 @@
-from pf_ft_ai import __version__
+from pff_fa_ai import __version__
 
 
 def test_should_expose_package_version() -> None:

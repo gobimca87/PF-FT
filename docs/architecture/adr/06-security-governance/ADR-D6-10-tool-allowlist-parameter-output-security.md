@@ -14,11 +14,11 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D3-04, ADR-D2-09, ADR-D6-03, ADR-D6-09, ADR-D2-13]
 source_docs:
-  - "MD files/4 AI/18.PF-FT-AI-GUARDRAILS.md §38, §39, §40, §41, §42, §43, §44, §45, §46"
-  - "MD files/5 QualityGovernance/19.PF-FT-AI-SECURITY.md §53, §54, §55, §56, §58, §59, §60"
+  - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §38, §39, §40, §41, §42, §43, §44, §45, §46"
+  - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §53, §54, §55, §56, §58, §59, §60"
 build_phases: [9]
 impacted_paths:
-  - src/pf_ft_ai/harness/
+  - src/pff_fa_ai/harness/
 classification: Confidential
 review_due: 2027-08-22
 ---
@@ -31,13 +31,13 @@ Every tool/enterprise-API/MCP call the AI can make will be constrained by an
 **allowlist** (which tools, which endpoints, which methods), **parameter validation +
 authorization** (against the propagated authz context, ADR-D6-03) and **output
 validation** before results re-enter reasoning — enforced in the Agent Harness
-(ADR-D2-09) and guardrail pipeline (ADR-D6-09) (18.PF-FT-AI-GUARDRAILS.md §38–§46; 19.PF-FT-AI-SECURITY.md §53–§60). No
+(ADR-D2-09) and guardrail pipeline (ADR-D6-09) (18.PFF-FA-AI-GUARDRAILS.md §38–§46; 19.PFF-FA-AI-SECURITY.md §53–§60). No
 arbitrary URLs, no unvalidated parameters, no unvetted tool output.
 
 ## 2. Context and Problem Statement
 
-18.PF-FT-AI-GUARDRAILS.md §38–§41 tool restrictions/authorization/parameter validation, §42–§46 enterprise
-API restrictions/endpoint-allowlist/method/payload/response validation; 19.PF-FT-AI-SECURITY.md §53–§56
+18.PFF-FA-AI-GUARDRAILS.md §38–§41 tool restrictions/authorization/parameter validation, §42–§46 enterprise
+API restrictions/endpoint-allowlist/method/payload/response validation; 19.PFF-FA-AI-SECURITY.md §53–§56
 tool security and §58–§60 arbitrary-URL protection and API request/response security.
 An LLM choosing a tool + parameters is an attack surface: it could call an
 out-of-scope endpoint, pass a malicious parameter, or ingest a poisoned response. This
@@ -48,10 +48,10 @@ gate mechanics).
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Allowlist tools/endpoints/methods | 18.PF-FT-AI-GUARDRAILS.md §38, §43–§44; 19.PF-FT-AI-SECURITY.md §54 |
-| DR-F-02 | Validate + authorize parameters | 18.PF-FT-AI-GUARDRAILS.md §40–§41; 19.PF-FT-AI-SECURITY.md §55 |
-| DR-F-03 | Validate tool/API output before use | 18.PF-FT-AI-GUARDRAILS.md §46; 19.PF-FT-AI-SECURITY.md §56, §60 |
-| DR-C-01 | No arbitrary URLs | 19.PF-FT-AI-SECURITY.md §58; ADR-D2-19 |
+| DR-F-01 | Allowlist tools/endpoints/methods | 18.PFF-FA-AI-GUARDRAILS.md §38, §43–§44; 19.PFF-FA-AI-SECURITY.md §54 |
+| DR-F-02 | Validate + authorize parameters | 18.PFF-FA-AI-GUARDRAILS.md §40–§41; 19.PFF-FA-AI-SECURITY.md §55 |
+| DR-F-03 | Validate tool/API output before use | 18.PFF-FA-AI-GUARDRAILS.md §46; 19.PFF-FA-AI-SECURITY.md §56, §60 |
+| DR-C-01 | No arbitrary URLs | 19.PFF-FA-AI-SECURITY.md §58; ADR-D2-19 |
 
 ### 3.4 Assumptions
 
@@ -114,12 +114,12 @@ arbitrary URLs (ADR-D2-19).
 
 | Option | Eliminated by |
 |---|---|
-| Arbitrary URL/tool invocation | 19.PF-FT-AI-SECURITY.md §58; ADR-D2-19 |
-| Trust tool output implicitly | 18.PF-FT-AI-GUARDRAILS.md §46 |
+| Arbitrary URL/tool invocation | 19.PFF-FA-AI-SECURITY.md §58; ADR-D2-19 |
+| Trust tool output implicitly | 18.PFF-FA-AI-GUARDRAILS.md §46 |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 18.PF-FT-AI-GUARDRAILS.md §38–§46 and 19.PF-FT-AI-SECURITY.md §53–§60.
+**Method.** Weighted scoring against §4, informed by 18.PFF-FA-AI-GUARDRAILS.md §38–§46 and 19.PFF-FA-AI-SECURITY.md §53–§60.
 
 | Criterion | Weight | A: Allowlist+validate | B: Allowlist only | C: Validate only | D: Model self-restraint | E: A+rate/anomaly |
 |---|---|---|---|---|---|---|
@@ -149,10 +149,10 @@ rejected.
 
 - Harness (ADR-D2-09) enforces the allowlist and runs the tool gates (ADR-D3-04):
   parameter schema + semantic validation (gate 3), authorization (ADR-D6-03), endpoint/
-  method allowlist (18.PF-FT-AI-GUARDRAILS.md §43–§44), payload validation (§45).
-- Output validation (18.PF-FT-AI-GUARDRAILS.md §46; 19.PF-FT-AI-SECURITY.md §56, §60): tool/API responses validated for
+  method allowlist (18.PFF-FA-AI-GUARDRAILS.md §43–§44), payload validation (§45).
+- Output validation (18.PFF-FA-AI-GUARDRAILS.md §46; 19.PFF-FA-AI-SECURITY.md §56, §60): tool/API responses validated for
   schema + safety (and treated as untrusted for injection, ADR-D6-08) before reasoning.
-- Arbitrary-URL protection (19.PF-FT-AI-SECURITY.md §58): outbound targets restricted (ADR-D6-04) and
+- Arbitrary-URL protection (19.PFF-FA-AI-SECURITY.md §58): outbound targets restricted (ADR-D6-04) and
   portal links resolved via registry (ADR-D2-19).
 - High-impact tools get rate/quota + anomaly monitoring.
 
@@ -214,7 +214,7 @@ rejected.
 | Aspect | Detail |
 |---|---|
 | Build phases | 9 |
-| Repository paths | `src/pf_ft_ai/harness/`, guardrails |
+| Repository paths | `src/pff_fa_ai/harness/`, guardrails |
 | Configuration | Allowlist; validation rules; rate/quota |
 | Contracts / schemas | Tool schemas; validation policy |
 | Migration | N/A |
@@ -261,10 +261,10 @@ rejected.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-27 |
-| Specification sections | 18.PF-FT-AI-GUARDRAILS.md §38–§46; 19.PF-FT-AI-SECURITY.md §53–§60 |
+| Specification sections | 18.PFF-FA-AI-GUARDRAILS.md §38–§46; 19.PFF-FA-AI-SECURITY.md §53–§60 |
 | Requirement IDs | SEC-TOOL-* |
 | Build phases | 9 |
-| Code paths | `src/pf_ft_ai/harness/` |
+| Code paths | `src/pff_fa_ai/harness/` |
 | Configuration | allowlist/validation |
 | Tests | tool security suites |
 | Upstream ADRs | ADR-D3-04, D2-09, D6-03 |

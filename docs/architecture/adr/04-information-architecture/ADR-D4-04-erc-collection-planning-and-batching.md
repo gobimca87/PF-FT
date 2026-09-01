@@ -14,10 +14,10 @@ supersedes: []
 superseded_by: []
 related_adrs: [ADR-D4-02, ADR-D4-05, ADR-D2-08, ADR-D2-13, ADR-D2-12]
 source_docs:
-  - "MD files/3 Context & Integration/8 PF-FT-AI-ERC-CONTEXT.md §22, §23, §24, §25, §26, §27, §28, §29, §30, §35, §36, §37, §38, §39, §42, §43, §53, §54, §55, §56, §57, §58"
+  - "MD files/3 Context & Integration/8 PFF-FA-AI-ERC-CONTEXT.md §22, §23, §24, §25, §26, §27, §28, §29, §30, §35, §36, §37, §38, §39, §42, §43, §53, §54, §55, §56, §57, §58"
 build_phases: [4]
 impacted_paths:
-  - src/pf_ft_ai/erc/collection/
+  - src/pff_fa_ai/erc/collection/
 classification: Internal
 review_due: 2027-08-22
 ---
@@ -30,12 +30,12 @@ PFF AI will build ERC through a **declarative collection planner** that resolves
 context-requirement dependency graph and executes enterprise reads with **bounded
 parallelism**, agreed **batch sizes** (`MAX_ERC_BATCH_SIZE = 20`), and
 **pagination-safety** guards (max pages, duplicate/missing-record detection) — never
-an unbounded fan-out (8 PF-FT-AI-ERC-CONTEXT.md §22–§30, §35–§43, §53–§58). Batch processing gathers
+an unbounded fan-out (8 PFF-FA-AI-ERC-CONTEXT.md §22–§30, §35–§43, §53–§58). Batch processing gathers
 *data*; it does not mean per-item SLM calls (§40).
 
 ## 2. Context and Problem Statement
 
-8 PF-FT-AI-ERC-CONTEXT.md §22–§29 define context-requirement identification, dependency graphs and a
+8 PFF-FA-AI-ERC-CONTEXT.md §22–§29 define context-requirement identification, dependency graphs and a
 collection planner; §26–§28 define sequential vs parallel collection and the
 parallel-execution rule; §35–§43 define large-data batching, agreed batch size, team/
 official batching and bounded parallelism; §53–§58 define pagination safety,
@@ -49,11 +49,11 @@ collected.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | Resolve dependencies before/around parallel reads | 8 PF-FT-AI-ERC-CONTEXT.md §25–§28 |
-| DR-F-02 | Batch large collections at agreed size (20) | 8 PF-FT-AI-ERC-CONTEXT.md §36; CLAUDE.md |
-| DR-F-03 | Pagination safety: max pages, dup/missing detection | 8 PF-FT-AI-ERC-CONTEXT.md §53–§56 |
-| DR-N-01 | Bounded parallelism (don't overload enterprise) | 8 PF-FT-AI-ERC-CONTEXT.md §28, §43; ADR-D2-08 |
-| DR-C-01 | Batch collection ≠ per-item SLM calls | 8 PF-FT-AI-ERC-CONTEXT.md §40 |
+| DR-F-01 | Resolve dependencies before/around parallel reads | 8 PFF-FA-AI-ERC-CONTEXT.md §25–§28 |
+| DR-F-02 | Batch large collections at agreed size (20) | 8 PFF-FA-AI-ERC-CONTEXT.md §36; CLAUDE.md |
+| DR-F-03 | Pagination safety: max pages, dup/missing detection | 8 PFF-FA-AI-ERC-CONTEXT.md §53–§56 |
+| DR-N-01 | Bounded parallelism (don't overload enterprise) | 8 PFF-FA-AI-ERC-CONTEXT.md §28, §43; ADR-D2-08 |
+| DR-C-01 | Batch collection ≠ per-item SLM calls | 8 PFF-FA-AI-ERC-CONTEXT.md §40 |
 
 ### 3.4 Assumptions
 
@@ -117,12 +117,12 @@ signals.
 
 | Option | Eliminated by |
 |---|---|
-| Per-item SLM enrichment during collection | 8 PF-FT-AI-ERC-CONTEXT.md §40 — batch ≠ SLM calls |
-| Unlimited pagination | 8 PF-FT-AI-ERC-CONTEXT.md §54 — pagination safety |
+| Per-item SLM enrichment during collection | 8 PFF-FA-AI-ERC-CONTEXT.md §40 — batch ≠ SLM calls |
+| Unlimited pagination | 8 PFF-FA-AI-ERC-CONTEXT.md §54 — pagination safety |
 
 ## 6. Evaluation Method and Decision Matrix
 
-**Method.** Weighted scoring against §4, informed by 8 PF-FT-AI-ERC-CONTEXT.md §22–§58 and ADR-D2-08.
+**Method.** Weighted scoring against §4, informed by 8 PFF-FA-AI-ERC-CONTEXT.md §22–§58 and ADR-D2-08.
 
 | Criterion | Weight | A: Planner bounded | B: Sequential | C: Unbounded | D: Pool no-graph | E: Adaptive |
 |---|---|---|---|---|---|---|
@@ -149,11 +149,11 @@ configurable; adaptive concurrency (E) is a documented future optimisation. Batc
 collection gathers data only — never per-item SLM calls (§40). Sequential (B) is too
 slow; unbounded (C) unsafe; pool-without-graph (D) mishandles dependencies.
 
-**Status rationale.** `Accepted` — 8 PF-FT-AI-ERC-CONTEXT.md §22–§58 and CLAUDE.md govern this.
+**Status rationale.** `Accepted` — 8 PFF-FA-AI-ERC-CONTEXT.md §22–§58 and CLAUDE.md govern this.
 
 ## 8. Architecture Detail
 
-- `src/pf_ft_ai/erc/collection/`: a `ContextCollectionPlanner` builds the dependency
+- `src/pff_fa_ai/erc/collection/`: a `ContextCollectionPlanner` builds the dependency
   graph (§25), schedules independent nodes in parallel within a semaphore-bounded pool
   (§28, §43), and batches collections (teams §37, officials §38) at 20 (§36).
 - Pagination (§53–§54): each paged read has a max-page guard; duplicates detected by
@@ -218,7 +218,7 @@ slow; unbounded (C) unsafe; pool-without-graph (D) mishandles dependencies.
 | Aspect | Detail |
 |---|---|
 | Build phases | 4 |
-| Repository paths | `src/pf_ft_ai/erc/collection/` |
+| Repository paths | `src/pff_fa_ai/erc/collection/` |
 | Configuration | Concurrency bound, batch size (20), max pages |
 | Contracts / schemas | Context requirement model (§23) |
 | Migration | N/A |
@@ -265,10 +265,10 @@ slow; unbounded (C) unsafe; pool-without-graph (D) mishandles dependencies.
 | Dimension | Reference |
 |---|---|
 | Workshop sheet | WS-19 |
-| Specification sections | 8 PF-FT-AI-ERC-CONTEXT.md §22–§30, §35–§43, §53–§58 |
+| Specification sections | 8 PFF-FA-AI-ERC-CONTEXT.md §22–§30, §35–§43, §53–§58 |
 | Requirement IDs | ERC-COLL-* |
 | Build phases | 4 |
-| Code paths | `src/pf_ft_ai/erc/collection/` |
+| Code paths | `src/pff_fa_ai/erc/collection/` |
 | Configuration | concurrency/batch/page config |
 | Tests | collection + pagination suites |
 | Upstream ADRs | ADR-D4-02, ADR-D2-08 |
