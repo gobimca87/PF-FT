@@ -269,12 +269,14 @@ Graph state carries typed references for anything that is not a scalar or identi
 class ERCReference(TypedDict):
     erc_id: str
     version: int
-    sections: list[str]        # which sections were requested, not their contents
+    sections: list[str]  # which sections were requested, not their contents
+
 
 class ToolResultReference(TypedDict):
     tool_call_id: str
     status: Literal["success", "failure", "unknown"]
-    result_ref: str            # pointer to the stored result
+    result_ref: str  # pointer to the stored result
+
 
 class RAGReference(TypedDict):
     document_id: str

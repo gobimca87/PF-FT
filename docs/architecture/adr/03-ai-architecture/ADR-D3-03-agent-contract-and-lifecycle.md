@@ -294,9 +294,9 @@ check — it has no means to attempt it, which is the ADR-D2-09 §7.1 property a
 class Agent(Protocol):
     async def handle(
         self,
-        context: AgentExecutionContext,   # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §18
+        context: AgentExecutionContext,  # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §18
         capabilities: AgentCapabilities,  # ADR-D2-09 §7.1
-    ) -> AgentResult: ...                 # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §19
+    ) -> AgentResult: ...  # 7 PF-FT-AI-AGENTIC-ORCHESTRATION.md §19
 ```
 
 - `AgentExecutionContext` carries the graph state reference, workflow associations, claims
