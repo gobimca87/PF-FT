@@ -16,22 +16,29 @@ This repository (`FA-PFF/`) is where **PFF AI** gets built — see `CLAUDE.md` f
 
 > Confirmed stack (Python/FastAPI, LangGraph, Azure/AKS, Langfuse, etc.) lives in `CLAUDE.md`. Below are the still-open decisions and doc-reconciliation notes relevant to planning phases.
 
-### Explicitly deferred choices — resolve via ADR, do not silently pick
+### Tech choices with ADR-recorded recommendations — build to these, formal ratification pending
 
-The source docs deliberately leave these open and list candidates. **Before Phase 8 (RAG/Vector), stop and ask the user to decide** (or record an ADR) rather than guessing:
+The source docs deliberately left these open, and each now has a complete CMMI-DAR evaluation
+and a **stated recommendation recorded in ADR**. **Build against the recommendation as the
+working default** — do not stop to ask or guess, and do not silently pick a different option.
+Each ADR is still `status: Proposed`, not `Accepted`: it is awaiting one specific piece of
+evidence or sign-off (named below) before it formally ratifies per `ADR-D0-04`. A deviation
+from the recommendation requires a superseding ADR.
 
-| Decision | Candidates listed in the docs | Status |
-|---|---|---|
-| Embedding model | HF-hosted general vs high-quality vs commercial API vs small vs domain-fine-tuned | Open — `ADR-D3-23` recommends HF-hosted general-purpose 768-dim (`bge-base-en-v1.5` class), pending the mandated PFF-FA retrieval evaluation |
-| Vector store | Azure AI Search, Pinecone, Qdrant, Weaviate, Milvus, pgvector, OpenSearch, Elasticsearch, Redis Vector Search, Chroma | Open — `ADR-D3-24` recommends Azure AI Search (vector + hybrid), fallback pgvector, pending ARB sign-off |
-| Memory / session / cache store | Redis, PostgreSQL, CosmosDB, SQL — abstracted behind `MemoryStore` / `CacheStore` interfaces regardless | **Resolved: Azure Managed Redis** — see `ADR-D4-10` (supersedes `docs/adr/0004-memory-cache-store-azure-managed-redis.md`) |
-| Self-hosted SLM serving stack | vLLM, HF TGI, Azure ML managed endpoints, Triton+TensorRT-LLM, Ray Serve | Open — `ADR-D5-10` recommends vLLM, fallback Azure ML/TGI/Triton, pending benchmark |
-| IaC tool | Terraform **or** Bicep | Open — `ADR-D5-12` recommends Terraform (OpenTofu-compatible), pending platform-team confirmation |
-| Kubernetes manifest tool | Kustomize **or** Helm | Open — `ADR-D5-13` recommends Kustomize for first-party (Helm hybrid for third-party charts), pending platform-team confirmation |
-| Deployment strategy | Rolling / Blue-Green / Canary — standardize one | **Resolved: rolling by default**, canary for AI-artefact changes, blue/green for GPU/index cutover — see `ADR-D7-10` |
+| Decision | Recommendation — build against this | ADR | Awaiting formal `Accepted` status |
+|---|---|---|---|
+| Embedding model | HF-hosted general-purpose 768-dim (`bge-base-en-v1.5` class); fallback 1024-dim | `ADR-D3-23` | Mandated PFF-FA retrieval evaluation (Recall@5 ≥ 0.90), then ARB sign-off |
+| Vector store | Azure AI Search (vector + hybrid); fallback pgvector on Azure Postgres | `ADR-D3-24` | ARB sign-off |
+| Memory / session / cache store | Azure Managed Redis | `ADR-D4-10` | **Accepted** — resolved, supersedes `docs/adr/0004-memory-cache-store-azure-managed-redis.md` |
+| Self-hosted SLM serving stack | vLLM on AKS GPU; fallbacks Azure ML / TGI / Triton | `ADR-D5-10` | Throughput/latency/quality benchmark, then ARB sign-off |
+| IaC tool | Terraform (OpenTofu-compatible); fallback Azure Bicep | `ADR-D5-12` | Platform-team house-standard confirmation |
+| Kubernetes manifest tool | Kustomize for first-party; Helm hybrid for third-party charts | `ADR-D5-13` | Platform-team confirmation |
+| Deployment strategy | Rolling by default; canary for AI-artefact changes; blue/green for GPU/index cutover | `ADR-D7-10` | **Accepted** — resolved |
 
-The full evaluation and stated recommendation behind each open decision is in
+The full evaluation and stated recommendation behind each decision is in
 [`docs/architecture/adr/_register/open-decisions.md`](docs/architecture/adr/_register/open-decisions.md).
+When the awaited evidence or sign-off lands, the ADR flips `Proposed → Accepted` (new version,
+Change Log entry) and this table's "Awaiting" column becomes "Resolved."
 
 ### Reconciliation items (docs disagree slightly — pick one and note it in `README.md`)
 
