@@ -5,7 +5,7 @@
 > Generated 2026-08-23.
 
 
-**Total ADRs:** 142 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
+**Total ADRs:** 144 across 9 domains. **Proposed (open) decisions:** 7 (see [open-decisions.md](open-decisions.md)).
 
 
 ## Domain 0 — Decision Programme & Governance
@@ -91,6 +91,7 @@
 | [ADR-D3-25](../03-ai-architecture/ADR-D3-25-context-engineering-assembly-and-budget.md) | Context engineering — assembly order, precedence and token-budget allocation | Accepted | AI Architecture Lead | [WS-18] | 2026-08-22 |
 | [ADR-D3-26](../03-ai-architecture/ADR-D3-26-rag-retrieval-invocation-and-agentic-loop.md) | RAG retrieval invocation — tool contract, execution model, agentic loop bound | Accepted | AI Architecture Lead | [WS-17] | 2026-08-23 |
 | [ADR-D3-27](../03-ai-architecture/ADR-D3-27-document-ingestion-trigger-mechanism.md) | Document ingestion trigger mechanism — what starts a (re-)ingest | Accepted | AI Architecture Lead | [WS-17] | 2026-08-23 |
+| [ADR-D3-28](../03-ai-architecture/ADR-D3-28-quality-gated-refinement-loop-and-model-escalation.md) | Quality-gated runtime refinement loop, model-escalation ladder and strict mode | Proposed | AI Architecture Lead | [WS-16] | 2026-09-04 |
 
 ## Domain 4 — Information Architecture
 
@@ -156,6 +157,7 @@
 | [ADR-D6-16](../06-security-governance/ADR-D6-16-gdpr-safeguarding-childrens-data.md) | UK GDPR, safeguarding and children's-data handling | Accepted | Data Protection Officer | [WS-29] | 2026-08-22 |
 | [ADR-D6-17](../06-security-governance/ADR-D6-17-audit-logging-and-evidential-record.md) | Audit logging and evidential record model | Accepted | Security Architect | [WS-29] | 2026-08-22 |
 | [ADR-D6-18](../06-security-governance/ADR-D6-18-standards-conformance.md) | Standards conformance — ISO/IEC 42001, 27001, 9001, NIST AI RMF, EU AI Act | Accepted | AI Governance Lead | [WS-30] | 2026-08-22 |
+| [ADR-D6-19](../06-security-governance/ADR-D6-19-slm-input-masking-external-mandatory-self-hosted-optional.md) | SLM input masking regime — mandatory for external, optional for self-hosted | Proposed | Data Protection Officer | [WS-27] | 2026-09-04 |
 
 ## Domain 7 — Operations
 

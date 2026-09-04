@@ -1646,6 +1646,45 @@ max_tool_calls
 max_execution_time
 ```
 
+This is the **tool/ReAct loop** — iteration to gather context and act. It is distinct from
+the **quality-gated refinement loop** below, which iterates to improve output *quality*
+before a step is committed.
+
+## Quality-gated refinement loop (ADR-D3-28)
+
+For quality-sensitive task classes, a deterministic controller scores each produced output
+and, if it is below the configured threshold, runs a bounded refinement — critique-and-
+regenerate and/or **escalate to a stronger model on a configured escalation ladder** (read
+from the model registry, ADR-D3-15) — before the workflow step is committed:
+
+```text
+Generate candidate
+ ↓
+Score vs configured dimensions
+ ↓
+score ≥ threshold ?  ──yes──▶ Commit candidate (as data → deterministic gates)
+ │ no
+ ▼
+iterations left ?  ──yes──▶ Refine: critique-regenerate / escalate ladder ──▶ (loop)
+ │ no
+ ▼
+on_exhaustion: return_best_flagged | defer_to_hil | fail_closed
+```
+
+Rules:
+
+- **Configurable per task class** in `config/base/refinement.yaml`; bounded by
+  `max_refinement_iterations`; disabled by default (opt-in).
+- **Strict mode** for governance-critical classes: higher threshold, at least one escalation
+  before acceptance, and no below-bar acceptance (HIL or fail-closed). Per-environment
+  overrides may only *tighten* the bar (Production ≥ lower environments), consistent with the
+  environment-differences rule (§162).
+- The controller decision is **deterministic** (threshold on a model quality signal,
+  ADR-D3-05); it refines *language and pre-commit decision candidates only* and **never
+  re-runs a non-idempotent enterprise action** (ADR-D2-11); it never raises temperature to
+  mask a miss (ADR-D3-16). Escalation moves *up* toward a more capable model — the opposite of
+  failure-driven fallback to a compatible peer (ADR-D3-18).
+
 ---
 
 # 73. Loop Protection

@@ -40,6 +40,14 @@ The full evaluation and stated recommendation behind each decision is in
 When the awaited evidence or sign-off lands, the ADR flips `Proposed → Accepted` (new version,
 Change Log entry) and this table's "Awaiting" column becomes "Resolved."
 
+Two further decisions were added on 2026-09-04, also `Proposed` and awaiting first ARB
+sign-off (Group 2 in the open-decisions register). Build to their stated direction meanwhile:
+
+| Decision | Direction — build against this | ADR | Awaiting |
+|---|---|---|---|
+| Runtime quality-gated refinement loop | Deterministic controller scores each output; below a configured threshold it regenerates and/or **escalates up a model ladder**, bounded, with a **strict mode** for governance-critical task classes; `config/base/refinement.yaml`, opt-in per task class. Distinct from failure-fallback (`ADR-D3-18`) and offline eval gates (`ADR-D7-13`) | `ADR-D3-28` | ARB sign-off + Phase 20 latency/cost benchmark |
+| SLM input masking regime | **External SLM: mandatory, fail-closed mask/tokenise-all** (no raw PII/enterprise egress; special-category/children's/secrets hard-blocked). **Self-hosted: raw or masked**, per task class. Reversible token vault re-identifies masked outputs in-tenancy. Refines `ADR-D6-07` | `ADR-D6-19` | ARB sign-off (DPO owner, DPIA update) + Phase 20 vault sizing |
+
 ### Reconciliation items (docs disagree slightly — pick one and note it in `README.md`)
 
 1. **Environment stages:** most docs use 4 stages `DEV → TEST → STAGING → PROD`; the Infrastructure doc (25) uses 5: `DEV → TEST → UAT → STAGE → PROD`. **Recommendation: adopt the 5-stage model** (it's a superset — STAGING/STAGE map 1:1, UAT is simply inserted before it) so nothing from doc 25's namespace/config examples needs renaming.
