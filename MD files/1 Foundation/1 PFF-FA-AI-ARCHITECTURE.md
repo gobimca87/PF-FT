@@ -186,6 +186,52 @@ Chat UI
 
 FastAPI is the application entry/delivery boundary. It delegates orchestration to the AI runtime.
 
+### 4.1 Simple Conceptual Flow
+
+The detailed runtime above collapses to nine conceptual stages for stakeholder-facing
+walkthroughs. This is the same request-driven path, at the altitude non-engineering
+audiences need — it must not be read as a replacement for the detailed flow, only a
+simplified restatement of it.
+
+```mermaid
+flowchart TD
+    A["👤 User Query"] --> B["🎯 Intent<br/>(Understand Query)"]
+    B --> C["🔀 Supervisor Decision<br/>(Route / Orchestrate)"]
+    C --> D["🧑‍💼 Workflow Agent<br/>(Execute Workflow)"]
+    D --> E["🛠️ Tool Selection<br/>(Choose Capability)"]
+    E --> F["☁️ API Selection<br/>(Enterprise / Internal)"]
+    F --> G["🗄️ ERC Construction<br/>(Build Context)"]
+    G --> H["🧠 SLM Reasoning<br/>(Generate / Decide)"]
+    H --> I["💬 Response<br/>(Send to User)"]
+
+    style A fill:#e0e7ff,stroke:#4338ca,color:#1e1b4b
+    style B fill:#dbeafe,stroke:#1d4ed8,color:#1e3a5f
+    style C fill:#dcfce7,stroke:#15803d,color:#14532d
+    style D fill:#ffedd5,stroke:#c2410c,color:#7c2d12
+    style E fill:#fef9c3,stroke:#a16207,color:#713f12
+    style F fill:#ccfbf1,stroke:#0f766e,color:#134e4a
+    style G fill:#ede9fe,stroke:#6d28d9,color:#3b0764
+    style H fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+    style I fill:#dbeafe,stroke:#1d4ed8,color:#1e3a5f
+```
+
+| Conceptual stage | Detailed runtime step(s) above |
+|---|---|
+| User Query | Chat UI → FastAPI → validated enterprise claims/context |
+| Intent | Conversation Manager, Session/Workflow State (query understanding feeding the Supervisor) |
+| Supervisor Decision | Supervisor |
+| Workflow Agent | Workflow Agent → Agent Harness → LangGraph |
+| Tool Selection | Sequential/parallel enterprise context acquisition; authorized tool execution |
+| API Selection | Enterprise vs. internal API chosen within authorized tool execution |
+| ERC Construction | ERC (+ RAG if knowledge is required) |
+| SLM Reasoning | Prompt Assembly → SLM → Output Guardrails |
+| Response | Response Formatter → FastAPI → Chat UI |
+
+Per the Golden Rule (`CLAUDE.md`), the Supervisor Decision and SLM Reasoning stages never
+authorize or fabricate outcomes themselves — they route and generate language only; ERC
+Construction and the enterprise APIs/tools remain the sole source of authoritative business
+truth.
+
 ---
 
 ## 5. Event-driven Runtime
