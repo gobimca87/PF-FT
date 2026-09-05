@@ -4,7 +4,7 @@ title: External SLM data boundary — what may leave the tenancy
 domain: 6 Security & Governance
 ws_ref: [WS-27]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: Data Protection Officer
 contributors: [Security Architect, AI Architecture Lead]
@@ -12,7 +12,7 @@ reviewers: [Principal Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D3-13, ADR-D6-06, ADR-D6-04, ADR-D3-14, ADR-D6-16]
+related_adrs: [ADR-D3-13, ADR-D6-06, ADR-D6-04, ADR-D3-14, ADR-D6-16, ADR-D6-19]
 source_docs:
   - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §22, §23, §24"
   - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §70, §71"
@@ -34,6 +34,13 @@ non-personal, redacted text needed for generation; **no special-category or chil
 personal data**, no secrets, no raw enterprise records — enforced at the external-SLM
 boundary guardrail (19.PFF-FA-AI-SECURITY.md §22–§24; 18.PFF-FA-AI-GUARDRAILS.md §70–§71; 15.PFF-FA-AI-SLM.md §124–§126). Flows that would
 require sending sensitive data are prioritised for the in-tenancy self-hosted SLM.
+
+> **Refined by [ADR-D6-19](ADR-D6-19-slm-input-masking-external-mandatory-self-hosted-optional.md)
+> (2026-09-04).** This decision stands unchanged; ADR-D6-19 strengthens the external
+> transform from "minimise + redact-on-detection" into a **mandatory, fail-closed
+> mask/tokenise-all** rule (no raw PII or enterprise records leave the tenancy), states
+> the self-hosted **raw-or-masked** permission explicitly, and adds a reversible token
+> vault for re-identifying masked external outputs inside the boundary.
 
 ## 2. Context and Problem Statement
 
@@ -277,3 +284,4 @@ is unnecessary given the controls.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Data Protection Officer | Initial decision recorded. |
+| 1.1.0 | 2026-09-04 | Data Protection Officer | Compatible amendment — forward-reference to ADR-D6-19, which refines the external transform into a mandatory fail-closed mask/tokenise-all rule and makes the self-hosted raw-or-masked permission explicit. No change to this decision. |
