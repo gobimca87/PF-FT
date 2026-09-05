@@ -31,9 +31,8 @@ from the recommendation requires a superseding ADR.
 | Vector store | Azure AI Search (vector + hybrid); fallback pgvector on Azure Postgres | `ADR-D3-24` | ARB sign-off |
 | Memory / session / cache store | Azure Managed Redis | `ADR-D4-10` | **Accepted** — resolved, supersedes `docs/adr/0004-memory-cache-store-azure-managed-redis.md` |
 | Self-hosted SLM serving stack | vLLM on AKS GPU; fallbacks Azure ML / TGI / Triton | `ADR-D5-10` | Throughput/latency/quality benchmark, then ARB sign-off |
-| IaC tool | Terraform (OpenTofu-compatible); fallback Azure Bicep | `ADR-D5-12` | Platform-team house-standard confirmation |
-| Kubernetes manifest tool | Kustomize for first-party; Helm hybrid for third-party charts | `ADR-D5-13` | Platform-team confirmation |
-| Deployment strategy | Rolling by default; canary for AI-artefact changes; blue/green for GPU/index cutover | `ADR-D7-10` | **Accepted** — resolved |
+| Platform delivery model (IaC + CI/CD + deploy) | **Conform to the Enterprise Application model** — Azure DevOps `build.yaml`/`release.yaml` on the shared AKS platform, same team/resources, enterprise SonarQube quality gate; **no** separate PFF-AI stack | `ADR-D5-20` | **Accepted** — resolved (ratifies `ADR-D5-12` IaC + `ADR-D5-13` K8s, both Accepted; realizes `ADR-D7-09`/`D7-10`/`D7-11`) |
+| Deployment strategy | Rolling by default; canary for AI-artefact changes; blue/green for GPU/index cutover | `ADR-D7-10` | **Accepted** — resolved (executed on the enterprise `release.yaml`, `ADR-D5-20`) |
 
 The full evaluation and stated recommendation behind each decision is in
 [`docs/architecture/adr/_register/open-decisions.md`](docs/architecture/adr/_register/open-decisions.md).
@@ -174,13 +173,15 @@ FA-PFF/
 │   ├── datasets/                      # golden evaluation datasets — doc 21
 │   └── reports/
 │
-├── infra/                             # Phase 19 — doc 25 (Terraform or Bicep — ADR pending)
+├── infra/                             # Phase 19 — doc 25 — within the Enterprise Application delivery model (ADR-D5-20; enterprise IaC standard, ADR-D5-12)
 │   ├── modules/{aks,acr,apim,keyvault,servicebus,storage,networking,monitoring}/
 │   └── environments/{dev,test,uat,stage,prod}/
 │
-├── deploy/                            # Phase 19 — doc 25 (Kustomize or Helm — ADR pending)
+├── deploy/                            # Phase 19 — doc 25 — via the enterprise AKS release model (ADR-D5-20; ADR-D5-13)
 │   ├── base/
 │   └── overlays/{dev,test,uat,stage,prod}/
+│
+├── .azuredevops/                      # Enterprise Azure DevOps CI/CD (ADR-D5-20): build.yaml, release.yaml, sonar-project.properties
 │
 └── scripts/                           # dev/CI helper scripts (bootstrap, seed data, local run)
 ```
@@ -340,7 +341,7 @@ Build strictly in this order — each phase depends on interfaces/contracts esta
 - **Doc:** 23 (Engineering Agents).
 
 ### Phase 19 — Infrastructure / IaC / CI-CD
-- Resolve the IaC tool (Terraform or Bicep) and manifest tool (Kustomize or Helm) decisions from §2, then scaffold `infra/` and `deploy/` per §3.
+- IaC and manifest tooling are **resolved** (`ADR-D5-20`): conform to the Enterprise Application delivery model — onboard to the enterprise Azure DevOps `build.yaml`/`release.yaml` pipelines and shared AKS platform with the enterprise SonarQube gate; do **not** stand up a separate stack. Scaffold `infra/`, `deploy/` and `.azuredevops/` *within* that model (enterprise-specific service connections / SonarQube keys / namespaces are placeholders filled by the platform team at onboarding).
 - Namespace pattern: `FA-PFF-ai-dev`, `FA-PFF-ai-test`, `FA-PFF-ai-uat`, `FA-PFF-ai-stage`, `FA-PFF-ai-prod`.
 - Immutable image tags only (e.g. `FA-PFF-ai-runtime:1.4.0`) — never `latest` in production.
 - CI/CD order: Checkout → Dependency Install → Lint → Type Check → Unit Tests → Security Scan → Dependency Scan → Engineering Agents → AI Evaluation → Integration Tests → Build → Container Scan → Package → Deploy (DEV → TEST → UAT → STAGE → PROD, with production approval gate).
@@ -417,6 +418,6 @@ See `CLAUDE.md` for naming, async, exception hierarchy, Pydantic/TypedDict bound
 
 ## 7. Before You Start Coding
 
-1. Resolve the ADR-pending decisions in §2 (embedding model, vector store, self-hosted SLM serving stack, IaC tool, manifest tool) — ask the user, don't guess. Memory/cache store and deployment strategy are already resolved (§2).
+1. Resolve the ADR-pending decisions in §2 (embedding model, vector store, self-hosted SLM serving stack) — ask the user, don't guess. Memory/cache store, deployment strategy, and the **platform delivery model (IaC/CI-CD/deploy → Enterprise Application model, `ADR-D5-20`)** are already resolved (§2).
 2. Confirm the 5-stage environment model and the "AffiliationAgent-only first" agent-catalog decision from §2 are acceptable, or adjust.
 3. Start at Phase 0 and proceed in order — later phases assume earlier interfaces exist (e.g., Phase 5's ERC batching assumes Phase 1's config loader and Phase 2's state model are already in place).

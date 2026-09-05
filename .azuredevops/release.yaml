@@ -1,0 +1,69 @@
+# Enterprise Application delivery model — CD release pipeline (ADR-D5-20).
+#
+# Promotes the immutable image/manifest produced by build.yaml through the environment
+# ladder (ADR-D5-14) onto the shared enterprise AKS platform, using the enterprise
+# deployment model and approval gates. The deployment strategy (rolling default, with
+# canary/blue-green where specified) and rollback are ADR-D7-10 — unchanged; this pipeline
+# is only the enterprise realization of them.
+#
+# Enterprise-specific values are PLACEHOLDERS filled in by the platform team at onboarding.
+# TODO(platform-team): replace environments, AKS service connection, namespaces and the
+# manifest source with enterprise-standard values, or `extends:` the enterprise release
+# template if one exists.
+
+# Triggered by a successful build.yaml run on main.
+resources:
+  pipelines:
+    - pipeline: ci
+      source: pff-fa-ai-build # TODO(platform-team): the build pipeline name
+      trigger:
+        branches:
+          include:
+            - main
+
+pool:
+  vmImage: ubuntu-latest # TODO(platform-team): enterprise-standard pool
+
+variables:
+  - group: pff-fa-ai-cd # TODO(platform-team): enterprise variable group
+
+stages:
+  # One stage per environment; each gated by the enterprise approval checks configured on
+  # the Azure DevOps Environment object (not in YAML). Rolling deploy with health probes.
+  - stage: deploy_dev
+    displayName: Deploy to DEV (fa-pff-ai-dev)
+    jobs:
+      - deployment: dev
+        environment: fa-pff-ai-dev # TODO(platform-team): enterprise AKS Environment
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: KubernetesManifest@1
+                  inputs:
+                    action: deploy
+                    kubernetesServiceConnection: "AKS_SERVICE_CONNECTION" # TODO(platform-team)
+                    namespace: fa-pff-ai-dev
+                    manifests: deploy/overlays/dev/**
+
+  - stage: deploy_test
+    displayName: Deploy to TEST
+    dependsOn: deploy_dev
+    condition: succeeded()
+    jobs:
+      - deployment: test
+        environment: fa-pff-ai-test
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: KubernetesManifest@1
+                  inputs:
+                    action: deploy
+                    kubernetesServiceConnection: "AKS_SERVICE_CONNECTION" # TODO(platform-team)
+                    namespace: fa-pff-ai-test
+                    manifests: deploy/overlays/test/**
+
+  # TODO(platform-team): add uat / stage / prod stages, each behind the enterprise approval
+  # gate, promoting the SAME immutable image/manifest. PROD carries the enterprise change
+  # approval (ADR-D6-15). Rollback = redeploy the previous immutable revision (ADR-D7-10).

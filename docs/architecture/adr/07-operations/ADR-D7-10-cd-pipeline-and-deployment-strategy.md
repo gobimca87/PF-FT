@@ -4,7 +4,7 @@ title: CD pipeline and deployment strategy — rolling updates
 domain: 7 Operations
 ws_ref: [WS-32]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: SRE
 contributors: [Platform Engineer, Release Manager]
@@ -12,7 +12,7 @@ reviewers: [Principal Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D5-14, ADR-D5-13, ADR-D5-06, ADR-D7-09, ADR-D6-15]
+related_adrs: [ADR-D5-14, ADR-D5-13, ADR-D5-20, ADR-D5-06, ADR-D7-09, ADR-D6-15]
 source_docs:
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §67, §47, §48, §49, §50"
   - "MD files/6 Production/28.PFF-FA-AI-OPERATIONS-RUNBOOK.md §23, §40, §41, §42, §43"
@@ -25,6 +25,15 @@ review_due: 2027-08-22
 ---
 
 # ADR-D7-10 — CD pipeline and deployment strategy — rolling updates
+
+> **Amendment (v1.1.0, 2026-09-05) — realizing toolchain.** Per **ADR-D5-20**, CD is
+> executed by the enterprise **Azure DevOps `release.yaml`** pipeline promoting the
+> immutable image/manifest through the environment ladder onto the shared enterprise **AKS**
+> platform, using the enterprise deployment model and the same platform team. **The
+> decision is unchanged** — rolling-default with health probes and post-deploy smoke tests,
+> canary/blue-green where specified, and fast rollback to the previous digest all still
+> apply; only the executing toolchain is named. Read "`.github/workflows/`" below as "the
+> enterprise Azure DevOps `release.yaml`".
 
 ## 1. Summary
 
@@ -273,3 +282,4 @@ model/prompt/high-risk changes and blue/green for GPU serving and vector-index c
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | SRE | Initial decision recorded. |
+| 1.1.0 | 2026-09-05 | SRE | Compatible amendment: CD realized on the Enterprise Application delivery model (ADR-D5-20) — enterprise Azure DevOps `release.yaml` to the shared AKS platform. Rolling-default strategy, canary/blue-green and rollback unchanged; forward-reference + related_adrs added. |

@@ -8,15 +8,19 @@
 > [ADR-D8-07](../08-business-value/ADR-D8-07-decision-register-and-traceability.md).
 > Generated 2026-08-22.
 
-The register holds two groups. **Group 1 — deferred technology choices (5):** four were
-flagged open from the outset in `CLAUDE.md` / `DEVELOPMENT-GUIDE.md` §2 (vector store, SLM
-serving stack, IaC tool, K8s manifest tool); the fifth (**ADR-D3-23 embedding model**) is
-Proposed because 14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 mandates that the embedding model be chosen by a
+The register holds two groups. **Group 1 — deferred technology choices (3):** the vector
+store and the SLM serving stack were flagged open from the outset in `CLAUDE.md` /
+`DEVELOPMENT-GUIDE.md` §2; the third (**ADR-D3-23 embedding model**) is Proposed because
+14.PFF-FA-AI-EMBEDDING-VECTOR.md §13 mandates that the embedding model be chosen by a
 PFF-FA-specific retrieval evaluation, not by reputation — so its recommendation is
 explicitly provisional on that evaluation. Each carries a **stated recommendation that is
-the working build default**. **Group 2 — newly-proposed decisions awaiting first
-ratification (2):** ADR-D3-28 and ADR-D6-19 are new decisions (added 2026-09-04); their §7
-*is* the decision, awaiting first ARB sign-off plus the validation named in each row.
+the working build default**. *(The IaC tool (**ADR-D5-12**) and K8s manifest tool
+(**ADR-D5-13**) were closed on 2026-09-05: the platform team confirmed the house standard
+is to conform to the Enterprise Application delivery model — Azure DevOps CI/CD on the
+shared AKS platform — recorded as **ADR-D5-20** (Accepted); both are now `Accepted` and no
+longer open.)* **Group 2 — newly-proposed decisions awaiting first ratification (2):**
+ADR-D3-28 and ADR-D6-19 are new decisions (added 2026-09-04); their §7 *is* the decision,
+awaiting first ARB sign-off plus the validation named in each row.
 
 ### Group 1 — Deferred technology choices (build-default recommendations)
 
@@ -25,8 +29,6 @@ ratification (2):** ADR-D3-28 and ADR-D6-19 are new decisions (added 2026-09-04)
 | [ADR-D3-23](../03-ai-architecture/ADR-D3-23-embedding-model-selection-and-re-embedding.md) | Embedding model selection | HF-hosted general-purpose **768-dim (`bge-base-en-v1.5` class)**; fallback 1024-dim | PFF-FA retrieval evaluation (Recall@5 ≥ 0.90) then ARB sign-off | 8 |
 | [ADR-D3-24](../03-ai-architecture/ADR-D3-24-vector-store-selection.md) | Vector store selection | **Azure AI Search** (vector + hybrid); fallback pgvector on Azure Postgres | ARB sign-off | 8 |
 | [ADR-D5-10](../05-technology-architecture/ADR-D5-10-self-hosted-slm-serving-stack.md) | Self-hosted SLM serving stack | **vLLM** on AKS GPU; fallbacks Azure ML / TGI / Triton | Throughput/latency/quality benchmark on chosen model + SKU, then ARB | 20 |
-| [ADR-D5-12](../05-technology-architecture/ADR-D5-12-iac-tool.md) | Infrastructure-as-Code tool | **Terraform** (OpenTofu-compatible); fallback Azure Bicep | Platform-team house-standard confirmation | 1 |
-| [ADR-D5-13](../05-technology-architecture/ADR-D5-13-kubernetes-manifest-tool.md) | Kubernetes manifest tool | **Kustomize** for first-party; Helm hybrid for third-party charts | Platform-team confirmation | 1 |
 
 ### Group 2 — Newly-proposed decisions awaiting first ratification
 
@@ -46,11 +48,13 @@ ratification (2):** ADR-D3-28 and ADR-D6-19 are new decisions (added 2026-09-04)
    provisional on the evidence.
 4. This register and the decision register are regenerated; the row moves out of "open".
 
-**Note on count:** the programme plan anticipated exactly four open technology decisions;
-a fifth (ADR-D3-23) is Proposed as a deliberate, documented consequence of
-14.PFF-FA-AI-EMBEDDING-VECTOR.md §13's evaluation-first requirement — recording it as Proposed is more
-faithful than marking it Accepted before the mandated retrieval evaluation has run. Two
-further decisions (ADR-D3-28, ADR-D6-19) were added on 2026-09-04 as new Group-2 proposals;
-they are Proposed pending first ARB ratification and the validation named in each row, per
+**Note on count:** the programme plan anticipated four open technology decisions; a fifth
+(ADR-D3-23) was Proposed as a deliberate, documented consequence of
+14.PFF-FA-AI-EMBEDDING-VECTOR.md §13's evaluation-first requirement. Two of the four
+(ADR-D5-12 IaC, ADR-D5-13 K8s manifest) were **closed on 2026-09-05** — the platform team
+confirmed conformance to the Enterprise Application delivery model (ADR-D5-20), so both are
+now `Accepted` and out of this register — leaving three Group-1 decisions open. Two further
+decisions (ADR-D3-28, ADR-D6-19) were added on 2026-09-04 as new Group-2 proposals; they
+are Proposed pending first ARB ratification and the validation named in each row, per
 [ADR-D0-04](../00-decision-programme/ADR-D0-04-open-decision-register-and-escalation.md).
-Total Proposed: 7.
+Total Proposed: 5.

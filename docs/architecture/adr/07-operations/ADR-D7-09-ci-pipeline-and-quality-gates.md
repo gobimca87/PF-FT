@@ -4,7 +4,7 @@ title: CI pipeline design and mandatory quality gates
 domain: 7 Operations
 ws_ref: [WS-32]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: Backend Lead
 contributors: [Platform Engineer, SRE, AI Architecture Lead]
@@ -12,7 +12,7 @@ reviewers: [Principal Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D5-02, ADR-D5-04, ADR-D5-05, ADR-D7-13, ADR-D7-14, ADR-D6-15]
+related_adrs: [ADR-D5-02, ADR-D5-04, ADR-D5-05, ADR-D5-20, ADR-D7-13, ADR-D7-14, ADR-D6-15]
 source_docs:
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65, §66, §68"
   - "MD files/6 Production/27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4, §12, §13"
@@ -24,6 +24,17 @@ review_due: 2027-08-22
 ---
 
 # ADR-D7-09 — CI pipeline design and mandatory quality gates
+
+> **Amendment (v1.1.0, 2026-09-05) — realizing toolchain.** Per **ADR-D5-20**, the CI
+> **realization follows the Enterprise Application delivery model**: the mandatory gates
+> below run in the enterprise **Azure DevOps `build.yaml`** pipeline, and code quality is
+> gated by the enterprise **SonarQube Quality Gate** (Python coverage + code smells + bugs
+> + vulnerabilities), rather than a standalone GitHub Actions system. **The decision is
+> unchanged** — the same mandatory gates (Ruff, mypy strict, pytest, security/dependency
+> scans, AI-evaluation gates), tiered execution and green-to-merge still apply; only the
+> executing toolchain is named. Any repo-local GitHub Actions workflow is an interim mirror
+> for PR feedback, not the authoritative pipeline. Read "`.github/workflows/`" below as "the
+> enterprise Azure DevOps pipeline (with an optional repo-local mirror)".
 
 ## 1. Summary
 
@@ -265,3 +276,4 @@ manual (D) are rejected.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Backend Lead | Initial decision recorded. |
+| 1.1.0 | 2026-09-05 | Backend Lead | Compatible amendment: CI realized on the Enterprise Application delivery model (ADR-D5-20) — enterprise Azure DevOps `build.yaml` + SonarQube Quality Gate rather than a standalone GitHub Actions system. Mandatory gates, tiered execution and green-to-merge unchanged; forward-reference + related_adrs added. |

@@ -4,7 +4,7 @@ title: Branching, versioning and release-train model
 domain: 7 Operations
 ws_ref: [WS-32]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: Release Manager
 contributors: [Backend Lead, SRE]
@@ -12,7 +12,7 @@ reviewers: [Principal Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D7-09, ADR-D7-10, ADR-D5-06, ADR-D3-11, ADR-D6-15]
+related_adrs: [ADR-D7-09, ADR-D7-10, ADR-D5-20, ADR-D5-06, ADR-D3-11, ADR-D6-15]
 source_docs:
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §65, §66, §67, §68"
   - "MD files/4 AI/17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §58, §60"
@@ -24,6 +24,13 @@ review_due: 2027-08-22
 ---
 
 # ADR-D7-11 — Branching, versioning and release-train model
+
+> **Amendment (v1.1.0, 2026-09-05) — realizing toolchain.** Per **ADR-D5-20**, the
+> branching/versioning/release-train model is operated within the **Enterprise Application
+> delivery model** (enterprise Azure DevOps repos/pipelines and release train). **The
+> decision is unchanged** — trunk-based development, short-lived protected-branch PRs and
+> the release-train cadence still apply; they are executed on the enterprise platform and
+> its conventions rather than a standalone GitHub setup.
 
 ## 1. Summary
 
@@ -265,3 +272,4 @@ env-branches (D) are rejected.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Release Manager | Initial decision recorded. |
+| 1.1.0 | 2026-09-05 | Release Manager | Compatible amendment: operated within the Enterprise Application delivery model (ADR-D5-20) — enterprise Azure DevOps repos/pipelines and release train. Trunk-based flow, protected branches and release-train cadence unchanged; forward-reference + related_adrs added. |
