@@ -22,7 +22,8 @@ def test_should_load_embedding_configuration_from_the_real_config_repository() -
     config = load_embedding_configuration("dev")
 
     assert config.embedding.provider == "mock"
-    assert config.embedding.dimension == 32
+    # ADR-D3-23: the index is built at 768 (bge-base-en-v1.5 class) immediately.
+    assert config.embedding.dimension == 768
 
 
 @pytest.mark.parametrize("environment", ALLOWED_ENVIRONMENTS)

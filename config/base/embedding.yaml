@@ -1,10 +1,15 @@
-# Doc 14 §13: model selection must be evaluation-driven, not picked ahead of an evaluation
-# exercise. `mock` keeps ingestion/retrieval genuinely working end-to-end without pretending
-# a specific Hugging Face model has been evaluated and approved yet (see docs/adr/0003).
+# Doc 14 §13/§17-18: model selection is evaluation-driven, and the vector index must be
+# created for the embedding dimension. Per ADR-D3-23 (Proposed — build default) the index
+# is built at **dimension 768** now (HF-hosted general-purpose `bge-base-en-v1.5` class),
+# so the eventual HF→self-hosted move is a pinned provider swap with no re-embedding; 1024
+# is the fallback only if the mandated PFF-FA retrieval evaluation misses Recall@5 ≥ 0.90.
+# `provider: mock` stays the runtime default until that evaluation approves a specific HF
+# model (docs/adr/0003) — the mock emits 768-dim vectors so the dimension constraint is
+# exercised end-to-end without pretending a specific model is approved.
 embedding:
   provider: mock
   model_id: mock-embedding-v1
   model_version: "1.0.0"
-  dimension: 32
+  dimension: 768
   max_input_tokens: 512
   batch_size: 32
