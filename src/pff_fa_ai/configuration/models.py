@@ -357,6 +357,43 @@ class GuardrailConfiguration(BaseModel):
     configuration_hash: str
 
 
+class EgressRuleSettings(BaseModel):
+    """ADR-D6-19 §8 — one row of the per-classification SLM egress matrix."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    can_send_external: bool
+    mask_required: bool
+    hard_block: bool
+
+
+class SelfHostedMaskingSettings(BaseModel):
+    """ADR-D6-19 §8 — self-hosted masking is per-task-class, defaulting to `raw` because
+    the payload never crosses the trust boundary. `task_classes` may only tighten the
+    default to `masked`."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    default: Literal["raw", "masked"] = "raw"
+    task_classes: dict[str, Literal["raw", "masked"]] = Field(default_factory=dict)
+
+
+class DataHandlingSettings(BaseModel):
+    """ADR-D6-19 §8 data-handling matrix — keyed by `DataClassification` value string."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    egress_matrix: dict[str, EgressRuleSettings]
+    self_hosted: SelfHostedMaskingSettings
+
+
+class DataHandlingConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    data_handling: DataHandlingSettings
+    configuration_hash: str
+
+
 class ServiceBusConnectionSettings(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -469,6 +506,42 @@ class EvaluationConfiguration(BaseModel):
 
     judge: JudgeSettings
     thresholds: EvaluationThresholdSettings
+    configuration_hash: str
+
+
+class RefinementTaskClassSettings(BaseModel):
+    """ADR-D3-28 §8 — per-task-class runtime quality-gate settings. Opt-in
+    (`enabled: false` by default); `escalation_ladder` is an ordered list of model
+    `id@version` refs (empty ⇒ regenerate-only). `strict` raises the bar for
+    governance-critical classes and forbids silent below-bar acceptance."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    enabled: bool = False
+    quality_threshold: float = Field(default=0.8, ge=0, le=1)
+    dimensions: tuple[str, ...] = Field(default_factory=tuple)
+    max_refinement_iterations: int = Field(default=2, ge=0)
+    escalation_ladder: tuple[str, ...] = Field(default_factory=tuple)
+    min_escalations: int = Field(default=0, ge=0)
+    on_exhaustion: Literal["return_best_flagged", "defer_to_hil", "fail_closed"] = (
+        "return_best_flagged"
+    )
+    strict: bool = False
+
+
+class RefinementSettings(BaseModel):
+    """ADR-D3-28 §8 — the `default` block plus per-task-class overrides."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    default: RefinementTaskClassSettings = Field(default_factory=RefinementTaskClassSettings)
+    task_classes: dict[str, RefinementTaskClassSettings] = Field(default_factory=dict)
+
+
+class RefinementConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    refinement: RefinementSettings
     configuration_hash: str
 
 

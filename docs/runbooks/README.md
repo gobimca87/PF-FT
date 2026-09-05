@@ -46,6 +46,8 @@ assumes it's in hand.
 ## Component runbooks
 
 - [`slm.md`](slm.md)
+- [`slm-boundary.md`](slm-boundary.md) — SLM input-masking boundary & token vault (ADR-D6-19)
+- [`refinement-loop.md`](refinement-loop.md) — runtime quality-gated refinement loop (ADR-D3-28)
 - [`enterprise-api.md`](enterprise-api.md)
 - [`rag.md`](rag.md)
 - [`vector.md`](vector.md)

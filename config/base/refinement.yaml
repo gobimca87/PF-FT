@@ -1,0 +1,21 @@
+# ADR-D3-28 — runtime quality-gated refinement loop. Additive and opt-in: every task
+# class starts `enabled: false`, so existing single-shot generation is unchanged until a
+# class opts in. `escalation_ladder` entries are model `id@version` refs resolved from the
+# model registry (ADR-D3-15); an empty ladder degrades the loop to regenerate-only. A
+# task class with `strict: true` raises the bar, mandates at least one escalation
+# (`min_escalations >= 1`, which requires a non-empty ladder), and forbids
+# `on_exhaustion: return_best_flagged` — it must defer to a human or fail closed. Per
+# ADR-D3-28 §8 per-environment overrides may only tighten the bar (Production ≥ lower
+# environments). Escalation ladders reference mock models until a real SLM is approved
+# (docs/adr/0003).
+refinement:
+  default:
+    enabled: false
+    quality_threshold: 0.80
+    dimensions: [groundedness, persona, schema]
+    max_refinement_iterations: 2
+    escalation_ladder: []
+    min_escalations: 0
+    on_exhaustion: return_best_flagged
+    strict: false
+  task_classes: {}

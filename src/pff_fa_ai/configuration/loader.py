@@ -29,6 +29,8 @@ from pff_fa_ai.configuration.models import (
     ConversationConfiguration,
     ConversationSecuritySettings,
     ConversationSettings,
+    DataHandlingConfiguration,
+    DataHandlingSettings,
     DefaultPerformanceBudgetSettings,
     EmbeddingConfiguration,
     EmbeddingSettings,
@@ -58,6 +60,8 @@ from pff_fa_ai.configuration.models import (
     RagConfiguration,
     RedisConfiguration,
     RedisConnectionSettings,
+    RefinementConfiguration,
+    RefinementSettings,
     RerankingSettings,
     RetrievalSettings,
     RetrySettings,
@@ -509,6 +513,56 @@ def load_guardrail_configuration(
 
     return GuardrailConfiguration(
         guardrail=guardrail, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_data_handling_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> DataHandlingConfiguration:
+    merged = _load_merged_config(
+        filename="data-handling.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        data_handling = DataHandlingSettings.model_validate(resolved["data_handling"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid data handling configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return DataHandlingConfiguration(
+        data_handling=data_handling, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_refinement_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> RefinementConfiguration:
+    merged = _load_merged_config(
+        filename="refinement.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        refinement = RefinementSettings.model_validate(resolved["refinement"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid refinement configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return RefinementConfiguration(
+        refinement=refinement, configuration_hash=compute_configuration_hash(merged)
     )
 
 
