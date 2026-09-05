@@ -4,7 +4,7 @@ title: Secret management — Azure Key Vault with `*_secret_ref` indirection
 domain: 5 Technology
 ws_ref: [WS-23]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: Security Architect
 contributors: [Platform Engineer, Backend Lead]
@@ -12,7 +12,7 @@ reviewers: [Principal Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D5-06, ADR-D5-08, ADR-D6-05, ADR-D6-04, ADR-D5-09]
+related_adrs: [ADR-D5-06, ADR-D5-08, ADR-D6-05, ADR-D6-04, ADR-D5-09, ADR-D5-20]
 source_docs:
   - "MD files/4 AI/17.PFF-FA-AI-CONFIGURATION-VERSIONING.md §6, §7, §10"
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §28, §30, §31, §32"
@@ -24,6 +24,21 @@ review_due: 2027-08-22
 ---
 
 # ADR-D5-07 — Secret management — Azure Key Vault with `*_secret_ref` indirection
+
+> **Amendment (v1.1.0, 2026-09-05) — Key Vault access mechanism.** Per the enterprise
+> application standard (**ADR-D5-20**, owner decision), PFF AI authenticates to Key Vault
+> **only** through the enterprise **service principal (MI-SPN)** — tenant id + client id +
+> client secret, held in the Azure DevOps pipeline variable group and injected into the
+> workload environment — **not** through Managed Identity. This **changes the access
+> mechanism** of §7 (and relaxes DR-F-02 / EC-02 "no static credentials") for the Key Vault
+> connection: the SPN client secret is itself a pipeline-held / Key-Vault-linked secret, so
+> exposure stays minimal. **Everything else in this ADR stands** — secrets live in Key
+> Vault, are referenced only through `*_secret_ref` indirection resolved at load time, reach
+> the vault over a private endpoint, support rotation without redeploy, and are never
+> committed, baked or logged. The single supported client is
+> `KeyVaultSecretResolver` / `AzureKeyVaultSecretClient` in
+> `src/pff_fa_ai/configuration/secrets.py` (`ClientSecretCredential` only; no
+> `DefaultAzureCredential`, no CLI/interactive credential, no managed identity).
 
 ## 1. Summary
 
@@ -277,3 +292,4 @@ rejected. No secret is ever committed, baked, or logged.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Security Architect | Initial decision recorded. |
+| 1.1.0 | 2026-09-05 | Security Architect | Access-mechanism amendment: Key Vault is authenticated **only** via the enterprise SPN (client credentials) per ADR-D5-20, not Managed Identity (changes DR-F-02/EC-02 for the vault connection). All other aspects — KV storage, `*_secret_ref` indirection, private endpoint, rotation, no secrets in images/logs — unchanged. Forward-reference + related_adrs added. Realized in `src/pff_fa_ai/configuration/secrets.py`. |

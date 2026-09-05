@@ -205,7 +205,16 @@ Concretely:
 5. **Team & resources.** PFF AI uses the **same platform team, shared resources, ACR
    (ADR-D5-09), Key Vault (ADR-D5-07), monitoring and runbooks** as the enterprise
    applications — for consistency and supportability.
-6. **No net-new tooling.** PFF AI does **not** stand up a parallel infrastructure, CI, CD or
+6. **Key Vault access via the enterprise SPN.** Consistent with the enterprise standard,
+   PFF AI authenticates to **Azure Key Vault only through the enterprise service principal
+   (MI-SPN)** — tenant id + client id + client secret held in the Azure DevOps pipeline
+   variable group and injected into the workload environment — and **no other method** (no
+   `DefaultAzureCredential`, no CLI/interactive credential, no managed identity without an
+   explicit SPN). This is the authoritative statement of the access mechanism and **refines
+   ADR-D5-07** (whose other provisions — Key Vault storage, `*_secret_ref` indirection,
+   private endpoint, rotation, no secrets in images/logs — stand). Realized in
+   `src/pff_fa_ai/configuration/secrets.py`.
+7. **No net-new tooling.** PFF AI does **not** stand up a parallel infrastructure, CI, CD or
    deployment stack. **Any future infra/CI/CD/deployment tooling proposal defers to and
    conforms with the current enterprise application standard** rather than introducing new
    tooling; a divergence would require its own superseding ADR with an explicit,
@@ -380,4 +389,4 @@ to this decision here and raise a superseding ADR rather than editing §7 in pla
 
 | Version | Date | Author | Change |
 |---|---|---|---|
-| 1.0.0 | 2026-09-05 | Platform Engineer | Initial decision recorded (Accepted). PFF AI conforms to the Enterprise Application delivery model — Azure DevOps `build.yaml`/`release.yaml` on the shared AKS platform, same team and resources, Python CI/CD onboarded with the enterprise SonarQube quality gate. Realizes ADR-D5-12/D5-13; refines ADR-D7-09/D7-10/D7-11 (intent unchanged). No net-new infra/CI/CD/deployment stack. |
+| 1.0.0 | 2026-09-05 | Platform Engineer | Initial decision recorded (Accepted). PFF AI conforms to the Enterprise Application delivery model — Azure DevOps `build.yaml`/`release.yaml` on the shared AKS platform, same team and resources, Python CI/CD onboarded with the enterprise SonarQube quality gate. Also fixes the **Key Vault access mechanism to the enterprise SPN** (client credentials only), refining ADR-D5-07. Realizes ADR-D5-12/D5-13; refines ADR-D7-09/D7-10/D7-11 (intent unchanged). No net-new infra/CI/CD/deployment stack. |
