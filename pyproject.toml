@@ -17,6 +17,8 @@ dependencies = [
     "structlog>=24.4,<25.0",
     "redis>=5.0,<6.0",
     "azure-servicebus>=7.12,<8.0",
+    "azure-identity>=1.19,<2.0",
+    "azure-keyvault-secrets>=4.8,<5.0",
     "langfuse>=2.50,<3.0",
 ]
 
@@ -95,6 +97,10 @@ disallow_untyped_defs = false
 
 [[tool.mypy.overrides]]
 module = "langfuse.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["azure.*"]
 ignore_missing_imports = true
 
 [tool.pydantic-mypy]

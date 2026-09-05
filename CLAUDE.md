@@ -161,7 +161,7 @@ reference before considering it aligned with the project.
 | Embedding model (initial) | Hugging Face API |
 | Cloud / Compute | **Microsoft Azure** / **AKS** |
 | API gateway / authZ boundary | **APIM** |
-| Secrets | **Azure Key Vault** |
+| Secrets | **Azure Key Vault** — the vault connection is established **only** via the enterprise service principal (MI-SPN): tenant id + client id + client secret. No other auth method (no DefaultAzureCredential, no CLI/interactive, no managed identity without an explicit SPN). The Azure DevOps pipeline variable group holds the SPN and injects it into the workload env; the app then resolves every `*_secret_ref` from Key Vault (`ADR-D5-07`, `ADR-D5-20`; `src/pff_fa_ai/configuration/secrets.py`) |
 | Async eventing | **Azure Service Bus** |
 | Container registry | **ACR** |
 | Observability (platform) | Azure Monitor, Application Insights, Log Analytics |

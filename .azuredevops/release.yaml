@@ -25,7 +25,15 @@ pool:
   vmImage: ubuntu-latest # TODO(platform-team): enterprise-standard pool
 
 variables:
-  - group: pff-fa-ai-cd # TODO(platform-team): enterprise variable group
+  # TODO(platform-team): enterprise variable group. It MUST hold the Key Vault URL and the
+  # service-principal credentials (ADR-D5-07 / ADR-D5-20) — the ONLY way the workload
+  # authenticates to Key Vault:
+  #   AZURE_KEY_VAULT_URL, AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET
+  #   (AZURE_CLIENT_SECRET must be a *secret* pipeline variable / Key Vault-linked, never
+  #    inline). Each deploy stage injects these four into the AKS pod environment (e.g. via
+  #   the Deployment env / a synced Kubernetes secret); the app then resolves every other
+  #   secret (*_secret_ref) from Key Vault via the SPN at startup.
+  - group: pff-fa-ai-cd
 
 stages:
   # One stage per environment; each gated by the enterprise approval checks configured on

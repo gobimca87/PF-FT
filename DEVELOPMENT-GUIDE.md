@@ -205,6 +205,7 @@ Build strictly in this order — each phase depends on interfaces/contracts esta
 - `PlatformConfiguration` immutable object built at startup.
 - Release Manifest schema + `configuration_hash` (SHA-256) drift detection.
 - Secrets always referenced as `*_secret_ref`, never inline (Key Vault-backed).
+- **Key Vault connection is SPN-only (`ADR-D5-07` / `ADR-D5-20`):** the vault is reached **only** through the enterprise service principal (MI-SPN) — `AZURE_TENANT_ID` + `AZURE_CLIENT_ID` + `AZURE_CLIENT_SECRET` + `AZURE_KEY_VAULT_URL` — with no other credential method. The Azure DevOps pipeline variable group holds these and injects them into the workload environment; `secret_resolver_for_environment()` then selects the SPN-backed `KeyVaultSecretResolver` for deployed environments (fail-closed) and the process-env resolver only for local dev/test. A `*_secret_ref` maps to a Key Vault secret name by replacing `_` with `-`. See `src/pff_fa_ai/configuration/secrets.py`.
 - **Doc:** 17 (Configuration & Versioning). Feeds every later phase — build this before anything that needs config.
 
 ### Phase 2 — State Model & Domain Layer

@@ -12,6 +12,7 @@ from pff_fa_ai.configuration.loader import (
     load_portal_link_configuration,
 )
 from pff_fa_ai.configuration.models import AffiliationAgentSettings, Environment
+from pff_fa_ai.configuration.secrets import SecretResolver, secret_resolver_for_environment
 from pff_fa_ai.domain.workflow.repository import WorkflowRepository
 from pff_fa_ai.guardrails.pipeline import GuardrailPipeline
 from pff_fa_ai.integration.api.catalog import load_api_catalog
@@ -43,14 +44,24 @@ def build_affiliation_dependencies(
     environment: Environment,
     workflow_repository: WorkflowRepository,
     guardrails: GuardrailPipeline | None = None,
+    secret_resolver: SecretResolver | None = None,
 ) -> AffiliationDependencies:
-    agents_config = load_agents_configuration(environment)
-    integration_config = load_integration_configuration(environment)
-    portal_link_config = load_portal_link_configuration(environment)
+    # ADR-D5-07 / ADR-D5-20: a deployed runtime resolves every `*_secret_ref` from Key Vault
+    # via the SPN; local dev may use the process environment. Built once and threaded into
+    # every config load so secrets come from a single, policy-selected source.
+    resolver = secret_resolver or secret_resolver_for_environment(environment)
 
-    api_catalog = load_api_catalog(CONFIG_ROOT / "enterprise" / "api-catalog")
+    agents_config = load_agents_configuration(environment, secret_resolver=resolver)
+    integration_config = load_integration_configuration(environment, secret_resolver=resolver)
+    portal_link_config = load_portal_link_configuration(environment, secret_resolver=resolver)
+
+    api_catalog = load_api_catalog(
+        CONFIG_ROOT / "enterprise" / "api-catalog", secret_resolver=resolver
+    )
     tool_registry = load_tool_registry(
-        CONFIG_ROOT / "enterprise" / "tool-registry", catalog=api_catalog
+        CONFIG_ROOT / "enterprise" / "tool-registry",
+        catalog=api_catalog,
+        secret_resolver=resolver,
     )
     portal_registry = load_portal_catalog()
 
