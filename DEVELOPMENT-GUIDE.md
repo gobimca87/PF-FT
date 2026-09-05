@@ -266,7 +266,7 @@ Build strictly in this order — each phase depends on interfaces/contracts esta
 - Defaults: chunking `target_tokens: 400, overlap_tokens: 50` (tune via evaluation); retrieval `vector_top_k: 20, keyword_top_k: 20` → rerank to `top_n: 8`; `agentic_rag.max_iterations: 2`.
 - Every retrieved chunk must carry citation metadata (`document_id, document_version, title, page, section, chunk_id`) — never fabricate citations.
 - Embedding/Vector is a **separate capability** from RAG orchestration: `embedding_vector/` owns providers, model registry, vector store abstraction, index lifecycle (blue/green via alias switching); `rag/` owns ingestion/chunking/query orchestration/reranking/citations.
-- **Resolve the vector store choice (§2) before this phase**, or build strictly behind the `VectorStore.upsert/search/delete/update` interface and defer the concrete adapter.
+- **Vector store (§2 / ADR-D3-24):** Azure AI Search is the build default; the `AzureAiSearchVectorStore` adapter is scaffolded behind the `VectorStore.upsert/search/delete/update` interface (`embedding_vector/vector_store.py`) with SPN/Entra ID auth and a parametric OData ACL filter. Runtime `provider` stays `inmemory` (`config/base/vector-store.yaml`) until the index is ARB-approved and provisioned, then switch to `azure_ai_search`; the embedding index is created at 768 dims (ADR-D3-23).
 - **Docs:** 13 (RAG), 14 (Embedding & Vector).
 
 ### Phase 9 — SLM Abstraction

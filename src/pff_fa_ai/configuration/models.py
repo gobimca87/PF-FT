@@ -323,6 +323,38 @@ class EmbeddingConfiguration(BaseModel):
     configuration_hash: str
 
 
+class AzureAiSearchSettings(BaseModel):
+    """ADR-D3-24 §8 — Azure AI Search index coordinates. `endpoint` is a placeholder until
+    the private-endpoint service is provisioned (Phase 8); authentication is via the
+    enterprise SPN (Entra ID RBAC), reusing the Key Vault credentials (ADR-D5-07)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    endpoint: str = ""
+    index_name: str
+    api_version: str
+
+
+class VectorStoreSettings(BaseModel):
+    """ADR-D3-24 — vector store selection. `provider` stays `inmemory` until Azure AI Search
+    is ARB-approved and provisioned; the `azure_ai_search` block is built behind the
+    `VectorStore` protocol and activated by switching `provider`."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    provider: Literal["inmemory", "azure_ai_search"] = "inmemory"
+    dimension: int = Field(gt=0)
+    index_alias: str
+    azure_ai_search: AzureAiSearchSettings
+
+
+class VectorStoreConfiguration(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    vector_store: VectorStoreSettings
+    configuration_hash: str
+
+
 class SlmSettings(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 

@@ -1,0 +1,15 @@
+# ADR-D3-24 (Proposed — build default): the knowledge/FAQ vector store is Azure AI Search
+# (vector + hybrid), holding 768-dim embeddings (ADR-D3-23) in a blue/green-aliased index,
+# with a private endpoint, Entra ID RBAC (the enterprise SPN, ADR-D5-07), CMK and managed
+# backup. The adapter is built behind the `VectorStore` protocol; `provider` stays
+# `inmemory` until Azure AI Search is ARB-approved and provisioned (Phase 8), then it is
+# switched to `azure_ai_search`. `endpoint` is a placeholder filled per environment once
+# the private-endpoint service exists — never a fabricated production URL.
+vector_store:
+  provider: inmemory
+  dimension: 768
+  index_alias: pff-fa-knowledge
+  azure_ai_search:
+    endpoint: ""
+    index_name: pff-fa-knowledge-v1
+    api_version: "2024-07-01"

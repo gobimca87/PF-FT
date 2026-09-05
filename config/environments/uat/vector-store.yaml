@@ -1,0 +1,1 @@
+# ADR-D3-24: vector-store override for uat — empty; per-env overrides may only tighten/provide the real endpoint.

@@ -14,12 +14,20 @@ from pff_fa_ai.embedding_vector.providers import (
 from pff_fa_ai.embedding_vector.registry import EmbeddingModelRegistry
 from pff_fa_ai.embedding_vector.states import EmbeddingModelStatus
 from pff_fa_ai.embedding_vector.vector_store import (
+    AzureAiSearchVectorStore,
+    AzureSearchClient,
+    AzureSearchDocumentsClient,
     InMemoryVectorStore,
     VectorStore,
+    build_acl_filter,
+    build_vector_store,
     cosine_similarity,
 )
 
 __all__ = [
+    "AzureAiSearchVectorStore",
+    "AzureSearchClient",
+    "AzureSearchDocumentsClient",
     "EmbeddingModelDescriptor",
     "EmbeddingModelRegistry",
     "EmbeddingModelStatus",
@@ -33,5 +41,7 @@ __all__ = [
     "VectorSearchFilter",
     "VectorSearchResult",
     "VectorStore",
+    "build_acl_filter",
+    "build_vector_store",
     "cosine_similarity",
 ]

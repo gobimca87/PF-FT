@@ -4,7 +4,7 @@ title: Vector store selection
 domain: 3 AI
 ws_ref: [WS-17]
 status: Proposed
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: AI Architecture Lead
 contributors: [Platform Engineer, Security Architect, FinOps, Data Protection Officer]
@@ -490,9 +490,9 @@ superseding ADR, not an in-place edit of §7.
 | Specification sections | 14.PFF-FA-AI-EMBEDDING-VECTOR.md §31–§37, §47–§51, §57–§58, §84–§86, §88, §91, §95, §122, §124, §160; 13.PFF-FA-AI-RAG.md §5 |
 | Requirement IDs | RAG-VDB-* (per ADR-D1-12 scheme) |
 | Build phases | 8 |
-| Code paths | `src/pff_fa_ai/rag/vector_store/` |
-| Configuration | Vector store & index config (14.PFF-FA-AI-EMBEDDING-VECTOR.md §129–§130) |
-| Tests | vector store integration + security + eval suites (14.PFF-FA-AI-EMBEDDING-VECTOR.md §144–§153) |
+| Code paths | `src/pff_fa_ai/embedding_vector/vector_store.py` (`AzureAiSearchVectorStore`, `build_vector_store`, `build_acl_filter`) |
+| Configuration | `config/base/vector-store.yaml` + per-env overrides; vector store & index config (14.PFF-FA-AI-EMBEDDING-VECTOR.md §129–§130) |
+| Tests | `tests/unit/embedding_vector/test_vector_store_azure.py`, `tests/unit/configuration/test_loader_vector_store.py`; integration + security + eval suites (14.PFF-FA-AI-EMBEDDING-VECTOR.md §144–§153) |
 | Upstream ADRs | ADR-D3-20, ADR-D3-21, ADR-D3-23, ADR-D0-04 |
 | Downstream ADRs | ADR-D3-22, ADR-D6-12 |
 
@@ -501,3 +501,4 @@ superseding ADR, not an in-place edit of §7.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | AI Architecture Lead | Initial decision recorded — OPEN (Proposed), recommendation Azure AI Search, fallback pgvector. |
+| 1.1.0 | 2026-09-05 | AI Architecture Lead | The Azure AI Search adapter is scaffolded behind the `VectorStore` protocol (`AzureAiSearchVectorStore`, `build_vector_store`, parametric OData ACL filter, SPN/Entra ID auth), with `config/base/vector-store.yaml` (`provider: inmemory` until provisioned). **Status stays `Proposed`** — awaiting ARB sign-off and Phase-8 index provisioning; §19 code paths corrected. |

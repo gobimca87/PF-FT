@@ -74,6 +74,8 @@ from pff_fa_ai.configuration.models import (
     SlmSettings,
     TimeoutSettings,
     TopicSettings,
+    VectorStoreConfiguration,
+    VectorStoreSettings,
     WorkflowSettings,
 )
 from pff_fa_ai.configuration.secrets import EnvVarSecretResolver, SecretResolver
@@ -458,6 +460,31 @@ def load_embedding_configuration(
 
     return EmbeddingConfiguration(
         embedding=embedding, configuration_hash=compute_configuration_hash(merged)
+    )
+
+
+def load_vector_store_configuration(
+    environment: Environment,
+    *,
+    config_root: Path | None = None,
+    secret_resolver: SecretResolver | None = None,
+) -> VectorStoreConfiguration:
+    merged = _load_merged_config(
+        filename="vector-store.yaml", environment=environment, config_root=config_root
+    )
+    resolved = resolve_secret_refs(merged, secret_resolver or EnvVarSecretResolver())
+
+    try:
+        vector_store = VectorStoreSettings.model_validate(resolved["vector_store"])
+    except KeyError as exc:
+        raise ConfigurationError(f"Missing required configuration section: {exc}") from exc
+    except PydanticValidationError as exc:
+        raise ConfigurationError(
+            f"Invalid vector store configuration: {format_validation_error(exc)}"
+        ) from exc
+
+    return VectorStoreConfiguration(
+        vector_store=vector_store, configuration_hash=compute_configuration_hash(merged)
     )
 
 
