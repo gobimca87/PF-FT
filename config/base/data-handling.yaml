@@ -1,0 +1,32 @@
+# ADR-D6-19 — SLM input masking regime. The per-classification egress matrix governs what
+# may be sent to an EXTERNAL / hosted SLM. External safety is default-safe, not
+# detector-dependent: personal and enterprise-record values are masked/tokenised as a
+# matter of course, and special-category / children's data / secrets are hard-blocked
+# entirely (ADR-D6-16). Any classification absent from this matrix fails closed
+# (hard-blocked) in code. Self-hosted masking is optional per task class (default `raw`)
+# because the payload never crosses the trust boundary.
+data_handling:
+  egress_matrix:
+    PUBLIC:
+      can_send_external: true
+      mask_required: false
+      hard_block: false
+    INTERNAL:
+      can_send_external: true
+      mask_required: false
+      hard_block: false
+    CONFIDENTIAL:
+      can_send_external: true
+      mask_required: true
+      hard_block: false
+    RESTRICTED:
+      can_send_external: false
+      mask_required: true
+      hard_block: true
+    SECRET:
+      can_send_external: false
+      mask_required: true
+      hard_block: true
+  self_hosted:
+    default: raw
+    task_classes: {}

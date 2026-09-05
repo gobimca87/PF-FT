@@ -5,7 +5,7 @@
 > Generated 2026-08-23.
 
 
-**Total ADRs:** 144 across 9 domains. **Proposed (open) decisions:** 7 (see [open-decisions.md](open-decisions.md)).
+**Total ADRs:** 145 across 9 domains. **Proposed (open) decisions:** 5 (see [open-decisions.md](open-decisions.md)).
 
 
 ## Domain 0 — Decision Programme & Governance
@@ -126,14 +126,15 @@
 | [ADR-D5-09](../05-technology-architecture/ADR-D5-09-container-image-and-acr.md) | Container image, ACR and image-immutability policy | Accepted | Platform Engineer | [WS-24] | 2026-08-22 |
 | [ADR-D5-10](../05-technology-architecture/ADR-D5-10-self-hosted-slm-serving-stack.md) | Self-hosted SLM serving stack — vLLM vs TGI vs Azure ML | Proposed | AI Architecture Lead | [WS-24] | 2026-08-22 |
 | [ADR-D5-11](../05-technology-architecture/ADR-D5-11-gpu-node-pool-and-workload-separation.md) | GPU node pool and CPU/GPU workload separation | Accepted | Platform Engineer | [WS-24] | 2026-08-22 |
-| [ADR-D5-12](../05-technology-architecture/ADR-D5-12-iac-tool.md) | Infrastructure-as-Code tool — Terraform vs Bicep | Proposed | Platform Engineer | [WS-24] | 2026-08-22 |
-| [ADR-D5-13](../05-technology-architecture/ADR-D5-13-kubernetes-manifest-tool.md) | Kubernetes manifest tool — Helm vs Kustomize | Proposed | Platform Engineer | [WS-24] | 2026-08-22 |
+| [ADR-D5-12](../05-technology-architecture/ADR-D5-12-iac-tool.md) | Infrastructure-as-Code approach — conform to the Enterprise Application delivery model | Accepted | Platform Engineer | [WS-24] | 2026-09-05 |
+| [ADR-D5-13](../05-technology-architecture/ADR-D5-13-kubernetes-manifest-tool.md) | Kubernetes deployment approach — conform to the Enterprise Application AKS model | Accepted | Platform Engineer | [WS-24] | 2026-09-05 |
 | [ADR-D5-14](../05-technology-architecture/ADR-D5-14-environment-model.md) | Environment model — DEV → TEST → UAT → STAGE → PROD | Accepted | Principal Architect | [WS-24] | 2026-08-22 |
 | [ADR-D5-15](../05-technology-architecture/ADR-D5-15-api-gateway-and-authorization-boundary-apim.md) | API gateway and authorization boundary — APIM | Accepted | Security Architect | [WS-25] | 2026-08-22 |
 | [ADR-D5-16](../05-technology-architecture/ADR-D5-16-shared-http-client-standard.md) | Shared HTTP client standard — pooling, timeout, retry, tracing | Accepted | Backend Lead | [WS-25] | 2026-08-22 |
 | [ADR-D5-17](../05-technology-architecture/ADR-D5-17-scalability-and-autoscaling.md) | Scalability and autoscaling model | Accepted | SRE | [WS-26] | 2026-08-22 |
 | [ADR-D5-18](../05-technology-architecture/ADR-D5-18-latency-budget-decomposition.md) | Latency budget decomposition and per-hop SLO allocation | Accepted | AI Architecture Lead | [WS-26] | 2026-08-22 |
 | [ADR-D5-19](../05-technology-architecture/ADR-D5-19-inference-kv-cache-and-vram-capacity-planning.md) | Inference KV-cache and VRAM capacity planning for the self-hosted SLM | Accepted | AI Architecture Lead | [WS-24] | 2026-08-23 |
+| [ADR-D5-20](../05-technology-architecture/ADR-D5-20-enterprise-application-delivery-model.md) | Adopt the Enterprise Application delivery model — Azure DevOps CI/CD on AKS with SonarQube | Accepted | Platform Engineer | [WS-24, WS-32] | 2026-09-05 |
 
 ## Domain 6 — Security & Governance
 

@@ -25,6 +25,7 @@ from pff_fa_ai.configuration.models import (
     HarnessLimits,
     PlatformConfiguration,
 )
+from pff_fa_ai.configuration.secrets import SecretResolver, secret_resolver_for_environment
 from pff_fa_ai.infrastructure.persistence import (
     InMemoryConversationRepository,
     InMemoryMessageRepository,
@@ -48,6 +49,7 @@ class AppState:
     conversation_configuration: ConversationConfiguration
     harness_limits: HarnessLimits
     affiliation_dependencies: AffiliationDependencies
+    secret_resolver: SecretResolver
     conversation_repository: InMemoryConversationRepository = field(
         default_factory=InMemoryConversationRepository
     )
@@ -79,15 +81,28 @@ class AppState:
 
 
 def build_app_state(*, environment: Environment = "dev") -> AppState:
+    # ADR-D5-07 / ADR-D5-20: select the secret source once for the whole app — Key Vault via
+    # the SPN in deployed environments (fail-closed), the process environment only for local
+    # dev/test — and thread it into every dependency that resolves `*_secret_ref` values.
+    secret_resolver = secret_resolver_for_environment(environment)
     affiliation_dependencies = build_affiliation_dependencies(
-        environment=environment, workflow_repository=InMemoryWorkflowRepository()
+        environment=environment,
+        workflow_repository=InMemoryWorkflowRepository(),
+        secret_resolver=secret_resolver,
     )
     return AppState(
         environment=environment,
-        platform_configuration=load_platform_configuration(environment),
-        conversation_configuration=load_conversation_configuration(environment),
-        harness_limits=load_harness_configuration(environment).harness,
+        platform_configuration=load_platform_configuration(
+            environment, secret_resolver=secret_resolver
+        ),
+        conversation_configuration=load_conversation_configuration(
+            environment, secret_resolver=secret_resolver
+        ),
+        harness_limits=load_harness_configuration(
+            environment, secret_resolver=secret_resolver
+        ).harness,
         affiliation_dependencies=affiliation_dependencies,
+        secret_resolver=secret_resolver,
     )
 
 

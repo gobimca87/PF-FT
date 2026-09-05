@@ -39,9 +39,19 @@ from pff_fa_ai.configuration.models import (
     WorkflowSettings,
 )
 from pff_fa_ai.configuration.release import load_release_manifest
-from pff_fa_ai.configuration.secrets import EnvVarSecretResolver, SecretResolver
+from pff_fa_ai.configuration.secrets import (
+    AzureKeyVaultSecretClient,
+    EnvVarSecretResolver,
+    KeyVaultSecretClient,
+    KeyVaultSecretResolver,
+    SecretResolver,
+    SpnCredentials,
+    build_key_vault_secret_resolver,
+    secret_resolver_for_environment,
+)
 
 __all__ = [
+    "AzureKeyVaultSecretClient",
     "BatchingConfiguration",
     "BatchingSettings",
     "CircuitBreakerSettings",
@@ -63,14 +73,18 @@ __all__ = [
     "HarnessConfiguration",
     "HarnessLimits",
     "IntegrationConfiguration",
+    "KeyVaultSecretClient",
+    "KeyVaultSecretResolver",
     "PlatformConfiguration",
     "ReleaseManifest",
     "RetrySettings",
     "RuntimeConfig",
     "SecretResolver",
     "SessionSettings",
+    "SpnCredentials",
     "TimeoutSettings",
     "WorkflowSettings",
+    "build_key_vault_secret_resolver",
     "compute_configuration_hash",
     "load_batching_configuration",
     "load_context_budget_configuration",
@@ -81,4 +95,5 @@ __all__ = [
     "load_platform_configuration",
     "load_release_manifest",
     "resolve_secret_refs",
+    "secret_resolver_for_environment",
 ]

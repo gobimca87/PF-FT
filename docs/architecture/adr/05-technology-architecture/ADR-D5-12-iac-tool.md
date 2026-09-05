@@ -1,18 +1,18 @@
 ---
 id: ADR-D5-12
-title: Infrastructure-as-Code tool — Terraform vs Bicep
+title: Infrastructure-as-Code approach — conform to the Enterprise Application delivery model
 domain: 5 Technology
 ws_ref: [WS-24]
-status: Proposed
-version: 1.0.0
-date: 2026-08-22
+status: Accepted
+version: 2.0.0
+date: 2026-09-05
 decision_owner: Platform Engineer
 contributors: [SRE, Security Architect, Principal Architect]
 reviewers: [Architecture Review Board]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D5-08, ADR-D5-13, ADR-D5-14, ADR-D0-04]
+related_adrs: [ADR-D5-08, ADR-D5-13, ADR-D5-14, ADR-D5-20, ADR-D0-04]
 source_docs:
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42, §43, §44"
 build_phases: [1]
@@ -22,19 +22,26 @@ classification: Internal
 review_due: 2027-08-22
 ---
 
-# ADR-D5-12 — Infrastructure-as-Code tool — Terraform vs Bicep
+# ADR-D5-12 — Infrastructure-as-Code approach — conform to the Enterprise Application delivery model
 
-> **OPEN DECISION** (`status: Proposed`, per ADR-D0-04 and CLAUDE.md). Full evaluation
-> and a recommendation are given; final selection awaits the platform team's tooling
-> confirmation and is gated at build Phase 1. Not Accepted.
+> **ACCEPTED (v2.0.0).** The platform team's house-standard confirmation — the condition
+> this ADR was `Proposed` pending — has been given: PFF AI **conforms to the Enterprise
+> Application delivery model** rather than standing up a separate IaC toolchain of its own.
+> The standalone Terraform-vs-Bicep evaluation below (§4–§6) is retained as historical
+> context; the selected outcome (§7) is to adopt the enterprise standard. The binding
+> cross-cutting decision is **ADR-D5-20**.
 
 ## 1. Summary
 
-PFF AI will define all Azure infrastructure as code with a single declarative IaC tool.
-The **recommendation is Terraform** (OpenTofu-compatible) for its mature module
-ecosystem, remote-state/plan workflow and portability, with **Azure Bicep** as the
-strong Azure-native fallback if the team prefers zero-state, ARM-native tooling. `Proposed`
-pending the platform team's confirmation of house standard.
+PFF AI's Azure infrastructure is defined and provisioned through the **Enterprise
+Application's existing Infrastructure-as-Code and delivery model** — the same IaC
+approach, Azure DevOps `build.yaml`/`release.yaml` pipelines, AKS platform, platform
+team and shared resources already used by the enterprise applications (ADR-D5-20). PFF
+AI does **not** select or maintain a separate, parallel IaC tool. Where the enterprise
+standard is Terraform or Bicep, PFF AI uses the same; the standalone tool evaluation
+below is superseded by the decision to keep infrastructure tooling **consistent with the
+enterprise platform** rather than divergent. This ratifies the previously `Proposed`
+recommendation into the enterprise-conformant decision on the platform team's confirmation.
 
 ## 2. Context and Problem Statement
 
@@ -146,17 +153,30 @@ are sound; the loser is not wrong.
 
 ## 7. Decision
 
-**Recommendation: Terraform (OpenTofu-compatible) as the IaC tool, with Azure Storage
-remote state and a plan/review/apply workflow; Azure Bicep is the designated fallback**
-if the team standardises on Azure-native, zero-state tooling. ARM JSON (C), Pulumi (D)
-and CDKTF (E) are not pursued. The choice is confirmed by the platform team before
-Phase 1 provisioning.
+**PFF AI adopts the Enterprise Application's existing Infrastructure-as-Code approach and
+delivery model (ADR-D5-20). It does not select or operate a separate IaC toolchain.**
+Infrastructure is provisioned with the enterprise platform team's established tooling and
+Azure DevOps `build.yaml`/`release.yaml` pipelines, on the shared enterprise AKS platform,
+using the same team and resources — for consistency, supportability and to avoid a
+parallel, divergent stack. If the enterprise standard is Terraform, PFF AI uses Terraform;
+if Bicep, PFF AI uses Bicep — the point of this decision is *conformance with the
+enterprise standard*, whatever it is, not an independent selection. The standalone
+Terraform-recommended evaluation (§4–§6) stands as historical analysis but is not acted on
+independently; ARM JSON (C), Pulumi (D) and CDKTF (E) remain not pursued.
 
-**Status rationale.** `Proposed` per ADR-D0-04/CLAUDE.md — an open decision. It carries
-a clear recommendation so provisioning can start once the team confirms; listed in
-`_register/open-decisions.md`. Not Accepted.
+**Status rationale.** `Accepted`. The gating condition — "platform-team house-standard
+confirmation" (ADR-D0-04) — is met: the confirmed standard is to conform to the enterprise
+application delivery model. This ADR moves out of `_register/open-decisions.md`. Any future
+change to the IaC tool is an enterprise-platform decision that PFF AI follows, not a
+PFF-AI-specific one.
 
 ## 8. Architecture Detail
+
+> **Enterprise-conformant realization (ADR-D5-20):** the concrete IaC modules, state
+> backend, pipeline stages and approvals are those of the Enterprise Application delivery
+> model (Azure DevOps `build.yaml`/`release.yaml` → AKS), owned by the enterprise platform
+> team. The structure below describes the shape of any PFF-AI-specific IaC that lives
+> *within* that model; it does not create a separate stack.
 
 - `infra/` holds IaC modules per resource group/service (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §43); environments
   (ADR-D5-14) compose modules with per-env variables (§40).
@@ -285,3 +305,4 @@ a clear recommendation so provisioning can start once the team confirms; listed 
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Platform Engineer | Initial decision recorded — OPEN (Proposed); recommend Terraform, fallback Bicep. |
+| 2.0.0 | 2026-09-05 | Platform Engineer | **Accepted.** Platform-team house-standard confirmed: PFF AI conforms to the Enterprise Application delivery model (ADR-D5-20) — Azure DevOps `build.yaml`/`release.yaml` on the shared AKS platform, same team and resources — rather than selecting a separate IaC tool. §1 and §7 rewritten to the enterprise-conformant decision; §4–§6 evaluation retained as history. Moved out of open-decisions. |

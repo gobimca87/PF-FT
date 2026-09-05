@@ -1,0 +1,1 @@
+# ADR-D3-28 / ADR-D6-19: data-handling.yaml override for uat — empty; per-env overrides may only tighten the base.

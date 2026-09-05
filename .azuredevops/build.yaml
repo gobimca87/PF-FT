@@ -1,0 +1,106 @@
+# Enterprise Application delivery model — CI build pipeline (ADR-D5-20).
+#
+# PFF AI conforms to the enterprise Azure DevOps delivery model rather than a separate
+# CI stack. This build pipeline runs the SAME mandatory quality gates ADR-D7-09 defines
+# (Ruff, mypy strict, pytest+coverage, security/dependency scans) and feeds the enterprise
+# SonarQube Quality Gate, then builds and pushes the immutable image to the enterprise ACR.
+#
+# Enterprise-specific values below are PLACEHOLDERS filled in by the platform team at
+# onboarding — never fabricate them and never commit secrets. Secrets are Key Vault-backed
+# and injected via the enterprise variable group / service connection (ADR-D5-07).
+#
+# TODO(platform-team): replace the pool, variable group, service connections and the
+# SonarQube/ACR/registry references with the enterprise-standard values, or convert this to
+# an `extends:` of the enterprise pipeline template if one exists.
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - "MD files/**"
+      - docs/**
+
+pr:
+  branches:
+    include:
+      - main
+
+# TODO(platform-team): use the enterprise-standard agent pool.
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  # TODO(platform-team): link the enterprise variable group holding SonarQube + ACR config.
+  - group: pff-fa-ai-ci
+  - name: pythonVersion
+    value: "3.11"
+
+stages:
+  - stage: build_and_quality
+    displayName: Build, test and SonarQube quality gate
+    jobs:
+      - job: python_ci
+        displayName: Python CI (lint, type, test, coverage)
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: "$(pythonVersion)"
+
+          - script: python -m pip install -e ".[dev]"
+            displayName: Install (editable + dev extras)
+
+          # Mandatory gates — identical to ADR-D7-09 / repo tooling (do not weaken here).
+          - script: ruff check .
+            displayName: Ruff lint
+          - script: ruff format --check .
+            displayName: Ruff format check
+          - script: mypy src tests scripts
+            displayName: mypy (strict)
+          - script: ruff check . --select S
+            displayName: Ruff security (bandit rules)
+
+          - script: >
+              pytest tests/unit -q
+              --cov=src/pff_fa_ai
+              --cov-report=xml:coverage.xml
+              --junitxml=test-results.xml
+            displayName: pytest (unit) with coverage
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFiles: test-results.xml
+              testRunTitle: pff-fa-ai unit tests
+
+          # SonarQube analysis + Quality Gate — the enterprise standard (ADR-D5-20).
+          # TODO(platform-team): set the SonarQube service connection + project key.
+          - task: SonarQubePrepare@6
+            inputs:
+              SonarQube: "SONARQUBE_SERVICE_CONNECTION" # TODO(platform-team)
+              scannerMode: CLI
+              configMode: file # reads sonar-project.properties at the repo root
+          - task: SonarQubeAnalyze@6
+            displayName: SonarQube analyze
+          - task: SonarQubePublish@6
+            displayName: SonarQube publish + Quality Gate
+            inputs:
+              pollingTimeoutSec: "300"
+          # Build fails here if the enterprise SonarQube Quality Gate does not pass.
+
+      - job: container_image
+        displayName: Build and push image to enterprise ACR
+        dependsOn: python_ci
+        condition: succeeded()
+        steps:
+          # Immutable, versioned tag from VERSION.yaml — never `latest` (ADR-D5-09).
+          # TODO(platform-team): point at the enterprise ACR service connection / registry.
+          - task: Docker@2
+            inputs:
+              command: buildAndPush
+              containerRegistry: "ENTERPRISE_ACR_SERVICE_CONNECTION" # TODO(platform-team)
+              repository: fa-pff-ai-runtime
+              Dockerfile: Dockerfile
+              tags: |
+                $(Build.BuildNumber)

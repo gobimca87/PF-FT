@@ -1,0 +1,1 @@
+# ADR-D3-28 / ADR-D6-19: refinement.yaml override for prod — empty; per-env overrides may only tighten the base.

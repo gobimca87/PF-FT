@@ -103,6 +103,7 @@
 | [ADR-D5-17](../05-technology-architecture/ADR-D5-17-scalability-and-autoscaling.md) | [WS-26] | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §51, §52, §53; 26.PFF-FA-AI-PERFORMANCE-COST.md… | [7, 20] | deploy/ |
 | [ADR-D5-18](../05-technology-architecture/ADR-D5-18-latency-budget-decomposition.md) | [WS-26] | 26.PFF-FA-AI-PERFORMANCE-COST.md §5, §6, §7, §8, §9, §10, §11, §16, §39, §52 | [2, 8] | src/pff_fa_ai/ |
 | [ADR-D5-19](../05-technology-architecture/ADR-D5-19-inference-kv-cache-and-vram-capacity-planning.md) | [WS-24] | 15.PFF-FA-AI-SLM.md §70, §71, §72, §73, §74, §77, §78, §79 | [20] | src/pff_fa_ai/slm/, infra/ |
+| [ADR-D5-20](../05-technology-architecture/ADR-D5-20-enterprise-application-delivery-model.md) | [WS-24, WS-32] | 25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §42-§50, §65-§68; 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §4, §12, §13 | [0, 1, 19] | .azuredevops/, infra/, deploy/ |
 | [ADR-D6-01](../06-security-governance/ADR-D6-01-zero-trust-and-trust-zones.md) | [WS-27] | 19.PFF-FA-AI-SECURITY.md §5, §6, §7, §8, §16, §17 | [2] | infra/ |
 | [ADR-D6-02](../06-security-governance/ADR-D6-02-authn-authz-boundary.md) | [WS-27] | 19.PFF-FA-AI-SECURITY.md §10, §11, §12, §16, §17; 18.PFF-FA-AI-GUARDRAILS.md §33, §34, §3… | [2] | src/pff_fa_ai/api/ |
 | [ADR-D6-03](../06-security-governance/ADR-D6-03-authorization-context-integrity-and-propagation.md) | [WS-27] | 19.PFF-FA-AI-SECURITY.md §12, §13, §14, §15; 18.PFF-FA-AI-GUARDRAILS.md §34, §35, §36, §3… | [3] | src/pff_fa_ai/orchestration/ |

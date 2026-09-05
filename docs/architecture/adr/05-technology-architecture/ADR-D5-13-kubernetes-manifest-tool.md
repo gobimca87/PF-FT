@@ -1,18 +1,18 @@
 ---
 id: ADR-D5-13
-title: Kubernetes manifest tool — Helm vs Kustomize
+title: Kubernetes deployment approach — conform to the Enterprise Application AKS model
 domain: 5 Technology
 ws_ref: [WS-24]
-status: Proposed
-version: 1.0.0
-date: 2026-08-22
+status: Accepted
+version: 2.0.0
+date: 2026-09-05
 decision_owner: Platform Engineer
 contributors: [SRE, Backend Lead]
 reviewers: [Principal Architect, Architecture Review Board]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D5-08, ADR-D5-12, ADR-D5-14, ADR-D7-10, ADR-D0-04]
+related_adrs: [ADR-D5-08, ADR-D5-12, ADR-D5-14, ADR-D5-20, ADR-D7-10, ADR-D0-04]
 source_docs:
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §45, §46, §47, §48, §49, §50, §67"
 build_phases: [1]
@@ -22,20 +22,27 @@ classification: Internal
 review_due: 2027-08-22
 ---
 
-# ADR-D5-13 — Kubernetes manifest tool — Helm vs Kustomize
+# ADR-D5-13 — Kubernetes deployment approach — conform to the Enterprise Application AKS model
 
-> **OPEN DECISION** (`status: Proposed`, per ADR-D0-04 and CLAUDE.md). Full evaluation
-> and a recommendation are given; final selection awaits platform-team confirmation and
-> is gated at build Phase 1. Not Accepted.
+> **ACCEPTED (v2.0.0).** The platform-team confirmation this ADR was `Proposed` pending has
+> been given: PFF AI is deployed through the **Enterprise Application's existing AKS
+> release model** rather than a separate manifest toolchain of its own. The standalone
+> Helm-vs-Kustomize evaluation below (§4–§6) is retained as historical context; the
+> selected outcome (§7) is to adopt the enterprise standard. The binding cross-cutting
+> decision is **ADR-D5-20**.
 
 ## 1. Summary
 
-PFF AI will template/customise its Kubernetes manifests with a single tool. The
-**recommendation is Kustomize** (base + per-environment overlays) for its
-template-free, GitOps-friendly, drift-transparent model that matches the platform's
-base+overlay config philosophy (ADR-D5-06), with **Helm** as the fallback where
-packaged, parameterised releases or third-party charts are needed. `Proposed` pending
-platform-team confirmation.
+PFF AI is packaged and deployed to the **existing enterprise Azure Kubernetes Service
+(AKS) platform through the Enterprise Application's established Azure DevOps
+`release.yaml` pipeline and Kubernetes deployment model** (ADR-D5-20) — the same manifest
+templating approach, release stages, promotion gates, platform team and shared cluster
+resources already used by the enterprise applications. PFF AI does **not** introduce a
+separate/parallel manifest tool. Where the enterprise standard is Kustomize or Helm, PFF
+AI uses the same; the standalone tool evaluation below is superseded by the decision to
+keep Kubernetes deployment **consistent with the enterprise platform** rather than
+divergent. This ratifies the previously `Proposed` recommendation into the
+enterprise-conformant decision on the platform team's confirmation.
 
 ## 2. Context and Problem Statement
 
@@ -149,17 +156,30 @@ Kustomize's transparency wins.
 
 ## 7. Decision
 
-**Recommendation: Kustomize (base + per-environment overlays) for first-party
-manifests, with Helm as the fallback/complement for third-party charts (hybrid,
-Option C, if chart consumption grows).** This mirrors the base+overlay config model
-(ADR-D5-06) and keeps diffs transparent for GitOps/CD (ADR-D7-10). Raw manifests (D)
-and jsonnet/cdk8s (E) are not pursued. Confirmed by the platform team before Phase 1.
+**PFF AI is deployed to AKS through the Enterprise Application's existing release model
+(ADR-D5-20). It does not select or operate a separate Kubernetes manifest toolchain.**
+Manifests are authored and applied with the enterprise platform team's established
+approach and Azure DevOps `release.yaml` pipeline, onto the shared enterprise AKS
+platform, using the same team and resources — for consistency, supportability and to
+avoid a parallel, divergent stack. If the enterprise standard is Kustomize, PFF AI uses
+Kustomize; if Helm, PFF AI uses Helm — the point of this decision is *conformance with
+the enterprise standard*, whatever it is, not an independent selection. The standalone
+Kustomize-recommended evaluation (§4–§6) stands as historical analysis but is not acted on
+independently; raw manifests (D) and jsonnet/cdk8s (E) remain not pursued.
 
-**Status rationale.** `Proposed` per ADR-D0-04/CLAUDE.md — an open decision; carries a
-recommendation with a clear trigger (third-party chart need) for adopting the hybrid.
-Listed in `_register/open-decisions.md`. Not Accepted.
+**Status rationale.** `Accepted`. The gating condition — platform-team confirmation
+(ADR-D0-04) — is met: the confirmed standard is to conform to the enterprise application
+AKS deployment model. This ADR moves out of `_register/open-decisions.md`. Any future
+change to the manifest tool is an enterprise-platform decision that PFF AI follows.
 
 ## 8. Architecture Detail
+
+> **Enterprise-conformant realization (ADR-D5-20):** the concrete manifest structure,
+> release stages, promotion approvals and rollout mechanics are those of the Enterprise
+> Application AKS release model, driven by the enterprise Azure DevOps `release.yaml` and
+> owned by the enterprise platform team. The structure below describes the shape of any
+> PFF-AI-specific manifests that live *within* that model; it does not create a separate
+> deployment stack.
 
 - `deploy/base/` + `deploy/overlays/<env>/` (Kustomize); manifests express Deployments,
   Services, HPAs, health probes (25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §47–§50), resource requests/limits (§19).
@@ -286,3 +306,4 @@ Listed in `_register/open-decisions.md`. Not Accepted.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Platform Engineer | Initial decision recorded — OPEN (Proposed); recommend Kustomize, hybrid with Helm as fallback. |
+| 2.0.0 | 2026-09-05 | Platform Engineer | **Accepted.** Platform-team confirmed: PFF AI deploys through the Enterprise Application AKS release model (ADR-D5-20) — Azure DevOps `release.yaml` on the shared AKS platform, same team and resources — rather than selecting a separate manifest tool. §1 and §7 rewritten to the enterprise-conformant decision; §4–§6 evaluation retained as history. Moved out of open-decisions. |

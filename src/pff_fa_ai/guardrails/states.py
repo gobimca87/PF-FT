@@ -73,3 +73,14 @@ class TrustClassification(StrEnum):
     UNTRUSTED_USER = "UNTRUSTED_USER"
     UNTRUSTED_EXTERNAL = "UNTRUSTED_EXTERNAL"
     UNKNOWN = "UNKNOWN"
+
+
+class DataClassification(StrEnum):
+    """doc 18 §68 / ADR-D6-19 — the per-value classification that drives the SLM
+    egress matrix (ADR-D6-06). Ordered from least to most sensitive."""
+
+    PUBLIC = "PUBLIC"
+    INTERNAL = "INTERNAL"
+    CONFIDENTIAL = "CONFIDENTIAL"
+    RESTRICTED = "RESTRICTED"
+    SECRET = "SECRET"  # noqa: S105 -- data-classification label, not a credential
