@@ -10,7 +10,7 @@ from tests.unit.agents.affiliation.support import (
 
 def test_should_resolve_both_affiliation_portal_links() -> None:
     deps = build_test_dependencies(enterprise_response_handler())
-    claims = ClaimsContext(subject="user-1", organization="club-1")
+    claims = ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1")
 
     links = resolve_affiliation_portal_links(
         deps, claims=claims, club_id="club-1", application_id="app-1"
@@ -24,7 +24,7 @@ def test_should_resolve_both_affiliation_portal_links() -> None:
 
 def test_resolved_links_should_embed_the_real_club_and_application_ids() -> None:
     deps = build_test_dependencies(enterprise_response_handler())
-    claims = ClaimsContext(subject="user-1", organization="club-1")
+    claims = ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1")
 
     links = resolve_affiliation_portal_links(
         deps, claims=claims, club_id="club-42", application_id="app-99"
@@ -44,7 +44,7 @@ def test_a_failed_resolution_should_be_omitted_not_fabricated() -> None:
     deps.portal_resolver = PortalLinkResolver(
         load_portal_catalog(), environment="dev", allowed_domains=frozenset()
     )
-    claims = ClaimsContext(subject="user-1", organization="club-1")
+    claims = ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1")
 
     links = resolve_affiliation_portal_links(
         deps, claims=claims, club_id="club-1", application_id="app-1"

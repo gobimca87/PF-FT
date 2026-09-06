@@ -19,8 +19,8 @@ SETTINGS = ConversationSettings(
     max_message_size=20,
 )
 SECURITY = ConversationSecuritySettings(enforce_ownership=True, enforce_tenant_isolation=True)
-CLAIMS = ClaimsContext(subject="user-1", organization="club-1")
-OTHER_CLAIMS = ClaimsContext(subject="user-2", organization="club-1")
+CLAIMS = ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1")
+OTHER_CLAIMS = ClaimsContext(tenant_id="tenant-1", subject="user-2", organization="club-1")
 
 
 def _service() -> ConversationService:

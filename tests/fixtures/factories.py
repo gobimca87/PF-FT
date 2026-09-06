@@ -9,6 +9,7 @@ from pff_fa_ai.common.claims import ClaimsContext
 
 def make_claims(
     *,
+    tenant_id: str = "tenant-1",
     subject: str = "user-1",
     organization: str = "club-1",
     roles: tuple[str, ...] = (),
@@ -16,6 +17,7 @@ def make_claims(
     access_token: str | None = None,
 ) -> ClaimsContext:
     return ClaimsContext(
+        tenant_id=tenant_id,
         subject=subject,
         organization=organization,
         roles=roles,

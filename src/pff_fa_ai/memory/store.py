@@ -47,12 +47,16 @@ def _build_key(*, environment: str, category: str, scope: MemoryScope, memory_id
 def _build_scan_pattern(*, environment: str, query: MemoryQuery, category: str) -> str:
     # An unset scope dimension means "any value" here, not "must be absent" — a query
     # scoped only to tenant+user should still surface workflow-scoped memory (doc 9 §23).
+    # tenant_id/user_id are unset only for a system/event-triggered lookup that knows
+    # solely a workflow_instance_id (e.g. HIL resume) — the workflow_instance_id itself
+    # is unique enough to make that lookup safe without narrowing by identity first.
+    tenant = query.tenant_id or "*"
+    user = query.user_id or "*"
     org = query.organization_id or "*"
     conversation = query.conversation_id or "*"
     workflow = query.workflow_instance_id or "*"
     return (
-        f"pff-fa:{environment}:memory:{category}:{query.tenant_id}:{query.user_id}:"
-        f"{org}:{conversation}:{workflow}:*"
+        f"pff-fa:{environment}:memory:{category}:{tenant}:{user}:{org}:{conversation}:{workflow}:*"
     )
 
 

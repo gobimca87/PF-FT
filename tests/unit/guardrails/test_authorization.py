@@ -5,7 +5,9 @@ from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 
 
 def _claims(*, subject: str = "user-1", permissions: tuple[str, ...] = ()) -> ClaimsContext:
-    return ClaimsContext(subject=subject, organization="club-123", permissions=permissions)
+    return ClaimsContext(
+        tenant_id="tenant-1", subject=subject, organization="club-123", permissions=permissions
+    )
 
 
 async def test_should_block_when_claims_are_missing() -> None:

@@ -344,9 +344,9 @@ async def test_resume_should_fail_cleanly_when_the_graph_lands_in_an_unexpected_
 
 
 async def test_resume_without_a_saved_context_should_fail_cleanly() -> None:
-    """A `RESUMING` workflow with no matching `resume_context_store` entry (e.g. the
-    agent process restarted and lost its in-memory store) must fail explicitly rather
-    than crash or silently invent claims."""
+    """A `RESUMING` workflow with no matching saved `MemoryCategory.WORKFLOW` memory
+    record (e.g. the agent process restarted and lost its in-memory store) must fail
+    explicitly rather than crash or silently invent claims."""
     workflow_repository = InMemoryWorkflowRepository()
     deps = build_test_dependencies(
         enterprise_response_handler(), workflow_repository=workflow_repository

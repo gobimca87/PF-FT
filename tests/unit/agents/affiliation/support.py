@@ -9,7 +9,6 @@ from typing import Any
 import httpx
 
 from pff_fa_ai.agents.affiliation.dependencies import AffiliationDependencies
-from pff_fa_ai.agents.affiliation.resume_context import AffiliationResumeContextStore
 from pff_fa_ai.agents.context import AgentExecutionContext
 from pff_fa_ai.common.claims import ClaimsContext
 from pff_fa_ai.common.correlation import CorrelationContext, new_id
@@ -17,17 +16,19 @@ from pff_fa_ai.configuration.loader import (
     CONFIG_ROOT,
     load_agents_configuration,
     load_integration_configuration,
+    load_memory_configuration,
     load_portal_link_configuration,
 )
 from pff_fa_ai.configuration.models import Environment
 from pff_fa_ai.domain.workflow.repository import WorkflowRepository
 from pff_fa_ai.guardrails.pipeline import GuardrailPipeline
-from pff_fa_ai.infrastructure.persistence import InMemoryWorkflowRepository
+from pff_fa_ai.infrastructure.persistence import InMemoryMemoryStore, InMemoryWorkflowRepository
 from pff_fa_ai.integration.api.catalog import load_api_catalog
 from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
 from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
 from pff_fa_ai.integration.tools.executor import ToolExecutor
 from pff_fa_ai.integration.tools.registry import load_tool_registry
+from pff_fa_ai.memory import MemoryService
 from pff_fa_ai.portal_links.catalog import load_portal_catalog
 from pff_fa_ai.portal_links.resolver import PortalLinkResolver
 
@@ -42,6 +43,7 @@ def build_test_dependencies(
     *,
     environment: Environment = "dev",
     workflow_repository: WorkflowRepository | None = None,
+    memory_service: MemoryService | None = None,
 ) -> AffiliationDependencies:
     """Builds real `AffiliationDependencies` against the real repo config (same
     "real config repository" pattern used throughout this project's config-loader
@@ -78,7 +80,8 @@ def build_test_dependencies(
         guardrails=GuardrailPipeline(),
         settings=agents_config.affiliation,
         http_client=http_client,
-        resume_context_store=AffiliationResumeContextStore(),
+        memory_service=memory_service
+        or MemoryService(InMemoryMemoryStore(), load_memory_configuration(environment).memory),
     )
 
 
@@ -95,7 +98,10 @@ def make_context(
         workflow_instance_id=workflow_instance_id or new_id("wf"),
         agent_run_id=new_id("run"),
         claims=ClaimsContext(
-            subject=subject, organization=club_id, permissions=("affiliation.read",)
+            tenant_id="tenant-1",
+            subject=subject,
+            organization=club_id,
+            permissions=("affiliation.read",),
         ),
         user_message=user_message,
         correlation=CorrelationContext(request_id=new_id("req"), correlation_id=new_id("corr")),

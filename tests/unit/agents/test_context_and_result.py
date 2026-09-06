@@ -12,7 +12,7 @@ def test_should_build_an_agent_execution_context() -> None:
         session_id="sess-1",
         workflow_instance_id="wf-1",
         agent_run_id="run-1",
-        claims=ClaimsContext(subject="user-1", organization="club-1"),
+        claims=ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1"),
         user_message="hello",
         correlation=CorrelationContext(request_id="req-1", correlation_id="corr-1"),
     )

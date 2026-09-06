@@ -20,7 +20,7 @@ from pff_fa_ai.orchestration.workflow_orchestrator import (
     SupervisorWorkflowOrchestrator,
 )
 
-CLAIMS = ClaimsContext(subject="user-1", organization="club-1")
+CLAIMS = ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1")
 LIMITS = HarnessLimits(
     max_graph_steps=10,
     max_agent_loops=5,

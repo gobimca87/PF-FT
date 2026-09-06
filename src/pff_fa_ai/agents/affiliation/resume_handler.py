@@ -23,7 +23,9 @@ def _synthetic_resume_context(
         session_id="",
         workflow_instance_id=workflow_instance_id,
         agent_run_id=new_id("run"),
-        claims=ClaimsContext(subject="system.event-consumer", organization=organization_id),
+        claims=ClaimsContext(
+            tenant_id="system", subject="system.event-consumer", organization=organization_id
+        ),
         user_message="",
         correlation=CorrelationContext(
             request_id=new_id("req"),

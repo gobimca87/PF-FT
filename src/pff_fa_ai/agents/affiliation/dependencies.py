@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 import httpx
 
-from pff_fa_ai.agents.affiliation.resume_context import AffiliationResumeContextStore
 from pff_fa_ai.configuration.loader import (
     CONFIG_ROOT,
     load_agents_configuration,
@@ -20,6 +19,7 @@ from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
 from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
 from pff_fa_ai.integration.tools.executor import ToolExecutor
 from pff_fa_ai.integration.tools.registry import load_tool_registry
+from pff_fa_ai.memory import MemoryService
 from pff_fa_ai.portal_links.catalog import load_portal_catalog
 from pff_fa_ai.portal_links.resolver import PortalLinkResolver
 
@@ -36,13 +36,14 @@ class AffiliationDependencies:
     guardrails: GuardrailPipeline
     settings: AffiliationAgentSettings
     http_client: httpx.AsyncClient
-    resume_context_store: AffiliationResumeContextStore
+    memory_service: MemoryService
 
 
 def build_affiliation_dependencies(
     *,
     environment: Environment,
     workflow_repository: WorkflowRepository,
+    memory_service: MemoryService,
     guardrails: GuardrailPipeline | None = None,
     secret_resolver: SecretResolver | None = None,
 ) -> AffiliationDependencies:
@@ -87,5 +88,5 @@ def build_affiliation_dependencies(
         guardrails=guardrails or GuardrailPipeline(),
         settings=agents_config.affiliation,
         http_client=http_client,
-        resume_context_store=AffiliationResumeContextStore(),
+        memory_service=memory_service,
     )

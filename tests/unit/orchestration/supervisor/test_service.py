@@ -4,7 +4,7 @@ from pff_fa_ai.orchestration.supervisor.registry import AgentRegistry
 from pff_fa_ai.orchestration.supervisor.service import Supervisor
 from pff_fa_ai.orchestration.supervisor.states import SupervisorStatus
 
-CLAIMS = ClaimsContext(subject="user-1", organization="club-1")
+CLAIMS = ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1")
 
 
 class _FixedClassifier:

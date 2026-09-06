@@ -78,7 +78,11 @@ def _claims(
     permissions: tuple[str, ...] = ("club.read",), *, access_token: str | None = None
 ) -> ClaimsContext:
     return ClaimsContext(
-        subject="user-1", organization="club-1", permissions=permissions, access_token=access_token
+        tenant_id="tenant-1",
+        subject="user-1",
+        organization="club-1",
+        permissions=permissions,
+        access_token=access_token,
     )
 
 

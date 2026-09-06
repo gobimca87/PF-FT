@@ -13,6 +13,7 @@ def _initial_state() -> GraphState:
         "conversation": {"conversation_id": "conv-1"},
         "session": {"session_id": "sess-1"},
         "claims": {
+            "tenant_id": "tenant-1",
             "subject": "user-1",
             "organization": "club-1",
             "roles": (),

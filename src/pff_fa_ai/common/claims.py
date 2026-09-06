@@ -8,6 +8,7 @@ class ClaimsContext(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    tenant_id: str
     subject: str
     organization: str
     roles: tuple[str, ...] = Field(default_factory=tuple)

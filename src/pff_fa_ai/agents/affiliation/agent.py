@@ -18,6 +18,15 @@ from pff_fa_ai.agents.states import AgentRunStatus
 from pff_fa_ai.common.error_category import ErrorCategory
 from pff_fa_ai.domain.workflow.entities import WaitingInfo, WorkflowInstance
 from pff_fa_ai.domain.workflow.states import WaitingType, WorkflowStatus
+from pff_fa_ai.memory import (
+    MemoryCategory,
+    MemoryConfidence,
+    MemoryQuery,
+    MemoryScope,
+    MemorySource,
+    MemorySourceType,
+    MemoryWriteRequest,
+)
 from pff_fa_ai.orchestration.langgraph.graph_builder import COMPLETED_STATUS
 from pff_fa_ai.orchestration.langgraph.state import GraphState
 
@@ -148,11 +157,22 @@ class AffiliationAgent:
                 waiting=waiting,
             )
         )
-        self._deps.resume_context_store.save(
-            context.workflow_instance_id,
-            AffiliationResumeContext(
-                claims=context.claims, conversation_id=context.conversation_id
-            ),
+        await self._deps.memory_service.write(
+            MemoryWriteRequest(
+                category=MemoryCategory.WORKFLOW,
+                scope=MemoryScope(
+                    tenant_id=context.claims.tenant_id,
+                    user_id=context.claims.subject,
+                    organization_id=context.claims.organization,
+                    conversation_id=context.conversation_id,
+                    workflow_instance_id=context.workflow_instance_id,
+                ),
+                content=AffiliationResumeContext(
+                    claims=context.claims, conversation_id=context.conversation_id
+                ).model_dump(mode="json"),
+                source=MemorySource(type=MemorySourceType.WORKFLOW),
+                confidence=MemoryConfidence.HIGH,
+            )
         )
         return AgentExecutionResult(
             status=AgentRunStatus.WAITING_FOR_EVENT,
@@ -171,11 +191,18 @@ class AffiliationAgent:
     async def _resume(
         self, context: AgentExecutionContext, existing: WorkflowInstance
     ) -> AgentExecutionResult:
-        resume_context = self._deps.resume_context_store.get(context.workflow_instance_id)
-        if resume_context is None:
+        records = await self._deps.memory_service.retrieve(
+            MemoryQuery(
+                workflow_instance_id=context.workflow_instance_id,
+                categories=(MemoryCategory.WORKFLOW,),
+                limit=1,
+            )
+        )
+        if not records:
             return _error_result(
                 code="RESUME_CONTEXT_MISSING", message="No saved context to resume from"
             )
+        resume_context = AffiliationResumeContext.model_validate(records[0].content)
 
         state = _initial_state(context)
         state["claims"] = resume_context.claims.model_dump()

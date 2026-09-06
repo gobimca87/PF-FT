@@ -50,12 +50,17 @@ class MemoryRecord(Versioned):
 
 
 class MemoryQuery(BaseModel):
-    """Doc 9 §144 memory retrieval contract."""
+    """Doc 9 §144 memory retrieval contract. `tenant_id`/`user_id` are optional (unlike
+    `MemoryScope`, where both are mandatory for every write): a system/event-triggered
+    lookup that only knows a `workflow_instance_id` (e.g. resuming a suspended workflow
+    from an enterprise event, before the original user's identity is known) must be able
+    to query without them — an unset dimension matches any value, exactly like
+    `organization_id`/`conversation_id`/`workflow_instance_id` already do."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    tenant_id: str
-    user_id: str
+    tenant_id: str | None = None
+    user_id: str | None = None
     organization_id: str | None = None
     conversation_id: str | None = None
     workflow_instance_id: str | None = None

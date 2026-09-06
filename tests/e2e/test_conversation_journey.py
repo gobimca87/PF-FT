@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 
 from pff_fa_ai.api import create_app
 
-CLAIMS_HEADERS = {"x-subject": "e2e-user", "x-organization": "e2e-club"}
+CLAIMS_HEADERS = {"x-tenant": "e2e-tenant", "x-subject": "e2e-user", "x-organization": "e2e-club"}
 
 
 def test_full_conversation_journey_create_chat_resume_list_and_close() -> None:
@@ -69,6 +69,6 @@ def test_journey_should_fail_safely_at_every_untrusted_boundary() -> None:
     conversation_id = cross_subject.json()["data"]["conversation_id"]
     stolen_access_attempt = client.get(
         f"/api/v1/conversations/{conversation_id}",
-        headers={"x-subject": "attacker", "x-organization": "e2e-club"},
+        headers={"x-tenant": "e2e-tenant", "x-subject": "attacker", "x-organization": "e2e-club"},
     )
     assert stolen_access_attempt.status_code == 400

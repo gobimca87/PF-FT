@@ -25,7 +25,7 @@ async def test_null_orchestrator_should_raise_a_clear_not_yet_available_error() 
             updated_at=now,
         ),
         user_message="hello",
-        claims=ClaimsContext(subject="user-1", organization="club-1"),
+        claims=ClaimsContext(tenant_id="tenant-1", subject="user-1", organization="club-1"),
         correlation=CorrelationContext(request_id="req-1", correlation_id="corr-1"),
     )
 

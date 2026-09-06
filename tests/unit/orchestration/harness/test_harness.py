@@ -30,7 +30,7 @@ def _context(subject: str = "user-1") -> AgentExecutionContext:
         session_id="sess-1",
         workflow_instance_id="wf-1",
         agent_run_id="run-1",
-        claims=ClaimsContext(subject=subject, organization="club-1"),
+        claims=ClaimsContext(tenant_id="tenant-1", subject=subject, organization="club-1"),
         user_message="hello",
         correlation=CorrelationContext(request_id="req-1", correlation_id="corr-1"),
     )

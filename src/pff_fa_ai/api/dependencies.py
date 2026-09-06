@@ -17,6 +17,7 @@ from pff_fa_ai.common.claims import ClaimsContext
 from pff_fa_ai.configuration.loader import (
     load_conversation_configuration,
     load_harness_configuration,
+    load_memory_configuration,
     load_platform_configuration,
 )
 from pff_fa_ai.configuration.models import (
@@ -28,10 +29,12 @@ from pff_fa_ai.configuration.models import (
 from pff_fa_ai.configuration.secrets import SecretResolver, secret_resolver_for_environment
 from pff_fa_ai.infrastructure.persistence import (
     InMemoryConversationRepository,
+    InMemoryMemoryStore,
     InMemoryMessageRepository,
     InMemorySessionRepository,
     InMemoryWorkflowRepository,
 )
+from pff_fa_ai.memory import MemoryService
 from pff_fa_ai.orchestration.harness import AgentHarness
 from pff_fa_ai.orchestration.supervisor import AgentRegistry, Supervisor
 from pff_fa_ai.orchestration.supervisor.classifier import IntentClassifier
@@ -50,6 +53,7 @@ class AppState:
     harness_limits: HarnessLimits
     affiliation_dependencies: AffiliationDependencies
     secret_resolver: SecretResolver
+    memory_service: MemoryService
     conversation_repository: InMemoryConversationRepository = field(
         default_factory=InMemoryConversationRepository
     )
@@ -85,10 +89,19 @@ def build_app_state(*, environment: Environment = "dev") -> AppState:
     # the SPN in deployed environments (fail-closed), the process environment only for local
     # dev/test — and thread it into every dependency that resolves `*_secret_ref` values.
     secret_resolver = secret_resolver_for_environment(environment)
+    # ADR-D4-11: the memory subsystem is built once and threaded into every consumer,
+    # mirroring how every other repository in AppState is constructed today — an
+    # in-memory adapter now, with the real Azure Managed Redis backing store (ADR-D4-10)
+    # wired in as a later infrastructure step.
+    memory_service = MemoryService(
+        InMemoryMemoryStore(),
+        load_memory_configuration(environment, secret_resolver=secret_resolver).memory,
+    )
     affiliation_dependencies = build_affiliation_dependencies(
         environment=environment,
         workflow_repository=InMemoryWorkflowRepository(),
         secret_resolver=secret_resolver,
+        memory_service=memory_service,
     )
     return AppState(
         environment=environment,
@@ -103,6 +116,7 @@ def build_app_state(*, environment: Environment = "dev") -> AppState:
         ).harness,
         affiliation_dependencies=affiliation_dependencies,
         secret_resolver=secret_resolver,
+        memory_service=memory_service,
     )
 
 
@@ -136,6 +150,7 @@ def _extract_bearer_token(authorization: str | None) -> str | None:
 
 
 def get_claims_context(
+    x_tenant: str = Header(...),
     x_subject: str = Header(...),
     x_organization: str = Header(...),
     x_roles: str = Header(default=""),
@@ -143,6 +158,7 @@ def get_claims_context(
 ) -> ClaimsContext:
     roles = tuple(role.strip() for role in x_roles.split(",") if role.strip())
     return ClaimsContext(
+        tenant_id=x_tenant,
         subject=x_subject,
         organization=x_organization,
         roles=roles,

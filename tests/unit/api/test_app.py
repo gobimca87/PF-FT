@@ -6,7 +6,7 @@ from pff_fa_ai.api.dependencies import get_workflow_orchestrator
 from pff_fa_ai.application.workflows.orchestrator import OrchestrationRequest, OrchestrationResult
 from pff_fa_ai.application.workflows.states import OrchestrationStatus
 
-CLAIMS_HEADERS = {"x-subject": "user-1", "x-organization": "club-1"}
+CLAIMS_HEADERS = {"x-tenant": "tenant-1", "x-subject": "user-1", "x-organization": "club-1"}
 
 
 class _FakeOrchestrator:
@@ -52,7 +52,7 @@ def test_get_conversation_should_reject_a_different_subject(client: TestClient) 
 
     response = client.get(
         f"/api/v1/conversations/{conversation_id}",
-        headers={"x-subject": "someone-else", "x-organization": "club-1"},
+        headers={"x-tenant": "tenant-1", "x-subject": "someone-else", "x-organization": "club-1"},
     )
 
     assert response.status_code == 400
