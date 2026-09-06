@@ -4,7 +4,7 @@ title: Memory architecture — short/long-term, ranking, summarisation, retentio
 domain: 4 Information
 ws_ref: [WS-22]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: AI Architecture Lead
 contributors: [Backend Lead, Conversation Designer, Data Protection Officer]
@@ -12,7 +12,7 @@ reviewers: [Principal Architect, Security Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D4-10, ADR-D4-12, ADR-D4-01, ADR-D3-25, ADR-D4-07, ADR-D6-06]
+related_adrs: [ADR-D4-10, ADR-D4-12, ADR-D4-01, ADR-D3-25, ADR-D4-07, ADR-D6-06, ADR-D2-07, ADR-D2-10, ADR-D3-09, ADR-D2-11, ADR-D3-26]
 source_docs:
   - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §5, §6, §10, §11, §12, §16, §17, §20, §22, §24, §25, §26, §27, §28, §29, §30, §32, §62, §64, §67, §68, §69, §72, §73, §74, §75, §76, §77, §78, §79"
 build_phases: [7]
@@ -116,12 +116,32 @@ ranking later.
 precedence. The exact anti-pattern the spec forbids.
 **Cost / effort.** Low; unacceptable.
 
+### 5.5a Option F — Agent-writable procedural/skill memory (rejected)
+
+**Description.** Let an agent write a new or revised "how-to" strategy/procedure back
+into its own prompt or tool configuration at runtime, based on what it learned from a
+prior run, so future runs reuse the learned procedure without a human re-authoring it.
+**Strengths.** Could reduce repeated manual prompt/tool-registry updates for patterns an
+agent discovers on its own.
+**Weaknesses.** Directly conflicts with the platform-wide rule that "prompts, models,
+agents, workflows, RAG indexes, and guardrails are versioned software artifacts — never
+mutate in place in production" (CLAUDE.md); breaks the human-authored, trust-labelled
+prompt-layer model (ADR-D3-09) by introducing an unreviewed, unversioned write path into
+what is otherwise Git-versioned content (ADR-D3-11); undermines the deterministic,
+bounded-loop execution model this platform relies on for auditability (ADR-D2-11's
+idempotency/loop-limit constraints; ADR-D3-26's bounded agentic RAG loop). A
+self-modifying procedure store is, in effect, a model output silently becoming platform
+behaviour — exactly what the Golden Rule forbids for business decisions, extended here to
+agent *behaviour* itself.
+**Cost / effort.** Not pursued — rejected on governance grounds, not cost.
+
 ### 5.6 Options considered and eliminated before scoring
 
 | Option | Eliminated by |
 |---|---|
 | No memory (stateless turns) | DR-F-02 — loses continuity |
 | Cross-user shared memory | 9 PFF-FA-AI-MEMORY-CACHE.md §77–§79 — isolation |
+| Option F — Agent-writable procedural/skill memory | "Versioned artefacts, never mutate in production" (CLAUDE.md); ADR-D3-09, ADR-D2-11, ADR-D3-26 |
 
 ## 6. Evaluation Method and Decision Matrix
 
@@ -150,7 +170,10 @@ long conversations, per-category retention and per-user/club isolation; ERC is
 referenced, never copied as truth (Option A).** Memory carries provenance and a trust
 level; conflicting/stale memories are resolved by trust+recency (9 PFF-FA-AI-MEMORY-CACHE.md §67–§68).
 Vector/semantic retrieval (D) may later enhance ranking behind the same abstraction.
-Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
+Raw-history (B), summary-only (C) and ERC-copy (E) are rejected. Agent-writable
+procedural/skill memory (F) is rejected outright on governance grounds (§5.5a) — it is
+not a cost/effort trade-off but a conflict with the platform's versioned-artefact and
+determinism rules.
 
 **Status rationale.** `Accepted` — 9 PFF-FA-AI-MEMORY-CACHE.md governs this.
 
@@ -166,6 +189,22 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 - Retention (§32, §74–§75): per-category TTL; explicit deletion path (§75) for rights
   requests; isolation by user/club key (§77–§79).
 - Write policy (§30–§31): explicit vs implicit memory; provenance stamped (§69).
+
+### 8.1 Relationship to the classic working/episodic/semantic/procedural memory taxonomy
+
+General agentic-AI literature often describes agent memory as four cognitive types —
+**working, episodic, semantic, procedural**. PFF AI does not adopt that taxonomy
+directly; it uses the 10 typed categories decided above (§1, §5.1). This subsection
+records, for anyone approaching the design from that literature, how the two taxonomies
+relate, so the absence of "episodic/semantic/procedural" terminology elsewhere in this
+ADR or in 9 PFF-FA-AI-MEMORY-CACHE.md reads as a considered mapping rather than an oversight.
+
+| Classic type | Relationship to this decision |
+|---|---|
+| **Working memory** — short-lived scratch state during one active execution | Covered by the `WORKING` category (§1; minutes/hours TTL, §32) and by the in-flight `AgentGraphState` (ADR-D2-07), which holds references, not copies, for the same run. |
+| **Episodic memory** — record of what happened in a specific past conversation/workflow/run | Covered by the `CONVERSATION`, `WORKFLOW`, `AGENT_RUN`, `DECISION` and `SUMMARY` categories (§1), which retain what happened in a given episode under per-category retention (§32) and are ranked/summarised for reuse (§19, §24–§28, §64–§66) — bounded continuity, not an open-ended episodic log. |
+| **Semantic memory** — general, decontextualised world/domain knowledge, and/or an agent's own accumulated cross-episode beliefs | **Not adopted** in the self-accumulating sense. General domain/policy knowledge is served by the curated, versioned, human-authored knowledge base (RAG — ADR-D3-20/22/26), not by memory. Cross-episode similarity recall over the agent's own memories was evaluated and explicitly deferred as Option D (§5.4) — "overkill now... blurs memory/RAG separation" — with revisit trigger RT-01. Bounded, explicit generalisation *is* available via `USER_PREFERENCE` and `ORGANIZATIONAL_CONTEXT` memory (§1), but only for approved, scoped facts — never an open semantic store. |
+| **Procedural memory** — an agent learning and reusing a strategy/skill from its own run experience | **Not adopted**, and not merely deferred — rejected outright as Option F (§5.5a) on Golden-Rule and versioned-artefact governance grounds, with revisit trigger RT-03 (§18). The platform's closest analog, `prompt_engineering/`'s versioned `PromptArtifact` library (ADR-D3-09/D3-11), is deliberately static and human-curated; there is no agent write path into it. |
 
 ## 9. Consequences
 
@@ -266,6 +305,7 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 |---|---|---|---|
 | RT-01 | Long-term memory volume/quality needs | Metrics | Add vector memory (D) + durable store (D4-10 Option E) |
 | RT-02 | Memory-caused stale-fact incident | Incident | CAR; tighten trust/staleness |
+| RT-03 | Repeated need for agents to reuse a strategy discovered at runtime | Incident/metrics on repeated manual prompt/tool-registry updates | Evaluate a *governed, human-reviewed* promotion path from AGENT_RUN/DECISION memory into a new versioned PromptArtifact (ADR-D3-11) — never a direct agent write into `prompt_engineering/` |
 
 **Scheduled review:** `review_due`.
 
@@ -288,3 +328,4 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | AI Architecture Lead | Initial decision recorded. |
+| 1.1.0 | 2026-09-06 | AI Architecture Lead | Compatible amendment: maps the classic working/episodic/semantic/procedural memory taxonomy onto the existing typed-category decision (§8.1); adds Option F (agent-writable procedural memory) as rejected (§5.5a) with revisit trigger RT-03 (§18). No change to the Option A decision or category model. |
