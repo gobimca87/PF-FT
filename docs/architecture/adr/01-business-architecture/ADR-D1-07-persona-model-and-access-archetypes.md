@@ -4,7 +4,7 @@ title: Persona model and access archetypes derived from enterprise claims
 domain: 1 Business Architecture
 ws_ref: [WS-04]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-21
 decision_owner: AI Product Owner
 contributors: [AI Solution Architect, Security Owner, Business Owner]
@@ -37,7 +37,7 @@ inferred from conversational signals.
 
 ## 2. Context and Problem Statement
 
-Four kinds of person use PFF, and the affiliation flow shows each of them at work:
+Several kinds of person use PFF, and the affiliation flow shows each of them at work:
 
 - **Club Admin / Club Secretary** — starts the affiliation, resolves pre-check failures,
   selects teams, buys insurance, pays the invoice. Typically a volunteer, doing this once or
@@ -46,8 +46,13 @@ Four kinds of person use PFF, and the affiliation flow shows each of them at wor
   CFA applications, approves, rejects, cancels, marks offline payments, grants CRC and
   suspension overrides.
 - **FA Admin** — national-level administration; appears in the flow's refund notifications.
-- **Officials and club members** — appear *in* the data (as officials with DBS status,
-  suspension status, welfare-officer roles) without necessarily being platform users.
+- **Team Admin** — logs in scoped to a single club, but restricted to team-level
+  management (roster, team details) — narrower than Club Admin's full club scope.
+- **Officials and club members** — split into two cases: those who appear *in* the
+  data (as officials with DBS status, suspension status, welfare-officer roles)
+  without ever being platform users, and those who *do* authenticate as platform
+  users, with their own narrow, individual claims scoped to their own record and
+  assigned team. §7.2 and §7.5 treat these two cases separately.
 
 Two distinct design questions get conflated when this is done casually.
 
@@ -110,7 +115,7 @@ that only considers users misses them entirely.
 | ID | Assumption | If false | Validation |
 |---|---|---|---|
 | DR-A-01 | APIM claims carry enough role information to resolve an archetype without an extra call | An enterprise claim enrichment is needed; the platform still does not infer | Claims contract review, ADR-D6-02 |
-| DR-A-02 | Four archetypes cover the user population for the first workflows | A fifth is added; the model accommodates it without structural change | Reviewed at each workflow onboarding |
+| DR-A-02 | Six archetypes (four original plus Team administrator and Club/Team official, added 1.1.0 via RT-04) cover the user population for the first workflows | A further archetype is added; the model accommodates it without structural change, as it already did once | Reviewed at each workflow onboarding |
 | DR-A-03 | Communication style genuinely differs enough between archetypes to justify separate persona variants | One persona suffices and the variants collapse; no harm done | Persona evaluation, ADR-D8-05 |
 
 ## 4. Evaluation Criteria and Weights
@@ -260,9 +265,13 @@ access. A persona variant is an input to prompt composition and to nothing else.
 | **County administrator** | County-scoped administrative role | All clubs in the county; product and window configuration | Phase 0 setup; Phase 6 review, approve, reject, cancel, override, offline payment |
 | **National administrator** | FA-level role | Cross-county | Refund initiation (Notification Summary) |
 | **Read-only enquirer** | Authenticated with no administrative role | Own record only; no state-changing tools | None |
+| **Team administrator** | Club-scoped role, restricted to a team-management claim/permission (narrower than Club administrator) | Own club's teams only: team roster, team-level details; no officials, applications, invoices, policies, affiliation-phase tools, or payment | None — outside the affiliation workflow entirely |
+| **Club/Team official** | Individual official authenticated as a platform user (club- or team-scoped identity), not a bare administrative role | Own profile/record only: own DBS/role/status, own assigned team roster visibility; no state-changing admin tools, no other officials' data | None |
 
-Four archetypes, role-based rather than workflow-based, so a new workflow adds tools and
-context requirements without adding archetypes (DR-N-03).
+Six archetypes, role-based rather than workflow-based, so a new workflow adds tools and
+context requirements without adding archetypes (DR-N-03). Team administrator and
+Club/Team official were added by this ADR's 1.1.0 amendment, exercising RT-04 below —
+they narrow rather than replace the original four (§20 Change Log).
 
 ### 7.3 Multi-role resolution
 
@@ -282,7 +291,7 @@ evaluated on its own.
 
 | Variant | Default archetype | Register |
 |---|---|---|
-| **Guiding** | Club administrator; read-only enquirer | The `SampleWorkflowchat.md` register — encouraging, explanatory, football commentary at workflow moments, assumes infrequent use |
+| **Guiding** | Club administrator; read-only enquirer; Team administrator; Club/Team official | The `SampleWorkflowchat.md` register — encouraging, explanatory, football commentary at workflow moments, assumes infrequent use |
 | **Efficient** | County administrator; national administrator | Same Adam identity and football register, applied more sparingly; assumes fluency with the process; denser, less scaffolding |
 
 Both variants are the same Adam persona under ADR-D1-09 and `CLAUDE.md`'s persona rules. The
@@ -290,6 +299,11 @@ variants differ in density and scaffolding, not in identity, honesty or tone rul
 officer still gets Adam; they get less explanation of what an affiliation window is.
 
 ### 7.5 Non-user data subjects
+
+An official who authenticates as a platform user takes the **Club/Team official**
+archetype (§7.2), not the treatment below — this section applies only to officials who
+appear solely as data subjects under an acting user's session and never log in
+themselves.
 
 Officials whose DBS status, suspension status and welfare-officer compliance appear in
 affiliation pre-checks are data subjects who may never use the platform. They have no
@@ -381,7 +395,8 @@ tool selection. ADR-D3-10 governs the persona prompt layer's construction.
 
 ### 9.3 Neutral
 
-- Four archetypes is a starting set; adding a fifth is a minor amendment, not a redesign.
+- The archetype set is a living catalogue, not a fixed count; RT-04's 1.1.0 exercise
+  shows adding an archetype is a minor amendment, not a redesign.
 - Both persona variants are the same Adam identity, so brand consistency is unaffected.
 
 ### 9.4 Trade-offs explicitly accepted
@@ -490,7 +505,7 @@ separation this decision establishes.
 | RT-01 | QM-01 or QM-03 records any occurrence | Daily audit | Governance incident per 20.PFF-FA-AI-GOVERNANCE.md §105; the separation has failed |
 | RT-02 | QM-02 finds persona referenced in an access path | CI | Build failure; remove before merge |
 | RT-03 | QM-05 shows no meaningful difference in fitness between variants (DR-A-03 false) | Quarterly evaluation | Collapse to a single persona (Option C); separation is unaffected |
-| RT-04 | A fifth user role appears in a new workflow | Workflow onboarding | Add an archetype with its claims basis and scope; do not stretch an existing one |
+| RT-04 | A fifth user role appears in a new workflow | Workflow onboarding | Add an archetype with its claims basis and scope; do not stretch an existing one. **Exercised in 1.1.0**: Team administrator and Club/Team official added this way, in response to a real gap (team-scoped login; individual officials with their own claims), not a hypothetical one. The trigger remains open for any further role. |
 | RT-05 | Claims contract changes | Enterprise change notice | Re-derive §7.2's claims basis; verify AC-04 still holds |
 | RT-06 | QM-06 records safeguarding over-collection | Weekly audit | Tighten ERC context requirements; minimisation is a GDPR obligation, not a preference |
 
@@ -515,3 +530,4 @@ separation this decision establishes.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-21 | AI Product Owner | Initial decision recorded. Access archetype and persona variant separated as distinct concepts with one-way dependency; per-resource archetype resolution for multi-role users; non-user data subjects explicitly covered. |
+| 1.1.0 | 2026-09-06 | AI Product Owner | Exercised RT-04: added **Team administrator** (club-scoped, team-management only, no affiliation-flow role) and **Club/Team official** (individual platform users among officials, narrow self-scoped claims) to §7.2's archetype table; updated §2, §7.4, §7.5 and DR-A-02 accordingly. §7.1's two-concept separation, §7.3's per-resource resolution rule, and the four original archetype rows are unchanged. |

@@ -110,6 +110,7 @@
 | [ADR-D4-11](../04-information-architecture/ADR-D4-11-memory-architecture.md) | Memory architecture — short/long-term, ranking, summarisation, retention | Accepted | AI Architecture Lead | [WS-22] | 2026-08-22 |
 | [ADR-D4-12](../04-information-architecture/ADR-D4-12-cache-architecture.md) | Cache architecture — namespaces, TTL, invalidation, stampede protection | Accepted | AI Architecture Lead | [WS-22] | 2026-08-22 |
 | [ADR-D4-13](../04-information-architecture/ADR-D4-13-cache-and-memory-scope-for-platform-global-entries.md) | Cache and memory key scoping for platform-global (non-tenant) entries | Accepted | AI Architecture Lead | [WS-22] | 2026-08-23 |
+| [ADR-D4-14](../04-information-architecture/ADR-D4-14-tenant-identity-resolution.md) | Tenant identity resolution — CFA as the concrete tenant boundary | Accepted | AI Architecture Lead | [WS-22, WS-37] | 2026-09-06 |
 
 ## Domain 5 — Technology Architecture
 

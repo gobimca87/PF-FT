@@ -4,7 +4,7 @@ title: Multi-county / multi-tenant extensibility strategy
 domain: 8 Business Value
 ws_ref: [WS-37]
 status: Accepted
-version: 1.0.0
+version: 1.1.0
 date: 2026-08-22
 decision_owner: Principal Architect
 contributors: [AI Architecture Lead, Security Architect, Product Owner]
@@ -12,7 +12,7 @@ reviewers: [Architecture Review Board]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D4-01, ADR-D6-12, ADR-D4-10, ADR-D1-07, ADR-D8-08]
+related_adrs: [ADR-D4-01, ADR-D6-12, ADR-D4-10, ADR-D1-07, ADR-D8-08, ADR-D4-14]
 source_docs:
   - "MD files/3 Context & Integration/9 PFF-FA-AI-MEMORY-CACHE.md §77, §78"
   - "MD files/4 AI/13.PFF-FA-AI-RAG.md §36, §37, §152, §153"
@@ -34,6 +34,12 @@ shared infrastructure with strict per-tenant isolation** — tenant-scoped keys/
 authorization context (ADR-D6-03), and per-tenant configuration overlays — rather than a
 separate deployment per county (9 PFF-FA-AI-MEMORY-CACHE.md §77–§78; 13.PFF-FA-AI-RAG.md §36–§37, §152–§153; 14.PFF-FA-AI-EMBEDDING-VECTOR.md §47–§48).
 Isolation is enforced, not assumed.
+
+> **Refined by [ADR-D4-14](../04-information-architecture/ADR-D4-14-tenant-identity-resolution.md)
+> (2026-09-06).** This decision (CFA as logical tenant, Option E) stands unchanged.
+> ADR-D4-14 specifies the concrete tenant-identity source this ADR's §8 left
+> unspecified — an Enterprise API/ERC lookup keyed by `organization_id`, cached — and
+> the per-resource resolution rule for cross-CFA actors.
 
 ## 2. Context and Problem Statement
 
@@ -277,3 +283,4 @@ are rejected.
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | Principal Architect | Initial decision recorded. |
+| 1.1.0 | 2026-09-06 | AI Architecture Lead | Refined by ADR-D4-14: added forward-reference and ADR-D4-14 to `related_adrs`. This ADR's decision (CFA as logical tenant, Option E) is unchanged; ADR-D4-14 specifies the concrete tenant-identity source and cross-CFA resolution rule §8 left open. |

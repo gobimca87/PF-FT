@@ -84,6 +84,7 @@
 | [ADR-D4-11](../04-information-architecture/ADR-D4-11-memory-architecture.md) | [WS-22] | 9 PFF-FA-AI-MEMORY-CACHE.md §5, §6, §10, §11, §12, §16, §17, §20, §22, §24, §25, §26, §2… | [7] | src/pff_fa_ai/memory/ |
 | [ADR-D4-12](../04-information-architecture/ADR-D4-12-cache-architecture.md) | [WS-22] | 9 PFF-FA-AI-MEMORY-CACHE.md §33, §34, §35, §36, §37, §38, §39, §40, §41, §42, §43, §44, … | [7] | src/pff_fa_ai/cache/ |
 | [ADR-D4-13](../04-information-architecture/ADR-D4-13-cache-and-memory-scope-for-platform-global-entries.md) | [WS-22] | 9 PFF-FA-AI-MEMORY-CACHE.md §5, §15, §33, §34, §36, §37, §38, §39 | [7] | src/pff_fa_ai/cache/, src/pff_fa_ai/memory/ |
+| [ADR-D4-14](../04-information-architecture/ADR-D4-14-tenant-identity-resolution.md) | [WS-22, WS-37] | 9 PFF-FA-AI-MEMORY-CACHE.md §77, §78; 13.PFF-FA-AI-RAG.md §36, §37, §152, §153 | [7, 23] | src/pff_fa_ai/common/claims.py, src/pff_fa_ai/memory/models.py, src/pff_fa_ai/memory/store.py |
 | [ADR-D5-01](../05-technology-architecture/ADR-D5-01-language-and-api-framework.md) | [WS-23] | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9, §27, §28, §29; 25.PFF-FA-AI-INFRASTRUCTURE-OPER… | [1] | src/pff_fa_ai/ |
 | [ADR-D5-02](../05-technology-architecture/ADR-D5-02-python-version-and-type-checker.md) | [WS-23] | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §9, §13, §14, §16 | [0, 1] | pyproject.toml |
 | [ADR-D5-03](../05-technology-architecture/ADR-D5-03-boundary-validation-pydantic.md) | [WS-23] | 27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md §16, §17, §36 | [1] | src/pff_fa_ai/ |
