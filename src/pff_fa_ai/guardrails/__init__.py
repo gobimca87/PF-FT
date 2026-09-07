@@ -7,6 +7,15 @@ from pff_fa_ai.guardrails.content import (
     wrap_tool_result,
 )
 from pff_fa_ai.guardrails.erc_integrity import validate_erc_batch_integrity
+from pff_fa_ai.guardrails.groundedness import (
+    GroundednessEvidence,
+    GroundednessFinding,
+    GroundednessOutputPolicy,
+    GroundednessReport,
+    build_grounded_identifiers,
+    check_groundedness,
+    extract_grounding_tokens,
+)
 from pff_fa_ai.guardrails.masking import (
     EgressMatrix,
     EgressRule,
@@ -42,6 +51,10 @@ __all__ = [
     "DataClassification",
     "EgressMatrix",
     "EgressRule",
+    "GroundednessEvidence",
+    "GroundednessFinding",
+    "GroundednessOutputPolicy",
+    "GroundednessReport",
     "GuardrailBoundary",
     "GuardrailContext",
     "GuardrailDecision",
@@ -61,8 +74,11 @@ __all__ = [
     "TrustClassification",
     "WrappedContent",
     "assert_no_privilege_escalation",
+    "build_grounded_identifiers",
+    "check_groundedness",
     "detect_pii",
     "detect_secrets",
+    "extract_grounding_tokens",
     "is_blocking",
     "is_fail_open_eligible",
     "is_more_trusted",

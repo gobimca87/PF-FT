@@ -15,13 +15,14 @@ from pff_fa_ai.agents.affiliation.models import (
     ProductSummary,
     TeamSummary,
 )
-from pff_fa_ai.agents.affiliation.persona import build_response_text
+from pff_fa_ai.agents.affiliation.persona import build_response_text, grounded_answer_tokens
 from pff_fa_ai.agents.affiliation.portal import resolve_affiliation_portal_links
 from pff_fa_ai.agents.affiliation.states import WAITING_STATUSES, AffiliationApplicationStatus
 from pff_fa_ai.common.claims import ClaimsContext
 from pff_fa_ai.context.collection.aggregator import aggregate_records
 from pff_fa_ai.context.collection.batching import split_into_batches
 from pff_fa_ai.context.erc.models import ErcSection
+from pff_fa_ai.guardrails.groundedness import GroundednessEvidence
 from pff_fa_ai.guardrails.models import GuardrailContext
 from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision
 from pff_fa_ai.integration.tools.models import ToolExecutionRequest
@@ -436,9 +437,21 @@ async def finalize_response(state: GraphState, deps: AffiliationDependencies) ->
         payment_status=payment_status,
     )
 
+    # ADR-D3-22 §91 / ADR-D6-09: the OUTPUT boundary verifies the response is grounded in
+    # authoritative enterprise data before it can reach the user. The evidence is built
+    # from the same `get_application` result the templates render from — a fabricated
+    # amount or reference id in `response_text` has no grounding and is blocked.
+    groundedness_evidence = GroundednessEvidence(
+        grounded_identifiers=grounded_answer_tokens(application=application),
+        requires_citation=False,
+    )
     guardrail_result = await deps.guardrails.evaluate(
         GuardrailBoundary.OUTPUT,
-        GuardrailContext(boundary=GuardrailBoundary.OUTPUT, content=response_text),
+        GuardrailContext(
+            boundary=GuardrailBoundary.OUTPUT,
+            content=response_text,
+            metadata={"groundedness_evidence": groundedness_evidence},
+        ),
     )
     if guardrail_result.decision is GuardrailDecision.BLOCK:
         return _fail(state, code="OUTPUT_BLOCKED", message="Response blocked by output guardrail")

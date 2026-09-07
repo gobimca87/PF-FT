@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from pff_fa_ai.guardrails.groundedness import build_grounded_identifiers
+
 # CLAUDE.md "Adam AI Persona & Conversational Style — Mandatory": workflow-first,
 # football-commentary tone used *contextually* at meaningful moments, never forced,
 # never celebrating an unconfirmed transaction, and errors stay factual. These are
@@ -69,3 +71,16 @@ def build_response_text(
         f"{club_name}'s affiliation application is still in progress — teams, "
         "insurance and products need to be finalized before it can be submitted."
     )
+
+
+def grounded_answer_tokens(*, application: dict[str, Any]) -> frozenset[str]:
+    """The structured tokens `build_response_text` may render (the fee amount and, when
+    present, the invoice number), taken from the *same* authoritative fields so the OUTPUT
+    groundedness guard (ADR-D3-22 §91) treats a legitimate response's tokens as grounded.
+    Co-located with the renderer so the two never drift — if a new template surfaces
+    another amount or reference id, add it here in the same commit."""
+    values = [_money(application["total_fee"], application.get("currency", "GBP"))]
+    invoice = application.get("invoice_number")
+    if invoice:
+        values.append(str(invoice))
+    return build_grounded_identifiers(values)

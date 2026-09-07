@@ -13,7 +13,9 @@ from pff_fa_ai.configuration.loader import (
 from pff_fa_ai.configuration.models import AffiliationAgentSettings, Environment
 from pff_fa_ai.configuration.secrets import SecretResolver, secret_resolver_for_environment
 from pff_fa_ai.domain.workflow.repository import WorkflowRepository
+from pff_fa_ai.guardrails.groundedness import GroundednessOutputPolicy
 from pff_fa_ai.guardrails.pipeline import GuardrailPipeline
+from pff_fa_ai.guardrails.states import GuardrailBoundary
 from pff_fa_ai.integration.api.catalog import load_api_catalog
 from pff_fa_ai.integration.api.client import HttpxEnterpriseHttpClient
 from pff_fa_ai.integration.execution.concurrency import ConcurrencyLimiter
@@ -37,6 +39,16 @@ class AffiliationDependencies:
     settings: AffiliationAgentSettings
     http_client: httpx.AsyncClient
     memory_service: MemoryService
+
+
+def _build_default_guardrail_pipeline() -> GuardrailPipeline:
+    """ADR-D6-09 / ADR-D3-22 §91: the OUTPUT boundary carries the deterministic
+    groundedness policy so a fabricated amount or reference id in a response is blocked
+    before it reaches the user. Kept here (not in the pipeline constructor) so a test can
+    still inject a bare pipeline via the `guardrails` argument."""
+    pipeline = GuardrailPipeline()
+    pipeline.register(GuardrailBoundary.OUTPUT, GroundednessOutputPolicy())
+    return pipeline
 
 
 def build_affiliation_dependencies(
@@ -85,7 +97,7 @@ def build_affiliation_dependencies(
         tool_executor=tool_executor,
         workflow_repository=workflow_repository,
         portal_resolver=portal_resolver,
-        guardrails=guardrails or GuardrailPipeline(),
+        guardrails=guardrails or _build_default_guardrail_pipeline(),
         settings=agents_config.affiliation,
         http_client=http_client,
         memory_service=memory_service,

@@ -1,7 +1,9 @@
 import httpx
+import pytest
 
 from pff_fa_ai.agents.affiliation import steps
 from pff_fa_ai.agents.affiliation.states import AffiliationApplicationStatus
+from pff_fa_ai.guardrails.groundedness import GroundednessOutputPolicy
 from pff_fa_ai.guardrails.models import GuardrailContext, GuardrailResult
 from pff_fa_ai.guardrails.states import GuardrailBoundary, GuardrailDecision, GuardrailSeverity
 from pff_fa_ai.orchestration.langgraph.state import GraphState
@@ -200,6 +202,50 @@ async def test_finalize_response_should_fail_when_output_guardrail_blocks() -> N
     }
 
     result = await steps.finalize_response(state, deps)
+
+    assert result["execution_status"] == steps.FAILED_STATUS
+    assert _error_code(result) == "OUTPUT_BLOCKED"
+
+
+def _complete_state() -> GraphState:
+    state = _initial_state()
+    state["entities"] = {
+        "club_id": "club-1",
+        "club": {"name": "Testville FC"},
+        "application": {
+            "application_id": "app-1",
+            "status": "COMPLETE",
+            "season": "2026-27",
+            "total_fee": 150.0,
+            "currency": "GBP",
+        },
+        "outcome_category": "complete",
+    }
+    return state
+
+
+async def test_finalize_response_passes_the_real_groundedness_policy() -> None:
+    """The now-active OUTPUT boundary must not block a legitimate template response — the
+    fee it renders is grounded in the same authoritative application."""
+    deps = build_test_dependencies(enterprise_response_handler(application_status="COMPLETE"))
+    deps.guardrails.register(GuardrailBoundary.OUTPUT, GroundednessOutputPolicy())
+
+    result = await steps.finalize_response(_complete_state(), deps)
+
+    assert result["execution_status"] != steps.FAILED_STATUS
+    assert "150.00" in result["entities"]["response_text"]
+
+
+async def test_finalize_response_blocks_a_fabricated_amount(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Simulate a hallucinating/compromised generator: a response asserting an amount that
+    is not in the authoritative application is caught by the real groundedness policy."""
+    deps = build_test_dependencies(enterprise_response_handler(application_status="COMPLETE"))
+    deps.guardrails.register(GuardrailBoundary.OUTPUT, GroundednessOutputPolicy())
+    monkeypatch.setattr(steps, "build_response_text", lambda **_: "Your fee is £999.99 today.")
+
+    result = await steps.finalize_response(_complete_state(), deps)
 
     assert result["execution_status"] == steps.FAILED_STATUS
     assert _error_code(result) == "OUTPUT_BLOCKED"
