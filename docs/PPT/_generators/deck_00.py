@@ -1,62 +1,53 @@
 #!/usr/bin/env python3
-"""Deck 00 — PFF AI Technical ARB: Executive & whole-system overview."""
+"""Deck 00 — PFF AI Technical overview, FA enterprise light theme (blue + white)."""
 import os
-from orion import (Deck, PP_ALIGN, MSO_ANCHOR, MSO_SHAPE,
-                   WHITE, GREY, MUTED, ACCENT, MAGENTA, SUCCESS, PANEL, PANEL2, HAIR)
-from common import stat_cards
+from fa import (Deck, PP_ALIGN, MSO_ANCHOR, MSO_SHAPE,
+                WHITE, NAVY, NAVY_DEEP, BLUE, GOLD, CARD, CARD_LINE, GREY, MUTEDBLUE,
+                CX0, CX1, CW)
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "00-overview.pptx")
 DATE = "September 2026"
 
 
 def master_diagram(d, s):
-    # runtime container (borderless panel)
-    d.box(s, "", 0.5, 3.05, 12.33, 2.55, fill=PANEL, line=None)
+    # runtime container (light card)
+    d.card(s, CX0, 3.05, CW, 2.35)
     d.text(s, "AI RUNTIME  ·  single LangGraph process  ·  agents = logical capabilities",
-           0.7, 3.12, 8.0, 0.3, size=10, color=ACCENT, bold=True)
+           CX0 + 0.15, 3.12, 6.8, 0.3, size=10, color=BLUE, bold=True)
     d.text(s, "Guardrails at every boundary (input · context · prompt · tool · model · output)",
-           4.7, 3.12, 7.9, 0.3, size=10, color=MAGENTA, bold=True, align=PP_ALIGN.RIGHT)
+           CX0 + 3.9, 3.12, CW - 4.05, 0.3, size=10, color=GREY, bold=True, align=PP_ALIGN.RIGHT)
 
-    # Band A — request path
     bandA = ["Chat UI", "APIM\nauthN / authZ", "FastAPI\nthin API",
              "Supervisor\nintent routing", "LangGraph\norchestration"]
-    x = 0.6; w = 2.15; gap = 0.34; y = 1.85; h = 0.72
-    prev_r = None
-    centers = []
-    for i, label in enumerate(bandA):
-        d.box(s, label, x, y, w, h, fill=PANEL2, line=None, textcolor=WHITE, size=12)
+    x = CX0; w = 1.95; gap = 0.28; y = 1.85; h = 0.72; prev = None; centers = []
+    for i, lab in enumerate(bandA):
+        st = "accent" if lab.startswith("LangGraph") else "light"
+        d.box(s, lab, x, y, w, h, style=st, size=11.5)
         centers.append(x + w / 2)
-        if prev_r is not None:
-            d.connector(s, prev_r, y + h / 2, x, y + h / 2, color=MUTED, width=1.5)
-        prev_r = x + w
-        x += w + gap
-    d.connector(s, centers[-1], y + h, centers[-1], 3.05, color=ACCENT, width=1.75)
+        if prev is not None:
+            d.connector(s, prev, y + h / 2, x, y + h / 2, width=1.5)
+        prev = x + w; x += w + gap
+    d.connector(s, centers[-1], y + h, centers[-1], 3.05, color=BLUE, width=1.75)
 
-    # Inside runtime: Agents + capability row
-    d.box(s, "Agents\n(AffiliationAgent first)", 0.75, 3.55, 2.4, 0.95,
-          fill=PANEL2, line=None, textcolor=WHITE, size=12)
-    caps = ["ERC\nenterprise context", "Tools / MCP", "RAG\nknowledge",
-            "Memory / Cache\nRedis", "SLM\nHF → vLLM"]
-    cx = 3.45; cw = 1.78; ch = 0.95
-    for label in caps:
-        d.box(s, label, cx, 3.9, cw, ch, fill=PANEL2, line=None, textcolor=WHITE, size=11)
+    d.box(s, "Agents\n(AffiliationAgent first)", CX0 + 0.2, 3.58, 2.45, 0.95, style="light", size=11)
+    caps = ["ERC\ncontext", "Tools / MCP", "RAG\nknowledge", "Memory /\nCache", "SLM\nHF → vLLM"]
+    cx = CX0 + 2.85; cw = 1.5; ch = 0.95
+    for lab in caps:
+        d.box(s, lab, cx, 3.9, cw, ch, style="light", size=10.5)
         cx += cw + 0.12
-    d.connector(s, 3.15, 4.02, 3.45, 4.02, color=MUTED, width=1.5)
+    d.connector(s, CX0 + 2.65, 4.05, CX0 + 2.85, 4.05, width=1.4)
 
-    # Band C — system of record + response
-    y2 = 5.05
+    y2 = 5.6
     d.box(s, "Enterprise APIs / Events  —  PFF System of Record (decides & executes)",
-          0.75, y2, 7.4, 0.42, fill=PANEL2, line=None, textcolor=WHITE, size=11)
-    d.box(s, "Output\nGuardrail", 8.35, y2 - 0.02, 1.7, 0.46, fill=PANEL2, line=None,
-          textcolor=WHITE, size=11)
-    d.box(s, "Response", 10.25, y2 - 0.02, 2.05, 0.46, fill=PANEL2, line=None,
-          textcolor=WHITE, size=11)
-    d.connector(s, 4.4, 4.85, 4.4, y2, color=MUTED, width=1.5)
-    d.connector(s, 8.15, y2 + 0.2, 8.35, y2 + 0.2, color=MUTED, width=1.4)
-    d.connector(s, 10.05, y2 + 0.2, 10.25, y2 + 0.2, color=MUTED, width=1.4)
+          CX0 + 0.2, y2, 6.7, 0.5, style="navy", size=11)
+    d.box(s, "Output\nGuardrail", 9.05, y2, 1.6, 0.5, style="light", size=10.5)
+    d.box(s, "Response", 10.8, y2, 1.85, 0.5, style="accent", size=11)
+    d.connector(s, CX0 + 3.5, 4.85, CX0 + 3.5, y2, width=1.5)
+    d.connector(s, 8.75, y2 + 0.25, 9.05, y2 + 0.25, width=1.4)
+    d.connector(s, 10.45, y2 + 0.25, 10.8, y2 + 0.25, width=1.4)
 
     d.text(s, "Authoritative-truth precedence:  Enterprise API / Event  ›  ERC  ›  Cache  ›  RAG  ›  SLM output",
-           0.5, 5.75, 12.33, 0.3, size=11, color=ACCENT, bold=True, align=PP_ALIGN.CENTER)
+           CX0, 6.35, CW, 0.3, size=11, color=NAVY, bold=True, align=PP_ALIGN.CENTER)
 
 
 def precedence_diagram(d, s):
@@ -65,122 +56,119 @@ def precedence_diagram(d, s):
              ("Cache", "Authorization-aware, freshness-bounded"),
              ("RAG", "Retrieved knowledge — cited, ACL-enforced"),
              ("SLM output", "Language only — never a source of authority")]
-    y = 1.85; h = 0.82; x = 0.95
+    y = 1.85; h = 0.82; x = CX0
     for i, (t, sub) in enumerate(steps):
-        d.box(s, f"{i+1}", x, y + 0.13, 0.56, 0.56, fill=ACCENT, line=None,
-              textcolor=WHITE, size=18, shape=MSO_SHAPE.OVAL)
-        d.text(s, t, x + 0.85, y + 0.08, 5.0, 0.4, size=17, color=WHITE, bold=True)
-        d.text(s, sub, x + 0.85, y + 0.44, 9.8, 0.35, size=12, color=GREY)
+        d._rect(s, x, y + 0.13, 0.56, 0.56, BLUE, shape=MSO_SHAPE.OVAL)
+        d.text(s, str(i + 1), x, y + 0.19, 0.56, 0.45, size=18, color=WHITE, bold=True,
+               align=PP_ALIGN.CENTER, font="Cambria")
+        d.text(s, t, x + 0.85, y + 0.06, 5.5, 0.4, size=17, color=NAVY, bold=True, font="Cambria")
+        d.text(s, sub, x + 0.85, y + 0.46, 9.4, 0.35, size=12, color=GREY)
         if i < len(steps) - 1:
-            d.text(s, "▼  higher source wins on conflict — always",
-                   x + 0.85, y + h - 0.02, 8.0, 0.28, size=9, color=MUTED)
+            d.text(s, "▼  higher source wins on conflict — always", x + 0.85, y + h - 0.03,
+                   8.0, 0.28, size=9, color=MUTEDBLUE)
         y += h + 0.14
 
 
 def build():
     d = Deck()
 
-    d.title_slide(
-        "PFF AI — Adam AI Platform",
-        f"Technical Architecture  ·  Architecture Review Board  ·  {DATE}",
-        notes="Welcome. This is the technical walkthrough of the PFF-FA Enterprise Agentic AI "
-              "platform — Adam AI — for ARB. This overview deck frames the whole system; nine "
-              "further decks go deep by domain (business, application, AI, information, technology, "
-              "security, operations, cost, and the open decisions we need you to sign off).")
+    d.title_slide("PFF AI — Adam AI", "Enterprise Agentic AI Platform",
+                  f"Technical architecture for the Architecture Review Board  ·  {DATE}",
+                  kicker="The FA · PFF · Technical Architecture",
+                  notes="Welcome. This is the technical walkthrough of the PFF-FA Enterprise Agentic "
+                        "AI platform — Adam AI — for the ARB. This overview frames the whole system; "
+                        "nine further decks go deep by domain, plus cost and the open decisions.")
 
-    d.agenda_slide("The presentation suite — 10 decks", [
-        "00  Overview (this deck) — whole-system technical picture",
-        "01  Business Architecture & Value — D0 / D1 / D8",
-        "02  Application & Orchestration — D2",
-        "03  AI Architecture — D3 (RAG, SLM, prompts, guardrails)",
-        "04  Information, Context & Data — D4 (ERC, memory, cache)",
-        "05  Technology & Infrastructure — D5 (Azure, AKS, APIM)",
-        "06  Security & Governance — D6",
-        "07  Operations, Observability & Quality — D7",
-        "08  Cost & FinOps — per-technology cost model",
-        "09  Open Decisions & ARB sign-off asks",
-    ], notes="Each deck is short on the slide and deep in the speaker notes so the discussion "
-             "stays live. All 145 ADRs and 29 specification documents are covered across the suite.")
+    s = d.content_slide("Presentation suite", kicker="Agenda", accent_tail="— 10 decks",
+                        subtitle="Short on the slide, deep in the narration — all 145 ADRs and 29 spec docs covered")
+    left = ["00  Overview — whole-system picture", "01  Business Architecture & Value",
+            "02  Application & Orchestration", "03  AI Architecture",
+            "04  Information, Context & Data"]
+    right = ["05  Technology & Infrastructure", "06  Security & Governance",
+             "07  Operations, Observability & Quality", "08  Cost & FinOps",
+             "09  Open Decisions & ARB sign-off asks"]
+    d.bullets(s, left, CX0, 2.0, 5.3, 4.4, size=15, gap=14)
+    d.bullets(s, right, 7.35, 2.0, 5.3, 4.4, size=15, gap=14)
+    d.set_notes(s, "Ten decks. Each is short on the slide and deep in the "
+        "speaker notes so discussion stays live. All 145 ADRs and 29 specification documents are covered.")
 
-    s = d.content_slide("What we are building", "Adam AI — a conversational orchestration layer over PFF")
+    s = d.content_slide("What we are building", kicker="Context",
+                        subtitle="Adam AI — a conversational orchestration layer over PFF")
     d.bullets(s, [
         "PFF is the FA's county/club administration platform — affiliation, registration, insurance, discipline, officials, county cups, payments; integrates with WGS (the FA's national database).",
         "Adam AI interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results — it does not replace PFF's business logic or authority.",
         "First end-to-end workflow delivered: Club Affiliation.",
         "Persona: a workflow-first enterprise assistant with a natural football-commentary tone.",
-    ], 0.9, 2.0, 11.5, 4.5, size=17, gap=14)
-    s.notes_slide.notes_text_frame.text = (
-        "Key message: this is an orchestration layer, not a rewrite. PFF remains the system of "
-        "record. Adam adds interpretation, context-gathering, reasoning, controlled tool-calling "
-        "and communication. WGS is the national football database we integrate with.")
+    ], CX0, 1.95, CW, 4.6, size=16, gap=14)
+    d.set_notes(s, "This is an orchestration layer, not a rewrite. PFF remains "
+        "the system of record. WGS is the national football database we integrate with.")
 
-    s = d.content_slide("The Golden Rule — the binding constraint")
+    s = d.content_slide("The Golden Rule", kicker="Binding constraint",
+                        subtitle="The single most important architectural principle")
     d.box(s, "Enterprise systems DECIDE and EXECUTE.\nThe AI platform INTERPRETS, ORCHESTRATES,\nCONTEXTUALISES, EXPLAINS and COMMUNICATES.",
-          1.4, 2.05, 10.5, 2.0, fill=PANEL2, line=None, textcolor=WHITE, size=22, bold=True)
+          CX0, 1.95, CW, 1.75, style="navy", size=21)
     d.bullets(s, [
         "The AI never authenticates/authorizes, re-implements business rules, or writes to the enterprise DB.",
         "A model output never becomes an authorization decision.",
         "Raw enterprise/personal data is never exposed to an external SLM (masked/tokenised, fail-closed).",
-    ], 1.4, 4.35, 10.5, 2.2, size=15, gap=12)
-    s.notes_slide.notes_text_frame.text = (
-        "This rule is repeated in every spec doc and is the single most important architectural "
-        "constraint. Everything downstream — guardrails, ERC, truth precedence, masking — enforces it.")
+    ], CX0, 4.0, CW, 2.2, size=15, gap=12)
+    d.set_notes(s, "Repeated in every spec doc. Everything downstream — "
+        "guardrails, ERC, truth precedence, masking — enforces it.")
 
-    s = d.content_slide("Authoritative-truth precedence", "Higher source always wins on conflict")
+    s = d.content_slide("Authoritative-truth precedence", kicker="Golden Rule",
+                        subtitle="Higher source always wins on conflict")
     precedence_diagram(d, s)
-    s.notes_slide.notes_text_frame.text = (
-        "When two sources disagree, the higher one wins — no exceptions. The SLM generates language "
-        "but is the lowest-trust source; it never overrides enterprise truth, ERC, cache or RAG.")
+    d.set_notes(s, "When two sources disagree, the higher wins — no exceptions. "
+        "The SLM generates language but is the lowest-trust source.")
 
-    s = d.content_slide("End-to-end platform architecture")
+    s = d.content_slide("End-to-end platform architecture", kicker="System overview")
     master_diagram(d, s)
-    s.notes_slide.notes_text_frame.text = (
-        "The request path: Chat UI → APIM (the authZ boundary) → thin FastAPI → Supervisor (intent) "
-        "→ LangGraph. Inside one runtime, agents are logical capabilities orchestrated by the Agent "
-        "Harness, using ERC, Tools/MCP, RAG, Memory/Cache and the SLM. Enterprise APIs/events are the "
-        "system of record. Guardrails run at every boundary; output is validated before it reaches the user.")
+    d.set_notes(s, "Chat UI → APIM (authZ boundary) → thin FastAPI → "
+        "Supervisor → LangGraph. Inside one runtime, agents are logical capabilities using ERC, "
+        "Tools/MCP, RAG, Memory/Cache and the SLM. Enterprise APIs/events are the system of record; "
+        "guardrails run at every boundary; output is validated before the user sees it.")
 
-    s = d.content_slide("Four state concepts — kept strictly separate")
+    s = d.content_slide("Four state concepts", kicker="Information model",
+                        subtitle="Kept strictly separate — never conflated in code")
     quad = [("Conversation State", "turns, messages, intent — per conversation"),
             ("Session State", "auth context, correlation, ttl — per session"),
             ("Workflow / Agent State", "graph state, steps, HIL — per workflow run"),
             ("Enterprise Business State", "system-of-record truth — owned by PFF")]
-    xs = [0.9, 6.85]; ys = [2.0, 4.35]
+    xs = [CX0, 7.35]; ys = [1.95, 4.2]
     for i, (t, sub) in enumerate(quad):
         x = xs[i % 2]; y = ys[i // 2]
-        col = ACCENT if i % 2 == 0 else MAGENTA
-        d.box(s, "", x, y, 5.55, 2.05, fill=PANEL2, line=None)
-        d.text(s, t, x + 0.3, y + 0.25, 5.0, 0.5, size=18, color=col, bold=True)
-        d.text(s, sub, x + 0.3, y + 0.95, 5.0, 0.9, size=13, color=GREY)
-    s.notes_slide.notes_text_frame.text = (
-        "These four are never conflated in code. Conflation is a classic source of security and "
-        "correctness bugs in agentic systems, so we separate them as first-class concepts.")
+        col = NAVY if i % 2 == 0 else BLUE
+        d.card(s, x, y, 5.3, 2.05)
+        d.text(s, t, x + 0.3, y + 0.28, 4.7, 0.5, size=18, color=col, bold=True, font="Cambria")
+        d.text(s, sub, x + 0.3, y + 1.0, 4.7, 0.9, size=13, color=GREY)
+    d.set_notes(s, "Enterprise business state is owned entirely by PFF; the "
+        "AI holds only conversation, session and workflow state.")
 
-    s = d.content_slide("Scope — affiliation first, catalogue deferred")
+    s = d.content_slide("Scope", kicker="Delivery approach",
+                        subtitle="Affiliation first, wider catalogue deferred")
     d.bullets(s, [
         "One AI runtime; agents are logical capabilities inside it — not one microservice per agent.",
-        "AffiliationAgent is the only agent built in the first pass (Phase 23).",
+        "AffiliationAgent is the only agent built in the first pass.",
         "The wider agent catalogue (registration, discipline, officials, competitions…) is a real product decision, deliberately deferred — not invented.",
         "Everything is a versioned software artifact: prompts, models, agents, workflows, RAG indexes, guardrails — released as immutable bundles.",
-    ], 0.9, 2.0, 11.5, 4.4, size=17, gap=14)
-    s.notes_slide.notes_text_frame.text = (
-        "We resist scope creep at the architecture level: prove the platform end-to-end on affiliation, "
-        "then extend. Immutable versioned bundles mean no in-place production mutation.")
+    ], CX0, 1.95, CW, 4.4, size=16, gap=14)
+    d.set_notes(s, "Prove the platform end-to-end on affiliation, then extend. "
+        "Immutable versioned bundles mean no in-place production mutation.")
 
-    s = d.content_slide("Technology at a glance")
+    s = d.content_slide("Technology at a glance", kicker="Technology stack")
     d.chip_row(s, [("python", "Python"), ("fastapi", "FastAPI"), ("langgraph", "LangGraph"),
                    ("huggingface", "HF SLM"), ("vllm", "vLLM"), ("aisearch", "AI Search")],
-               y=2.1, size=0.9)
+               y=2.15, size=0.85)
     d.chip_row(s, [("aks", "AKS"), ("apim", "APIM"), ("servicebus", "Service Bus"),
                    ("redis", "Redis"), ("keyvault", "Key Vault"), ("langfuse", "Langfuse")],
-               y=4.3, size=0.9)
-    s.notes_slide.notes_text_frame.text = (
-        "Python/FastAPI + LangGraph on Azure/AKS. SLM starts on Hugging Face Inference API and targets "
-        "self-hosted vLLM on GPU. Azure AI Search for vectors, Managed Redis for state/cache, Service "
-        "Bus for async eventing, APIM as the authZ boundary, Key Vault (SPN-only) for secrets, Langfuse "
-        "for AI observability. Full detail and the cost of each is in decks 05 and 08.")
+               y=4.35, size=0.85)
+    d.set_notes(s, "Python/FastAPI + LangGraph on Azure/AKS. SLM starts on "
+        "Hugging Face and targets self-hosted vLLM on GPU. AI Search for vectors, Managed Redis for "
+        "state/cache, Service Bus for eventing, APIM as the authZ boundary, Key Vault for secrets, "
+        "Langfuse for AI observability. Cost of each is in deck 08.")
 
-    s = d.content_slide("The ADR programme", "Every significant decision is recorded and governed")
+    s = d.content_slide("The ADR programme", kicker="Governance",
+                        subtitle="Every significant decision recorded and governed")
     d.table(s, [
         ["Domain", "ADRs", "Focus"],
         ["D0 Decision Programme", "4", "ADR governance, review board, open-decision register"],
@@ -192,32 +180,28 @@ def build():
         ["D6 Security & Governance", "19", "zero-trust, masking, guardrails, GDPR"],
         ["D7 Operations", "18", "observability, CI/CD, testing, LLMOps, DR"],
         ["D8 Business Value", "10", "value, metrics, traceability"],
-    ], 0.9, 1.95, 11.5, 4.9, col_widths=[3.2, 1.0, 7.3], font_size=12)
+    ], CX0, 1.9, CW, 4.6, col_widths=[3.0, 0.9, 6.95], font_size=11.5)
     d.text(s, "145 governed ADRs  ·  5 still Proposed and awaiting ARB sign-off (deck 09)",
-           0.9, 6.95, 11.5, 0.35, size=12, color=ACCENT, bold=True)
-    s.notes_slide.notes_text_frame.text = (
-        "145 ADRs across nine decision domains. Most are Accepted; five remain Proposed with a stated "
-        "recommendation we are building against — those are what we need the ARB to ratify (deck 09).")
+           CX0, 6.6, CW, 0.35, size=12, color=BLUE, bold=True)
+    d.set_notes(s, "145 ADRs across nine domains. Most Accepted; five remain "
+        "Proposed with a stated recommendation we build against — deck 09 asks the ARB to ratify them.")
 
-    s = d.content_slide("Cost headline", "Indicative — Azure UK South, Sept 2026, verify with FinOps")
-    stat_cards(d, s, [
-        ("HF API", "hosted SLM phase", None),
-        ("vLLM / GPU", "self-hosted target", None),
-        ("AI Search", "vector store", None),
-        ("Langfuse", "AI observability", None),
-    ], y=2.2, h=1.9)
-    d.text(s, "Deck 08 breaks cost down per technology (drivers, formula, Low / Expected / High monthly).",
-           0.9, 4.5, 11.5, 0.5, size=15, color=WHITE)
-    s.notes_slide.notes_text_frame.text = (
-        "Cost is presented per technology in deck 08 with drivers, formula and Low/Expected/High "
-        "monthly scenarios. Every figure is an indicative public list price, dated and region-stamped, "
-        "to be confirmed by FinOps — pricing is never hard-coded in the application.")
+    s = d.content_slide("Cost headline", kicker="Cost & FinOps",
+                        subtitle="Indicative — Azure UK South, Sept 2026, verify with FinOps")
+    d.stat_cards(s, [("HF → vLLM", "SLM inference — dominant lever"),
+                     ("Azure AI Search", "vector store"),
+                     ("Langfuse", "AI observability"),
+                     ("AKS / GPU", "compute")], y=2.15, h=1.9)
+    d.text(s, "Deck 08 breaks cost down per technology — drivers, formula, Low / Expected / High monthly.",
+           CX0, 4.4, CW, 0.5, size=15, color=NAVY)
+    d.set_notes(s, "Cost is per technology in deck 08 with drivers, formula and "
+        "Low/Expected/High scenarios — indicative public list prices, dated and region-stamped, to be "
+        "confirmed by FinOps; never hard-coded in the application.")
 
     d.final_slide("What we are asking the ARB",
-                  "Note the architecture · ratify the 5 open decisions (deck 09) · endorse the cost model (deck 08)",
-                  notes="Three asks: (1) note and challenge the architecture across the domain decks; "
-                        "(2) ratify the five Proposed decisions in deck 09; (3) endorse the cost model "
-                        "and budget-control approach in deck 08.")
+                  "Note the architecture  ·  ratify the 5 open decisions (deck 09)  ·  endorse the cost model (deck 08)",
+                  notes="Three asks: note and challenge the architecture; ratify the five Proposed "
+                        "decisions; endorse the cost model and budget controls.")
 
     d.save(OUT)
     print("saved", os.path.abspath(OUT), "slides:", len(d.prs.slides._sldIdLst))
