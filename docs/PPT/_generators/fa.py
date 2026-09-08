@@ -161,8 +161,14 @@ class Deck:
                        anchor=MSO_ANCHOR.MIDDLE)
         return tb
 
-    def box(self, s, text, x, y, w, h, style="light", size=13, bold=True,
-            align=PP_ALIGN.CENTER, font=BODY_FONT):
+    def box(self, s, text, x, y, w, h, style=None, size=13, bold=True,
+            align=PP_ALIGN.CENTER, font=BODY_FONT,
+            fill=None, line=None, textcolor=None, line_w=None, shape=None):
+        # Back-compat: legacy callers pass fill/line/textcolor. In the FA light
+        # theme every box renders as a light card (navy text) for an airy,
+        # consistent look, except where a navy/accent emphasis style is asked for.
+        if style is None:
+            style = "navy" if (textcolor == WHITE and fill == NAVY_DEEP) else "light"
         if style == "navy":
             fill, line, tc = NAVY_DEEP, None, WHITE
         elif style == "accent":
@@ -344,3 +350,111 @@ class Deck:
             if label and lab:
                 self.text(s, lab, cx - step / 2, y + size + 0.08, step, 0.3, size=label_size,
                           color=GREY, align=PP_ALIGN.CENTER)
+
+
+# ============================================================================
+# Domain-deck helpers (shared across decks 01-09), FA light theme, sidebar-aware
+# ============================================================================
+import json as _json
+
+_ADRIDX = _json.load(open(os.path.join(HERE, "adr_index.json")))
+
+
+def adrs_for(*domains):
+    out = []
+    for dm in domains:
+        out.extend(_ADRIDX["domains"].get(str(dm), []))
+    return out
+
+
+def _short_id(adr_id):
+    return adr_id.replace("ADR-", "")
+
+
+def _st(status):
+    return "Accepted" if status == "Accepted" else ("Proposed ◆" if status == "Proposed" else status[:8])
+
+
+def _agenda_slide(self, title, items, notes=None):
+    s = self.content_slide(title, kicker="Agenda")
+    n = len(items)
+    if n > 6:
+        half = (n + 1) // 2
+        self.bullets(s, items[:half], CX0, 1.95, 5.25, 4.6, size=15, gap=12)
+        self.bullets(s, items[half:], 7.4, 1.95, 5.25, 4.6, size=15, gap=12)
+    else:
+        self.bullets(s, items, CX0, 1.95, CW, 4.6, size=16, gap=13)
+    self.set_notes(s, notes)
+    return s
+
+
+def _pipeline(self, s, steps, y=3.0, h=1.0, x0=CX0, x1=CX1):
+    n = len(steps); gap = 0.26
+    w = (x1 - x0 - gap * (n - 1)) / n
+    x = x0; prev = None
+    for step in steps:
+        if isinstance(step, str):
+            self.box(s, step, x, y, w, h, style="light", size=12)
+        else:
+            self.card(s, x, y, w, h)
+            self.text(s, step[0], x + 0.1, y + 0.16, w - 0.2, 0.5, size=12.5, color=NAVY,
+                      bold=True, align=PP_ALIGN.CENTER, font=HEAD_FONT)
+            self.text(s, step[1], x + 0.1, y + h - 0.42, w - 0.2, 0.4, size=10, color=GREY,
+                      align=PP_ALIGN.CENTER)
+        if prev is not None:
+            self.connector(s, prev, y + h / 2, x, y + h / 2, color=BLUE, width=1.6)
+        prev = x + w; x += w + gap
+
+
+def _kv_panel(self, s, title, pairs, x, y, w, h, col=BLUE, size=12):
+    self.card(s, x, y, w, h)
+    self.text(s, title.upper(), x + 0.24, y + 0.18, w - 0.48, 0.35, size=12.5, color=col, bold=True)
+    yy = y + 0.72
+    for k, v in pairs:
+        self.text(s, k, x + 0.24, yy, w - 0.48, 0.3, size=size, color=NAVY, bold=True)
+        self.text(s, v, x + 0.24, yy + 0.27, w - 0.48, 0.5, size=size - 1, color=GREY)
+        yy += 0.82
+
+
+def _stat_cards(self, s, cards, y=2.2, h=1.8, x0=CX0, x1=CX1, gap=0.28):
+    n = len(cards); w = (x1 - x0 - gap * (n - 1)) / n; x = x0
+    for i, c in enumerate(cards):
+        big, small = c[0], c[1]
+        col = NAVY if i % 2 == 0 else BLUE
+        self.card(s, x, y, w, h)
+        self._rect(s, x, y + 0.28, 0.12, h - 0.56, col)
+        self.text(s, big, x + 0.32, y + 0.24, w - 0.5, 0.8, size=22, color=col, bold=True, font=HEAD_FONT)
+        self.text(s, small, x + 0.32, y + 1.0, w - 0.5, h - 1.05, size=11, color=GREY)
+        x += w + gap
+
+
+def _adr_index_slides(self, title, adrs, notes=None, rows_per_table=13):
+    per_slide = rows_per_table * 2
+    pages = [adrs[i:i + per_slide] for i in range(0, len(adrs), per_slide)]
+    for pi, page in enumerate(pages):
+        suffix = f"  ({pi + 1}/{len(pages)})" if len(pages) > 1 else ""
+        s = self.content_slide(title + suffix, kicker="Decision record",
+                               subtitle=f"{len(adrs)} decisions in this domain  ·  ◆ = Proposed, awaiting ARB")
+        left = page[:rows_per_table]; right = page[rows_per_table:]
+        for col, chunk in enumerate((left, right)):
+            if not chunk:
+                continue
+            rows = [["ADR", "Decision", "Status"]]
+            for a in chunk:
+                t = a["title"] or ""
+                if len(t) > 46:
+                    t = t[:45] + "…"
+                rows.append([_short_id(a["id"]), t, _st(a["status"])])
+            x = CX0 + col * 5.55
+            self.table(s, rows, x, 1.95, 5.25, min(0.32 * len(rows), 4.9),
+                       col_widths=[1.0, 3.4, 1.05], font_size=8.5)
+        if pi == len(pages) - 1:
+            self.set_notes(s, notes)
+    return pages
+
+
+Deck.agenda_slide = _agenda_slide
+Deck.pipeline = _pipeline
+Deck.kv_panel = _kv_panel
+Deck.stat_cards = _stat_cards
+Deck.adr_index_slides = _adr_index_slides

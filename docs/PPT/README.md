@@ -1,8 +1,9 @@
 # PFF AI — Technical ARB Presentation Suite
 
-A suite of **10 PowerPoint decks** (~144 slides) presenting the PFF-FA Enterprise Agentic AI
+A suite of **10 PowerPoint decks** (~145 slides) presenting the PFF-FA Enterprise Agentic AI
 platform (**Adam AI**) to the **Architecture Review Board**, from a technical perspective.
-Built on the organisation **Orion** template, **dark ("Black") theme**.
+Built on the organisation **Orion FA** template — **blue & white enterprise theme** (white
+background, navy sidebar with the FA crest, professional blue accent, Cambria/Calibri).
 
 > **Design intent:** short on the slide, deep in the speaker notes — the presenter narrates;
 > the slides are the scaffold. Every one of the **145 ADRs** and all **29 MD spec docs** is
@@ -60,12 +61,18 @@ D5-10 self-hosted vLLM · D3-28 refinement loop · D6-19 masking regime.
 
 ## Template & theme
 
-- Org template preserved verbatim at `_TEMPLATE/Orion_Template_V1.0.pptx`.
-- Every deck is **cloned from that template** (inheriting the "Custom 1" brand theme, master,
-  footer/logo and all 14 layouts), sample slides stripped, and rebuilt on the **Black** layouts:
-  L2 title · L3 agenda · L5 section divider · L7 content · L9/L10 content-with-subtitle · L14 close.
-- Dark palette: black canvas, white text, brand accents cyan `#2ACCFF`, blue `#0283FF`,
-  purple `#7F19BE`, pink `#FE2579`, violet `#5300DB`, yellow `#FED038`, green `#48E84A`.
+- Org template preserved verbatim at `_TEMPLATE/Orion_FATemplate.pptx` (the earlier dark Orion
+  template is kept at `_TEMPLATE/Orion_Template_V1.0.pptx` for reference only).
+- Every deck is **cloned from the FA template** (white background, brand theme), the two sample
+  slides stripped, and rebuilt by `_generators/fa.py` with a fixed chrome: a **navy sidebar**
+  (`#011E41`) carrying the **FA crest** (recoloured white) + wordmark + page number, and a header
+  band (blue eyebrow · Cambria navy title · grey subtitle) on a white canvas.
+- **Palette (blue & white, enterprise):** navy headings `#13294B`, sidebar/dark-panel `#011E41`,
+  professional blue accent `#2E75B6` (the FA red is deliberately not used), gold highlight
+  `#FFC72C`, light cards `#F3F6FA` with a visible `#A9BACE` border, grey body `#5C6B7A`.
+- **Fonts:** Cambria (titles / big numbers), Calibri (body / labels).
+- Content lives in the `2.05–12.9"` band (clear of the sidebar); all cards have visible borders.
+- The dark-theme builder `orion.py` and its `Orion_Template_V1.0.pptx` are retained but unused.
 
 ## Cost figures — read this
 
@@ -90,9 +97,13 @@ python3 qa.py ../*.pptx         # geometry lint
 python3 coverage.py             # all 145 ADRs present
 ```
 
-- `orion.py` — shared dark-theme builder (clones template, Black layouts, palette, slide helpers).
-- `common.py` — ADR index tables, stat cards, pipelines, panels.
+- `fa.py` — the shared FA light-theme builder (clones the FA template, draws the navy sidebar +
+  crest chrome, palette, and all slide/diagram/table/ADR-index helpers). This is the template for
+  every deck.
 - `pricing.py` — versioned indicative pricing snapshot (deck 08).
+- `gen_logos.py` writes white marks to `assets/logos/`; the navy marks for the white theme are in
+  `assets/logos_navy/`; the FA crest variants are `assets/logos/fa_crest_{white,navy}.png`.
+- `orion.py` / `common.py` — the earlier dark-theme builder, retained but no longer used.
 - To update ADR/doc content, edit the relevant `deck_NN.py` and rerun; nothing is hand-edited in
   the `.pptx`.
 
