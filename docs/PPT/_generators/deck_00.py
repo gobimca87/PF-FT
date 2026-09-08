@@ -56,17 +56,20 @@ def precedence_diagram(d, s):
              ("Cache", "Authorization-aware, freshness-bounded"),
              ("RAG", "Retrieved knowledge — cited, ACL-enforced"),
              ("SLM output", "Language only — never a source of authority")]
-    y = 1.85; h = 0.82; x = CX0
+    y = 1.9; h = 0.78; gap = 0.18
     for i, (t, sub) in enumerate(steps):
-        d._rect(s, x, y + 0.13, 0.56, 0.56, BLUE, shape=MSO_SHAPE.OVAL)
-        d.text(s, str(i + 1), x, y + 0.19, 0.56, 0.45, size=18, color=WHITE, bold=True,
-               align=PP_ALIGN.CENTER, font="Cambria")
-        d.text(s, t, x + 0.85, y + 0.06, 5.5, 0.4, size=17, color=NAVY, bold=True, font="Cambria")
-        d.text(s, sub, x + 0.85, y + 0.46, 9.4, 0.35, size=12, color=GREY)
+        d.card(s, CX0, y, CW, h)                       # bordered item card
+        cy = y + h / 2
+        d.num_circle(s, CX0 + 0.55, cy, i + 1, dia=0.5)
+        d.text(s, t, CX0 + 1.1, y + 0.12, 6.0, 0.34, size=15, color=NAVY, bold=True,
+               font="Cambria")
+        d.text(s, sub, CX0 + 1.1, y + 0.44, 9.2, 0.3, size=11.5, color=GREY)
         if i < len(steps) - 1:
-            d.text(s, "▼  higher source wins on conflict — always", x + 0.85, y + h - 0.03,
-                   8.0, 0.28, size=9, color=MUTEDBLUE)
-        y += h + 0.14
+            d.text(s, "▼", CX0 + 0.4, y + h - 0.02, 0.3, gap + 0.04, size=11, color=BLUE,
+                   bold=True, align=PP_ALIGN.CENTER)
+        y += h + gap
+    d.text(s, "Higher source always wins on conflict — no exceptions.", CX0, y + 0.02,
+           CW, 0.3, size=11, color=MUTEDBLUE, italic=True)
 
 
 def build():
@@ -134,13 +137,14 @@ def build():
             ("Session State", "auth context, correlation, ttl — per session"),
             ("Workflow / Agent State", "graph state, steps, HIL — per workflow run"),
             ("Enterprise Business State", "system-of-record truth — owned by PFF")]
-    xs = [CX0, 7.35]; ys = [1.95, 4.2]
+    xs = [CX0, 7.4]; ys = [1.95, 4.25]; cw = 5.25; ch = 1.95
     for i, (t, sub) in enumerate(quad):
         x = xs[i % 2]; y = ys[i // 2]
         col = NAVY if i % 2 == 0 else BLUE
-        d.card(s, x, y, 5.3, 2.05)
-        d.text(s, t, x + 0.3, y + 0.28, 4.7, 0.5, size=18, color=col, bold=True, font="Cambria")
-        d.text(s, sub, x + 0.3, y + 1.0, 4.7, 0.9, size=13, color=GREY)
+        d.card(s, x, y, cw, ch)
+        d._rect(s, x, y + 0.32, 0.12, 0.9, col)      # accent tab (not a full border stripe)
+        d.text(s, t, x + 0.35, y + 0.32, cw - 0.6, 0.5, size=18, color=col, bold=True, font="Cambria")
+        d.text(s, sub, x + 0.35, y + 1.02, cw - 0.6, 0.8, size=13, color=GREY)
     d.set_notes(s, "Enterprise business state is owned entirely by PFF; the "
         "AI holds only conversation, session and workflow state.")
 

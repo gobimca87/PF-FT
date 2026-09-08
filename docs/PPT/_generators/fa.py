@@ -29,7 +29,7 @@ BLUE       = RGBColor(0x2E, 0x75, 0xB6)   # professional accent (replaces red)
 BLUE_DK    = RGBColor(0x1F, 0x5C, 0x99)
 GOLD       = RGBColor(0xFF, 0xC7, 0x2C)   # sparing highlight
 CARD       = RGBColor(0xF3, 0xF6, 0xFA)   # light card fill
-CARD_LINE  = RGBColor(0xD9, 0xE1, 0xEA)   # card border
+CARD_LINE  = RGBColor(0xA9, 0xBA, 0xCE)   # card border — clearly visible
 GREY       = RGBColor(0x5C, 0x6B, 0x7A)   # secondary text
 MUTEDBLUE  = RGBColor(0x8F, 0xA6, 0xC4)   # muted on navy
 INK        = NAVY
@@ -149,9 +149,17 @@ class Deck:
             r1.font.size = Pt(size); r1.font.name = font; r1.font.color.rgb = color
         return tb
 
-    def card(self, s, x, y, w, h, fill=CARD, line=CARD_LINE):
+    def card(self, s, x, y, w, h, fill=CARD, line=CARD_LINE, line_w=1.25):
         return self._rect(s, x, y, w, h, fill, line=line, shape=MSO_SHAPE.ROUNDED_RECTANGLE,
-                          line_w=1.0)
+                          line_w=line_w)
+
+    def num_circle(self, s, cx, cy, n, dia=0.56, fill=BLUE, tsize=18, tcolor=WHITE):
+        """Filled circle centred at (cx, cy) with the number centred inside it."""
+        self._rect(s, cx - dia / 2, cy - dia / 2, dia, dia, fill, shape=MSO_SHAPE.OVAL)
+        tb = self.text(s, str(n), cx - dia / 2, cy - dia / 2, dia, dia, size=tsize,
+                       color=tcolor, bold=True, align=PP_ALIGN.CENTER, font=HEAD_FONT,
+                       anchor=MSO_ANCHOR.MIDDLE)
+        return tb
 
     def box(self, s, text, x, y, w, h, style="light", size=13, bold=True,
             align=PP_ALIGN.CENTER, font=BODY_FONT):
