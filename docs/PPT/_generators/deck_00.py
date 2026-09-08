@@ -2,80 +2,78 @@
 """Deck 00 — PFF AI Technical ARB: Executive & whole-system overview."""
 import os
 from orion import (Deck, PP_ALIGN, MSO_ANCHOR, MSO_SHAPE,
-                   WHITE, GREY, MUTED, CYAN, BLUE, PURPLE, PINK, VIOLET, YELLOW, GREEN,
-                   PANEL, PANEL2)
+                   WHITE, GREY, MUTED, ACCENT, MAGENTA, SUCCESS, PANEL, PANEL2, HAIR)
+from common import stat_cards
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "00-overview.pptx")
 DATE = "September 2026"
 
 
 def master_diagram(d, s):
-    # zone container for the AI runtime
-    d.box(s, "", 0.5, 3.05, 12.33, 2.55, fill=PANEL, line=VIOLET, line_w=1.0)
+    # runtime container (borderless panel)
+    d.box(s, "", 0.5, 3.05, 12.33, 2.55, fill=PANEL, line=None)
     d.text(s, "AI RUNTIME  ·  single LangGraph process  ·  agents = logical capabilities",
-           0.7, 3.12, 8.0, 0.3, size=10, color=VIOLET, bold=True)
+           0.7, 3.12, 8.0, 0.3, size=10, color=ACCENT, bold=True)
     d.text(s, "Guardrails at every boundary (input · context · prompt · tool · model · output)",
-           4.7, 3.12, 7.9, 0.3, size=10, color=PINK, bold=True, align=PP_ALIGN.RIGHT)
+           4.7, 3.12, 7.9, 0.3, size=10, color=MAGENTA, bold=True, align=PP_ALIGN.RIGHT)
 
     # Band A — request path
-    bandA = [("Chat UI", CYAN), ("APIM\nauthN / authZ", BLUE),
-             ("FastAPI\nthin API", CYAN), ("Supervisor\nintent routing", YELLOW),
-             ("LangGraph\norchestration", GREEN)]
+    bandA = ["Chat UI", "APIM\nauthN / authZ", "FastAPI\nthin API",
+             "Supervisor\nintent routing", "LangGraph\norchestration"]
     x = 0.6; w = 2.15; gap = 0.34; y = 1.85; h = 0.72
+    prev_r = None
     centers = []
-    for i, (label, col) in enumerate(bandA):
-        d.box(s, label, x, y, w, h, fill=PANEL2, line=col, textcolor=WHITE, size=12)
-        centers.append((x + w/2, x, x + w))
-        if i > 0:
-            d.connector(s, prev_r, y + h/2, x, y + h/2, color=GREY, width=1.5)
+    for i, label in enumerate(bandA):
+        d.box(s, label, x, y, w, h, fill=PANEL2, line=None, textcolor=WHITE, size=12)
+        centers.append(x + w / 2)
+        if prev_r is not None:
+            d.connector(s, prev_r, y + h / 2, x, y + h / 2, color=MUTED, width=1.5)
         prev_r = x + w
         x += w + gap
-    # LangGraph down into runtime
-    d.connector(s, centers[-1][0], y + h, centers[-1][0], 3.05, color=GREEN, width=1.75)
+    d.connector(s, centers[-1], y + h, centers[-1], 3.05, color=ACCENT, width=1.75)
 
     # Inside runtime: Agents + capability row
     d.box(s, "Agents\n(AffiliationAgent first)", 0.75, 3.55, 2.4, 0.95,
-          fill=PANEL2, line=YELLOW, size=12)
-    caps = [("ERC\nenterprise context", CYAN), ("Tools / MCP", BLUE),
-            ("RAG\nknowledge", GREEN), ("Memory / Cache\nRedis", PINK),
-            ("SLM\nHF → vLLM", VIOLET)]
-    cx = 3.45; cw = 1.78; cgap = 0.12; cy = 3.9; ch = 0.95
-    for label, col in caps:
-        d.box(s, label, cx, cy, cw, ch, fill=PANEL2, line=col, size=11)
-        cx += cw + cgap
-    d.connector(s, 3.15, 4.02, 3.45, 4.02, color=YELLOW, width=1.5)
+          fill=PANEL2, line=None, textcolor=WHITE, size=12)
+    caps = ["ERC\nenterprise context", "Tools / MCP", "RAG\nknowledge",
+            "Memory / Cache\nRedis", "SLM\nHF → vLLM"]
+    cx = 3.45; cw = 1.78; ch = 0.95
+    for label in caps:
+        d.box(s, label, cx, 3.9, cw, ch, fill=PANEL2, line=None, textcolor=WHITE, size=11)
+        cx += cw + 0.12
+    d.connector(s, 3.15, 4.02, 3.45, 4.02, color=MUTED, width=1.5)
 
     # Band C — system of record + response
     y2 = 5.05
     d.box(s, "Enterprise APIs / Events  —  PFF System of Record (decides & executes)",
-          0.75, y2, 7.4, 0.42, fill=PANEL2, line=BLUE, size=11)
-    d.box(s, "Output\nGuardrail", 8.35, y2 - 0.02, 1.7, 0.46, fill=PANEL2, line=PINK, size=11)
-    d.box(s, "Response", 10.25, y2 - 0.02, 2.05, 0.46, fill=PANEL2, line=CYAN, size=11)
-    d.connector(s, 4.4, 4.85, 4.4, y2, color=BLUE, width=1.5)
-    d.connector(s, 8.15, y2 + 0.2, 8.35, y2 + 0.2, color=GREY, width=1.4)
-    d.connector(s, 10.05, y2 + 0.2, 10.25, y2 + 0.2, color=GREY, width=1.4)
+          0.75, y2, 7.4, 0.42, fill=PANEL2, line=None, textcolor=WHITE, size=11)
+    d.box(s, "Output\nGuardrail", 8.35, y2 - 0.02, 1.7, 0.46, fill=PANEL2, line=None,
+          textcolor=WHITE, size=11)
+    d.box(s, "Response", 10.25, y2 - 0.02, 2.05, 0.46, fill=PANEL2, line=None,
+          textcolor=WHITE, size=11)
+    d.connector(s, 4.4, 4.85, 4.4, y2, color=MUTED, width=1.5)
+    d.connector(s, 8.15, y2 + 0.2, 8.35, y2 + 0.2, color=MUTED, width=1.4)
+    d.connector(s, 10.05, y2 + 0.2, 10.25, y2 + 0.2, color=MUTED, width=1.4)
 
-    # precedence footnote
     d.text(s, "Authoritative-truth precedence:  Enterprise API / Event  ›  ERC  ›  Cache  ›  RAG  ›  SLM output",
-           0.5, 5.75, 12.33, 0.3, size=11, color=YELLOW, bold=True, align=PP_ALIGN.CENTER)
+           0.5, 5.75, 12.33, 0.3, size=11, color=ACCENT, bold=True, align=PP_ALIGN.CENTER)
 
 
 def precedence_diagram(d, s):
-    steps = [("Enterprise API / Event", "System of record — decides & executes", GREEN),
-             ("ERC", "Enterprise Runtime Context — validated, provenanced", CYAN),
-             ("Cache", "Authorization-aware, freshness-bounded", BLUE),
-             ("RAG", "Retrieved knowledge — cited, ACL-enforced", PURPLE),
-             ("SLM output", "Language only — never a source of authority", PINK)]
-    y = 1.85; h = 0.82; w = 11.4; x = 0.95
-    for i, (t, sub, col) in enumerate(steps):
-        d.box(s, "", x, y, 0.16, h, fill=col, line=None)
-        d.box(s, f"{i+1}", x + 0.28, y + 0.13, 0.56, 0.56, fill=PANEL2, line=col,
-              textcolor=col, size=18, shape=MSO_SHAPE.OVAL)
-        d.text(s, t, x + 1.05, y + 0.08, 4.5, 0.4, size=17, color=WHITE, bold=True)
-        d.text(s, sub, x + 1.05, y + 0.44, 9.8, 0.35, size=12, color=GREY)
+    steps = [("Enterprise API / Event", "System of record — decides & executes"),
+             ("ERC", "Enterprise Runtime Context — validated, provenanced"),
+             ("Cache", "Authorization-aware, freshness-bounded"),
+             ("RAG", "Retrieved knowledge — cited, ACL-enforced"),
+             ("SLM output", "Language only — never a source of authority")]
+    y = 1.85; h = 0.82; x = 0.95
+    for i, (t, sub) in enumerate(steps):
+        d.box(s, f"{i+1}", x, y + 0.13, 0.56, 0.56, fill=ACCENT, line=None,
+              textcolor=WHITE, size=18, shape=MSO_SHAPE.OVAL)
+        d.text(s, t, x + 0.85, y + 0.08, 5.0, 0.4, size=17, color=WHITE, bold=True)
+        d.text(s, sub, x + 0.85, y + 0.44, 9.8, 0.35, size=12, color=GREY)
         if i < len(steps) - 1:
             d.text(s, "▼  higher source wins on conflict — always",
-                   x + 1.05, y + h - 0.02, 8.0, 0.28, size=9, color=MUTED)
+                   x + 0.85, y + h - 0.02, 8.0, 0.28, size=9, color=MUTED)
         y += h + 0.14
 
 
@@ -111,7 +109,6 @@ def build():
         "First end-to-end workflow delivered: Club Affiliation.",
         "Persona: a workflow-first enterprise assistant with a natural football-commentary tone.",
     ], 0.9, 2.0, 11.5, 4.5, size=17, gap=14)
-    d.notes_helper = None
     s.notes_slide.notes_text_frame.text = (
         "Key message: this is an orchestration layer, not a rewrite. PFF remains the system of "
         "record. Adam adds interpretation, context-gathering, reasoning, controlled tool-calling "
@@ -119,7 +116,7 @@ def build():
 
     s = d.content_slide("The Golden Rule — the binding constraint")
     d.box(s, "Enterprise systems DECIDE and EXECUTE.\nThe AI platform INTERPRETS, ORCHESTRATES,\nCONTEXTUALISES, EXPLAINS and COMMUNICATES.",
-          1.4, 2.05, 10.5, 2.0, fill=PANEL, line=YELLOW, textcolor=WHITE, size=22, bold=True)
+          1.4, 2.05, 10.5, 2.0, fill=PANEL2, line=None, textcolor=WHITE, size=22, bold=True)
     d.bullets(s, [
         "The AI never authenticates/authorizes, re-implements business rules, or writes to the enterprise DB.",
         "A model output never becomes an authorization decision.",
@@ -144,14 +141,15 @@ def build():
         "system of record. Guardrails run at every boundary; output is validated before it reaches the user.")
 
     s = d.content_slide("Four state concepts — kept strictly separate")
-    quad = [("Conversation State", "turns, messages, intent — per conversation", CYAN),
-            ("Session State", "auth context, correlation, ttl — per session", BLUE),
-            ("Workflow / Agent State", "graph state, steps, HIL — per workflow run", GREEN),
-            ("Enterprise Business State", "system-of-record truth — owned by PFF", PINK)]
+    quad = [("Conversation State", "turns, messages, intent — per conversation"),
+            ("Session State", "auth context, correlation, ttl — per session"),
+            ("Workflow / Agent State", "graph state, steps, HIL — per workflow run"),
+            ("Enterprise Business State", "system-of-record truth — owned by PFF")]
     xs = [0.9, 6.85]; ys = [2.0, 4.35]
-    for i, (t, sub, col) in enumerate(quad):
+    for i, (t, sub) in enumerate(quad):
         x = xs[i % 2]; y = ys[i // 2]
-        d.box(s, "", x, y, 5.55, 2.05, fill=PANEL, line=col, line_w=1.25)
+        col = ACCENT if i % 2 == 0 else MAGENTA
+        d.box(s, "", x, y, 5.55, 2.05, fill=PANEL2, line=None)
         d.text(s, t, x + 0.3, y + 0.25, 5.0, 0.5, size=18, color=col, bold=True)
         d.text(s, sub, x + 0.3, y + 0.95, 5.0, 0.9, size=13, color=GREY)
     s.notes_slide.notes_text_frame.text = (
@@ -196,20 +194,18 @@ def build():
         ["D8 Business Value", "10", "value, metrics, traceability"],
     ], 0.9, 1.95, 11.5, 4.9, col_widths=[3.2, 1.0, 7.3], font_size=12)
     d.text(s, "145 governed ADRs  ·  5 still Proposed and awaiting ARB sign-off (deck 09)",
-           0.9, 6.95, 11.5, 0.35, size=12, color=YELLOW, bold=True)
+           0.9, 6.95, 11.5, 0.35, size=12, color=ACCENT, bold=True)
     s.notes_slide.notes_text_frame.text = (
         "145 ADRs across nine decision domains. Most are Accepted; five remain Proposed with a stated "
         "recommendation we are building against — those are what we need the ARB to ratify (deck 09).")
 
     s = d.content_slide("Cost headline", "Indicative — Azure UK South, Sept 2026, verify with FinOps")
-    stats = [("HF API", "hosted SLM phase", CYAN), ("vLLM / GPU", "self-hosted target", VIOLET),
-             ("AI Search", "vector store", GREEN), ("Langfuse", "AI observability", PINK)]
-    x = 0.9
-    for t, sub, col in stats:
-        d.box(s, "", x, 2.2, 2.75, 1.9, fill=PANEL, line=col, line_w=1.25)
-        d.text(s, t, x + 0.25, 2.45, 2.3, 0.6, size=20, color=col, bold=True)
-        d.text(s, sub, x + 0.25, 3.15, 2.3, 0.7, size=12, color=GREY)
-        x += 2.95
+    stat_cards(d, s, [
+        ("HF API", "hosted SLM phase", None),
+        ("vLLM / GPU", "self-hosted target", None),
+        ("AI Search", "vector store", None),
+        ("Langfuse", "AI observability", None),
+    ], y=2.2, h=1.9)
     d.text(s, "Deck 08 breaks cost down per technology (drivers, formula, Low / Expected / High monthly).",
            0.9, 4.5, 11.5, 0.5, size=15, color=WHITE)
     s.notes_slide.notes_text_frame.text = (

@@ -28,13 +28,20 @@ PINK    = RGBColor(0xFE, 0x25, 0x79)   # accent3
 VIOLET  = RGBColor(0x53, 0x00, 0xDB)   # accent4
 YELLOW  = RGBColor(0xFE, 0xD0, 0x38)   # accent5
 GREEN   = RGBColor(0x48, 0xE8, 0x4A)   # accent6
-GREY    = RGBColor(0xD5, 0xD5, 0xD5)   # lt2
-MUTED   = RGBColor(0x9A, 0x9A, 0x9A)
-PANEL   = RGBColor(0x14, 0x16, 0x1C)   # near-black panel fill
-PANEL2  = RGBColor(0x1E, 0x22, 0x2B)
+GREY    = RGBColor(0xCF, 0xD3, 0xDA)   # body secondary
+MUTED   = RGBColor(0x8A, 0x90, 0x9C)
+PANEL   = RGBColor(0x12, 0x14, 0x19)   # near-black panel fill
+PANEL2  = RGBColor(0x1B, 0x1F, 0x27)   # slightly lighter panel
+HAIR    = RGBColor(0x2A, 0x2E, 0x38)   # subtle hairline
 
-BODY_FONT = "Calibri"
-HEAD_FONT = "Calibri"
+# Professional restrained scheme (per org reference slide)
+ACCENT  = RGBColor(0x2E, 0x9B, 0xF0)   # azure blue — section headers / labels / bullets
+MAGENTA = RGBColor(0xC2, 0x4D, 0xFF)   # magenta — sub-headers / emphasis
+SUCCESS = GREEN                        # reserved for confirmed success only
+WARN    = RGBColor(0xF2, 0xB0, 0x3A)   # amber — genuine warnings only
+
+BODY_FONT = "Arial"
+HEAD_FONT = "Arial"
 
 # Layout names in the Orion template (Black = dark variants)
 L_TITLE    = "Title - Tidal - Black"
@@ -125,7 +132,7 @@ class Deck:
         s = self.prs.slides.add_slide(self.layout(L_CONTENT))
         self._set_title(s, title)
         if subtitle:
-            self.text(s, subtitle, 0.9, 1.35, 11.5, 0.5, size=15, color=CYAN, bold=True)
+            self.text(s, subtitle, 0.9, 1.35, 11.5, 0.5, size=15, color=ACCENT, bold=True)
         self._notes(s, notes)
         return s
 
@@ -190,17 +197,17 @@ class Deck:
             p.space_after = Pt(gap)
             p.alignment = PP_ALIGN.LEFT
             # accent bullet marker
-            marker = f"{start+i+1}. " if numbered else "▸ "
+            marker = f"{start+i+1}.  " if numbered else "•  "
             r0 = p.add_run(); r0.text = marker
             r0.font.size = Pt(size); r0.font.name = font
-            r0.font.color.rgb = CYAN; r0.font.bold = True
+            r0.font.color.rgb = ACCENT; r0.font.bold = True
             r1 = p.add_run(); r1.text = item
             r1.font.size = Pt(size); r1.font.name = font
             r1.font.color.rgb = color
         return tb
 
-    def box(self, slide, text, x, y, w, h, fill=PANEL, line=CYAN, textcolor=WHITE,
-            size=13, bold=True, shape=MSO_SHAPE.ROUNDED_RECTANGLE, line_w=1.25,
+    def box(self, slide, text, x, y, w, h, fill=PANEL, line=None, textcolor=WHITE,
+            size=13, bold=True, shape=MSO_SHAPE.ROUNDED_RECTANGLE, line_w=1.0,
             align=PP_ALIGN.CENTER, font=BODY_FONT):
         sp = slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h))
         sp.fill.solid(); sp.fill.fore_color.rgb = fill
@@ -244,8 +251,8 @@ class Deck:
         return slide.shapes.add_picture(path, Inches(x), Inches(y), **kw)
 
     def table(self, slide, rows, x, y, w, h, col_widths=None, header=True,
-              font_size=11, header_fill=PURPLE, body_fill=PANEL, alt_fill=PANEL2,
-              header_color=WHITE, body_color=GREY, first_col_color=WHITE):
+              font_size=11, header_fill=RGBColor(0x15, 0x3A, 0x5C), body_fill=PANEL,
+              alt_fill=PANEL2, header_color=WHITE, body_color=GREY, first_col_color=WHITE):
         nrows, ncols = len(rows), len(rows[0])
         gt = slide.shapes.add_table(nrows, ncols, Inches(x), Inches(y),
                                     Inches(w), Inches(h))
