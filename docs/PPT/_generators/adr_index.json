@@ -1,0 +1,1201 @@
+{
+ "domains": {
+  "0": [
+   {
+    "id": "ADR-D0-01",
+    "title": "Adopt an in-repository ADR library with a CMMI DAR-aligned template",
+    "status": "Accepted",
+    "domain": "0",
+    "num": 1,
+    "summary": "PFF AI will maintain its architecture decisions as an in-repository ADR library at docs/architecture/adr/, written to a template aligned with CMMI-DEV Decision Analysis and Resolution."
+   },
+   {
+    "id": "ADR-D0-02",
+    "title": "ADR identification, status lifecycle, supersession and amendment policy",
+    "status": "Accepted",
+    "domain": "0",
+    "num": 2,
+    "summary": "ADRs are identified as ADR-D<domain>-<sequence>, domain-prefixed rather than globally sequential. Records move through a five-state lifecycle (Proposed \u2192 Accepted \u2192 Superseded / Deprecated / Rejected), are never edited in substance once Acc"
+   },
+   {
+    "id": "ADR-D0-03",
+    "title": "Decision authority model and architecture review cadence",
+    "status": "Accepted",
+    "domain": "0",
+    "num": 3,
+    "summary": "Ratification authority for an ADR is determined by what the decision touches, not by who wrote it. Decisions in the 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md \u00a752 categories are ratified by the external ADF/ADR forum;"
+   },
+   {
+    "id": "ADR-D0-04",
+    "title": "Open and deferred decision register with a phase-gated escalation path",
+    "status": "Accepted",
+    "domain": "0",
+    "num": 4,
+    "summary": "A decision that is not yet made is recorded as a Proposed ADR carrying its full evaluation and a stated recommendation, listed in _register/open-decisions.md against the build phase that forces it."
+   }
+  ],
+  "1": [
+   {
+    "id": "ADR-D1-01",
+    "title": "PFF AI scope boundary \u2014 a conversational orchestration layer, not a replacement enterprise platform",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 1,
+    "summary": "PFF AI is scoped as a conversational orchestration layer over the existing PFF platform. It owns conversation, context assembly, agent execution, knowledge retrieval and communication."
+   },
+   {
+    "id": "ADR-D1-02",
+    "title": "The Golden Rule as a binding architectural constraint with named enforcement points",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 2,
+    "summary": "The Golden Rule \u2014 enterprise systems decide and execute; the AI platform interprets, orchestrates, contextualises, explains and communicates \u2014 is adopted as a binding architectural constraint enforced deterministically in code, not as a pri"
+   },
+   {
+    "id": "ADR-D1-03",
+    "title": "Authoritative-truth precedence chain for resolving source conflicts",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 3,
+    "summary": "When two sources of information disagree about operational or business truth, the ordering Enterprise API / Enterprise Event > ERC > Cache > RAG > SLM output decides, without exception."
+   },
+   {
+    "id": "ADR-D1-04",
+    "title": "Business problem framing and measurable success definition",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 4,
+    "summary": "PFF AI's success is defined as workflow completion, not conversational quality or query deflection. The platform succeeds when a county-football administrator who would otherwise have abandoned, escalated or completed a process incorrectly "
+   },
+   {
+    "id": "ADR-D1-05",
+    "title": "Club Affiliation as the first end-to-end reference workflow",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 5,
+    "summary": "Club Affiliation is built first and end to end, rather than a simpler workflow or a partial slice of several. It is chosen precisely because it is hard: it exercises long-running execution, human-in-the-loop review, payment, batching, event"
+   },
+   {
+    "id": "ADR-D1-06",
+    "title": "Business capability map and capability ownership model",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 6,
+    "summary": "Capabilities are mapped in three ownership classes \u2014 Enterprise-owned, AI-owned, and Shared by boundary \u2014 with \"Shared\" given a precise definition rather than left as a comfortable label: a shared capability is one where the enterprise owns"
+   },
+   {
+    "id": "ADR-D1-07",
+    "title": "Persona model and access archetypes derived from enterprise claims",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 7,
+    "summary": "Personas describe how the platform communicates with a user; access archetypes describe what a user may see and do. They are kept strictly separate, and only the second is derived from enterprise claims."
+   },
+   {
+    "id": "ADR-D1-08",
+    "title": "Conversational journey design principles and human-in-the-loop touchpoints",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 8,
+    "summary": "The conversational journey is designed around four principles \u2014 surface blockers before they block, never leave a wait unexplained, hand off deliberately rather than by failure, and make every wait resumable."
+   },
+   {
+    "id": "ADR-D1-09",
+    "title": "Adam AI persona charter \u2014 football-commentary tone as a governed product decision",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 9,
+    "summary": "Adam's football-commentary persona is adopted as a deliberate product decision with a written charter, not as a stylistic default."
+   },
+   {
+    "id": "ADR-D1-10",
+    "title": "Enterprise workflow catalogue, prioritisation and phasing",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 10,
+    "summary": "A workflow catalogue is maintained as a candidate list with explicit prioritisation criteria, not as a committed roadmap. Only affiliation is committed."
+   },
+   {
+    "id": "ADR-D1-11",
+    "title": "Agent catalogue scope \u2014 AffiliationAgent only in the first pass",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 11,
+    "summary": "Exactly one agent is built: AffiliationAgent. The wider catalogue stays unfinalised, per 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md \u00a76's own statement that it \"will be finalized separately\"."
+   },
+   {
+    "id": "ADR-D1-12",
+    "title": "Functional and non-functional requirements baseline and identifier traceability scheme",
+    "status": "Accepted",
+    "domain": "1",
+    "num": 12,
+    "summary": "Requirements are identified by a scheme that names their source rather than a flat sequence, and the baseline is derived from what the specifications already state rather than re-elicited."
+   }
+  ],
+  "2": [
+   {
+    "id": "ADR-D2-01",
+    "title": "Layered architecture with a mechanically enforced dependency rule",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 1,
+    "summary": "Five layers \u2014 API, Application, Orchestration, Domain, Infrastructure \u2014 with dependencies running strictly inward. The decision is not the layering, which CLAUDE.md already states;"
+   },
+   {
+    "id": "ADR-D2-02",
+    "title": "Single AI runtime with agents as logical capabilities, not deployables",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 2,
+    "summary": "Agents are modules inside one deployable runtime. One microservice per agent is an anti-pattern under 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md \u00a748 unless independent deployment or scaling is specifically justified, and no such justification ex"
+   },
+   {
+    "id": "ADR-D2-03",
+    "title": "Dual runtime model \u2014 request-driven and event-driven entry into one execution core",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 3,
+    "summary": "The platform has two entry paths \u2014 a synchronous HTTP request and an asynchronous Service Bus event \u2014 converging on one execution core: the same harness, the same agents, the same ERC, the same guardrails."
+   },
+   {
+    "id": "ADR-D2-04",
+    "title": "Conversation Manager responsibility boundary",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 4,
+    "summary": "The Conversation Manager owns conversation and session lifecycle, message persistence, concurrency control and active-workflow association."
+   },
+   {
+    "id": "ADR-D2-05",
+    "title": "Supervisor intent routing, confidence thresholds and candidate agent selection",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 5,
+    "summary": "The Supervisor produces a schema-validated structured decision \u2014 intent, workflow, agent, confidence, clarification flag \u2014 before any routing occurs."
+   },
+   {
+    "id": "ADR-D2-06",
+    "title": "Workflow orchestration engine \u2014 LangGraph",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 6,
+    "summary": "LangGraph is adopted as the workflow orchestration engine, confirming CLAUDE.md's stated stack. The decision that needed making was not whether \u2014 that was fixed \u2014 but how much of the platform depends on it."
+   },
+   {
+    "id": "ADR-D2-07",
+    "title": "Graph state representation \u2014 TypedDict internally, Pydantic at boundaries, references not copies",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 7,
+    "summary": "LangGraph internal state is a TypedDict, as CLAUDE.md requires; everything crossing a boundary is a Pydantic model. The consequential part is 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md \u00a727's rule: graph state carries references to large data, nev"
+   },
+   {
+    "id": "ADR-D2-08",
+    "title": "Sequential, parallel and hybrid execution with bounded parallelism",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 8,
+    "summary": "Execution order is derived from a declared dependency graph in the API catalogue, not chosen by an agent or a model. Independent calls run in parallel under a bounded concurrency limit that exists to protect the enterprise, not the platform"
+   },
+   {
+    "id": "ADR-D2-09",
+    "title": "Agent Harness as the single controlled execution boundary",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 9,
+    "summary": "The Agent Harness is the only path by which an agent reaches a model, a tool, ERC, memory, RAG or MCP. Agents receive capabilities from the harness rather than importing them, so an agent physically cannot bypass a control."
+   },
+   {
+    "id": "ADR-D2-10",
+    "title": "Long-running workflow durability and human-in-the-loop suspend/resume",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 10,
+    "summary": "Workflow state is persisted at every suspension point in a store independent of process, session and conversation, so a workflow survives request termination, pod restart, session expiry and a change of workload."
+   },
+   {
+    "id": "ADR-D2-11",
+    "title": "Workflow idempotency, retry, timeout and loop-limit policy",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 11,
+    "summary": "Retry eligibility is a declared property of each enterprise operation, not a runtime judgement, and a write is retried only when it carries an idempotency key."
+   },
+   {
+    "id": "ADR-D2-12",
+    "title": "ERC as the enterprise context boundary",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 12,
+    "summary": "ERC is the single, exclusive path by which enterprise operational data reaches the model. It is defined as much by what it is not \u2014 not the enterprise database, not conversation memory, not cache, not RAG \u2014 as by what it is."
+   },
+   {
+    "id": "ADR-D2-13",
+    "title": "Enterprise integration pattern \u2014 API catalogue, tool registry and selective MCP",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 13,
+    "summary": "Three layers with distinct jobs, per 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md \u00a74: the API catalogue describes what enterprise operations exist;"
+   },
+   {
+    "id": "ADR-D2-14",
+    "title": "Enterprise integration matrix, service ownership and coupling rules",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 14,
+    "summary": "The integration matrix is maintained as a derived artefact \u2014 built up from the enterprise services the platform actually integrates with, workflow by workflow \u2014 rather than asserted up front from a service count."
+   },
+   {
+    "id": "ADR-D2-15",
+    "title": "Enterprise API contract, versioning and compatibility strategy",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 15,
+    "summary": "Every enterprise response is validated against a platform-owned contract and mapped deterministically into ERC shapes \u2014 never passed through raw."
+   },
+   {
+    "id": "ADR-D2-16",
+    "title": "Asynchronous eventing platform \u2014 Azure Service Bus, consumed not produced",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 16,
+    "summary": "Azure Service Bus is confirmed as the eventing platform per CLAUDE.md. The decision that needed making is the platform's posture: PFF AI is a pure consumer."
+   },
+   {
+    "id": "ADR-D2-17",
+    "title": "Event envelope, schema registry and event contract versioning",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 17,
+    "summary": "Event contracts live in the repository as versioned schema files under contracts/events/, and every event is validated against the envelope and its typed payload schema before any handler sees it."
+   },
+   {
+    "id": "ADR-D2-18",
+    "title": "Message reliability \u2014 deduplication, idempotency, dead-lettering and reconciliation",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 18,
+    "summary": "At-least-once delivery is handled by making event processing idempotent at two levels \u2014 event ID deduplication and workflow position checking \u2014 rather than by trying to achieve exactly-once."
+   },
+   {
+    "id": "ADR-D2-19",
+    "title": "Portal link registry and the no-invented-URL enforcement mechanism",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 19,
+    "summary": "Every URL the platform emits is constructed from a registry of portal bases and route templates, never generated by the model and never validated after the fact."
+   },
+   {
+    "id": "ADR-D2-20",
+    "title": "Enterprise API endpoint declaration and per-environment resolution",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 20,
+    "summary": "The API catalogue declares each enterprise operation's business contract \u2014 api_id, version, operation, purpose \u2014 against a logical endpoint_ref, never a physical URL."
+   },
+   {
+    "id": "ADR-D2-21",
+    "title": "Request payload parameter sourcing and binding",
+    "status": "Accepted",
+    "domain": "2",
+    "num": 21,
+    "summary": "Every field in an enterprise API request contract is declared with an explicit source: model_argument (proposed by the model, subject to ADR-D3-04's full gate sequence), or platform_bound \u2014 resolved deterministically by the tool implementat"
+   }
+  ],
+  "3": [
+   {
+    "id": "ADR-D3-01",
+    "title": "AI capability taxonomy and capability-to-component mapping",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 1,
+    "summary": "AI capabilities are classified by where the intelligence sits and what it is trusted with, not by which technology provides them. Four classes \u2014 Deterministic, Model-Assisted, Model-Generated and Model-Terminal \u2014 with the rule that no Model"
+   },
+   {
+    "id": "ADR-D3-02",
+    "title": "Agentic architecture style \u2014 supervisor with workflow agents, no autonomous delegation",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 2,
+    "summary": "A single supervisor routes to one workflow agent per turn. Agents do not delegate to each other, do not spawn sub-agents, and do not plan across workflows."
+   },
+   {
+    "id": "ADR-D3-03",
+    "title": "Agent contract, capability registration and lifecycle",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 3,
+    "summary": "An agent declares its capabilities, context requirements and tool needs as configuration, and implements a narrow execution contract in code."
+   },
+   {
+    "id": "ADR-D3-04",
+    "title": "Tool-calling architecture and the tool-validation boundary",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 4,
+    "summary": "A tool call proposed by the model passes five deterministic gates before dispatch \u2014 allowlist, schema, semantic parameter validation, authorization, idempotency \u2014 and its result passes two on return."
+   },
+   {
+    "id": "ADR-D3-05",
+    "title": "Deterministic versus model-decided routing \u2014 where each governs",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 5,
+    "summary": "Model decisions are confined to interpretation \u2014 what the user means, how to say something, which permitted option best fits. Every decision with a consequence outside the conversation is deterministic: execution order, tool eligibility, au"
+   },
+   {
+    "id": "ADR-D3-06",
+    "title": "Intent classification approach and the registered intent set",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 6,
+    "summary": "Intent is classified by the SLM into a closed, registered set declared by agents, with out-of-scope as a first-class member of that set."
+   },
+   {
+    "id": "ADR-D3-07",
+    "title": "Clarification, disambiguation and confirmation strategy",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 7,
+    "summary": "Clarification is triggered by irreversibility, not by uncertainty alone: the platform asks when proceeding wrongly would cause something hard to undo, and proceeds when a wrong guess is recoverable within the conversation."
+   },
+   {
+    "id": "ADR-D3-08",
+    "title": "Transaction-uncertainty and ambiguous-outcome conversational policy",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 8,
+    "summary": "When an enterprise outcome is genuinely unknown, the platform says so \u2014 naming what is known, what is not, why it cannot tell, and what the user should do."
+   },
+   {
+    "id": "ADR-D3-09",
+    "title": "Layered prompt composition with trust-labelled content boundaries",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 9,
+    "summary": "Prompts are composed deterministically from separately versioned layers, and every piece of content carries a trust label with an explicit delimiter marking where untrusted content begins and ends."
+   },
+   {
+    "id": "ADR-D3-10",
+    "title": "Adam persona prompt layer \u2014 versioned, reusable, workflow-independent",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 10,
+    "summary": "PFF AI will implement the Adam persona as a dedicated, versioned prompt layer that sits between the system prompt and the task/workflow prompts in the layered composition of [ADR-D3-09](ADR-D3-09-layered-prompt-composition.md), and is reuse"
+   },
+   {
+    "id": "ADR-D3-11",
+    "title": "Prompt storage, versioning and promotion",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 11,
+    "summary": "PFF AI will treat Git as the canonical source of truth for all prompts, stored as versioned Markdown-body-with-YAML-metadata artefacts under prompts/, promoted through environments as immutable, semantically-versioned releases via the relea"
+   },
+   {
+    "id": "ADR-D3-12",
+    "title": "Prompt injection defence inside the prompt layer",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 12,
+    "summary": "PFF AI will defend against prompt injection with defence-in-depth inside the prompt layer: strict trust tiering of every composed segment (16.PFF-FA-AI-PROMPT-ENGINEERING.md \u00a76, \u00a757), hard structural delimitation of all untrusted data (\u00a716,"
+   },
+   {
+    "id": "ADR-D3-13",
+    "title": "SLM strategy \u2014 Hugging Face Inference API first, self-hosted SLM as target",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 13,
+    "summary": "PFF AI will start on the Hugging Face Inference API for language generation and migrate to an internally self-hosted SLM (vLLM/TGI on AKS GPU \u2014 see [ADR-D5-10](../05-technology-architecture/ADR-D5-10-self-hosted-slm-serving-stack.md)) as th"
+   },
+   {
+    "id": "ADR-D3-14",
+    "title": "SLM provider abstraction and provider-neutral contract",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 14,
+    "summary": "PFF AI will access all language models through a single provider-neutral SLM abstraction \u2014 a Python Protocol with Pydantic request/response contracts (15.PFF-FA-AI-SLM.md \u00a713\u2013\u00a715) \u2014 so that Hugging Face, self-hosted vLLM/TGI, or any future "
+   },
+   {
+    "id": "ADR-D3-15",
+    "title": "Model registry \u2014 capability, purpose and status model",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 15,
+    "summary": "PFF AI will maintain a declarative model registry (config-as-code, Git-versioned) that records every language and embedding model by id@version with its capabilities, purpose/task class, status lifecycle (ACTIVE/TESTING/ DEPRECATED/RETIRED/"
+   },
+   {
+    "id": "ADR-D3-16",
+    "title": "Generation parameter and temperature strategy per task class",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 16,
+    "summary": "PFF AI will bind generation parameters (temperature, top-p, max output tokens, stop sequences) to a declared task class, not to ad-hoc call sites: deterministic tasks (structured extraction, routing rationale, tool-argument formatting) run "
+   },
+   {
+    "id": "ADR-D3-17",
+    "title": "Structured output strategy and output validation",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 17,
+    "summary": "Wherever the platform needs machine-consumable output from the SLM (tool arguments, routing decisions, extraction results, HIL forms), PFF AI will require the output to conform to an explicit Pydantic schema, obtained through the strongest "
+   },
+   {
+    "id": "ADR-D3-18",
+    "title": "SLM fallback, degradation and circuit-breaking",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 18,
+    "summary": "PFF AI will make SLM resilience explicit and never silent: ordered fallback across compatible models/providers, per-provider circuit breakers, layered timeouts, bounded retries with backoff, and a defined degraded mode when no model is avai"
+   },
+   {
+    "id": "ADR-D3-19",
+    "title": "Streaming strategy and its interaction with structured output",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 19,
+    "summary": "PFF AI will stream user-facing persona narration token-by-token for responsiveness, but will never stream structured output, tool arguments, or any text that must pass validation or guardrails before the user sees it."
+   },
+   {
+    "id": "ADR-D3-20",
+    "title": "RAG scope \u2014 knowledge and FAQ only, never business truth",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 20,
+    "summary": "PFF AI's RAG subsystem will serve only knowledge and FAQ content \u2014 policies, guidance, how-to, rules explanations \u2014 and will never be a source of authoritative business state (a club's affiliation status, a payment result, an official's rec"
+   },
+   {
+    "id": "ADR-D3-21",
+    "title": "Document ingestion and chunking strategy for a low-churn policy corpus",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 21,
+    "summary": "Structure-aware chunking (heading and section boundaries), augmented with LLM-generated contextual prefixes per chunk, retrieved via a parent-child scheme."
+   },
+   {
+    "id": "ADR-D3-22",
+    "title": "Retrieval, reranking and mandatory-citation policy",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 22,
+    "summary": "PFF AI will retrieve with hybrid search (vector + lexical) \u2192 fusion \u2192 reranking \u2192 score-threshold filtering, and will enforce mandatory citation: every knowledge claim in an answer must map to a retrieved, cited chunk, or the claim is not m"
+   },
+   {
+    "id": "ADR-D3-23",
+    "title": "Embedding model selection, versioning and re-embedding strategy",
+    "status": "Proposed",
+    "domain": "3",
+    "num": 23,
+    "summary": "PFF AI will select its embedding model through a PFF-FA-specific retrieval evaluation rather than benchmark reputation, and will treat the chosen model as a versioned artefact bound to a specific vector index."
+   },
+   {
+    "id": "ADR-D3-24",
+    "title": "Vector store selection",
+    "status": "Proposed",
+    "domain": "3",
+    "num": 24,
+    "summary": "PFF AI will store and search knowledge/FAQ embeddings in a managed, Azure-native vector store with private networking, Entra ID RBAC and built-in hybrid search."
+   },
+   {
+    "id": "ADR-D3-25",
+    "title": "Context engineering \u2014 assembly order, precedence and token-budget allocation",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 25,
+    "summary": "PFF AI will assemble the model context by a deterministic, precedence-ordered pipeline with an explicit token budget allocated per source \u2014 enterprise/ERC context and instructions first and protected, then memory, then retrieved knowledge, "
+   },
+   {
+    "id": "ADR-D3-26",
+    "title": "RAG retrieval invocation \u2014 tool contract, execution model, agentic loop bound",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 26,
+    "summary": "PFF AI will expose RAG retrieval as a harness-gated tool (rag.search) with an explicit input contract and limits, invoked either by deterministic supervisor routing or by the agent within its declared scope (never by free-form model text) \u2014"
+   },
+   {
+    "id": "ADR-D3-27",
+    "title": "Document ingestion trigger mechanism \u2014 what starts a (re-)ingest",
+    "status": "Accepted",
+    "domain": "3",
+    "num": 27,
+    "summary": "PFF AI will trigger document ingestion through two complementary paths, matched to where a document actually lives: (1) enterprise-source documents (policies tracked in an FA system of record) are re-ingested on a Service Bus event (documen"
+   },
+   {
+    "id": "ADR-D3-28",
+    "title": "Quality-gated runtime refinement loop, model-escalation ladder and strict mode",
+    "status": "Proposed",
+    "domain": "3",
+    "num": 28,
+    "summary": "For quality-sensitive generation tasks, PFF AI will add a runtime quality-gated refinement loop: after a candidate output is produced, a deterministic controller scores it against configured quality dimensions (reusing the evaluation scorer"
+   }
+  ],
+  "4": [
+   {
+    "id": "ADR-D4-01",
+    "title": "Four-state separation \u2014 conversation / session / workflow / enterprise",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 1,
+    "summary": "PFF AI will keep four state concepts strictly separate in code, storage and lifecycle: Conversation State, Session State, Workflow/Agent State and Enterprise Business State \u2014 never conflating them, never letting one masquerade as another."
+   },
+   {
+    "id": "ADR-D4-02",
+    "title": "ERC schema, identity and section-level versioning",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 2,
+    "summary": "PFF AI will model the Enterprise Runtime Context (ERC) as a strongly-typed, sectioned Pydantic structure with a stable ERC identity, an overall ERC version and independent section-level versions, plus a schema version \u2014 so that individual c"
+   },
+   {
+    "id": "ADR-D4-03",
+    "title": "ERC provenance, freshness policy and authority levels",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 3,
+    "summary": "Every ERC section will carry provenance (which enterprise source produced it, and when), a freshness assessment against a per-section policy, and an explicit authority level \u2014 so the platform can reason about how much to trust each section "
+   },
+   {
+    "id": "ADR-D4-04",
+    "title": "ERC collection planning, batching and pagination safety",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 4,
+    "summary": "PFF AI will build ERC through a declarative collection planner that resolves the context-requirement dependency graph and executes enterprise reads with bounded parallelism, agreed batch sizes (MAX_ERC_BATCH_SIZE = 20), and pagination-safet"
+   },
+   {
+    "id": "ADR-D4-05",
+    "title": "ERC partial-failure semantics \u2014 mandatory vs optional, completeness tracking",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 5,
+    "summary": "PFF AI will classify every context requirement as mandatory or optional and handle partial ERC-collection failures accordingly: a failed mandatory collection fails the ERC build (the workflow cannot safely proceed), while a failed optional "
+   },
+   {
+    "id": "ADR-D4-06",
+    "title": "ERC invalidation, patching and event-driven refresh",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 6,
+    "summary": "PFF AI will keep ERC current through section-level invalidation and patching and event-driven refresh: when an enterprise event indicates a change (via Azure Service Bus, ADR-D2-16), only the affected ERC section is invalidated and re-colle"
+   },
+   {
+    "id": "ADR-D4-07",
+    "title": "Data and knowledge architecture \u2014 domains, classification and ownership",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 7,
+    "summary": "PFF AI will organise all data it touches into explicit data domains (enterprise business data, ERC reference data, conversation/session/memory data, knowledge/RAG data, operational telemetry), each with a classification (Public / Internal /"
+   },
+   {
+    "id": "ADR-D4-08",
+    "title": "Canonical identifier and reference-data strategy (WGS alignment)",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 8,
+    "summary": "PFF AI will treat entity identifiers (club, team, official, affiliation number, league, season) as enterprise-owned canonical identifiers referenced by the AI, never minted or reconciled by the AI itself."
+   },
+   {
+    "id": "ADR-D4-09",
+    "title": "Metadata, response envelope and error-code standards",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 9,
+    "summary": "PFF AI will use a single standard response envelope for its API \u2014 a typed Pydantic structure carrying data, a metadata block (correlation id, timestamps, versions, pagination) and a structured error block with a stable, namespaced error-cod"
+   },
+   {
+    "id": "ADR-D4-10",
+    "title": "Session / conversation / memory / cache state store \u2014 Azure Managed Redis",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 10,
+    "summary": "PFF AI will use Azure Managed Redis as the backing store for conversation, session, memory and cache state, behind the MemoryStore/CacheStore abstractions (9 PFF-FA-AI-MEMORY-CACHE.md \u00a722), with memory and cache logically separated by key n"
+   },
+   {
+    "id": "ADR-D4-11",
+    "title": "Memory architecture \u2014 short/long-term, ranking, summarisation, retention",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 11,
+    "summary": "PFF AI will implement memory as typed categories (conversation, session, working, workflow, agent-run, user-preference, organizational, ERC-reference, decision, summary \u2014 9 PFF-FA-AI-MEMORY-CACHE.md \u00a75\u2013\u00a719) behind a provider-independent Mem"
+   },
+   {
+    "id": "ADR-D4-12",
+    "title": "Cache architecture \u2014 namespaces, TTL, invalidation, stampede protection",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 12,
+    "summary": "PFF AI will cache enterprise-API responses and derived data using cache-aside with namespaced, isolation-safe keys, volatility-aware TTLs, event-driven + TTL invalidation, and protection against stampede, penetration and poisoning (9 PFF-FA"
+   },
+   {
+    "id": "ADR-D4-13",
+    "title": "Cache and memory key scoping for platform-global (non-tenant) entries",
+    "status": "Accepted",
+    "domain": "4",
+    "num": 13,
+    "summary": "Every cache and memory entry declares an explicit scope \u2014 tenant (the default, namespaced by tenant/organization/user as ADR-D4-12 already requires) or platform (a small, reviewed set of genuinely tenant-invariant reference data, keyed once"
+   }
+  ],
+  "5": [
+   {
+    "id": "ADR-D5-01",
+    "title": "Language and API framework \u2014 Python + FastAPI",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 1,
+    "summary": "PFF AI will be built in Python with FastAPI as the HTTP API framework. Python is the lingua franca of the AI/agent ecosystem (LangGraph, Hugging Face, embeddings, evaluation tooling), and FastAPI provides async-first, Pydantic-native, OpenA"
+   },
+   {
+    "id": "ADR-D5-02",
+    "title": "Python version range and primary type checker \u2014 mypy",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 2,
+    "summary": "PFF AI will target Python >=3.11,<3.13 and use mypy in strict mode (with the pydantic.mypy plugin) as the single primary type checker across CI and pre-commit."
+   },
+   {
+    "id": "ADR-D5-03",
+    "title": "Boundary validation standard \u2014 Pydantic v2",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 3,
+    "summary": "PFF AI will use Pydantic v2 for all data crossing a boundary \u2014 FastAPI request/response, tool req/res, config, event contracts, ERC schema, SLM req/res \u2014 while LangGraph-internal state uses TypedDict (27.PFF-FA-AI-DEVELOPMENT-STANDARDS.md \u00a7"
+   },
+   {
+    "id": "ADR-D5-04",
+    "title": "Dependency management, pinning and lock-file policy",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 4,
+    "summary": "PFF AI will manage dependencies with pyproject.toml + a committed lock file and fully pinned, hash-verified versions, with reproducible installs across dev, CI and production images and automated vulnerability + update scanning (CLAUDE.md;"
+   },
+   {
+    "id": "ADR-D5-05",
+    "title": "Lint/format toolchain \u2014 Ruff as the single tool",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 5,
+    "summary": "PFF AI will use Ruff as the single tool for both linting and formatting, replacing the traditional flake8 + isort + black (+ plugins) stack (CLAUDE.md;"
+   },
+   {
+    "id": "ADR-D5-06",
+    "title": "Configuration architecture and immutable release-manifest model",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 6,
+    "summary": "PFF AI will use a layered YAML configuration (base + environment overlays) loaded fail-fast into an immutable runtime configuration object, with an immutable release manifest as the single deployment truth that pins every versioned artefact"
+   },
+   {
+    "id": "ADR-D5-07",
+    "title": "Secret management \u2014 Azure Key Vault with `*_secret_ref` indirection",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 7,
+    "summary": "PFF AI will store all secrets in Azure Key Vault, accessed at runtime via Azure Managed Identity (no secrets in images, env files or YAML), with configuration referencing secrets only through _secret_ref indirection that resolves to a Key V"
+   },
+   {
+    "id": "ADR-D5-08",
+    "title": "Cloud platform and compute \u2014 Azure + AKS",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 8,
+    "summary": "PFF AI will run on Microsoft Azure with Azure Kubernetes Service (AKS) as the compute platform, alongside APIM, Key Vault, Service Bus, ACR and Azure Monitor (CLAUDE.md;"
+   },
+   {
+    "id": "ADR-D5-09",
+    "title": "Container image, ACR and image-immutability policy",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 9,
+    "summary": "PFF AI will build minimal, multi-stage, non-root container images, publish them to Azure Container Registry (ACR) with immutable, digest-pinned tags, vulnerability scanning and (target) signing, and deploy images by digest so what runs is e"
+   },
+   {
+    "id": "ADR-D5-10",
+    "title": "Self-hosted SLM serving stack \u2014 vLLM vs TGI vs Azure ML",
+    "status": "Proposed",
+    "domain": "5",
+    "num": 10,
+    "summary": "For the self-hosted SLM phase (ADR-D3-13), PFF AI will serve the model on a GPU-accelerated inference server behind the provider abstraction (ADR-D3-14)."
+   },
+   {
+    "id": "ADR-D5-11",
+    "title": "GPU node pool and CPU/GPU workload separation",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 11,
+    "summary": "PFF AI will run CPU workloads (API, orchestration, workers) and GPU workloads (self-hosted SLM/embedding inference) on separate AKS node pools, with the GPU pool independently autoscaled and provisioned only when self-hosting is active (25."
+   },
+   {
+    "id": "ADR-D5-12",
+    "title": "Infrastructure-as-Code approach \u2014 conform to the Enterprise Application delivery model",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 12,
+    "summary": "PFF AI's Azure infrastructure is defined and provisioned through the Enterprise Application's existing Infrastructure-as-Code and delivery model \u2014 the same IaC approach, Azure DevOps build.yaml/release.yaml pipelines, AKS platform, platform"
+   },
+   {
+    "id": "ADR-D5-13",
+    "title": "Kubernetes deployment approach \u2014 conform to the Enterprise Application AKS model",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 13,
+    "summary": "PFF AI is packaged and deployed to the existing enterprise Azure Kubernetes Service (AKS) platform through the Enterprise Application's established Azure DevOps release.yaml pipeline and Kubernetes deployment model (ADR-D5-20) \u2014 the same ma"
+   },
+   {
+    "id": "ADR-D5-14",
+    "title": "Environment model \u2014 DEV \u2192 TEST \u2192 UAT \u2192 STAGE \u2192 PROD",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 14,
+    "summary": "PFF AI will use a five-stage environment model \u2014 DEV \u2192 TEST \u2192 UAT \u2192 STAGE \u2192 PROD \u2014 with strict isolation, per-environment configuration overlays and release-manifest promotion, so changes flow through progressively production-like stages be"
+   },
+   {
+    "id": "ADR-D5-15",
+    "title": "API gateway and authorization boundary \u2014 APIM",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 15,
+    "summary": "PFF AI will front its API with Azure API Management (APIM) as the edge gateway and authorization boundary: APIM authenticates and authorizes requests (validating tokens/claims), applies rate limiting and edge policies, and the AI platform c"
+   },
+   {
+    "id": "ADR-D5-16",
+    "title": "Shared HTTP client standard \u2014 pooling, timeout, retry, tracing",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 16,
+    "summary": "PFF AI will route all outbound HTTP through a single shared async client (httpx AsyncClient) with connection pooling, mandatory timeouts, bounded retries with backoff, circuit-breaking, correlation-ID propagation and tracing \u2014 no ad-hoc cli"
+   },
+   {
+    "id": "ADR-D5-17",
+    "title": "Scalability and autoscaling model",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 17,
+    "summary": "PFF AI will scale horizontally with workload-appropriate autoscaling signals: HPA on request concurrency/CPU for the API tier, queue-depth-based scaling for Service Bus workers, and inference-utilisation-based scaling for the GPU tier \u2014 all"
+   },
+   {
+    "id": "ADR-D5-18",
+    "title": "Latency budget decomposition and per-hop SLO allocation",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 18,
+    "summary": "PFF AI will define an end-to-end latency budget measured in percentiles (p50/ p95/p99) and decompose it into per-hop sub-budgets \u2014 gateway, orchestration, ERC collection, retrieval, SLM generation, tool calls \u2014 each with an owner and an SLO"
+   },
+   {
+    "id": "ADR-D5-19",
+    "title": "Inference KV-cache and VRAM capacity planning for the self-hosted SLM",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 19,
+    "summary": "The self-hosted GPU pool's VRAM/KV-cache headroom is sized by an explicit formula connecting ADR-D3-25's declared token budget (the maximum prompt size the platform allows, including protected ERC content) and a target concurrency to the KV"
+   },
+   {
+    "id": "ADR-D5-20",
+    "title": "Adopt the Enterprise Application delivery model \u2014 Azure DevOps CI/CD on AKS with SonarQube",
+    "status": "Accepted",
+    "domain": "5",
+    "num": 20,
+    "summary": "The enterprise already operates a proven application delivery platform: Azure DevOps build (build.yaml) and release (release.yaml) pipelines that deploy to a shared Azure Kubernetes Service (AKS) platform, provisioned and maintained by an e"
+   }
+  ],
+  "6": [
+   {
+    "id": "ADR-D6-01",
+    "title": "Zero-trust model and trust-zone definition",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 1,
+    "summary": "PFF AI will adopt a zero-trust security model: no request, service or network location is trusted by default; every hop authenticates, authorizes and validates."
+   },
+   {
+    "id": "ADR-D6-02",
+    "title": "AuthN/AuthZ boundary \u2014 APIM validates, AI consumes claims only",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 2,
+    "summary": "Authentication and the validation of authorization are performed at the APIM/ enterprise boundary; the AI platform consumes already-validated authorization claims and never authenticates a request, mints authority, or lets a model output be"
+   },
+   {
+    "id": "ADR-D6-03",
+    "title": "Authorization context integrity and propagation through the graph",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 3,
+    "summary": "The validated authorization context (identity + claims from APIM, ADR-D6-02) will be carried as immutable, server-owned state propagated through every LangGraph node, tool call and ERC/RAG access \u2014 never re-derived from user input, never mu"
+   },
+   {
+    "id": "ADR-D6-04",
+    "title": "Network segmentation, private connectivity and egress control",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 4,
+    "summary": "PFF AI will run on segmented private networks with private endpoints to all Azure PaaS (Key Vault, ACR, Service Bus, Redis, vector store), no public data-plane exposure, and default-deny egress with an explicit allowlist for the few externa"
+   },
+   {
+    "id": "ADR-D6-05",
+    "title": "Encryption in transit/at rest, key management and rotation",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 5,
+    "summary": "PFF AI will enforce TLS 1.2+ in transit everywhere and encryption at rest on all stores, using Azure-managed keys by default and customer-managed keys (CMK) in Key Vault for Confidential/Personal/special-category data, with defined rotation"
+   },
+   {
+    "id": "ADR-D6-06",
+    "title": "Data classification, PII protection and data-flow policy",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 6,
+    "summary": "PFF AI will apply data minimisation and a data-flow policy driven by classification (ADR-D4-07): PII is detected/redacted at inputs and outputs where appropriate, only the minimum necessary data crosses each boundary, and higher-classificat"
+   },
+   {
+    "id": "ADR-D6-07",
+    "title": "External SLM data boundary \u2014 what may leave the tenancy",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 7,
+    "summary": "While the SLM runs on the external Hugging Face API (initial phase, ADR-D3-13), PFF AI will strictly bound what may leave the Azure tenancy: only the minimum non-personal, redacted text needed for generation;"
+   },
+   {
+    "id": "ADR-D6-08",
+    "title": "Prompt injection and jailbreak defence architecture",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 8,
+    "summary": "PFF AI will defend against prompt injection and jailbreaks with layered runtime guardrails covering direct and indirect injection across all untrusted channels \u2014 user input, RAG documents, tool/API results, MCP responses, memory, Service Bu"
+   },
+   {
+    "id": "ADR-D6-09",
+    "title": "Guardrail pipeline placement at six boundaries, fail-closed policy",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 9,
+    "summary": "PFF AI will run a guardrail pipeline at six enforcement boundaries \u2014 user input, pre-SLM prompt, SLM output, pre-tool-call, tool/API/RAG result ingestion, and user-facing output \u2014 each returning a structured guardrail result and failing clo"
+   },
+   {
+    "id": "ADR-D6-10",
+    "title": "Tool allowlist, parameter and output security",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 10,
+    "summary": "Every tool/enterprise-API/MCP call the AI can make will be constrained by an allowlist (which tools, which endpoints, which methods), parameter validation + authorization (against the propagated authz context, ADR-D6-03) and output validati"
+   },
+   {
+    "id": "ADR-D6-11",
+    "title": "MCP server trust model and response validation",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 11,
+    "summary": "MCP (Model Context Protocol) servers will be treated as semi-trusted external integrations: only allowlisted MCP servers and tools with pinned version compatibility may be used, all MCP responses are validated and treated as untrusted conte"
+   },
+   {
+    "id": "ADR-D6-12",
+    "title": "RAG ACL enforcement and retrieval-time authorization",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 12,
+    "summary": "RAG retrieval will enforce access control at retrieval time: the caller's authz context (ADR-D6-03) is translated into metadata filters applied before/within the vector search, so a user only ever retrieves knowledge chunks they are authori"
+   },
+   {
+    "id": "ADR-D6-13",
+    "title": "Responsible AI principles and prohibited-use boundary",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 13,
+    "summary": "PFF AI will adopt an explicit Responsible AI framework \u2014 fairness, reliability, safety, privacy, transparency, explainability, traceability, auditability (20.PFF-FA-AI-GOVERNANCE.md \u00a721\u2013\u00a730) \u2014 and a prohibited-use boundary defining what the"
+   },
+   {
+    "id": "ADR-D6-14",
+    "title": "Human oversight and HIL governance model",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 14,
+    "summary": "PFF AI will keep humans in authority over consequential decisions: a defined human-in-the-loop (HIL) boundary means the platform pauses for human decision/approval on defined actions (e.g."
+   },
+   {
+    "id": "ADR-D6-15",
+    "title": "Model/prompt/index change governance and release approval gates",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 15,
+    "summary": "Changes to versioned AI artefacts \u2014 models, prompts, RAG indexes, guardrails, agents, workflows \u2014 will pass classified change-governance gates: risk-classified changes, required approvals by role, evaluation release gates (golden datasets/r"
+   },
+   {
+    "id": "ADR-D6-16",
+    "title": "UK GDPR, safeguarding and children's-data handling",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 16,
+    "summary": "Because FA football data pervasively involves children and safeguarding, PFF AI treats children's personal data and safeguarding information as special-category-grade, most-protected data: lawful-basis-aware, minimised, never sent to extern"
+   },
+   {
+    "id": "ADR-D6-17",
+    "title": "Audit logging and evidential record model",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 17,
+    "summary": "PFF AI will keep an append-only, tamper-evident evidential record of decisions and consequential events \u2014 HIL decisions (ADR-D6-14), change approvals (ADR-D6-15), authorization decisions, tool/enterprise actions, state transitions and RAG/A"
+   },
+   {
+    "id": "ADR-D6-18",
+    "title": "Standards conformance \u2014 ISO/IEC 42001, 27001, 9001, NIST AI RMF, EU AI Act",
+    "status": "Accepted",
+    "domain": "6",
+    "num": 18,
+    "summary": "PFF AI will align to a defined set of standards \u2014 ISO/IEC 42001 (AI management), ISO/IEC 27001 (infosec), ISO/IEC 27701 (privacy), ISO 9001 (quality), ISO/IEC 23894 (AI risk), NIST AI RMF, NIST CSF, and the EU AI Act / UK GDPR \u2014 via a compl"
+   },
+   {
+    "id": "ADR-D6-19",
+    "title": "SLM input masking regime \u2014 mandatory for external, optional for self-hosted",
+    "status": "Proposed",
+    "domain": "6",
+    "num": 19,
+    "summary": "PFF AI adopts an explicit two-regime masking rule for data sent to a language model, strengthening ADR-D6-07 from \"minimise, redact and hard-block the most sensitive classes\" into a testable default: for an external / hosted SLM (any infere"
+   }
+  ],
+  "7": [
+   {
+    "id": "ADR-D7-01",
+    "title": "Platform observability stack \u2014 Azure Monitor / App Insights / Log Analytics",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 1,
+    "summary": "PFF AI will use the Azure-native observability stack \u2014 Azure Monitor, Application Insights and Log Analytics \u2014 for platform metrics, traces and logs, answering the four runtime questions (is it up, is it fast, is it correct, is it costing w"
+   },
+   {
+    "id": "ADR-D7-02",
+    "title": "AI-specific observability \u2014 Langfuse",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 2,
+    "summary": "PFF AI will use Langfuse as the AI-specific observability layer \u2014 tracing LLM/agent executions, prompt versions, token usage and cost, and AI-quality signals \u2014 complementing the platform stack (ADR-D7-01) (24.PFF-FA-AI-OBSERVABILITY-RESILIE"
+   },
+   {
+    "id": "ADR-D7-03",
+    "title": "Correlation ID and trace-propagation standard",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 3,
+    "summary": "Every request carries a correlation ID propagated via W3C Trace Context across API, orchestration, tools, enterprise calls and Service Bus events, so one conversation/ workflow is traceable end-to-end across platform logs, Langfuse traces a"
+   },
+   {
+    "id": "ADR-D7-04",
+    "title": "Logging standards, levels and redaction rules",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 4,
+    "summary": "PFF AI will emit structured JSON logs with consistent levels and mandatory redaction of PII/secrets, carrying the correlation id (ADR-D7-03), to Log Analytics (ADR-D7-01) \u2014 with logs treated as operational (debugging), distinct from the tam"
+   },
+   {
+    "id": "ADR-D7-05",
+    "title": "Error taxonomy and the PlatformError hierarchy",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 5,
+    "summary": "PFF AI will use a single PlatformError exception hierarchy \u2014 ValidationError, ConfigurationError, IntegrationError, ToolError, ModelError, RAGError, GuardrailError, WorkflowError (CLAUDE.md) \u2014 each carrying structured fields (code, severity"
+   },
+   {
+    "id": "ADR-D7-06",
+    "title": "Resilience patterns \u2014 retry, circuit breaker, bulkhead, fallback",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 6,
+    "summary": "PFF AI will apply a standard resilience toolkit \u2014 bounded retry with backoff (only for retryable errors), circuit breakers per dependency, bulkhead isolation, timeouts and fallback \u2014 uniformly across all external dependencies (enterprise AP"
+   },
+   {
+    "id": "ADR-D7-07",
+    "title": "SLI/SLO definition and error-budget policy",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 7,
+    "summary": "PFF AI will define SLIs (availability, latency per ADR-D5-18, correctness/answer success, cost) and SLOs with an error-budget policy that governs the balance between shipping and reliability: when the budget is healthy the team ships;"
+   },
+   {
+    "id": "ADR-D7-08",
+    "title": "Alerting, severity model and on-call escalation",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 8,
+    "summary": "PFF AI will alert on symptoms (SLO burn) and defined error severities, mapped to a P1\u2013P4 severity model with an on-call escalation path (24.PFF-FA-AI-OBSERVABILITY-RESILIENCE.md \u00a749, \u00a753;"
+   },
+   {
+    "id": "ADR-D7-09",
+    "title": "CI pipeline design and mandatory quality gates",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 9,
+    "summary": "PFF AI's CI will run mandatory quality gates on every PR \u2014 lint/format (Ruff, ADR-D5-05), type check (mypy strict, ADR-D5-02), unit/component tests (ADR-D7-14), security + dependency scans (ADR-D6-18), and AI-evaluation gates where relevant"
+   },
+   {
+    "id": "ADR-D7-10",
+    "title": "CD pipeline and deployment strategy \u2014 rolling updates",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 10,
+    "summary": "PFF AI will deploy via a CD pipeline promoting an immutable release manifest/image digest through the environment ladder (ADR-D5-14) using rolling updates with health probes and automated post-deployment smoke tests, with fast rollback to t"
+   },
+   {
+    "id": "ADR-D7-11",
+    "title": "Branching, versioning and release-train model",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 11,
+    "summary": "PFF AI will use trunk-based development with short-lived feature branches, protected main, semantic versioning of releases, and a regular release train that bundles code + AI artefacts into an immutable release (ADR-D5-06) (25.PFF-FA-AI-INF"
+   },
+   {
+    "id": "ADR-D7-12",
+    "title": "AI engineering lifecycle (LLMOps) \u2014 prompt/model/index release bundles",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 12,
+    "summary": "PFF AI will manage prompts, models, RAG indexes, guardrails and their configs as a coordinated LLMOps lifecycle: authored/versioned in Git, evaluated (ADR-D7-13), promoted as compatible, immutable release bundles (ADR-D5-06) through the env"
+   },
+   {
+    "id": "ADR-D7-13",
+    "title": "Evaluation and regression gates in CI \u2014 golden datasets, LLM-as-judge",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 13,
+    "summary": "PFF AI will gate AI changes on automated evaluation against versioned golden datasets, combining deterministic checks (exact/functional correctness) with LLM-as-judge for subjective qualities (relevance, groundedness, faithfulness, persona)"
+   },
+   {
+    "id": "ADR-D7-14",
+    "title": "Test strategy and test pyramid, incl. deterministic mock SLM",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 14,
+    "summary": "PFF AI will follow a test pyramid \u2014 many fast unit tests, fewer component/integration tests, few end-to-end \u2014 with a deterministic mock SLM and mock enterprise APIs so AI-dependent tests are stable and fast (22.PFF-FA-AI-TESTING.md \u00a75\u2013\u00a78, \u00a7"
+   },
+   {
+    "id": "ADR-D7-15",
+    "title": "Engineering (dev-time) agents \u2014 scope and guardrails",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 15,
+    "summary": "PFF AI may use AI engineering agents at development time (code review, test/doc generation, security scan, prompt review, eval, architecture-compliance) as advisory, least-privilege assistants that never merge, deploy, or bypass human revie"
+   },
+   {
+    "id": "ADR-D7-16",
+    "title": "Operational support model, runbook ownership and service tiers",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 16,
+    "summary": "PFF AI will run a tiered support model with clear operational boundaries, owned runbooks and an on-call rota \u2014 the AI platform team operates the AI layer within defined boundaries;"
+   },
+   {
+    "id": "ADR-D7-17",
+    "title": "Incident management and AI-specific incident classification",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 17,
+    "summary": "PFF AI will run a standard incident lifecycle (detect \u2192 triage \u2192 mitigate \u2192 resolve \u2192 review) with P1\u2013P4 severity and evidence capture, extended with AI-specific incident classes \u2014 hallucination/wrong-answer, guardrail bypass/injection, mod"
+   },
+   {
+    "id": "ADR-D7-18",
+    "title": "Disaster recovery, business continuity, RPO/RTO",
+    "status": "Accepted",
+    "domain": "7",
+    "num": 18,
+    "summary": "PFF AI will define RPO/RTO targets per data class and a DR strategy that leans on the platform being largely stateless and reconstructable: code/config/AI-artefacts redeploy from Git + manifest (ADR-D5-06);"
+   }
+  ],
+  "8": [
+   {
+    "id": "ADR-D8-01",
+    "title": "Cost model and unit economics per conversation / workflow completion",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 1,
+    "summary": "PFF AI will measure cost as unit economics \u2014 cost per request, per workflow, and per successful outcome \u2014 with cost attribution/tagging, budgets, alerts and anomaly detection (26.PFF-FA-AI-PERFORMANCE-COST.md \u00a774\u2013\u00a793, \u00a795)."
+   },
+   {
+    "id": "ADR-D8-02",
+    "title": "Build vs buy vs extend for the orchestration layer",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 2,
+    "summary": "PFF AI will build the orchestration layer in-house on open frameworks (Python/FastAPI + LangGraph) rather than buy a packaged conversational-AI/agent platform, because the value and defensibility are in the enterprise-specific orchestration"
+   },
+   {
+    "id": "ADR-D8-03",
+    "title": "ROI model and benefit-realisation tracking",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 3,
+    "summary": "PFF AI will track ROI as benefit (cost/time saved, capacity freed, error reduction, experience uplift) minus cost (unit economics, ADR-D8-01), measured against a pre-launch baseline per workflow, with benefit-realisation reviews rather than"
+   },
+   {
+    "id": "ADR-D8-04",
+    "title": "Business KPI framework and dashboard definition",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 4,
+    "summary": "PFF AI will define a business KPI framework \u2014 workflow completion rate, containment/ deflection, time-to-completion, user satisfaction, cost per outcome \u2014 presented on a business dashboard, distinct from AI-quality KPIs (ADR-D8-05) and oper"
+   },
+   {
+    "id": "ADR-D8-05",
+    "title": "AI quality KPIs \u2014 containment, deflection, accuracy, persona adherence",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 5,
+    "summary": "PFF AI will track AI-quality KPIs distinct from business KPIs \u2014 answer accuracy/ groundedness, retrieval quality, hallucination rate, clarification appropriateness, containment/deflection, and persona adherence evaluated separately (per CLA"
+   },
+   {
+    "id": "ADR-D8-06",
+    "title": "RAID register and ownership",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 6,
+    "summary": "PFF AI will maintain a RAID register (Risks, Assumptions, Issues, Dependencies) with an owner and status per entry, integrated with the existing risk register (20.PFF-FA-AI-GOVERNANCE.md \u00a718\u2013\u00a720), open-decisions register (ADR-D0-04), govern"
+   },
+   {
+    "id": "ADR-D8-07",
+    "title": "Decision register and end-to-end traceability model",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 7,
+    "summary": "PFF AI will maintain a decision register and a traceability matrix linking every ADR to its WS sheet, source-doc sections, requirement IDs (ADR-D1-12), build phases, code paths and related decisions \u2014 so any decision can be traced from busi"
+   },
+   {
+    "id": "ADR-D8-08",
+    "title": "Platform extensibility \u2014 how a new agent/workflow is added",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 8,
+    "summary": "PFF AI will make adding a new workflow/agent a declarative, contract-driven, governed extension \u2014 implement the agent contract (ADR-D3-03), register it with the supervisor (ADR-D2-05), declare its tools/ERC needs/prompts as versioned artefa"
+   },
+   {
+    "id": "ADR-D8-09",
+    "title": "Multi-county / multi-tenant extensibility strategy",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 9,
+    "summary": "PFF AI will support multiple CFAs (County Football Associations) as logical tenants on shared infrastructure with strict per-tenant isolation \u2014 tenant-scoped keys/namespaces (memory/cache/session, ADR-D4-10), tenant-filtered RAG (ADR-D6-12)"
+   },
+   {
+    "id": "ADR-D8-10",
+    "title": "Vendor lock-in, portability and exit strategy",
+    "status": "Accepted",
+    "domain": "8",
+    "num": 10,
+    "summary": "PFF AI will manage lock-in by abstracting swappable dependencies behind provider-neutral interfaces, preferring open standards/OSS for the core, and documenting an exit strategy per major dependency \u2014 while accepting deliberate, valuable Az"
+   }
+  ]
+ },
+ "domain_names": {
+  "0": "Decision Programme",
+  "1": "Business Architecture",
+  "2": "Application Architecture",
+  "3": "AI Architecture",
+  "4": "Information Architecture",
+  "5": "Technology Architecture",
+  "6": "Security & Governance",
+  "7": "Operations",
+  "8": "Business Value"
+ },
+ "total": 145,
+ "proposed": [
+  "ADR-D3-23",
+  "ADR-D3-24",
+  "ADR-D3-28",
+  "ADR-D5-10",
+  "ADR-D6-19"
+ ]
+}
