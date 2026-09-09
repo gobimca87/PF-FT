@@ -18,7 +18,10 @@
 
 1. [How to read this document (C4 in 3 minutes)](#1-how-to-read-this-document-c4-in-3-minutes)
 2. [The platform in one paragraph](#2-the-platform-in-one-paragraph)
-3. [Level 1 — System Context](#3-level-1--system-context)
+3. [Level 1 — System Context (high level → detail)](#3-level-1--system-context-high-level--detail)
+   - 3.1 [Bird's-eye: User → Chat UI → Response](#31-birds-eye-user--chat-ui--response)
+   - 3.2 [Conceptual: conversation → RAG + agentic + SLM → response](#32-conceptual-conversation--rag--agentic--slm--response)
+   - 3.3 [Full system context (actors & external systems)](#33-full-system-context-actors--external-systems)
 4. [Level 2 — Containers](#4-level-2--containers)
 5. [Level 3 — Component diagrams (every corner)](#5-level-3--component-diagrams-every-corner)
    - 5.1 [API boundary](#51-api-boundary)
@@ -37,7 +40,18 @@
    - 5.14 [Messaging — Service Bus event consumer](#514-messaging--service-bus-event-consumer)
    - 5.15 [Refinement loop](#515-refinement-loop)
    - 5.16 [Cross-cutting — Observability, Evaluation, Governance, Portal Links, Config](#516-cross-cutting--observability-evaluation-governance-portal-links-config)
-6. [Level 4 — Code (selected)](#6-level-4--code-selected)
+6. [Level 4 — Code (granular, grounded in `src/pff_fa_ai/`)](#6-level-4--code-granular-grounded-in-srcpff_fa_ai)
+   - 6.1 [API request path](#61-api-request-path)
+   - 6.2 [Supervisor & intent routing](#62-supervisor--intent-routing)
+   - 6.3 [Agent contract & Harness](#63-agent-contract--harness)
+   - 6.4 [Affiliation Agent & LangGraph engine](#64-affiliation-agent--langgraph-engine)
+   - 6.5 [ERC model](#65-erc-model)
+   - 6.6 [Tool execution](#66-tool-execution)
+   - 6.7 [Guardrail pipeline](#67-guardrail-pipeline)
+   - 6.8 [SLM abstraction](#68-slm-abstraction)
+   - 6.9 [RAG model](#69-rag-model)
+   - 6.10 [Messaging & event processing](#610-messaging--event-processing)
+   - 6.11 [Refinement controller](#611-refinement-controller)
 7. [Dynamic diagrams (runtime flows)](#7-dynamic-diagrams-runtime-flows)
 8. [Deployment diagram (Azure / AKS)](#8-deployment-diagram-azure--aks)
 9. [Cross-cutting architectural invariants](#9-cross-cutting-architectural-invariants)
@@ -56,9 +70,16 @@ for the question being asked.
 | **L1 Context** | How does the system fit the world? | People & software systems | Everyone incl. non-technical |
 | **L2 Container** | What are the separately-deployable/runnable parts? | Apps, services, data stores | Architects, ops |
 | **L3 Component** | What are the major building blocks inside a container? | Modules/packages with a role | Developers |
-| **L4 Code** | How is a component implemented? | Classes / key types | Developers (selectively) |
+| **L4 Code** | How is a component implemented? | Classes / key types / signatures | Developers |
 | **Dynamic** | How do parts collaborate for a scenario? | Numbered interactions | Everyone |
 | **Deployment** | Where does it run? | Nodes / infra | Ops, SRE, security |
+
+**This document deliberately starts at the very top.** §3 opens with the simplest possible picture — a
+user sends a message and gets a reply — then adds one idea at a time (a conversational brain that uses
+knowledge + agents + a model), and only *then* introduces the real actors (CFA/FA admins) and
+infrastructure (APIM, Service Bus, …). Nothing technical appears before you need it. From §4 onward each
+level zooms one step deeper, and **§6 (L4) is intentionally granular** — real class names, signatures and
+type contracts read straight from `src/pff_fa_ai/`, so a developer can go from a box to the exact type.
 
 **Reading the notation used here:**
 
@@ -88,13 +109,71 @@ letting the model become an authority.** The first end-to-end workflow is **Club
 
 ---
 
-## 3. Level 1 — System Context
+## 3. Level 1 — System Context (high level → detail)
 
-**Question:** Who uses Adam AI, and which systems must it talk to?
+This section is the on-ramp. It starts as simply as the system can be drawn and adds one concept per step.
+If you only ever look at one section, look at **3.1**.
 
-The AI platform is a *single system* at this altitude. Everything grey is enterprise-owned or third-party.
-Note that **authentication/authorization is done by the enterprise (APIM)** — the AI platform only consumes
-validated claims.
+### 3.1 Bird's-eye: User → Chat UI → Response
+
+The whole platform, from ten thousand feet: **a person asks Adam something and gets an answer.** No
+infrastructure, no actors, no jargon — this is the promise of the product.
+
+```mermaid
+flowchart LR
+    U([User]) -->|asks a question| UI[Chat UI]
+    UI -->|request| AI[[Adam AI Platform]]
+    AI -->|answer| UI
+    UI -->|shows response| U
+    style AI fill:#1f6feb,color:#fff
+    style UI fill:#dbeafe,color:#111
+```
+
+That is the entire user-visible loop. Everything else in this document is *how the blue box keeps that
+promise safely.*
+
+### 3.2 Conceptual: conversation → RAG + agentic + SLM → response
+
+Now open the blue box **one notch** — still conceptual, still no infrastructure. Adam is a *conversational
+brain* that, to answer well, does three things: it **retrieves knowledge (RAG)**, it **runs an agentic
+workflow** (gather context, take controlled actions), and it uses a **small language model (SLM)** to
+reason and phrase the reply. The answer flows back to the user.
+
+```mermaid
+flowchart LR
+    U([User]) <-->|conversation| CI[Conversational Interface<br/>Adam persona]
+
+    subgraph BRAIN [Adam's reasoning core]
+        direction TB
+        AG[Agentic Flow<br/>gather context, take controlled actions]
+        RAG[RAG<br/>knowledge: FAQ, policy, guidance]
+        SLM[SLM<br/>reason and phrase the reply]
+        AG <--> RAG
+        AG <--> SLM
+    end
+
+    CI --> BRAIN
+    BRAIN -->|grounded response| CI
+    style CI fill:#1f6feb,color:#fff
+    style BRAIN fill:#eef2ff,color:#111
+    style AG fill:#dbeafe,color:#111
+    style RAG fill:#dbeafe,color:#111
+    style SLM fill:#dbeafe,color:#111
+```
+
+Two ideas to carry down into the detail:
+
+- **The agentic flow is the driver.** RAG and the SLM are *services it uses* — the SLM never decides on its
+  own; it phrases and reasons under the workflow's control.
+- **"Grounded" is the whole game.** Adam answers from retrieved knowledge and real context, not from what
+  the model imagines. That single principle is what every deeper level is protecting.
+
+### 3.3 Full system context (actors & external systems)
+
+Only now do we add the real world: the other **people** (CFA/FA admins), and the **systems** Adam must talk
+to. This is the classic C4 System Context. Everything grey is enterprise-owned or third-party — Adam
+*consumes* it but never re-implements it. Note especially that **authentication/authorization is done by
+the enterprise (APIM)**; Adam only consumes validated claims.
 
 ```mermaid
 C4Context
@@ -903,105 +982,766 @@ so a single incident is followable end-to-end across both runtimes.
 
 ---
 
-## 6. Level 4 — Code (selected)
+## 6. Level 4 — Code (granular, grounded in `src/pff_fa_ai/`)
 
-L4 is drawn **only where the type structure carries a rule** — not for every module. Two views: the agent
-contract, and the LangGraph state / ERC contract.
+This is the deepest zoom. Every class, field and signature below is **read from the actual source** — not
+illustrative — so you can go straight from a box to the type. Stereotypes: `<<Protocol>>` = structural
+interface, `<<Pydantic>>` = validated boundary model, `<<TypedDict>>` = graph-local state,
+`<<enumeration>>` = state/enum. Optional (`| None`) and generic detail is trimmed for legibility; the file
+path over each diagram is the source of truth.
 
-### 6.1 Agent contract & result (`agents/contract.py`, `agents/result.py`, `agents/context.py`)
+### 6.1 API request path
+
+`api/v1/chat.py`, `api/v1/envelope.py`, `application/workflows/orchestrator.py`, `common/claims.py`,
+`common/correlation.py`
 
 ```mermaid
 classDiagram
-    class AgentContract {
-        <<interface>>
-        +name: str
-        +version: str
-        +run(context: AgentContext) AgentResult
-        +can_resume(context: ResumeContext) bool
-    }
-    class AgentContext {
-        +claims: Claims
+    class ChatRequest {
+        <<Pydantic>>
         +conversation_id: str
-        +workflow_instance_id: str
-        +erc_reference: ERCReference
-        +trace_context: TraceContext
+        +session_id: str
+        +message: str
     }
-    class AgentResult {
-        +state: WorkflowState
+    class ChatData {
+        <<Pydantic>>
+        +conversation_id: str
+        +session_id: str
+        +workflow_status: str
         +response: str
-        +references: list
-        +pending_action: PendingAction
     }
-    class AffiliationAgent {
-        +name = "affiliation"
-        +run(context) AgentResult
+    class ResponseEnvelope~ChatData~ {
+        <<Pydantic>>
+        +request_id: str
+        +conversation_id: str
+        +status: str
+        +message: str
+        +data: ChatData
     }
-    class AffiliationGraph {
-        +build() CompiledGraph
-        +resume(checkpoint) CompiledGraph
+    class post_chat {
+        <<FastAPI route>>
+        +POST /api/v1/chat
     }
-    AgentContract <|.. AffiliationAgent
-    AffiliationAgent --> AffiliationGraph : drives
-    AffiliationAgent --> AgentContext : consumes
-    AffiliationAgent --> AgentResult : produces
-    AgentResult --> WorkflowState : reports
+    class OrchestrationRequest {
+        <<Pydantic>>
+        +conversation: Conversation
+        +user_message: str
+        +claims: ClaimsContext
+        +correlation: CorrelationContext
+    }
+    class OrchestrationResult {
+        <<Pydantic>>
+        +status: OrchestrationStatus
+        +response_message: str
+        +workflow_instance_id: str
+    }
+    class WorkflowOrchestrator {
+        <<Protocol>>
+        +handle_message(request) OrchestrationResult
+    }
+    class ClaimsContext {
+        <<Pydantic frozen>>
+        +subject: str
+        +organization: str
+        +roles: tuple
+        +permissions: tuple
+        +access_token: str
+    }
+    post_chat --> ChatRequest : validates
+    post_chat --> OrchestrationRequest : builds
+    post_chat --> WorkflowOrchestrator : handle_message()
+    WorkflowOrchestrator --> OrchestrationResult : returns
+    post_chat --> ResponseEnvelope~ChatData~ : returns
+    ResponseEnvelope~ChatData~ --> ChatData : wraps
+    OrchestrationRequest --> ClaimsContext : carries
 ```
 
-**Rule in the types:** an agent only ever *returns* an `AgentResult` carrying a **`WorkflowState`** —
-it cannot itself commit enterprise truth. `pending_action` is how it signals "waiting for HIL / external
-event" without owning the decision.
+**Read from code:** `post_chat` never orchestrates — it resolves conversation/session, wraps the message in
+`OrchestrationRequest` and delegates through the `WorkflowOrchestrator` **Protocol** (a port). `ClaimsContext`
+is `frozen`, and its `access_token` is the APIM-validated token propagated *unchanged* to enterprise calls
+(never a platform-held credential).
 
-### 6.2 LangGraph state & ERC contract (`orchestration/langgraph/state.py`, `context/erc/models.py`)
+### 6.2 Supervisor & intent routing
+
+`orchestration/supervisor/service.py`, `.../classifier.py`, `.../registry.py`, `.../models.py`
 
 ```mermaid
 classDiagram
+    class Supervisor {
+        -registry: AgentRegistry
+        -classifier: IntentClassifier
+        +route(user_message, claims) SupervisorDecision
+    }
+    class IntentClassifier {
+        <<Protocol>>
+        +classify(user_message) IntentClassification
+    }
+    class AgentRegistry {
+        +find_by_intent(intent) list~AgentCapability~
+    }
+    class IntentClassification {
+        <<Pydantic frozen>>
+        +intent: str
+        +confidence: float
+    }
+    class AgentCapability {
+        <<Pydantic frozen>>
+        +agent_id: str
+        +agent_version: str
+        +workflow: str
+        +supported_intents: tuple
+        +enabled: bool
+    }
+    class SupervisorDecision {
+        <<Pydantic frozen>>
+        +status: SupervisorStatus
+        +intent: str
+        +confidence: float
+        +clarification_required: bool
+        +agent_id: str
+        +workflow: str
+    }
+    class SupervisorStatus {
+        <<enumeration>>
+        ROUTED
+        CLARIFICATION_REQUIRED
+        ROUTING_FAILED
+    }
+    Supervisor --> IntentClassifier : classify
+    Supervisor --> AgentRegistry : find_by_intent
+    IntentClassifier --> IntentClassification
+    AgentRegistry --> AgentCapability
+    Supervisor --> SupervisorDecision : returns
+    SupervisorDecision --> SupervisorStatus
+```
+
+**Read from code:** `CLARIFICATION_CONFIDENCE_THRESHOLD = 0.7`. Below it → `CLARIFICATION_REQUIRED`
+(never a guessed route); no candidate → `ROUTING_FAILED`; otherwise the first matching `AgentCapability`
+wins → `ROUTED`. Deterministic threshold on a model-produced signal (`ADR-D3-05`).
+
+### 6.3 Agent contract & Harness
+
+`agents/contract.py`, `agents/context.py`, `agents/result.py`, `orchestration/harness/harness.py`
+
+```mermaid
+classDiagram
+    class Agent {
+        <<Protocol>>
+        +execute(context) AgentExecutionResult
+    }
+    class AgentHarness {
+        -limits: HarnessLimits
+        +execute(agent, context) AgentExecutionResult
+    }
+    class HarnessLimits {
+        +max_execution_time_seconds: int
+        +max_retry_count: int
+    }
+    class AgentExecutionContext {
+        <<Pydantic frozen>>
+        +conversation_id: str
+        +session_id: str
+        +workflow_instance_id: str
+        +agent_run_id: str
+        +claims: ClaimsContext
+        +user_message: str
+        +correlation: CorrelationContext
+    }
+    class AgentExecutionResult {
+        <<Pydantic frozen>>
+        +status: AgentRunStatus
+        +response: str
+        +erc_reference: str
+        +waiting: WaitingInfo
+        +errors: list~AgentError~
+    }
+    class AgentError {
+        <<Pydantic frozen>>
+        +category: ErrorCategory
+        +code: str
+        +message_safe: str
+        +retryable: bool
+    }
+    class AgentRunStatus {
+        <<enumeration>>
+        COMPLETED
+        WAITING_FOR_EVENT
+        FAILED
+    }
+    AgentHarness --> Agent : wraps + times out + retries
+    AgentHarness --> HarnessLimits : bounded by
+    Agent --> AgentExecutionContext : consumes
+    Agent --> AgentExecutionResult : produces
+    AgentExecutionResult --> AgentError
+    AgentExecutionResult --> AgentRunStatus
+```
+
+**Read from code:** `AgentHarness.execute` requires a validated `claims.subject`, wraps the agent in
+`asyncio.wait_for(max_execution_time_seconds)`, and retries only `IntegrationError` up to
+`max_retry_count`. The agent can only ever *return* an `AgentExecutionResult` — it never commits enterprise
+truth; `waiting: WaitingInfo` is how it signals HIL / external-event pauses.
+
+### 6.4 Affiliation Agent & LangGraph engine
+
+`agents/affiliation/agent.py`, `orchestration/langgraph/state.py`, `.../nodes.py`, `.../graph_builder.py`,
+`domain/workflow/entities.py`
+
+```mermaid
+classDiagram
+    class AffiliationAgent {
+        -deps: AffiliationDependencies
+        -graph: CompiledStateGraph
+        +execute(context) AgentExecutionResult
+        -_run_fresh(context)
+        -_resume(context, existing)
+        -_still_waiting_result(existing)
+    }
     class GraphState {
         <<TypedDict>>
-        +request: dict
-        +conversation: dict
-        +session: dict
-        +claims: dict
-        +workflow: dict
-        +entities: dict
+        +request, conversation, session, claims, workflow: dict
+        +intent, entities, context_requirements: dict
         +erc_reference: dict
-        +knowledge_context: list
-        +tool_results: list
+        +knowledge_context, tool_results: list
         +pending_action: dict
+        +current_node: str
         +execution_status: str
+        +step_count: int
         +error: dict
         +trace_context: dict
     }
-    class ERC {
-        <<Pydantic>>
-        +version: str
-        +generated_at: datetime
-        +sections: dict~str,ERCSection~
-        +completeness: CompletenessStatus
+    class NodeRegistry {
+        +register(node_id, handler, kind) GraphNode
+        +get(node_id) GraphNode
+        +list_nodes() list~GraphNode~
     }
-    class ERCSection {
-        <<Pydantic>>
-        +status: str
-        +count: int
-        +provenance: Provenance
+    class GraphNode {
+        <<dataclass frozen>>
+        +node_id: str
+        +kind: NodeKind
+        +handler: NodeCallable
     }
-    class Provenance {
-        <<Pydantic>>
-        +source: str
-        +api: str
-        +retrieved_at: datetime
-        +freshness: str
-        +authority: str
-        +schema_version: str
-        +correlation_id: str
+    class NodeKind {
+        <<enumeration>>
+        DETERMINISTIC
+        AI_ASSISTED
     }
-    GraphState --> ERC : erc_reference points to
-    ERC --> ERCSection : has many
-    ERCSection --> Provenance : tagged with
+    class WorkflowInstance {
+        +workflow_instance_id: str
+        +workflow_type: str
+        +status: WorkflowStatus
+        +current_state: str
+        +waiting: WaitingInfo
+        +version: int
+    }
+    class WaitingInfo {
+        +type: WaitingType
+        +reason: str
+        +resume_node: str
+        +expected_event_type: str
+    }
+    class WorkflowStatus {
+        <<enumeration>>
+        COMPLETED
+        RESUMING
+        WAITING_FOR_EXTERNAL_EVENT
+        WAITING_FOR_HUMAN
+        WAITING_FOR_USER
+    }
+    AffiliationAgent --> GraphState : ainvoke
+    AffiliationAgent --> WorkflowInstance : persists / transitions
+    WorkflowInstance --> WaitingInfo
+    WorkflowInstance --> WorkflowStatus
+    NodeRegistry --> GraphNode
+    GraphNode --> NodeKind
 ```
 
-**Boundary discipline (`ADR-D2-07`):** LangGraph internal state is **`TypedDict`** (fast, mutable, graph-
-local); everything that *crosses a boundary* — ERC, tool I/O, API/event contracts — is **Pydantic**
-(validated). Large collections live behind an `erc_reference`, not copied into every state transition.
+**Read from code:** `build_skeleton_graph(registry, entry_node, max_graph_steps, terminal_statuses)`
+compiles a self-looping `StateGraph` that stops on `terminal_statuses` (Affiliation adds `WAITING_FOR_*`
+to `COMPLETED`) or a `_limit_exceeded` node at `max_graph_steps`. The canonical `STANDARD_NODES` pipeline
+is **20 nodes** — `validate_request → identify_intent → identify_entities → determine_context →
+collect_context → build_erc → validate_erc → retrieve_rag → prepare_reasoning_context → reason →
+select_tool → authorize_tool → execute_tool → validate_tool_result → update_erc → check_completion →
+generate_response → validate_output → complete` — each tagged `DETERMINISTIC` or `AI_ASSISTED`. Note the
+control split: **every tool/ERC/validate node is `DETERMINISTIC`**; only intent/entity/reason/select/
+generate are `AI_ASSISTED`.
+
+### 6.5 ERC model
+
+`context/erc/models.py`, `context/erc/provenance.py`, `context/erc/states.py`
+
+```mermaid
+classDiagram
+    class Erc {
+        <<Versioned>>
+        +erc_id: str
+        +schema_version: str
+        +status: ErcLifecycleStatus
+        +workflow_instance_id: str
+        +conversation_id: str
+        +created_at, updated_at: datetime
+        +sections: dict~str, ErcSection~
+        +completeness: ErcCompleteness
+        +validation: ErcValidationResult
+        +version: int
+    }
+    class ErcSection {
+        <<Pydantic frozen>>
+        +name: str
+        +status: ErcSectionStatus
+        +section_version: int
+        +data: dict
+        +provenance: Provenance
+        +freshness: Freshness
+        +expected_count: int
+        +received_count: int
+    }
+    class Provenance {
+        <<Pydantic frozen>>
+        +system: str
+        +api: str
+        +endpoint_ref: str
+        +retrieved_at: datetime
+        +authority: ErcAuthority
+    }
+    class Freshness {
+        <<Pydantic frozen>>
+        +retrieved_at: datetime
+        +expires_at: datetime
+        +ttl_seconds: int
+        +status: FreshnessStatus
+    }
+    class ErcCompleteness {
+        <<Pydantic frozen>>
+        +required_sections: int
+        +completed_sections: int
+        +missing_sections: tuple
+    }
+    class ErcValidationResult {
+        <<Pydantic frozen>>
+        +status: ErcValidationStatus
+        +checked_at: datetime
+        +errors: tuple
+        +warnings: tuple
+    }
+    Erc --> ErcSection : sections
+    Erc --> ErcCompleteness
+    Erc --> ErcValidationResult
+    ErcSection --> Provenance
+    ErcSection --> Freshness
+```
+
+**Read from code:** `Erc` extends `Versioned` (optimistic-concurrency `version` for safe state
+transitions). `expected_count` vs `received_count` on a section is exactly how a partial batch surfaces as
+*incomplete*. `compute_freshness(retrieved_at, ttl_seconds, now)` stamps `FRESH`/`EXPIRED` deterministically
+— no model involvement in freshness.
+
+### 6.6 Tool execution
+
+`integration/tools/executor.py`, `.../models.py`, `integration/api/*`, `integration/execution/*`
+
+```mermaid
+classDiagram
+    class ToolExecutor {
+        +execute(request) ToolResult
+    }
+    class ToolExecutionRequest {
+        <<Pydantic frozen>>
+        +tool_id: str
+        +agent_id: str
+        +claims: ClaimsContext
+        +arguments: dict
+        +workflow_instance_id: str
+        +operation_id: str
+    }
+    class ToolDefinition {
+        <<Pydantic frozen>>
+        +tool_id: str
+        +version: str
+        +source: ToolSource
+        +input_schema_ref: str
+        +output_schema_ref: str
+        +execution_policy: ToolExecutionPolicy
+        +risk_class: ToolRiskClass
+        +allowed_agents: tuple
+    }
+    class ToolExecutionPolicy {
+        +timeout_ms: int
+        +idempotent: bool
+    }
+    class ToolResult {
+        <<Pydantic frozen>>
+        +tool_id: str
+        +status: ToolCallStatus
+        +data: Any
+        +provenance: Provenance
+        +error: ToolResultError
+    }
+    class ToolResultError {
+        +code: IntegrationErrorCode
+        +message: str
+        +retryable: bool
+    }
+    class ToolCallStatus {
+        <<enumeration>>
+        REJECTED
+        TOOL_COMPLETED
+        FAILED
+    }
+    class CircuitBreaker
+    class ConcurrencyLimiter
+    class IdempotencyStore
+    ToolExecutor --> ToolExecutionRequest : consumes
+    ToolExecutor --> ToolDefinition : resolves + authorizes
+    ToolExecutor --> CircuitBreaker : per api_id
+    ToolExecutor --> ConcurrencyLimiter : acquire(enterprise)
+    ToolExecutor --> IdempotencyStore : WRITE ops
+    ToolExecutor --> ToolResult : returns
+    ToolDefinition --> ToolExecutionPolicy
+    ToolResult --> ToolCallStatus
+    ToolResult --> ToolResultError
+```
+
+**Read from code — the authorization gauntlet inside `execute()`, in order:** tool registered? → agent
+allowed for tool? → api_id known? → `claims.permissions ⊇ api.authorization.claims`? → (for idempotent
+`WRITE`) idempotency key not already `COMPLETED`? → circuit closed for that api_id? Only then does it call
+through `EnterpriseHttpClient` under the `ConcurrencyLimiter`, propagating the caller's bearer token. Any
+failed check returns a `REJECTED` `ToolResult` — the enterprise call never happens.
+
+### 6.7 Guardrail pipeline
+
+`guardrails/pipeline.py`, `guardrails/models.py`, `guardrails/states.py`
+
+```mermaid
+classDiagram
+    class GuardrailPipeline {
+        -policies: dict~GuardrailBoundary, list~
+        -fail_open_boundaries: set
+        +register(boundary, policy)
+        +allow_fail_open(boundary)
+        +evaluate(boundary, context) GuardrailResult
+    }
+    class GuardrailPolicy {
+        <<Protocol>>
+        +evaluate(context) GuardrailResult
+    }
+    class GuardrailContext {
+        <<Pydantic frozen>>
+        +boundary: GuardrailBoundary
+        +claims: ClaimsContext
+        +content: str
+        +metadata: dict
+    }
+    class GuardrailResult {
+        <<Pydantic frozen>>
+        +decision: GuardrailDecision
+        +guardrail_id: str
+        +guardrail_version: str
+        +reason_codes: tuple
+        +severity: GuardrailSeverity
+    }
+    class GuardrailBoundary {
+        <<enumeration>>
+        INPUT
+        INJECTION
+        AUTHORIZATION_CONTEXT
+        DATA
+        PROMPT
+        TOOL
+        MODEL
+        OUTPUT
+        RESPONSE
+    }
+    class GuardrailDecision {
+        <<enumeration>>
+        ALLOW
+        ALLOW_WITH_TRANSFORMATION
+        RETRY
+        FALLBACK
+        WARN
+        BLOCK
+        ESCALATE
+    }
+    GuardrailPipeline --> GuardrailPolicy : registers per boundary
+    GuardrailPolicy --> GuardrailContext : consumes
+    GuardrailPolicy --> GuardrailResult : returns
+    GuardrailResult --> GuardrailDecision
+    GuardrailContext --> GuardrailBoundary
+```
+
+**Read from code:** `evaluate` short-circuits on the first *blocking* decision (`BLOCK`/`ESCALATE`);
+otherwise it returns the "worst" of the non-blocking results by `_DECISION_RANK`. **Fail-closed by
+default:** if a policy *raises*, the boundary `BLOCK`s — unless it was explicitly opted into fail-open, and
+`allow_fail_open` itself refuses boundaries that `is_fail_open_eligible` marks mandatory-closed.
+
+### 6.8 SLM abstraction
+
+`slm/service.py`, `slm/models.py`, `slm/providers.py`, `slm/masking_provider.py`
+
+```mermaid
+classDiagram
+    class SlmService {
+        -primary: SLMProvider
+        -fallback: SLMProvider
+        -circuit: CircuitBreaker
+        +generate(request) SlmExecutionResult
+    }
+    class SLMProvider {
+        <<Protocol>>
+        +generate(request) SlmResponse
+    }
+    class MaskingProvider {
+        <<decorator>>
+        +generate(request) SlmResponse
+    }
+    class SlmRequest {
+        <<Pydantic frozen>>
+        +model_id: str
+        +messages: tuple~SlmMessage~
+        +temperature: float
+        +top_p: float
+        +max_output_tokens: int
+        +stream: bool
+        +response_format: str
+    }
+    class SlmResponse {
+        <<Pydantic frozen>>
+        +request_id: str
+        +model_id: str
+        +model_version: str
+        +output: str
+        +usage: SlmUsage
+        +finish_reason: FinishReason
+    }
+    class SlmUsage {
+        +prompt_tokens: int
+        +completion_tokens: int
+        +total_tokens: int
+    }
+    class SlmExecutionResult {
+        +response: SlmResponse
+        +status: SlmStatus
+    }
+    class SlmStatus {
+        <<enumeration>>
+        SUCCEEDED
+        FALLBACK
+    }
+    SlmService --> SLMProvider : primary + fallback
+    MaskingProvider ..|> SLMProvider : implements
+    MaskingProvider --> SLMProvider : wraps (external path)
+    SLMProvider --> SlmRequest : consumes
+    SLMProvider --> SlmResponse : produces
+    SlmService --> SlmExecutionResult : returns
+    SlmExecutionResult --> SlmStatus
+    SlmResponse --> SlmUsage
+```
+
+**Read from code:** `generate` retries only *transient* HTTP status (`429/500/502/503/504`) with the shared
+retry primitive, trips a `CircuitBreaker`, and on failure uses the fallback provider — **never silently**:
+the caller learns via `SlmExecutionResult.status` (`SUCCEEDED` vs `FALLBACK`). `MaskingProvider` implements
+the same `SLMProvider` Protocol and *decorates* the external provider so masking cannot be skipped.
+
+### 6.9 RAG model
+
+`rag/models.py`, `rag/states.py`
+
+```mermaid
+classDiagram
+    class RagQuery {
+        <<Pydantic frozen>>
+        +query_text: str
+        +tenant_id: str
+        +organization_ids: tuple
+        +domain: str
+    }
+    class RagResult {
+        <<Pydantic frozen>>
+        +status: RagStatus
+        +chunks: tuple~RetrievedChunk~
+        +citations: tuple~Citation~
+    }
+    class RetrievedChunk {
+        +chunk: Chunk
+        +score: float
+    }
+    class Chunk {
+        <<Pydantic frozen>>
+        +chunk_id: str
+        +document_id: str
+        +document_version: int
+        +source_id: str
+        +chunk_index: int
+        +content: str
+        +tenant_id: str
+        +organization_id: str
+        +page: int
+        +section: str
+    }
+    class Citation {
+        <<Pydantic frozen>>
+        +document_id: str
+        +document_version: int
+        +title: str
+        +chunk_id: str
+        +page: int
+        +section: str
+    }
+    class SourceRegistration {
+        +source_id: str
+        +authority_level: SourceAuthorityLevel
+    }
+    class DocumentRecord {
+        +document_id: str
+        +document_version: int
+        +content_hash: str
+        +status: DocumentLifecycleStatus
+    }
+    RagQuery --> RagResult : produces
+    RagResult --> RetrievedChunk
+    RagResult --> Citation
+    RetrievedChunk --> Chunk
+    DocumentRecord --> Chunk : chunked into
+    SourceRegistration --> DocumentRecord : registers
+```
+
+**Read from code:** `RagQuery` carries `tenant_id` + `organization_ids` → this is the **ACL filter**
+(`ADR-D6-12`) applied at retrieval. `Citation` is built **only from fields of actually-retrieved chunks**
+(`document_id`, `title`, `chunk_id`, `page`, `section`) — citations cannot be invented. `content_hash` +
+`document_version` drive re-ingestion change detection.
+
+### 6.10 Messaging & event processing
+
+`messaging/service_bus/consumer.py`, `.../processing.py`, `messaging/events/models.py`,
+`messaging/handlers/workflow_resume.py`
+
+```mermaid
+classDiagram
+    class EventConsumer {
+        -receiver: ServiceBusReceiverPort
+        -processing: EventProcessingService
+        +consume_once() list~EventProcessingOutcome~
+        -_handle_message(message)
+    }
+    class EventProcessingService {
+        +process(envelope) EventProcessingOutcome
+    }
+    class EventEnvelope {
+        <<Pydantic frozen>>
+        +event_id: str
+        +event_type: str
+        +event_version: str
+        +source: str
+        +subject: str
+        +correlation_id: str
+        +causation_id: str
+        +tenant_id: str
+        +organization_id: str
+        +workflow_instance_id: str
+        +payload: dict
+    }
+    class EventProcessingOutcome {
+        +status: EventProcessingStatus
+        +reason_code: str
+    }
+    class EventProcessingStatus {
+        <<enumeration>>
+        PROCESSED
+        DUPLICATE
+        FAILED
+        DEAD_LETTERED
+    }
+    class WorkflowResumeService {
+        +resume(workflow_instance_id, event) WorkflowResumeOutcome
+    }
+    class WorkflowResumeEventHandler {
+        +handle(event, route) HandlerOutcome
+    }
+    EventConsumer --> EventProcessingService : delegates
+    EventConsumer --> EventEnvelope : validates schema
+    EventProcessingService --> EventProcessingOutcome : returns
+    EventProcessingOutcome --> EventProcessingStatus
+    EventProcessingService --> WorkflowResumeEventHandler : routes to
+    WorkflowResumeEventHandler --> WorkflowResumeService
+```
+
+**Read from code:** `EventConsumer` owns *only* message lifecycle — `PROCESSED`/`DUPLICATE` → complete,
+`DEAD_LETTERED` → dead-letter, `FAILED` → abandon (Service Bus redelivers up to max-delivery). Bad schema is
+dead-lettered before processing. `EventProcessingService.process` runs **validate → claim idempotency key
+→ route → execute → record**; an unknown event type is safely `PROCESSED` (ignored), never retried.
+`WorkflowResumeService.resume` applies **six guards** before resuming — found? org match? status in
+`{WAITING_FOR_USER, WAITING_FOR_HUMAN, WAITING_FOR_EXTERNAL_EVENT}`? has pending task?
+`expected_event_type` matches? — then `transition(... RESUMING, expected_version)`. **The right event type
+alone never resumes a workflow.**
+
+### 6.11 Refinement controller
+
+`orchestration/refinement/controller.py`, `.../models.py`, `.../scorer.py`, `.../states.py`
+
+```mermaid
+classDiagram
+    class QualityRefinementController {
+        -policy: ResolvedRefinementPolicy
+        -generator: CandidateGenerator
+        -scorer: QualityScorer
+        +run(base_model_id, reference) RefinementOutcome
+    }
+    class CandidateGenerator {
+        <<Protocol>>
+        +generate(model_id, critique) str
+    }
+    class QualityScorer {
+        +score(text, dimensions, reference) QualityScore
+    }
+    class QualityScore {
+        +overall: float
+        +dimension_scores: dict
+        +meets(threshold) bool
+        +failing_dimensions(threshold) list
+    }
+    class ResolvedRefinementPolicy {
+        +task_class: str
+        +enabled: bool
+        +quality_threshold: float
+        +dimensions: tuple
+        +escalation_ladder: tuple
+        +max_refinement_iterations: int
+        +min_escalations: int
+        +on_exhaustion: OnExhaustionAction
+    }
+    class RefinementOutcome {
+        +final_text: str
+        +decision: RefinementDecision
+        +committed: bool
+        +flagged: bool
+        +deferred_to_hil: bool
+        +failed_closed: bool
+        +score: QualityScore
+        +iterations: int
+        +escalations: int
+        +model_used: str
+    }
+    class OnExhaustionAction {
+        <<enumeration>>
+        RETURN_BEST_FLAGGED
+        DEFER_TO_HIL
+        FAIL_CLOSED
+    }
+    QualityRefinementController --> CandidateGenerator : generate(critique)
+    QualityRefinementController --> QualityScorer : score
+    QualityScorer --> QualityScore
+    QualityRefinementController --> ResolvedRefinementPolicy : bounded by
+    QualityRefinementController --> RefinementOutcome : returns
+    ResolvedRefinementPolicy --> OnExhaustionAction
+    RefinementOutcome --> RefinementDecision
+```
+
+**Read from code:** `run` loops `generate → score → gate`. It commits only when
+`score.meets(quality_threshold)` **and** `escalations >= min_escalations`; each iteration builds a
+`critique` (naming failing dimensions, ordering "keep every factual value/status/amount/date/identifier
+exactly") and steps up the `escalation_ladder`. The **only lever between iterations is the critique** —
+`CandidateGenerator.generate` takes no temperature knob and never re-invokes an enterprise tool. On
+`max_refinement_iterations` it applies `on_exhaustion` (flag / defer-to-HIL / fail-closed) and **never
+silently accepts** a below-bar output.
 
 ---
 
