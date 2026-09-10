@@ -10,7 +10,8 @@
 > *Solution Architecture Definition Template v2* section-for-section and follows the style/depth of the
 > approved *Referee Solution* SAD (v0.4). Content is grounded in `CLAUDE.md`, `DEVELOPMENT-GUIDE.md`, and the
 > ADR register. Items marked _TBD_ need your input (names, dates, cost figures, confirmed diagram assets).
-> Diagram placeholders `[Diagram: …]` mark where a LeanIX/architecture image will be inserted in the DOCX.
+> Diagrams are drafted inline as **Mermaid** (Figures 1–4); they render on GitHub and are easy to edit. Refine
+> them on review — recreate with more detail or swap for LeanIX assets before the DOCX is generated.
 
 ---
 
@@ -187,7 +188,36 @@ Detailed conversational behaviour is defined by the Adam persona rules [R4] and 
   enterprise events where required; consume events, refresh ERC, resume, and respond with resolved portal
   links.
 
-> `[Diagram: Club Affiliation conversational flow — user ↔ Adam ↔ AffiliationAgent ↔ ERC/tools ↔ PFF enterprise APIs/events]`
+**Figure 1 — Club Affiliation conversational flow.** _Draft (Mermaid); refine with real tool/step names on review._
+
+```mermaid
+sequenceDiagram
+    actor User as County / Club Admin
+    participant Adam as Adam AI (FastAPI /chat)
+    participant Agent as AffiliationAgent (LangGraph)
+    participant Harness as Agent Harness
+    participant ERC as ERC Pipeline
+    participant PFF as PFF Enterprise APIs (via APIM)
+    participant SB as Azure Service Bus
+    participant SLM as SLM (HF API to self-hosted)
+
+    User->>Adam: Affiliation request (natural language)
+    Adam->>Agent: Route to AffiliationAgent
+    Agent->>Harness: Run inside controlled boundary
+    Harness->>ERC: Build context (identify club, load application)
+    ERC->>PFF: Fetch teams / officials / products / insurance (20-record batches)
+    PFF-->>ERC: Validated claims + records
+    ERC-->>Harness: ERC (versioned)
+    Harness->>SLM: Prompt (persona + ERC); external payload masked, fail-closed
+    SLM-->>Harness: Draft language (not authority)
+    Harness->>PFF: Authorised operation via controlled tool
+    PFF-->>Harness: Authoritative result
+    Note over Agent,SB: If HIL / pending, wait for enterprise event
+    SB-->>Agent: Enterprise event (e.g. payment confirmed)
+    Agent->>ERC: Partial ERC refresh (new version)
+    Agent-->>Adam: Explain status + resolved portal link
+    Adam-->>User: Response (celebrate only after confirmed success)
+```
 
 ## 1.3 Constraints
 
@@ -256,7 +286,31 @@ enterprise data assembled per workflow instance:
 Enterprise APIs → Normalization → Validation → Claims/Security Filtering → Batch Processing → Aggregation →
 Prioritization → Context Reduction → ERC → Prompt Assembly.
 
-> `[Diagram: Target data flow — PFF enterprise APIs/events → ERC pipeline → prompt assembly → SLM; RAG index alongside]`
+**Figure 2 — Target data flow (ERC pipeline).** _Draft (Mermaid); refine with concrete source systems on review._
+
+```mermaid
+flowchart LR
+    subgraph SoR["PFF — System of Record (authoritative)"]
+        API["Enterprise APIs<br/>club, affiliation, teams,<br/>officials, products,<br/>insurance, payments"]
+        EVT["Enterprise Events<br/>(Azure Service Bus)"]
+    end
+
+    subgraph Pipe["ERC Pipeline — in-tenancy, per workflow instance"]
+        direction TB
+        N["Normalization"] --> V["Validation"] --> C["Claims / Security Filtering"]
+        C --> B["Batch Processing (20)"] --> AG["Aggregation"] --> PR["Prioritization"] --> RD["Context Reduction"]
+        RD --> ERCv["ERC (versioned)"]
+    end
+
+    RAG["RAG Index<br/>Azure AI Search<br/>policy / eligibility — questions only"]
+
+    API --> N
+    EVT -->|partial refresh| ERCv
+    ERCv --> PA["Prompt Assembly"]
+    RAG -. retrieval .-> PA
+    PA --> SLM["SLM<br/>HF API to self-hosted vLLM<br/>external payload masked"]
+    SLM --> OUT["Adam response<br/>precedence: API/Event &gt; ERC &gt; Cache &gt; RAG &gt; SLM"]
+```
 
 ## 2.1 GDPR
 
@@ -447,7 +501,43 @@ Key application components:
   operations.
 - **Guardrails capability:** input/output validation, injection/jailbreak defence, PII masking, fail-closed.
 
-> `[Diagram: Application architecture — FastAPI → LangGraph supervisor/AffiliationAgent → Agent Harness (ERC, prompt, RAG, tools/MCP, guardrails) → PFF enterprise APIs/Service Bus]`
+**Figure 3 — Application architecture (layered).** _Draft (Mermaid); refine component names on review._
+
+```mermaid
+flowchart TB
+    subgraph API["API Layer — FastAPI"]
+        CHAT["/api/v1/chat (Pydantic req/res)"]
+    end
+    subgraph APP["Application Layer"]
+        APPSVC["Chat / workflow application services"]
+    end
+    subgraph ORCH["Orchestration — LangGraph (TypedDict state)"]
+        SUP["Supervisor graph"]
+        AFF["AffiliationAgent (Phase 1 only)"]
+    end
+    subgraph HARNESS["Agent Harness — controlled boundary"]
+        ERCC["ERC"]
+        PROMPT["Prompt / Persona (Adam)"]
+        RAGC["RAG"]
+        TOOLS["Tools / MCP"]
+        GUARD["Guardrails (fail-closed)"]
+    end
+    subgraph INFRA["Infrastructure / Integrations"]
+        PFFAPI["PFF Enterprise APIs (via APIM)"]
+        SBUS["Azure Service Bus"]
+        SLM["SLM (HF to self-hosted)"]
+        SRCH["Azure AI Search"]
+        REDIS["Azure Managed Redis"]
+    end
+
+    CHAT --> APPSVC --> SUP --> AFF --> HARNESS
+    ERCC --> PFFAPI
+    TOOLS --> PFFAPI
+    RAGC --> SRCH
+    PROMPT --> SLM
+    HARNESS --> REDIS
+    SBUS -. events .-> SUP
+```
 
 ### 4.1.1 Model Sourcing (phased)
 
@@ -471,7 +561,28 @@ AI runtime. Key components:
 - **Azure Key Vault:** secrets/certs/config, accessed via the enterprise MI-SPN only.
 - **Observability:** Azure Monitor, Application Insights, Log Analytics (platform) + Langfuse (AI-specific).
 
-> `[Diagram: Infrastructure architecture — AKS (runtime + GPU pool), APIM, Service Bus, Redis, AI Search, ACR, Key Vault, monitoring]`
+**Figure 4 — Infrastructure architecture.** _Draft (Mermaid); refine with network/tenancy detail on review._
+
+```mermaid
+flowchart TB
+    Users["County FA / Club users"] --> APIM["Azure API Management<br/>authN / authZ boundary"]
+    APIM --> AKS
+    subgraph AKS["Azure Kubernetes Service — existing PFF cluster"]
+        RT["PFF AI runtime<br/>FastAPI + LangGraph"]
+        GPU["GPU node pool<br/>self-hosted SLM (vLLM, target state)"]
+    end
+    RT --> REDIS["Azure Managed Redis<br/>session / memory / cache"]
+    RT --> SRCH["Azure AI Search<br/>RAG vectors"]
+    RT --> SB["Azure Service Bus<br/>events"]
+    RT --> FUNC["Azure Functions<br/>integration"]
+    RT --> KV["Azure Key Vault<br/>MI-SPN only"]
+    RT --> HF["Hugging Face Inference API<br/>initial model sourcing"]
+    ACR["Azure Container Registry"] -. images .-> AKS
+    RT --> MON["Azure Monitor / App Insights / Log Analytics"]
+    RT --> LF["Langfuse<br/>AI traces / cost"]
+    SB --> RT
+    RT --> PFFAPI["PFF Enterprise APIs"]
+```
 
 ## 4.3 Environments
 

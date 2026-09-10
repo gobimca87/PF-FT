@@ -15,7 +15,7 @@ SAD template and style.
 ## Workflow
 
 1. **Review** `PFF-AI-SAD.md`. Resolve every `_TBD_` (names, dates, capacity/cost figures, lifecycle) and
-   confirm the diagram placeholders (`[Diagram: …]`) / which LeanIX assets to insert.
+   refine the draft Mermaid diagrams (Figures 1–4) — recreate with more detail or swap for LeanIX assets.
 2. **Sign off** the content.
 3. **Generate** `PFF-AI-SAD.docx` from the approved Markdown, matching the company template's headings,
    history/review/approval/reference tables, table of contents, and numbering.
