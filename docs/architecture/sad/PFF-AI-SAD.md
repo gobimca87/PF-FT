@@ -1,5 +1,5 @@
 # Solution Architecture Definition
-## PFF AI — Conversational Orchestration Platform (Adam AI)
+## PFF AI — Conversational Orchestration Platform (PFF Chat AI)
 ### Phase 1 — Club Affiliation Workflow
 
 **Version:** 0.1 (Draft for review)
@@ -19,7 +19,7 @@
 
 | Version No | Revision Date | Author | Summary of Changes |
 |---|---|---|---|
-| 0.1 | 10-Sep-26 | _TBD_ | Initial draft — PFF AI (Adam) Phase 1, Club Affiliation |
+| 0.1 | 10-Sep-26 | _TBD_ | Initial draft — PFF AI (PFF Chat AI) Phase 1, Club Affiliation |
 
 ## Document Review
 
@@ -58,7 +58,7 @@
 | R4 | PFF AI — Working Rules | `CLAUDE.md` |
 | R5 | PFF AI — Development Guide (24-phase build, repo map, doc index) | `DEVELOPMENT-GUIDE.md` |
 | R6 | Club Affiliation E2E Flow | `MD files/0 Workflow/pff_affiliation_e2e_flow.md` |
-| R7 | Adam AI Persona — Golden Reference | `SampleWorkflowchat.md` |
+| R7 | PFF Chat AI Persona — Golden Reference | `SampleWorkflowchat.md` |
 | R8 | ADR Register / Open Decisions | `docs/architecture/adr/_register/open-decisions.md` |
 
 ## Guidance
@@ -125,7 +125,7 @@ For any sections or sub-sections which are not relevant, the heading is retained
 # 1 Introduction
 
 This Solution Architecture Definition (SAD) covers Phase 1 of the **PFF AI** initiative. PFF AI is a
-conversational orchestration layer — presented to users through the **Adam AI** persona — built on top of the
+conversational orchestration layer — presented to users through the **PFF Chat AI** persona — built on top of the
 existing PFF platform (The FA's county/club administration platform). PFF AI does not replace PFF's business
 logic, databases, or authority. It interprets user requests, gathers enterprise context, reasons, calls
 controlled tools, and communicates results in natural language.
@@ -152,7 +152,7 @@ enterprise runtime context (ERC), retrieval (RAG), guardrails, tools, and observ
 The objectives of Phase 1 are to establish a governed, reusable AI orchestration capability and prove it
 end-to-end on the Club Affiliation workflow.
 
-- Deliver a conversational assistant (Adam AI) that helps users complete the **Club Affiliation** workflow and
+- Deliver a conversational assistant (PFF Chat AI) that helps users complete the **Club Affiliation** workflow and
   reach the correct next action or outcome.
 - Establish the reusable AI runtime — LangGraph orchestration, Agent Harness, ERC, RAG, prompt/persona layer,
   guardrails, tools/MCP, and AI-specific observability — as versioned software artifacts.
@@ -167,14 +167,14 @@ end-to-end on the Club Affiliation workflow.
 ## 1.2 Functionality
 
 Phase 1 functionality is organised around the conversational assistant and the Club Affiliation workflow.
-Detailed conversational behaviour is defined by the Adam persona rules [R4] and the golden reference [R7].
+Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R4] and the golden reference [R7].
 
-### 1.2.1 Conversational Assistant (Adam AI)
+### 1.2.1 Conversational Assistant (PFF Chat AI)
 
 - Natural-language chat entrypoint (`/api/v1/chat`) that interprets user requests and maintains conversation,
   session, and workflow state as strictly separate concerns.
 - Workflow-first, football-commentary persona applied as a dedicated, versioned prompt layer — persona
-  controls *how* Adam communicates, never *what* the enterprise result is.
+  controls *how* PFF Chat AI communicates, never *what* the enterprise result is.
 - Clear communication of amounts, statuses, dates, errors, and required user actions; celebratory language
   used **only** after an authoritative enterprise response confirms success.
 
@@ -193,7 +193,7 @@ Detailed conversational behaviour is defined by the Adam persona rules [R4] and 
 ```mermaid
 sequenceDiagram
     actor User as County / Club Admin
-    participant Adam as Adam AI (FastAPI /chat)
+    participant Chat as PFF Chat AI (FastAPI /chat)
     participant Agent as AffiliationAgent (LangGraph)
     participant Harness as Agent Harness
     participant ERC as ERC Pipeline
@@ -201,8 +201,8 @@ sequenceDiagram
     participant SB as Azure Service Bus
     participant SLM as SLM (HF API to self-hosted)
 
-    User->>Adam: Affiliation request (natural language)
-    Adam->>Agent: Route to AffiliationAgent
+    User->>Chat: Affiliation request (natural language)
+    Chat->>Agent: Route to AffiliationAgent
     Agent->>Harness: Run inside controlled boundary
     Harness->>ERC: Build context (identify club, load application)
     ERC->>PFF: Fetch teams / officials / products / insurance (20-record batches)
@@ -215,8 +215,8 @@ sequenceDiagram
     Note over Agent,SB: If HIL / pending, wait for enterprise event
     SB-->>Agent: Enterprise event (e.g. payment confirmed)
     Agent->>ERC: Partial ERC refresh (new version)
-    Agent-->>Adam: Explain status + resolved portal link
-    Adam-->>User: Response (celebrate only after confirmed success)
+    Agent-->>Chat: Explain status + resolved portal link
+    Chat-->>User: Response (celebrate only after confirmed success)
 ```
 
 ## 1.3 Constraints
@@ -309,7 +309,7 @@ flowchart LR
     ERCv --> PA["Prompt Assembly"]
     RAG -. retrieval .-> PA
     PA --> SLM["SLM<br/>HF API to self-hosted vLLM<br/>external payload masked"]
-    SLM --> OUT["Adam response<br/>precedence: API/Event &gt; ERC &gt; Cache &gt; RAG &gt; SLM"]
+    SLM --> OUT["PFF Chat AI response<br/>precedence: API/Event &gt; ERC &gt; Cache &gt; RAG &gt; SLM"]
 ```
 
 ## 2.1 GDPR
@@ -368,7 +368,7 @@ AI and the PFF platform. PFF AI is a consumer/orchestrator, never a writer of au
 ### 2.3.2 Outbound / Downstream Integration
 
 - **Controlled tool calls** are the only outbound writes; they call PFF enterprise APIs and return
-  authoritative results/events that Adam then communicates. PFF AI publishes **no** authoritative business
+  authoritative results/events that PFF Chat AI then communicates. PFF AI publishes **no** authoritative business
   events of its own.
 
 ## 2.4 Migration
@@ -494,7 +494,7 @@ Key application components:
 - **Agent Harness:** the controlled boundary every agent runs inside — enforces claims, prompt/persona, ERC,
   memory, tools, MCP, RAG, guardrails, retry, timeout, loop/token limits, HIL, validation, and observability.
 - **ERC capability:** builds and versions enterprise runtime context from PFF enterprise APIs.
-- **Prompt/Persona capability:** versioned prompt layers, including the reusable Adam persona prompt.
+- **Prompt/Persona capability:** versioned prompt layers, including the reusable PFF Chat AI persona prompt.
 - **RAG capability:** retrieval over the approved knowledge index (Azure AI Search) for policy/eligibility
   questions.
 - **Tools/MCP capability:** registered controlled tools that call PFF enterprise APIs to execute authorised
@@ -517,7 +517,7 @@ flowchart TB
     end
     subgraph HARNESS["Agent Harness — controlled boundary"]
         ERCC["ERC"]
-        PROMPT["Prompt / Persona (Adam)"]
+        PROMPT["Prompt / Persona (PFF Chat AI)"]
         RAGC["RAG"]
         TOOLS["Tools / MCP"]
         GUARD["Guardrails (fail-closed)"]
@@ -733,5 +733,5 @@ beforehand. Enterprise business data is unaffected as it is owned by PFF.
 | R4 | PFF AI — Working Rules | `CLAUDE.md` |
 | R5 | PFF AI — Development Guide | `DEVELOPMENT-GUIDE.md` |
 | R6 | Club Affiliation E2E Flow | `MD files/0 Workflow/pff_affiliation_e2e_flow.md` |
-| R7 | Adam AI Persona — Golden Reference | `SampleWorkflowchat.md` |
+| R7 | PFF Chat AI Persona — Golden Reference | `SampleWorkflowchat.md` |
 | R8 | ADR Register / Open Decisions | `docs/architecture/adr/_register/open-decisions.md` |

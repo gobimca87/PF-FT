@@ -1,6 +1,6 @@
 # PFF AI — Solution Architecture Definition (SAD)
 
-This folder holds the Solution Architecture Definition for **PFF AI (Adam)**, authored to the company
+This folder holds the Solution Architecture Definition for **PFF AI (PFF Chat AI)**, authored to the company
 SAD template and style.
 
 ## Contents
