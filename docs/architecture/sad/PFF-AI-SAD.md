@@ -188,13 +188,20 @@ Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R
   enterprise events where required; consume events, refresh ERC, resume, and respond with resolved portal
   links.
 
-**Figure 1 — Club Affiliation conversational flow.** _Draft (Mermaid); refine with real tool/step names on review._
+**Figure 1 — PFF Affiliation Workflow (Sequence Diagram).** Conversational request → Agent orchestration → ERC → Enterprise systems → Event-driven continuation → Final response.
+
+<img width="1536" height="1024" alt="PFF – Affiliation Workflow (Sequence Diagram)" src="https://github.com/user-attachments/assets/5289d0b2-6bd9-43d4-b239-95c4b7132b7e" />
+
+<details>
+<summary>Mermaid source (superseded by the image above — kept for future edits)</summary>
 
 ```mermaid
 <img width="1536" height="1024" alt="ChatGPT Image Sep 10, 2026, 03_48_32 PM" src="https://github.com/user-attachments/assets/5289d0b2-6bd9-43d4-b239-95c4b7132b7e" />
 
 
 ```
+
+</details>
 
 ## 1.3 Constraints
 
