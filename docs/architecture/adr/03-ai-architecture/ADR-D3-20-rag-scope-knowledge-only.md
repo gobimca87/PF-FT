@@ -191,7 +191,7 @@ boundary; the ADR records the enforceable design.
 | Precedence chain | RAG explicitly ranked below ERC/enterprise; never overrides (13.PFF-FA-AI-RAG.md §102–§103) |
 | Four-state separation | Knowledge plane distinct from enterprise business state |
 | Versioned artefacts | RAG pipeline/index versioned (13.PFF-FA-AI-RAG.md §138–§143) |
-| Adam persona governs *how*, not *what* | Persona narrates cited knowledge; never invents business truth |
+| PFF Chat AI persona governs *how*, not *what* | Persona narrates cited knowledge; never invents business truth |
 
 ## 11. Risks and Mitigations
 

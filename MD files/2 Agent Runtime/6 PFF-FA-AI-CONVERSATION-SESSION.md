@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Core Runtime & Interaction Management  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI / LangGraph  
 
 ---

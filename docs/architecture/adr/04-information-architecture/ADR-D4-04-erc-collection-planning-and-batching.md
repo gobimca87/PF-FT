@@ -183,7 +183,7 @@ slow; unbounded (C) unsafe; pool-without-graph (D) mishandles dependencies.
 | Precedence chain | Collects authoritative ERC data faithfully |
 | Four-state separation | Builds the enterprise-reference view (ERC) |
 | Versioned artefacts | Collection config versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

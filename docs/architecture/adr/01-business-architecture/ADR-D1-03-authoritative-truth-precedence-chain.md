@@ -431,7 +431,7 @@ that this is the only possible outcome, not the likely one.
 | Authoritative-truth precedence | This ADR *is* that constraint, implemented. §7.1 states the ordering; §8.1 makes it a computable property; §8.2 enforces it at two points. |
 | Four-state separation | Supported: `truth_class` and `source_type` prevent Workflow/Agent State or memory being presented as Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Freshness policies and authority mappings live in versioned configuration per ADR-D5-06. |
-| Adam persona governs how, never what | Enforced: the persona shapes expression of a resolved fact and cannot alter its authority or value. |
+| PFF Chat AI persona governs how, never what | Enforced: the persona shapes expression of a resolved fact and cannot alter its authority or value. |
 
 ## 11. Risks and Mitigations
 

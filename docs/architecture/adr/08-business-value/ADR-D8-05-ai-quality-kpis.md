@@ -177,7 +177,7 @@ rejected — the last violates CLAUDE.md's separation requirement.
 | Precedence chain | Groundedness/hallucination KPIs protect authoritative-truth fidelity |
 | Four-state separation | N/A |
 | Versioned artefacts | KPI/eval definitions versioned |
-| Adam persona governs *how*, not *what* | Persona adherence measured separately, per CLAUDE.md |
+| PFF Chat AI persona governs *how*, not *what* | Persona adherence measured separately, per CLAUDE.md |
 
 ## 11. Risks and Mitigations
 

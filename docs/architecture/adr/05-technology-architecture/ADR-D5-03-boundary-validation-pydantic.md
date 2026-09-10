@@ -170,7 +170,7 @@ attrs (C), Pydantic v1 (D) and marshmallow (E) are rejected.
 | Precedence chain | Validates data faithfully at boundaries |
 | Four-state separation | Pydantic boundaries + TypedDict state (ADR-D2-07) |
 | Versioned artefacts | Schemas versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

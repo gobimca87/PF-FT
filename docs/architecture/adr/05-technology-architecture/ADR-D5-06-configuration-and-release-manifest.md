@@ -185,7 +185,7 @@ and manifest-less (E) are rejected.
 | Precedence chain | Config precedence separate from data authority chain |
 | Four-state separation | Config is not runtime state |
 | Versioned artefacts | Manifest pins all artefacts immutably |
-| Adam persona governs *how*, not *what* | Persona version pinned in manifest |
+| PFF Chat AI persona governs *how*, not *what* | Persona version pinned in manifest |
 
 ## 11. Risks and Mitigations
 

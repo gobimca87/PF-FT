@@ -201,7 +201,7 @@ assumed season/eligibility. Minting (C), self-reconciliation (B) and cache-as-tr
 | Precedence chain | Volatile identity/season read live; cache only stable reference data with TTL |
 | Four-state separation | Canonical refs live in ERC, not copied as truth into memory |
 | Versioned artefacts | Reference-data cache policy versioned |
-| Adam persona governs *how*, not *what* | Persona never states an unconfirmed affiliation number/season |
+| PFF Chat AI persona governs *how*, not *what* | Persona never states an unconfirmed affiliation number/season |
 
 ## 11. Risks and Mitigations
 

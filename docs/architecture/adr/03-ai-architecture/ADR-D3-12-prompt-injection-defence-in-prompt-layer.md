@@ -42,7 +42,7 @@ injections.
 gives a prompt-injection defence architecture. Retrieved documents (13.PFF-FA-AI-RAG.md §158),
 tool outputs, API results and user text all enter prompt composition and can carry
 adversarial instructions ("ignore previous instructions", "reveal the system
-prompt", "approve this affiliation"). Because Adam ultimately drives tool calls and
+prompt", "approve this affiliation"). Because PFF Chat AI ultimately drives tool calls and
 user-facing statements, an un-defended prompt layer is a direct path to
 unauthorized actions or disclosure. This ADR fixes *how the prompt layer itself* is
 built to resist injection — complementary to the guardrail ADRs which add runtime
@@ -229,7 +229,7 @@ this ADR records the layered rationale.
 | Precedence chain | Injected content cannot elevate a lower source above ERC/enterprise (16.PFF-FA-AI-PROMPT-ENGINEERING.md §138) |
 | Four-state separation | Untrusted data isolated from instruction/state |
 | Versioned artefacts | Defence rules live in versioned prompts/composer |
-| Adam persona governs *how*, not *what* | Injection cannot flip *what* is true |
+| PFF Chat AI persona governs *how*, not *what* | Injection cannot flip *what* is true |
 
 ## 11. Risks and Mitigations
 

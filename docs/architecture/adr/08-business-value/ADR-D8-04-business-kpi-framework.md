@@ -169,7 +169,7 @@ E-with-A base).** Merged (B), usage-only (C) and financial-only (D) are rejected
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | KPI definitions versioned |
-| Adam persona governs *how*, not *what* | Persona adherence is a quality KPI (D8-05), not business KPI |
+| PFF Chat AI persona governs *how*, not *what* | Persona adherence is a quality KPI (D8-05), not business KPI |
 
 ## 11. Risks and Mitigations
 

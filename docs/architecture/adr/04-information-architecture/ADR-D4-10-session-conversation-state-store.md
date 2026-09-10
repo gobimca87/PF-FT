@@ -206,7 +206,7 @@ for ephemeral state; self-host (D) imposes undue ops. This confirms and supersed
 | Precedence chain | Cache ranks below ERC/enterprise; TTL enforces freshness |
 | Four-state separation | Namespaces keep conversation/session/memory/cache separate |
 | Versioned artefacts | Store config versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

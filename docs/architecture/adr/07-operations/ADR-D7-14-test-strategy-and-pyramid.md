@@ -171,7 +171,7 @@ Heavy-e2e (B), live-SLM-in-CI (C) and unit-only (D) are rejected.
 | Precedence chain | ACL/precedence behaviours tested |
 | Four-state separation | State + isolation tests |
 | Versioned artefacts | Test fixtures versioned |
-| Adam persona governs *how*, not *what* | Persona quality tested at eval (D7-13) |
+| PFF Chat AI persona governs *how*, not *what* | Persona quality tested at eval (D7-13) |
 
 ## 11. Risks and Mitigations
 

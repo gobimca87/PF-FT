@@ -127,7 +127,7 @@ def build():
         "Workflows can suspend at a human-in-the-loop point (user confirm, CFA review, payment) and resume later on an event.",
         "Workflow/agent state is checkpointed with optimistic concurrency (id + version + expected_version).",
         "A resume event re-hydrates state and continues from the exact step — no re-execution of completed side-effects.",
-        "Adam communicates who/what the workflow is waiting for throughout the pending state.",
+        "PFF Chat AI communicates who/what the workflow is waiting for throughout the pending state.",
     ], CX0, 1.95, CW, 4.0, size=16, gap=15)
     d.set_notes(s, "Affiliation can wait days for CFA review; state is checkpointed and resumed on an event.")
 
@@ -158,7 +158,7 @@ def build():
 
     s = d.content_slide("Portal links — no invented URLs", kicker="D2-19")
     d.bullets(s, [
-        "Every portal link is resolved through a registered portal-link mechanism — Adam never invents a URL.",
+        "Every portal link is resolved through a registered portal-link mechanism — PFF Chat AI never invents a URL.",
         "Links are registry-driven, validated, scoped and (where needed) signed/expiring.",
         "Deck 03/06 cover the same principle for IDs, tool results and technical details.",
     ], CX0, 1.95, CW, 3.2, size=16, gap=15)

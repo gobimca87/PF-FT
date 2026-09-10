@@ -422,7 +422,7 @@ which is stronger evidence than an absence.
 | Authoritative-truth precedence | Tool results enter ERC with `enterprise_api` provenance at authority 5 (ADR-D2-12 §7.2), never bypassing into a prompt. |
 | Four-state separation | Tool results are projections of Enterprise Business State; the registry and catalogue are configuration, not state. |
 | Versioned artefacts, never mutated in place | Catalogue and registry are versioned configuration (ADR-D5-06); a tool change is a release. |
-| Adam persona governs how, never what | Tool descriptions are for model selection, not user-facing; the persona never sees or shapes them. |
+| PFF Chat AI persona governs how, never what | Tool descriptions are for model selection, not user-facing; the persona never sees or shapes them. |
 
 ## 11. Risks and Mitigations
 

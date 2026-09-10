@@ -171,7 +171,7 @@ governing change velocity vs reliability work, and multi-window burn-rate alerti
 | Precedence chain | Correctness SLI reflects authoritative-truth fidelity |
 | Four-state separation | N/A |
 | Versioned artefacts | SLO/budget config versioned |
-| Adam persona governs *how*, not *what* | Persona-adherence is a quality signal (D8-05) |
+| PFF Chat AI persona governs *how*, not *what* | Persona-adherence is a quality signal (D8-05) |
 
 ## 11. Risks and Mitigations
 

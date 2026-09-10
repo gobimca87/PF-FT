@@ -41,7 +41,7 @@ missing structure or validation.
 structured output to validation and state the SLM "must not execute business rules."
 Uncontrolled temperature is a correctness and safety hazard: high randomness in a
 routing or extraction step produces non-reproducible, sometimes invalid results;
-zero temperature everywhere makes Adam's persona flat. Without a decision, each call
+zero temperature everywhere makes PFF Chat AI's persona flat. Without a decision, each call
 site picks its own parameters, defeating reproducibility, eval and cost control.
 
 ## 3. Decision Drivers
@@ -49,7 +49,7 @@ site picks its own parameters, defeating reproducibility, eval and cost control.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Deterministic tasks must be reproducible | 15.PFF-FA-AI-SLM.md §36, §38 |
-| DR-F-02 | Persona narration must feel natural | CLAUDE.md §Adam; ADR-D3-10 |
+| DR-F-02 | Persona narration must feel natural | CLAUDE.md §PFF Chat AI; ADR-D3-10 |
 | DR-F-03 | Output-token budget enforced per workflow | 15.PFF-FA-AI-SLM.md §33–§34 |
 | DR-N-01 | Parameters declared, versioned, not hard-coded | 15.PFF-FA-AI-SLM.md §35; CLAUDE.md |
 | DR-C-01 | Temperature never substitutes for validation | 15.PFF-FA-AI-SLM.md §39–§40 |
@@ -184,7 +184,7 @@ rationale.
 | Precedence chain | Sampling never elevates SLM output over authoritative sources |
 | Four-state separation | Parameters are config, not state |
 | Versioned artefacts | Parameters versioned; no hard-coding |
-| Adam persona governs *how*, not *what* | Non-zero temperature affects wording only |
+| PFF Chat AI persona governs *how*, not *what* | Non-zero temperature affects wording only |
 
 ## 11. Risks and Mitigations
 

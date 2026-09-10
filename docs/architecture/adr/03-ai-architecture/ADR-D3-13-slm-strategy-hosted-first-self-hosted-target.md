@@ -235,7 +235,7 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 | Precedence chain | SLM output is the lowest tier; never overrides ERC/enterprise |
 | Four-state separation | SLM is stateless compute; state lives elsewhere |
 | Versioned artefacts | Model + config versioned (ADR-D3-15; 15.PFF-FA-AI-SLM.md §154–§155) |
-| Adam persona governs *how*, not *what* | Provider choice is invisible to persona/user |
+| PFF Chat AI persona governs *how*, not *what* | Provider choice is invisible to persona/user |
 
 ## 11. Risks and Mitigations
 

@@ -179,7 +179,7 @@ Re-derivation from user input (B) and mutable context (C) are forbidden.
 | Precedence chain | Authz context is authoritative input, never model-derived |
 | Four-state separation | Authz context is a protected, immutable part of state |
 | Versioned artefacts | Enforcement config versioned |
-| Adam persona governs *how*, not *what* | Persona cannot alter authorization |
+| PFF Chat AI persona governs *how*, not *what* | Persona cannot alter authorization |
 
 ## 11. Risks and Mitigations
 

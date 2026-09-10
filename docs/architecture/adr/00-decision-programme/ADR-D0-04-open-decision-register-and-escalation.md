@@ -390,7 +390,7 @@ buying nothing.
 | Authoritative-truth precedence | Not applicable — no runtime data path. |
 | Four-state separation | Not applicable. |
 | Versioned artefacts, never mutated in place | Upheld: a `Proposed` record moves to `Accepted` in place because it is the same decision at two lifecycle stages, with §20 recording the transition. Any change to §7's substance before ratification is a version bump, not a silent edit. |
-| Adam persona governs how, never what | Not applicable. |
+| PFF Chat AI persona governs how, never what | Not applicable. |
 
 ## 11. Risks and Mitigations
 

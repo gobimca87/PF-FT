@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Enterprise Navigation & UI Integration  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI / LangGraph  
 **Primary Scope:** Portal Catalog, Portal URLs, Deep Links, Environment-specific Links, Workflow Links, Entity Links, Link Generation, Link Validation, Security, Expiration/Signed Links, UI Response Integration
 

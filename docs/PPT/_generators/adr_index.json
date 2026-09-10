@@ -101,11 +101,11 @@
    },
    {
     "id": "ADR-D1-09",
-    "title": "Adam AI persona charter \u2014 football-commentary tone as a governed product decision",
+    "title": "PFF Chat AI persona charter \u2014 football-commentary tone as a governed product decision",
     "status": "Accepted",
     "domain": "1",
     "num": 9,
-    "summary": "Adam's football-commentary persona is adopted as a deliberate product decision with a written charter, not as a stylistic default."
+    "summary": "PFF Chat AI's football-commentary persona is adopted as a deliberate product decision with a written charter, not as a stylistic default."
    },
    {
     "id": "ADR-D1-10",
@@ -377,11 +377,11 @@
    },
    {
     "id": "ADR-D3-10",
-    "title": "Adam persona prompt layer \u2014 versioned, reusable, workflow-independent",
+    "title": "PFF Chat AI persona prompt layer \u2014 versioned, reusable, workflow-independent",
     "status": "Accepted",
     "domain": "3",
     "num": 10,
-    "summary": "PFF AI will implement the Adam persona as a dedicated, versioned prompt layer that sits between the system prompt and the task/workflow prompts in the layered composition of [ADR-D3-09](ADR-D3-09-layered-prompt-composition.md), and is reuse"
+    "summary": "PFF AI will implement the PFF Chat AI persona as a dedicated, versioned prompt layer that sits between the system prompt and the task/workflow prompts in the layered composition of [ADR-D3-09](ADR-D3-09-layered-prompt-composition.md), and i"
    },
    {
     "id": "ADR-D3-11",

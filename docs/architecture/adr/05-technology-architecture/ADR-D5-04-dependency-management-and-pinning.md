@@ -168,7 +168,7 @@ for dev/CI/prod parity. Plain unpinned pip (E) is forbidden.
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Lock file pins exact versions |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

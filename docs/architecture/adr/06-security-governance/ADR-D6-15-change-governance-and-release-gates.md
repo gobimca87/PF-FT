@@ -178,7 +178,7 @@ CI-only (C) and human-only (D) are rejected.
 | Precedence chain | Index/model changes can't undermine authoritative data |
 | Four-state separation | N/A |
 | Versioned artefacts | Enforces immutable versioned promotion |
-| Adam persona governs *how*, not *what* | Persona changes are governed prompt changes |
+| PFF Chat AI persona governs *how*, not *what* | Persona changes are governed prompt changes |
 
 ## 11. Risks and Mitigations
 

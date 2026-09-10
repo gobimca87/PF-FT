@@ -37,9 +37,9 @@ risk, compatibility, variables, template`) and starts at `status: DRAFT` per the
 doc 16 §34 (`DRAFT → TESTING → APPROVED → ACTIVE → DEPRECATED → RETIRED → BLOCKED`) — nothing
 here is production-active until it's been evaluated and approved.
 
-## The Adam AI persona
+## The PFF Chat AI persona
 
-The mandatory persona rules live in `CLAUDE.md` ("Adam AI Persona & Conversational Style") —
+The mandatory persona rules live in `CLAUDE.md` ("PFF Chat AI Persona & Conversational Style") —
 that's the canonical, development-time governance spec. `persona/affiliation/affiliation.assistant.persona.yaml`
 is the concise runtime implementation of those rules for the Affiliation Assistant.
 `MD files/Examples/SampleWorkflowchat.md` remains the canonical tone reference — compare new

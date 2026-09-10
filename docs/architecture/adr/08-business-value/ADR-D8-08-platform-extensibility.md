@@ -176,7 +176,7 @@ pure-config-DSL (C) and microservice-per-agent (D) are rejected.
 | Precedence chain | New agents use ERC/precedence unchanged |
 | Four-state separation | Inherited from core |
 | Versioned artefacts | Agent + its artefacts versioned |
-| Adam persona governs *how*, not *what* | New agents reuse the persona layer (ADR-D3-10) |
+| PFF Chat AI persona governs *how*, not *what* | New agents reuse the persona layer (ADR-D3-10) |
 
 ## 11. Risks and Mitigations
 

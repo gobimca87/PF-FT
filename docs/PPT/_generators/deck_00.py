@@ -75,11 +75,11 @@ def precedence_diagram(d, s):
 def build():
     d = Deck()
 
-    d.title_slide("PFF AI — Adam AI", "Enterprise Agentic AI Platform",
+    d.title_slide("PFF AI — PFF Chat AI", "Enterprise Agentic AI Platform",
                   f"Technical architecture for the Architecture Review Board  ·  {DATE}",
                   kicker="The FA · PFF · Technical Architecture",
                   notes="Welcome. This is the technical walkthrough of the PFF-FA Enterprise Agentic "
-                        "AI platform — Adam AI — for the ARB. This overview frames the whole system; "
+                        "AI platform — PFF Chat AI — for the ARB. This overview frames the whole system; "
                         "nine further decks go deep by domain, plus cost and the open decisions.")
 
     s = d.content_slide("Presentation suite", kicker="Agenda", accent_tail="— 10 decks",
@@ -96,10 +96,10 @@ def build():
         "speaker notes so discussion stays live. All 145 ADRs and 29 specification documents are covered.")
 
     s = d.content_slide("What we are building", kicker="Context",
-                        subtitle="Adam AI — a conversational orchestration layer over PFF")
+                        subtitle="PFF Chat AI — a conversational orchestration layer over PFF")
     d.bullets(s, [
         "PFF is the FA's county/club administration platform — affiliation, registration, insurance, discipline, officials, county cups, payments; integrates with WGS (the FA's national database).",
-        "Adam AI interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results — it does not replace PFF's business logic or authority.",
+        "PFF Chat AI interprets requests, gathers enterprise context, reasons, calls controlled tools, and communicates results — it does not replace PFF's business logic or authority.",
         "First end-to-end workflow delivered: Club Affiliation.",
         "Persona: a workflow-first enterprise assistant with a natural football-commentary tone.",
     ], CX0, 1.95, CW, 4.6, size=16, gap=14)

@@ -228,7 +228,7 @@ iteration bound.
 | Precedence chain | Retrieved content still ranks below ERC/enterprise regardless of how it was fetched |
 | Four-state separation | Tool invocation touches no enterprise/session state directly |
 | Versioned artefacts | Tool limits and iteration bound are versioned config |
-| Adam persona governs *how*, not *what* | Persona narrates retrieved, cited content; invocation mechanics are invisible to it |
+| PFF Chat AI persona governs *how*, not *what* | Persona narrates retrieved, cited content; invocation mechanics are invisible to it |
 
 ## 11. Risks and Mitigations
 

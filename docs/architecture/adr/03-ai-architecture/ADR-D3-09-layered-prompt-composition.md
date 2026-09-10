@@ -237,7 +237,7 @@ Composed in fixed order per 16.PFF-FA-AI-PROMPT-ENGINEERING.md §5 and 7 PFF-FA-
 |---|---|---|---|---|
 | 1 | **System** | Platform identity, the Golden Rule, absolute prohibitions | Rarely | T0 — platform |
 | 2 | **Security** | Injection resistance instructions, output constraints | Rarely | T0 |
-| 3 | **Persona** | Adam's character and register, per variant (ADR-D1-07 §7.4) | Occasionally | T0 |
+| 3 | **Persona** | PFF Chat AI's character and register, per variant (ADR-D1-07 §7.4) | Occasionally | T0 |
 | 4 | **Task** | What this node is doing, its output requirements | Per node | T0 |
 | 5 | **Tools** | Available tool descriptions from the declaration | Per agent | T0 |
 | 6 | **Context** | ERC facts, memory, RAG passages — each delimited and labelled | Per turn | **T1–T3, per source** |
@@ -388,7 +388,7 @@ Each layer is versioned independently (ADR-D3-11) and referenced by the agent de
 prompts:
   system: pfft.system@2.1.0
   security: pfft.security@1.3.0
-  persona: adam.guiding@1.1.0
+  persona: pff-chat-ai.guiding@1.1.0
   task: affiliation.precheck@1.0.0
   output: structured.decision@1.0.0
 ```
@@ -440,7 +440,7 @@ artefacts — which §7.5's determinism makes exact.
 | Authoritative-truth precedence | Trust tiers align with ADR-D1-03's authority levels: T1 enterprise, T2 derived, T3 knowledge and user. The output check enforces that business claims trace to T1. |
 | Four-state separation | Layer 6 carries ERC (enterprise projection), memory and conversation content, each labelled by source so they are not conflated. |
 | Versioned artefacts, never mutated in place | Every layer is independently versioned and pinned in the release bundle (§8.3). |
-| Adam persona governs how, never what | The persona is layer 3, a T0 layer that shapes expression. It sits above context and cannot alter what layer 6 contains. |
+| PFF Chat AI persona governs how, never what | The persona is layer 3, a T0 layer that shapes expression. It sits above context and cannot alter what layer 6 contains. |
 
 ## 11. Risks and Mitigations
 

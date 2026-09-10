@@ -168,7 +168,7 @@ detection, a FinOps dashboard, a CI cost-regression gate and per-workflow/county
 | Precedence chain | Cost guardrails never trade correctness for savings (routing safety §97) |
 | Four-state separation | N/A |
 | Versioned artefacts | Cost model/config versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

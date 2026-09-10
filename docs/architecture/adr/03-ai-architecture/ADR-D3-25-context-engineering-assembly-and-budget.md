@@ -204,7 +204,7 @@ ADR records the rationale.
 | Precedence chain | Assembly order *is* the precedence chain; lowest authority dropped first |
 | Four-state separation | Each state source has its own budgeted slot |
 | Versioned artefacts | Assembly config/budgets versioned |
-| Adam persona governs *how*, not *what* | Persona slot fixed; never displaces facts |
+| PFF Chat AI persona governs *how*, not *what* | Persona slot fixed; never displaces facts |
 
 ## 11. Risks and Mitigations
 

@@ -189,7 +189,7 @@ Raw-history (B), summary-only (C) and ERC-copy (E) are rejected.
 | Precedence chain | Memory ranks below ERC/enterprise; trust/staleness enforced |
 | Four-state separation | Memory distinct from ERC/cache/session (9 PFF-FA-AI-MEMORY-CACHE.md §3) |
 | Versioned artefacts | Summary versioning (§65) |
-| Adam persona governs *how*, not *what* | Memory informs wording, not business truth |
+| PFF Chat AI persona governs *how*, not *what* | Memory informs wording, not business truth |
 
 ## 11. Risks and Mitigations
 

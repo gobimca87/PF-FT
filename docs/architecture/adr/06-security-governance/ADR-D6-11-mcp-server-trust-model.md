@@ -178,7 +178,7 @@ Trusting responses (B) and open server sets (C) are rejected.
 | Precedence chain | MCP output validated, ranked below authoritative sources |
 | Four-state separation | MCP responses validated before touching state |
 | Versioned artefacts | MCP server/tool versions pinned |
-| Adam persona governs *how*, not *what* | MCP cannot inject business truth |
+| PFF Chat AI persona governs *how*, not *what* | MCP cannot inject business truth |
 
 ## 11. Risks and Mitigations
 

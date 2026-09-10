@@ -176,7 +176,7 @@ env-branches (D) are rejected.
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Releases are immutable, versioned, traceable |
-| Adam persona governs *how*, not *what* | Persona ships as a versioned artefact in the bundle |
+| PFF Chat AI persona governs *how*, not *what* | Persona ships as a versioned artefact in the bundle |
 
 ## 11. Risks and Mitigations
 

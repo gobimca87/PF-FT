@@ -369,7 +369,7 @@ mechanical, rather than something discovered only when production latency degrad
 | Authoritative-truth precedence | By preventing silent context truncation under capacity pressure, this ADR protects ADR-D3-25's precedence-ordered context assembly from being overridden at the infrastructure layer. |
 | Four-state separation | Not applicable — capacity planning, not application state. |
 | Versioned artefacts, never mutated in place | The capacity formula's inputs (model, precision, engine) are the same versioned artefacts ADR-D5-10/ADR-D3-15 already govern. |
-| Adam persona governs how, never what | Not applicable. |
+| PFF Chat AI persona governs how, never what | Not applicable. |
 
 ## 11. Risks and Mitigations
 

@@ -425,7 +425,7 @@ cannot be absent from either path.
 | Authoritative-truth precedence | §7.4 and §8.2 apply it precisely: an event has authority 5 for the fact of a change; the refreshed API response carries the authoritative values. Writing payload values into ERC would conflate the two. |
 | Four-state separation | Both paths update Workflow State and read Enterprise Business State; neither writes enterprise state. Conversation and session state are touched only by the request path. |
 | Versioned artefacts, never mutated in place | Event contracts are versioned (11 PFF-FA-AI-SERVICE-BUS.md §16); unknown versions handled per 11 PFF-FA-AI-SERVICE-BUS.md §38. |
-| Adam persona governs how, never what | Event-driven updates produce no immediate user output; the persona applies when the user next enters, on refreshed authoritative state. |
+| PFF Chat AI persona governs how, never what | Event-driven updates produce no immediate user output; the persona applies when the user next enters, on refreshed authoritative state. |
 
 ## 11. Risks and Mitigations
 

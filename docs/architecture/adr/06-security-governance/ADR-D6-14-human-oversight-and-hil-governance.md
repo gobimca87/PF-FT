@@ -174,7 +174,7 @@ actions (B) is forbidden; HIL-on-everything (C) and confidence-only (D) are reje
 | Precedence chain | Human decision is authoritative |
 | Four-state separation | HIL is a workflow state (ADR-D2-10) |
 | Versioned artefacts | HIL boundary config versioned |
-| Adam persona governs *how*, not *what* | Persona explains the wait; never decides |
+| PFF Chat AI persona governs *how*, not *what* | Persona explains the wait; never decides |
 
 ## 11. Risks and Mitigations
 

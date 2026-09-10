@@ -283,11 +283,11 @@ evaluated on its own.
 | Variant | Default archetype | Register |
 |---|---|---|
 | **Guiding** | Club administrator; read-only enquirer | The `SampleWorkflowchat.md` register — encouraging, explanatory, football commentary at workflow moments, assumes infrequent use |
-| **Efficient** | County administrator; national administrator | Same Adam identity and football register, applied more sparingly; assumes fluency with the process; denser, less scaffolding |
+| **Efficient** | County administrator; national administrator | Same PFF Chat AI identity and football register, applied more sparingly; assumes fluency with the process; denser, less scaffolding |
 
-Both variants are the same Adam persona under ADR-D1-09 and `CLAUDE.md`'s persona rules. The
+Both variants are the same PFF Chat AI persona under ADR-D1-09 and `CLAUDE.md`'s persona rules. The
 variants differ in density and scaffolding, not in identity, honesty or tone rules. A county
-officer still gets Adam; they get less explanation of what an affiliation window is.
+officer still gets PFF Chat AI; they get less explanation of what an affiliation window is.
 
 ### 7.5 Non-user data subjects
 
@@ -346,7 +346,7 @@ every club's DBS failures."*
   is not in context to be leaked.
 - Tools requiring county scope are absent from the allowlist and cannot be called.
 - The persona variant is unaffected — persona is not derived from conversation content.
-- Adam explains, in the guiding register, what the user can see and how a genuine county
+- PFF Chat AI explains, in the guiding register, what the user can see and how a genuine county
   officer would access the rest.
 
 The important property is that the refusal is not a judgement the model makes. The data was
@@ -382,7 +382,7 @@ tool selection. ADR-D3-10 governs the persona prompt layer's construction.
 ### 9.3 Neutral
 
 - Four archetypes is a starting set; adding a fifth is a minor amendment, not a redesign.
-- Both persona variants are the same Adam identity, so brand consistency is unaffected.
+- Both persona variants are the same PFF Chat AI identity, so brand consistency is unaffected.
 
 ### 9.4 Trade-offs explicitly accepted
 
@@ -400,7 +400,7 @@ tool selection. ADR-D3-10 governs the persona prompt layer's construction.
 | Authoritative-truth precedence | Supported: archetype scoping determines what enters context, and everything that enters carries provenance per ADR-D1-03. |
 | Four-state separation | Supported: archetype is Session State derived from claims; persona variant is Conversation State. Neither is Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Persona variants are versioned prompt layers per ADR-D3-11. |
-| Adam persona governs how, never what | This ADR is the structural realisation of that rule: §7.1's table has "never affects" columns in both directions, and §8.1's diagram has no edge from persona to access. |
+| PFF Chat AI persona governs how, never what | This ADR is the structural realisation of that rule: §7.1's table has "never affects" columns in both directions, and §8.1's diagram has no edge from persona to access. |
 
 ## 11. Risks and Mitigations
 
@@ -409,7 +409,7 @@ tool selection. ADR-D3-10 governs the persona prompt layer's construction.
 | RSK-01 | The two concepts are collapsed in implementation for convenience | Medium | Very High | High | Separate fields with no shared type; architecture-fitness test asserts no persona reference in context or tool-selection code; QM-02 | Security Owner | Low |
 | RSK-02 | Per-resource archetype resolution applied inconsistently, leaving an operation over-scoped | Medium | High | High | Resolution centralised in the harness, not per agent; QM-03 audits scope against claims | AI Engineering Lead | Medium |
 | RSK-03 | Claims lack role detail, tempting inference from conversation (DR-A-01) | Medium | Very High | High | Inference is prohibited; a claims gap is an enterprise change request. The platform refuses rather than guesses. | Security Owner | Low |
-| RSK-04 | Efficient variant drifts from Adam's persona rules toward terseness that loses clarity | Medium | Medium | Medium | Both variants evaluated against the same persona rubric (ADR-D8-05); `CLAUDE.md` rules apply identically | AI Product Owner | Low |
+| RSK-04 | Efficient variant drifts from PFF Chat AI's persona rules toward terseness that loses clarity | Medium | Medium | Medium | Both variants evaluated against the same persona rubric (ADR-D8-05); `CLAUDE.md` rules apply identically | AI Product Owner | Low |
 | RSK-05 | Officials' safeguarding data over-collected into context | Medium | High | High | Minimisation per §7.5; ERC context requirements specify fields, not entities; ADR-D6-06 | Compliance/Legal | Medium |
 | RSK-06 | A fifth archetype is needed and is bolted on inconsistently | Low | Medium | Low | Archetypes are role-based; addition is a minor amendment with a change-log row | AI Product Owner | Low |
 

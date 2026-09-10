@@ -413,7 +413,7 @@ at the broker. That is defence in depth for the boundary in §7.1.
 | Authoritative-truth precedence | §7.4: every event invalidates and triggers refresh rather than writing values, so authoritative values always come from an API read (ADR-D2-03 §7.4). |
 | Four-state separation | Events update Workflow State and invalidate ERC projections; they never write Enterprise Business State, which the enterprise owns. |
 | Versioned artefacts, never mutated in place | Event contracts are versioned (ADR-D2-17); subscription filters are versioned configuration. |
-| Adam persona governs how, never what | Events produce no immediate user output; the persona applies on the user's next entry, over refreshed authoritative state. |
+| PFF Chat AI persona governs how, never what | Events produce no immediate user output; the persona applies on the user's next entry, over refreshed authoritative state. |
 
 ## 11. Risks and Mitigations
 

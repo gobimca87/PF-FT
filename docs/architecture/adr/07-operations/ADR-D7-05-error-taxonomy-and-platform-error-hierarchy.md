@@ -173,7 +173,7 @@ Result-type (D) are rejected.
 | Precedence chain | N/A |
 | Four-state separation | Errors carry no unredacted state |
 | Versioned artefacts | Error catalogue versioned |
-| Adam persona governs *how*, not *what* | Persona communicates errors factually (CLAUDE.md §Adam 7) |
+| PFF Chat AI persona governs *how*, not *what* | Persona communicates errors factually (CLAUDE.md §PFF Chat AI 7) |
 
 ## 11. Risks and Mitigations
 

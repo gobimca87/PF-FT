@@ -177,7 +177,7 @@ judge-only (C) and human-only (D) are rejected as sole approaches.
 | Precedence chain | Groundedness/faithfulness evals protect authoritative-truth fidelity |
 | Four-state separation | Eval data governed; no real PII (synthetic) |
 | Versioned artefacts | Datasets versioned |
-| Adam persona governs *how*, not *what* | Persona adherence evaluated separately (ADR-D8-05) |
+| PFF Chat AI persona governs *how*, not *what* | Persona adherence evaluated separately (ADR-D8-05) |
 
 ## 11. Risks and Mitigations
 

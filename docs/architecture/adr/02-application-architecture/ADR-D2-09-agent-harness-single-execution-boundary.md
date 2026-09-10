@@ -421,7 +421,7 @@ often ends with tests that instantiate real objects.
 | Authoritative-truth precedence | The harness assembles the context manifest that I-1 checks against, so every business assertion is traceable to a ranked source. |
 | Four-state separation | The harness holds claims (session-derived) read-only, mediates ERC (enterprise projection) by reference, and lets the agent own only workflow state. |
 | Versioned artefacts, never mutated in place | Prompt resolution and SLM configuration resolve versioned artefacts (ADR-D3-11, ADR-D3-15); the harness records which versions were used per run. |
-| Adam persona governs how, never what | The persona is a prompt layer the harness composes; it is applied after content is determined and cannot alter tool results or context. |
+| PFF Chat AI persona governs how, never what | The persona is a prompt layer the harness composes; it is applied after content is determined and cannot alter tool results or context. |
 
 ## 11. Risks and Mitigations
 

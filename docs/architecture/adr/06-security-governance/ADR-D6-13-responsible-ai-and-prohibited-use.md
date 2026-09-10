@@ -176,7 +176,7 @@ ISO/IEC 42001 are conformance targets (ADR-D6-18). Policy-only (B) and human-rev
 | Precedence chain | Reliability/transparency uphold authoritative truth |
 | Four-state separation | Privacy principle respects state boundaries |
 | Versioned artefacts | RAI controls versioned |
-| Adam persona governs *how*, not *what* | Transparency: persona never misrepresents truth |
+| PFF Chat AI persona governs *how*, not *what* | Transparency: persona never misrepresents truth |
 
 ## 11. Risks and Mitigations
 

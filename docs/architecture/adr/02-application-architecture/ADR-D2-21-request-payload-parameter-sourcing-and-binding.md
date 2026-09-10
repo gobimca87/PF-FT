@@ -395,7 +395,7 @@ model.
 | Authoritative-truth precedence | `erc`-sourced fields come only from ERC, itself populated only from Enterprise API/Event data (ADR-D2-12, ADR-D1-03) — precedence is preserved on the request side exactly as ADR-D2-15 preserves it on the response side. |
 | Four-state separation | `workflow_state` and `claims` sources are read from their own state categories, never conflated with conversation state. |
 | Versioned artefacts, never mutated in place | The request contract (with its `source` declarations) is part of the versioned API catalogue (ADR-D5-06). |
-| Adam persona governs how, never what | Not applicable — no user-facing communication in this ADR's scope. |
+| PFF Chat AI persona governs how, never what | Not applicable — no user-facing communication in this ADR's scope. |
 
 ## 11. Risks and Mitigations
 

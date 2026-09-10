@@ -17,7 +17,7 @@ def test_should_compose_sections_in_the_fixed_doc_order_regardless_of_input_orde
             PromptSectionRole.USER_REQUEST, PromptTrustLevel.UNTRUSTED, "What is required?"
         ),
         PromptSectionRole.PLATFORM_SYSTEM: _section(
-            PromptSectionRole.PLATFORM_SYSTEM, PromptTrustLevel.TRUSTED, "You are Adam AI."
+            PromptSectionRole.PLATFORM_SYSTEM, PromptTrustLevel.TRUSTED, "You are PFF Chat AI."
         ),
         PromptSectionRole.AGENT_PERSONA: _section(
             PromptSectionRole.AGENT_PERSONA, PromptTrustLevel.CONTROLLED, "Affiliation Assistant."

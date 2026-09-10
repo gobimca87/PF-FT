@@ -415,7 +415,7 @@ value per ADR-D1-04 §7.1.
 | Authoritative-truth precedence | Intent is model output at authority 1 and decides only which code path runs; it never becomes a business fact. |
 | Four-state separation | Classification reads Conversation State (message, summary) and Workflow State (associations); it writes neither. |
 | Versioned artefacts, never mutated in place | The intent set derives from versioned agent declarations; the classifier prompt is a versioned artefact (ADR-D3-11). |
-| Adam persona governs how, never what | Out-of-scope responses are shaped by the persona under ADR-D1-09; the classification itself is persona-independent. |
+| PFF Chat AI persona governs how, never what | Out-of-scope responses are shaped by the persona under ADR-D1-09; the classification itself is persona-independent. |
 
 ## 11. Risks and Mitigations
 

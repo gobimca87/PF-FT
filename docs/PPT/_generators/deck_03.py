@@ -11,7 +11,7 @@ OUT = os.path.join(os.path.dirname(__file__), "..", "03-ai-architecture.pptx")
 def prompt_stack(d, s):
     layers = [("System", "platform rules, non-negotiable"),
               ("Security", "injection defence, allow/deny"),
-              ("Persona", "Adam — versioned, reusable"),
+              ("Persona", "PFF Chat AI — versioned, reusable"),
               ("Task", "workflow objective & steps"),
               ("Context", "ERC · RAG · state (budgeted)"),
               ("Tools", "schemas & instructions"),
@@ -87,16 +87,16 @@ def build():
 
     s = d.content_slide("Clarify, confirm & handle uncertainty", kicker="D3-07 / D3-08")
     d.bullets(s, [
-        "Ambiguous or incomplete requests → Adam asks a clarifying question rather than guessing.",
+        "Ambiguous or incomplete requests → PFF Chat AI asks a clarifying question rather than guessing.",
         "Before any state-changing action → explicit confirmation (HIL).",
-        "Transaction-uncertainty policy: on a failed/ambiguous outcome Adam never silently guesses — it states the uncertainty, and reconciliation (deck 02) resolves the true state.",
+        "Transaction-uncertainty policy: on a failed/ambiguous outcome PFF Chat AI never silently guesses — it states the uncertainty, and reconciliation (deck 02) resolves the true state.",
         "Never celebrate an unconfirmed transaction — 'GOAL' only after the enterprise confirms.",
     ], CX0, 1.95, CW, 4.0, size=16, gap=15)
     d.set_notes(s, "The conversational safety core: clarify, confirm, never fabricate a transaction outcome.")
 
     s = d.content_slide("Prompt engineering — layered composition", kicker="D3-09 / D3-10")
     prompt_stack(d, s)
-    d.set_notes(s, "Prompts are composed from independent, versioned layers. The Adam persona is one "
+    d.set_notes(s, "Prompts are composed from independent, versioned layers. The PFF Chat AI persona is one "
                    "reusable layer; system & security layers are non-negotiable and cannot be overridden.")
 
     s = d.content_slide("Prompt storage, versioning & injection defence", kicker="D3-11 / D3-12")

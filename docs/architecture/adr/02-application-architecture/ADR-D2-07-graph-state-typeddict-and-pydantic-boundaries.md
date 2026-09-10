@@ -439,7 +439,7 @@ which is why references carry decision-relevant fields and not just an identifie
 | Authoritative-truth precedence | This decision is what keeps precedence computable. Facts stay with the ERC service carrying provenance and authority; a copy in graph state would be an unranked value (§7.3). |
 | Four-state separation | Enforced by the type definition itself (§7.4): conversation, session and enterprise projections are reference-only fields; only Workflow/Agent State is owned by value. |
 | Versioned artefacts, never mutated in place | Persisted state is a versioned Pydantic model (§7.5); a state-shape change is a schema version, not a silent reinterpretation. |
-| Adam persona governs how, never what | Graph state carries no user-facing language; response generation reads from it and produces language downstream. |
+| PFF Chat AI persona governs how, never what | Graph state carries no user-facing language; response generation reads from it and produces language downstream. |
 
 ## 11. Risks and Mitigations
 

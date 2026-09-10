@@ -446,7 +446,7 @@ carried forward unchanged and given the fuller treatment the template requires.
 | Authoritative-truth precedence | Not applicable — this decision concerns how decisions are recorded and touches no runtime data path. The precedence chain is itself recorded as a decision in ADR-D1-03. |
 | Four-state separation | Not applicable — no runtime state is involved. |
 | Versioned artefacts, never mutated in place in production | Directly upheld: ADRs are versioned, superseded rather than rewritten, and `review_due` forces periodic revalidation. Amendment rules are in ADR-D0-02. |
-| Adam persona governs how, never what | Not applicable — no user-facing communication is involved. |
+| PFF Chat AI persona governs how, never what | Not applicable — no user-facing communication is involved. |
 
 ## 11. Risks and Mitigations
 

@@ -213,7 +213,7 @@ kill-switch is a governed refinement.
 | Precedence chain | Not applicable — model metadata layer |
 | Four-state separation | Registry is config, not runtime state |
 | Versioned artefacts | This ADR enforces model version immutability |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

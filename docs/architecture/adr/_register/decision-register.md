@@ -29,7 +29,7 @@
 | [ADR-D1-06](../01-business-architecture/ADR-D1-06-business-capability-map-and-ownership.md) | Business capability map and capability ownership model | Accepted | AI Solution Architect | [WS-03] | 2026-08-21 |
 | [ADR-D1-07](../01-business-architecture/ADR-D1-07-persona-model-and-access-archetypes.md) | Persona model and access archetypes derived from enterprise claims | Accepted | AI Product Owner | [WS-04] | 2026-08-21 |
 | [ADR-D1-08](../01-business-architecture/ADR-D1-08-conversational-journey-and-hil-touchpoints.md) | Conversational journey design principles and human-in-the-loop touchpoints | Accepted | AI Product Owner | [WS-04] | 2026-08-21 |
-| [ADR-D1-09](../01-business-architecture/ADR-D1-09-adam-persona-charter.md) | Adam AI persona charter — football-commentary tone as a governed product decision | Accepted | AI Product Owner | [WS-04] | 2026-08-21 |
+| [ADR-D1-09](../01-business-architecture/ADR-D1-09-pff-chat-ai-persona-charter.md) | PFF Chat AI persona charter — football-commentary tone as a governed product decision | Accepted | AI Product Owner | [WS-04] | 2026-08-21 |
 | [ADR-D1-10](../01-business-architecture/ADR-D1-10-enterprise-workflow-catalogue-and-phasing.md) | Enterprise workflow catalogue, prioritisation and phasing | Accepted | AI Product Owner | [WS-05] | 2026-08-21 |
 | [ADR-D1-11](../01-business-architecture/ADR-D1-11-agent-catalogue-scope-affiliation-only.md) | Agent catalogue scope — AffiliationAgent only in the first pass | Accepted | AI Solution Architect | [WS-05] | 2026-08-21 |
 | [ADR-D1-12](../01-business-architecture/ADR-D1-12-requirements-baseline-and-traceability-scheme.md) | Functional and non-functional requirements baseline and identifier traceability scheme | Accepted | AI Solution Architect | [WS-06] | 2026-08-21 |
@@ -73,7 +73,7 @@
 | [ADR-D3-07](../03-ai-architecture/ADR-D3-07-clarification-and-confirmation-strategy.md) | Clarification, disambiguation and confirmation strategy | Accepted | AI Product Owner | [WS-14] | 2026-08-21 |
 | [ADR-D3-08](../03-ai-architecture/ADR-D3-08-transaction-uncertainty-conversational-policy.md) | Transaction-uncertainty and ambiguous-outcome conversational policy | Accepted | AI Product Owner | [WS-14] | 2026-08-21 |
 | [ADR-D3-09](../03-ai-architecture/ADR-D3-09-layered-prompt-composition.md) | Layered prompt composition with trust-labelled content boundaries | Accepted | AI Solution Architect | [WS-15] | 2026-08-21 |
-| [ADR-D3-10](../03-ai-architecture/ADR-D3-10-adam-persona-prompt-layer.md) | Adam persona prompt layer — versioned, reusable, workflow-independent | Accepted | AI Architecture Lead | [WS-15] | 2026-08-22 |
+| [ADR-D3-10](../03-ai-architecture/ADR-D3-10-pff-chat-ai-persona-prompt-layer.md) | PFF Chat AI persona prompt layer — versioned, reusable, workflow-independent | Accepted | AI Architecture Lead | [WS-15] | 2026-08-22 |
 | [ADR-D3-11](../03-ai-architecture/ADR-D3-11-prompt-storage-versioning-and-promotion.md) | Prompt storage, versioning and promotion | Accepted | AI Architecture Lead | [WS-15] | 2026-08-22 |
 | [ADR-D3-12](../03-ai-architecture/ADR-D3-12-prompt-injection-defence-in-prompt-layer.md) | Prompt injection defence inside the prompt layer | Accepted | Security Architect | [WS-15] | 2026-08-22 |
 | [ADR-D3-13](../03-ai-architecture/ADR-D3-13-slm-strategy-hosted-first-self-hosted-target.md) | SLM strategy — Hugging Face Inference API first, self-hosted SLM as target | Accepted | AI Architecture Lead | [WS-16] | 2026-08-22 |

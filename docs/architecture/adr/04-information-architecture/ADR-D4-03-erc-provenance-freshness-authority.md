@@ -186,7 +186,7 @@ wrong for authoritative context.
 | Precedence chain | Authority level is the section's place in the chain |
 | Four-state separation | Provenance marks enterprise-reference nature of ERC |
 | Versioned artefacts | Freshness policies versioned |
-| Adam persona governs *how*, not *what* | Persona must not present stale as fresh |
+| PFF Chat AI persona governs *how*, not *what* | Persona must not present stale as fresh |
 
 ## 11. Risks and Mitigations
 

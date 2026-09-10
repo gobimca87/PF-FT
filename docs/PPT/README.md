@@ -1,7 +1,7 @@
 # PFF AI — Technical ARB Presentation Suite
 
 A suite of **10 PowerPoint decks** (~145 slides) presenting the PFF-FA Enterprise Agentic AI
-platform (**Adam AI**) to the **Architecture Review Board**, from a technical perspective.
+platform (**PFF Chat AI**) to the **Architecture Review Board**, from a technical perspective.
 Built on the organisation **Orion FA** template — **blue & white enterprise theme** (white
 background, navy sidebar with the FA crest, professional blue accent, Cambria/Calibri).
 
@@ -14,7 +14,7 @@ background, navy sidebar with the FA crest, professional blue accent, Cambria/Ca
 | # | File | Scope | ADR domain(s) |
 |---|------|-------|---------------|
 | 00 | `00-overview.pptx` | Whole-system technical overview, Golden Rule, master architecture, tech & cost headlines | all |
-| 01 | `01-business-architecture.pptx` | Governance, scope, Adam persona, workflows, value | D0 · D1 · D8 |
+| 01 | `01-business-architecture.pptx` | Governance, scope, PFF Chat AI persona, workflows, value | D0 · D1 · D8 |
 | 02 | `02-application-orchestration.pptx` | Layering, runtime, Supervisor, LangGraph, Harness, integration, eventing | D2 |
 | 03 | `03-ai-architecture.pptx` | Agents, prompts, SLM, RAG, embeddings, refinement | D3 |
 | 04 | `04-information-context-data.pptx` | Four states, ERC, identifiers, Redis state/memory/cache | D4 |
@@ -57,7 +57,7 @@ D5-10 self-hosted vLLM · D3-28 refinement loop · D6-19 masking regime.
 | 21 Evaluation · 22 Testing · 23 Engineering Agents | 07 |
 | 24 Observability/Resilience · 25 Infrastructure/Operations · 27 Dev Standards · 28 Ops Runbook | 07 (25 also 05) |
 | 26 Performance & Cost | 08 |
-| SampleWorkflowchat (Adam persona reference) | 01 |
+| SampleWorkflowchat (PFF Chat AI persona reference) | 01 |
 
 ## Template & theme
 

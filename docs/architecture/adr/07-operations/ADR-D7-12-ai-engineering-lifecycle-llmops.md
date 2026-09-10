@@ -178,7 +178,7 @@ and manual management (D) are rejected.
 | Precedence chain | Eval protects authoritative-truth fidelity |
 | Four-state separation | N/A |
 | Versioned artefacts | This ADR operationalises immutability + bundling |
-| Adam persona governs *how*, not *what* | Persona promoted as a bundled, canaried artefact |
+| PFF Chat AI persona governs *how*, not *what* | Persona promoted as a bundled, canaried artefact |
 
 ## 11. Risks and Mitigations
 

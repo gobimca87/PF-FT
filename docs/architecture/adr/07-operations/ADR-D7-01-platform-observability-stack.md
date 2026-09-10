@@ -172,7 +172,7 @@ SaaS APM (C) are rejected as the primary stack.
 | Precedence chain | N/A |
 | Four-state separation | Telemetry redacted per classification (ADR-D7-04) |
 | Versioned artefacts | Dashboards/alerts as code |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -186,7 +186,7 @@ model/prompt/high-risk changes and blue/green for GPU serving and vector-index c
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Deploy by immutable manifest/digest |
-| Adam persona governs *how*, not *what* | Persona changes deploy as canary prompt changes |
+| PFF Chat AI persona governs *how*, not *what* | Persona changes deploy as canary prompt changes |
 
 ## 11. Risks and Mitigations
 

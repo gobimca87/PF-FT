@@ -191,7 +191,7 @@ and per-family envelopes (E) are rejected.
 | Precedence chain | Metadata can carry source/authority where relevant |
 | Four-state separation | Wire contract only; no state conflation |
 | Versioned artefacts | api/schema versions in metadata |
-| Adam persona governs *how*, not *what* | Error messages factual; persona wording separate |
+| PFF Chat AI persona governs *how*, not *what* | Error messages factual; persona wording separate |
 
 ## 11. Risks and Mitigations
 

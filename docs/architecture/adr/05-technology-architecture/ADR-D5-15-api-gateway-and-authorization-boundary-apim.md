@@ -179,7 +179,7 @@ NGINX authz (E) are rejected.
 | Precedence chain | Claims are authoritative input, not AI-derived |
 | Four-state separation | Claims context distinct from other state |
 | Versioned artefacts | APIM policies versioned in IaC |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

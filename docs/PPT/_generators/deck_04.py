@@ -84,7 +84,7 @@ def build():
     d.two_col(s, "Partial-failure semantics", [
         "If some entities fail, ERC is explicitly PARTIAL — never silently treated as complete.",
         "The workflow decides: retry, degrade, or surface to the user.",
-        "Adam states clearly what could not be gathered.",
+        "PFF Chat AI states clearly what could not be gathered.",
     ], "Invalidation & event refresh", [
         "Enterprise events invalidate stale ERC entries (D4-06).",
         "Refresh is event-driven via Service Bus (deck 02).",
@@ -108,7 +108,7 @@ def build():
     d.bullets(s, [
         "A consistent metadata response envelope wraps enterprise/tool responses: status, provenance, freshness, correlation, and typed error codes.",
         "Error codes map to the PlatformError hierarchy (deck 07) so failures are handled uniformly.",
-        "This envelope is what lets Adam communicate precise, factual state and next actions.",
+        "This envelope is what lets PFF Chat AI communicate precise, factual state and next actions.",
     ], CX0, 1.95, CW, 3.2, size=16, gap=15)
     d.set_notes(s, "A uniform envelope carries status, provenance, freshness and typed error codes — "
                    "the substrate for factual communication and consistent error handling.")

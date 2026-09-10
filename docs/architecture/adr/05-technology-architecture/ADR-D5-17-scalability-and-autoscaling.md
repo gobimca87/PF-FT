@@ -183,7 +183,7 @@ are rejected as primary strategies.
 | Precedence chain | N/A |
 | Four-state separation | Stateless horizontal scaling preserves state stores |
 | Versioned artefacts | Autoscaler config versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -188,7 +188,7 @@ is unnecessary given the controls.
 | Precedence chain | External model is lowest authority; boundary protects data |
 | Four-state separation | Enterprise/ERC data minimised before any egress |
 | Versioned artefacts | Boundary policy versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -174,7 +174,7 @@ Container Apps (B) may host stateless CPU workers later; AWS/GCP (C/D) and plain
 | Precedence chain | N/A (infra) |
 | Four-state separation | Workloads separated by node pool/namespace |
 | Versioned artefacts | Infra as code, versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 
