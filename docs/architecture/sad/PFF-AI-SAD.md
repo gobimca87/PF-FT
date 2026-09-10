@@ -191,32 +191,8 @@ Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R
 **Figure 1 — Club Affiliation conversational flow.** _Draft (Mermaid); refine with real tool/step names on review._
 
 ```mermaid
-sequenceDiagram
-    actor User as County / Club Admin
-    participant Chat as PFF Chat AI (FastAPI /chat)
-    participant Agent as AffiliationAgent (LangGraph)
-    participant Harness as Agent Harness
-    participant ERC as ERC Pipeline
-    participant PFF as PFF Enterprise APIs (via APIM)
-    participant SB as Azure Service Bus
-    participant SLM as SLM (HF API to self-hosted)
+![Uploading ChatGPT Image Sep 10, 2026, 03_48_32 PM.png…]()
 
-    User->>Chat: Affiliation request (natural language)
-    Chat->>Agent: Route to AffiliationAgent
-    Agent->>Harness: Run inside controlled boundary
-    Harness->>ERC: Build context (identify club, load application)
-    ERC->>PFF: Fetch teams / officials / products / insurance (20-record batches)
-    PFF-->>ERC: Validated claims + records
-    ERC-->>Harness: ERC (versioned)
-    Harness->>SLM: Prompt (persona + ERC); external payload masked, fail-closed
-    SLM-->>Harness: Draft language (not authority)
-    Harness->>PFF: Authorised operation via controlled tool
-    PFF-->>Harness: Authoritative result
-    Note over Agent,SB: If HIL / pending, wait for enterprise event
-    SB-->>Agent: Enterprise event (e.g. payment confirmed)
-    Agent->>ERC: Partial ERC refresh (new version)
-    Agent-->>Chat: Explain status + resolved portal link
-    Chat-->>User: Response (celebrate only after confirmed success)
 ```
 
 ## 1.3 Constraints
