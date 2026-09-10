@@ -3,7 +3,11 @@ import pytest
 
 from pff_fa_ai.common.exceptions import IntegrationError
 from pff_fa_ai.slm.models import SlmMessage, SlmRequest
-from pff_fa_ai.slm.providers import HuggingFaceSLMProvider, MockSLMProvider
+from pff_fa_ai.slm.providers import (
+    AzureAIFoundrySLMProvider,
+    HuggingFaceSLMProvider,
+    MockSLMProvider,
+)
 from pff_fa_ai.slm.states import ProviderHealthStatus
 
 
@@ -116,3 +120,56 @@ async def test_huggingface_provider_health_should_report_healthy() -> None:
     ) as client:
         provider = HuggingFaceSLMProvider(client, model_version="1.2.0")
         assert await provider.health() is ProviderHealthStatus.HEALTHY
+
+
+async def test_foundry_provider_should_generate_from_openai_compatible_response() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/models/chat/completions"
+        assert request.url.params.get("api-version") == "2024-05-01-preview"
+        return httpx.Response(
+            200,
+            json={
+                "model": "phi-3-mini",
+                "choices": [
+                    {
+                        "message": {"content": "Clubs must submit affiliation documents."},
+                        "finish_reason": "stop",
+                    }
+                ],
+                "usage": {"prompt_tokens": 10, "completion_tokens": 6, "total_tokens": 16},
+            },
+        )
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler), base_url="https://foundry.example"
+    ) as client:
+        provider = AzureAIFoundrySLMProvider(client, model_version="3.0.0")
+        response = await provider.generate(_request())
+
+    assert response.output == "Clubs must submit affiliation documents."
+    assert response.model_version == "3.0.0"
+    assert response.usage.total_tokens == 16
+    assert response.finish_reason == "stop"
+
+
+async def test_foundry_provider_should_raise_integration_error_on_failure() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(503, json={"error": "unavailable"})
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler), base_url="https://foundry.example"
+    ) as client:
+        provider = AzureAIFoundrySLMProvider(client, model_version="3.0.0")
+        with pytest.raises(IntegrationError):
+            await provider.generate(_request())
+
+
+async def test_foundry_provider_health_should_report_unavailable_on_network_error() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ConnectError("connection refused", request=request)
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler), base_url="https://foundry.example"
+    ) as client:
+        provider = AzureAIFoundrySLMProvider(client, model_version="3.0.0")
+        assert await provider.health() is ProviderHealthStatus.UNAVAILABLE

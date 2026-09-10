@@ -12,7 +12,7 @@ reviewers: [Principal Architect, AI Governance Lead]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D6-07, ADR-D6-06, ADR-D6-04, ADR-D3-13, ADR-D3-14, ADR-D6-16, ADR-D7-04, ADR-D6-09]
+related_adrs: [ADR-D6-07, ADR-D6-06, ADR-D6-04, ADR-D3-13, ADR-D3-29, ADR-D3-14, ADR-D6-16, ADR-D7-04, ADR-D6-09]
 source_docs:
   - "MD files/5 QualityGovernance/19.PFF-FA-AI-SECURITY.md §22, §23, §24"
   - "MD files/4 AI/18.PFF-FA-AI-GUARDRAILS.md §62, §69, §70, §71"
@@ -40,6 +40,15 @@ data, children's personal data and secrets remain hard-blocked entirely (ADR-D6-
 data may be used, chosen per task class, because the data never crosses the trust
 boundary. A tenancy-internal **token vault** (extending ADR-D6-06) maps tokens to original
 values so masked model outputs can be re-identified inside the boundary before use.
+
+> **Placement refinement ([ADR-D3-29](../03-ai-architecture/ADR-D3-29-model-serving-plane-azure-ai-foundry.md),
+> 2026-09-10).** The hosted-first plane is now **Azure AI Foundry**, a managed Azure service running
+> **in-tenancy** in an Azure region under the enterprise EA/DPA (`SlmPlacement.MANAGED_IN_TENANCY`).
+> Because its inference does not cross the tenancy trust boundary, Foundry takes the **self-hosted
+> (optional, per-task-class) masking regime**, **not** the mandatory external-egress regime. The
+> mandatory mask-before-egress rule continues to apply to any genuinely external endpoint (e.g. the
+> Hugging Face Inference API, retained only for evaluation). Special-category/children's data and secrets
+> remain hard-blocked regardless of placement (ADR-D6-16).
 
 ## 2. Context and Problem Statement
 

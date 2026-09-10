@@ -115,3 +115,83 @@ class HuggingFaceSLMProvider:
             if response.status_code < 400
             else ProviderHealthStatus.DEGRADED
         )
+
+
+class AzureAIFoundrySLMProvider:
+    """ADR-D3-29: the hosted-first inference plane is Azure AI Foundry (in-tenancy Azure),
+    superseding the Hugging Face Inference API as the production/hosted path (ADR-D3-13 is
+    superseded).
+
+    Calls the OpenAI-compatible Azure AI Model Inference chat-completions API. The shared
+    httpx client carries the Foundry endpoint (base_url) and the Entra ID / managed-identity
+    bearer token (or key), resolved from Key Vault via `*_secret_ref` (ADR-D5-07); no
+    provider SDK is imported past this adapter (ADR-D3-14, ADR-D2-01). Because Foundry runs
+    in-tenancy, its placement is `SlmPlacement.MANAGED_IN_TENANCY`, so the mandatory
+    external-masking boundary (ADR-D6-19 / `MaskedExternalSLMProvider`) does not wrap it —
+    masking is applied per task class, as for a self-hosted SLM.
+    """
+
+    def __init__(
+        self,
+        client: httpx.AsyncClient,
+        *,
+        model_version: str,
+        api_version: str = "2024-05-01-preview",
+    ) -> None:
+        self._client = client
+        self._model_version = model_version
+        self._api_version = api_version
+
+    async def generate(self, request: SlmRequest) -> SlmResponse:
+        response = await self._client.post(
+            "/models/chat/completions",
+            params={"api-version": self._api_version},
+            json={
+                "model": request.model_id,
+                "messages": [
+                    {"role": message.role, "content": message.content}
+                    for message in request.messages
+                ],
+                "temperature": request.temperature,
+                "top_p": request.top_p,
+                "max_tokens": request.max_output_tokens,
+            },
+        )
+        if response.status_code >= 400:
+            raise IntegrationError(
+                f"Azure AI Foundry SLM request failed with status {response.status_code}",
+                details={"status_code": response.status_code},
+            )
+        body = response.json()
+        choice = body["choices"][0]
+        usage = body.get("usage", {})
+        return SlmResponse(
+            request_id=new_id("slm-req"),
+            model_id=request.model_id,
+            model_version=self._model_version,
+            output=choice["message"]["content"],
+            usage=SlmUsage(
+                prompt_tokens=usage.get("prompt_tokens", 0),
+                completion_tokens=usage.get("completion_tokens", 0),
+                total_tokens=usage.get("total_tokens", 0),
+            ),
+            finish_reason=choice.get("finish_reason", "stop"),
+        )
+
+    async def stream(self, request: SlmRequest) -> AsyncIterator[str]:
+        response = await self.generate(request)
+        for word in response.output.split():
+            yield word + " "
+
+    async def health(self) -> ProviderHealthStatus:
+        try:
+            response = await self._client.get(
+                "/models", params={"api-version": self._api_version}
+            )
+        except httpx.HTTPError:
+            return ProviderHealthStatus.UNAVAILABLE
+        return (
+            ProviderHealthStatus.HEALTHY
+            if response.status_code < 400
+            else ProviderHealthStatus.DEGRADED
+        )

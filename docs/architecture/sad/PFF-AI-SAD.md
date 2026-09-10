@@ -213,11 +213,14 @@ Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R
   is deferred (DEVELOPMENT-GUIDE §2, "AffiliationAgent-only first").
 - **PFF remains the system of record:** all business/compliance decisions and all writes to enterprise data
   remain owned by PFF; AI consumes validated claims and authoritative responses/events only.
-- **Recommended-but-Proposed ADRs are the working default:** embedding model `bge-base-en-v1.5`-class 768-dim
-  (`ADR-D3-23`), vector store Azure AI Search (`ADR-D3-24`), and self-hosted SLM serving via vLLM on AKS GPU
-  (`ADR-D5-10`) are built against pending formal ratification; deviation requires a superseding ADR.
-- **Initial model sourcing:** the SLM and embeddings start on the Hugging Face Inference API and transition to
-  an internal self-hosted SLM; masking/fail-closed applies while any external SLM is in use.
+- **Recommended-but-Proposed ADRs are the working default:** model serving plane Azure AI Foundry hosted-first
+  → self-hosted vLLM target (`ADR-D3-29`, supersedes `ADR-D3-13`), embedding model `bge-base-en-v1.5`-class
+  768-dim (`ADR-D3-23`), vector store Azure AI Search (`ADR-D3-24`), and self-hosted SLM serving via vLLM on
+  AKS GPU (`ADR-D5-10`) are built against pending formal ratification; deviation requires a superseding ADR.
+- **Hosted-first model sourcing:** the SLM and embeddings run on **Azure AI Foundry** (in-tenancy Azure) and
+  transition to an internal self-hosted SLM (vLLM on AKS GPU). Foundry is in-tenancy
+  (`SlmPlacement.MANAGED_IN_TENANCY`), so masking is per task class, not the mandatory external boundary;
+  Hugging Face is retained as an eval-only provider and would trigger mask/fail-closed if ever used.
 
 ## 1.5 Dependencies
 
@@ -230,8 +233,8 @@ surfaces.
   Bus event contracts being available.
 - **APIM authZ boundary:** authentication/authorisation is performed at APIM/enterprise auth; PFF AI depends
   on validated claims being passed through.
-- **Model & embedding provider:** Hugging Face Inference API (initial) and, for the target state, AKS GPU
-  capacity for the self-hosted SLM (vLLM).
+- **Model & embedding provider:** Azure AI Foundry (hosted-first, in-tenancy) and, for the target state, AKS
+  GPU capacity for the self-hosted SLM (vLLM).
 - **Azure AI Search & Azure Managed Redis:** RAG retrieval depends on the vector store (`ADR-D3-24`); session/
   memory/cache depends on Azure Managed Redis (`ADR-D4-10`).
 - **Langfuse:** AI-specific tracing/prompt/cost observability depends on Langfuse availability alongside Azure
@@ -281,7 +284,7 @@ flowchart LR
     EVT -->|partial refresh| ERCv
     ERCv --> PA["Prompt Assembly"]
     RAG -. retrieval .-> PA
-    PA --> SLM["SLM<br/>HF API to self-hosted vLLM<br/>external payload masked"]
+    PA --> SLM["SLM<br/>Azure AI Foundry to self-hosted vLLM<br/>in-tenancy; masked per task class"]
     SLM --> OUT["PFF Chat AI response<br/>precedence: API/Event &gt; ERC &gt; Cache &gt; RAG &gt; SLM"]
 ```
 
@@ -415,8 +418,8 @@ Key performance requirements for Phase 1 (targets to be confirmed against PFF NF
 
 - The AI runtime is stateless at the request layer and scales horizontally on the existing PFF AKS cluster;
   session/workflow state is externalised to Azure Managed Redis.
-- The self-hosted SLM (target state) scales on AKS GPU node pools (vLLM, `ADR-D5-10`); initial state uses the
-  Hugging Face Inference API.
+- The self-hosted SLM (target state) scales on AKS GPU node pools (vLLM, `ADR-D5-10`); the hosted-first state
+  uses Azure AI Foundry (managed, in-tenancy scaling).
 - The runtime quality-gated refinement loop with a model-escalation ladder (`ADR-D3-28`) bounds retries and
   escalation under strict mode.
 - Recommended HPA settings and node pools: _TBD_ (to be aligned to the existing PFF AKS capacity in [R1]).
@@ -424,7 +427,7 @@ Key performance requirements for Phase 1 (targets to be confirmed against PFF NF
 ## 3.5 Availability
 
 **Availability approach.** Availability aligns with the existing PFF standard defined in "PFF Platform
-Architecture" [R1]. External dependencies (e.g., Hugging Face Inference API) are treated as degradable — the
+Architecture" [R1]. External dependencies (e.g., the optional Hugging Face eval provider) are treated as degradable — the
 runtime fails closed on guardrails and degrades gracefully where an authoritative source is unavailable rather
 than guessing an outcome.
 
@@ -498,7 +501,7 @@ flowchart TB
     subgraph INFRA["Infrastructure / Integrations"]
         PFFAPI["PFF Enterprise APIs (via APIM)"]
         SBUS["Azure Service Bus"]
-        SLM["SLM (HF to self-hosted)"]
+        SLM["SLM (Azure AI Foundry to self-hosted)"]
         SRCH["Azure AI Search"]
         REDIS["Azure Managed Redis"]
     end
@@ -512,11 +515,13 @@ flowchart TB
     SBUS -. events .-> SUP
 ```
 
-### 4.1.1 Model Sourcing (phased)
+### 4.1.1 Model Sourcing (phased, `ADR-D3-29`)
 
-- **Initial:** SLM and embeddings via the Hugging Face Inference API; external-SLM payloads masked/fail-closed.
+- **Hosted-first:** SLM and embeddings via **Azure AI Foundry** (in-tenancy Azure; Entra ID / managed
+  identity; Private Link). Placement `MANAGED_IN_TENANCY` → masking per task class, not the mandatory external
+  boundary. Hugging Face Inference API is retained as an eval-only provider (external → mask/fail-closed).
 - **Target:** internal self-hosted SLM (vLLM on AKS GPU, `ADR-D5-10`) able to use raw or masked in-tenancy
-  data; embeddings `bge-base-en-v1.5`-class 768-dim (`ADR-D3-23`).
+  data; embeddings `bge-base-en-v1.5`-class 768-dim or Azure OpenAI `text-embedding-3` (`ADR-D3-23`).
 
 ## 4.2 Infrastructure Architecture
 
@@ -549,7 +554,7 @@ flowchart TB
     RT --> SB["Azure Service Bus<br/>events"]
     RT --> FUNC["Azure Functions<br/>integration"]
     RT --> KV["Azure Key Vault<br/>MI-SPN only"]
-    RT --> HF["Hugging Face Inference API<br/>initial model sourcing"]
+    RT --> FOUNDRY["Azure AI Foundry<br/>hosted-first SLM + embeddings (in-tenancy)"]
     ACR["Azure Container Registry"] -. images .-> AKS
     RT --> MON["Azure Monitor / App Insights / Log Analytics"]
     RT --> LF["Langfuse<br/>AI traces / cost"]
@@ -583,7 +588,8 @@ model (`ADR-D5-20`). No new DevOps tooling, pipelines, or release processes are 
 | `ADR-D4-10` | Memory/session/cache store — **Azure Managed Redis** (Accepted; supersedes `docs/adr/0004`). |
 | `ADR-D5-20` | Delivery — conform to Enterprise Application delivery model; no separate infra/CI/CD (Accepted; ratifies `ADR-D5-12` IaC and `ADR-D5-13` Kubernetes). |
 | `ADR-D5-07` | Key Vault access via enterprise MI-SPN only. |
-| `ADR-D3-23` | Embedding model — HF-hosted `bge-base-en-v1.5`-class 768-dim (Proposed; working default). |
+| `ADR-D3-29` | Model serving plane — Azure AI Foundry hosted-first (in-tenancy), self-hosted vLLM target; supersedes `ADR-D3-13`; HF eval-only (Proposed; working default). |
+| `ADR-D3-23` | Embedding model — `bge-base-en-v1.5`-class 768-dim (or Azure OpenAI `text-embedding-3`), hosted on Azure AI Foundry (Proposed; working default). |
 | `ADR-D3-24` | Vector store — Azure AI Search (Proposed; working default). |
 | `ADR-D5-10` | Self-hosted SLM serving — vLLM on AKS GPU (Proposed; working default). |
 | `ADR-D3-28` | Runtime quality-gated refinement loop + model-escalation ladder + strict mode (Proposed; awaiting ARB). |
@@ -620,8 +626,8 @@ development technologies. Solution-specific components are introduced only where
 
 - Python + **FastAPI** (API framework)
 - **LangGraph** (agent orchestration)
-- SLM: Hugging Face Inference API (initial) → self-hosted vLLM/HF TGI on AKS GPU (target)
-- Embeddings: Hugging Face API (`bge-base-en-v1.5`-class, 768-dim)
+- SLM: Azure AI Foundry (hosted-first, in-tenancy) → self-hosted vLLM on AKS GPU (target); HF eval-only (`ADR-D3-29`)
+- Embeddings: Azure AI Foundry-hosted (`bge-base-en-v1.5`-class 768-dim or Azure OpenAI `text-embedding-3`)
 - **Pydantic** (all boundary models) + **TypedDict** (LangGraph internal state)
 - **Ruff** (lint/format); mypy or pyright (one project primary)
 - **Langfuse** (AI-specific traces/prompts/tokens/cost)
@@ -645,15 +651,15 @@ development technologies. Solution-specific components are introduced only where
 | ACR | Existing registry reused | No extra cost |
 | Key Vault | Existing PFF Key Vault reused | No extra cost |
 | Monitoring/Log Analytics | Existing PFF monitoring + Langfuse | Low — incremental ingestion + Langfuse |
-| Hugging Face Inference API | Initial model/embedding sourcing (usage-based) | _TBD_ — usage-based |
+| Azure AI Foundry | Hosted-first SLM + embedding inference (in-tenancy; usage or provisioned throughput) | _TBD_ — usage/PTU-based |
 
 ## 6.2 Software
 
 **Software licensing approach.**
 - Phase 1 uses existing approved platform services and open-source components (FastAPI, LangGraph, Pydantic,
   Ruff) wherever possible.
-- Incremental costs are usage-based model/embedding inference (Hugging Face, initial) and Langfuse; a
-  self-hosted SLM shifts cost from per-call inference to GPU compute (target state).
+- Incremental costs are Azure AI Foundry model/embedding inference (hosted-first) and Langfuse; a
+  self-hosted SLM shifts cost from managed inference to GPU compute (target state).
 - Any third-party SaaS/licensing beyond the above: _TBD_ — none currently anticipated for Phase 1.
 
 ---
@@ -675,7 +681,7 @@ support channels, and escalation routes.
 - **Phase 1:** Reusable AI runtime proven end-to-end on the **Club Affiliation** workflow (`AffiliationAgent`
   only).
 - **Later phases:** extend to additional workflows and agents (player registration, discipline, officials,
-  insurance, county cups, payments) and transition from the Hugging Face Inference API to the internal
+  insurance, county cups, payments) and transition from Azure AI Foundry (hosted-first) to the internal
   self-hosted SLM (vLLM on AKS GPU).
 
 ## 7.3 Life Expectancy

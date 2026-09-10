@@ -3,15 +3,15 @@ id: ADR-D3-13
 title: SLM strategy — Hugging Face Inference API first, self-hosted SLM as target
 domain: 3 AI
 ws_ref: [WS-16]
-status: Accepted
-version: 1.0.0
+status: Superseded
+version: 1.1.0
 date: 2026-08-22
 decision_owner: AI Architecture Lead
 contributors: [ML Engineer, Platform Engineer, Security Architect, FinOps]
 reviewers: [Principal Architect, Data Protection Officer]
 approver: Architecture Review Board
 supersedes: []
-superseded_by: []
+superseded_by: [ADR-D3-29]
 related_adrs: [ADR-D3-14, ADR-D3-15, ADR-D3-18, ADR-D5-10, ADR-D5-11, ADR-D6-07]
 source_docs:
   - "MD files/4 AI/15.PFF-FA-AI-SLM.md §2, §3, §4, §5, §19, §20, §21, §85, §103, §104, §105, §124, §125, §126"
@@ -23,6 +23,14 @@ review_due: 2027-08-22
 ---
 
 # ADR-D3-13 — SLM strategy — Hugging Face Inference API first, self-hosted SLM as target
+
+> **SUPERSEDED by [ADR-D3-29](ADR-D3-29-model-serving-plane-azure-ai-foundry.md) (2026-09-10).** The
+> phased strategy (hosted-first → self-hosted, behind the ADR-D3-14 abstraction) and the self-hosted
+> vLLM-on-AKS target (ADR-D5-10) are **retained**; only the **hosted-first provider changes from the
+> Hugging Face Inference API to Azure AI Foundry** (in-tenancy Azure). Hugging Face is retained as an
+> optional evaluation/experimentation provider only. This file is kept for history; for the current
+> decision see ADR-D3-29. The change was driven by the all-Azure enterprise posture (ADR-D5-20) and the
+> data-boundary/masking regime (ADR-D6-07, ADR-D6-19) — see ADR-D3-29 §2.
 
 ## 1. Summary
 
@@ -336,3 +344,4 @@ the open part and lives in ADR-D5-10 as `Proposed`.)
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 1.0.0 | 2026-08-22 | AI Architecture Lead | Initial decision recorded. |
+| 1.1.0 | 2026-09-10 | AI Solution Architect | Superseded by ADR-D3-29 — hosted-first provider changed from Hugging Face Inference API to Azure AI Foundry; status set to Superseded. |

@@ -1,6 +1,19 @@
 # Doc 14 §13: model selection must be evaluation-driven, not picked ahead of an evaluation
 # exercise. `mock` keeps ingestion/retrieval genuinely working end-to-end without pretending
-# a specific Hugging Face model has been evaluated and approved yet (see docs/adr/0003).
+# a specific model has been evaluated and approved yet.
+#
+# ADR-D3-29 (supersedes the HF-hosting part of ADR-D3-13): the hosted embedding plane is
+# Azure AI Foundry (in-tenancy Azure), NOT the Hugging Face Inference API. The embedding
+# MODEL choice (family, dimensionality) remains the ADR-D3-23 selection — this changes only
+# where it is hosted. The Foundry endpoint + credential resolve from Key Vault via
+# *_secret_ref (ADR-D5-07). Hugging Face remains an optional eval provider only.
+#
+# Example hosted config (kept commented until model evaluation + ARB sign-off):
+#   provider: azure_ai_foundry
+#   endpoint_secret_ref: kv:embedding-foundry-endpoint
+#   api_version: "2024-05-01-preview"
+#   model_id: <foundry-embedding-deployment>
+#   dimension: 768
 embedding:
   provider: mock
   model_id: mock-embedding-v1

@@ -55,3 +55,43 @@ class HuggingFaceEmbeddingProvider:
     async def embed_query(self, text: str) -> tuple[float, ...]:
         vectors = await self.embed_documents([text])
         return vectors[0]
+
+
+class AzureAIFoundryEmbeddingProvider:
+    """ADR-D3-29 / ADR-D3-23: embeddings are hosted in Azure AI Foundry (in-tenancy Azure),
+    superseding the Hugging Face Inference API as the hosted embedding path.
+
+    Calls the OpenAI-compatible Azure AI Model Inference embeddings API. The shared httpx
+    client carries the Foundry endpoint (base_url) and the Entra ID / managed-identity
+    credential resolved from Key Vault (ADR-D5-07); no provider SDK is imported past this
+    adapter (ADR-D3-14, ADR-D2-01). The embedding model itself (dimensionality, family)
+    remains the ADR-D3-23 selection — this changes only where it is hosted.
+    """
+
+    def __init__(
+        self,
+        client: httpx.AsyncClient,
+        *,
+        model_id: str,
+        api_version: str = "2024-05-01-preview",
+    ) -> None:
+        self._client = client
+        self._model_id = model_id
+        self._api_version = api_version
+
+    async def embed_documents(self, texts: list[str]) -> list[tuple[float, ...]]:
+        response = await self._client.post(
+            "/embeddings",
+            params={"api-version": self._api_version},
+            json={"model": self._model_id, "input": texts},
+        )
+        if response.status_code >= 400:
+            raise IntegrationError(
+                f"Azure AI Foundry embedding request failed with status {response.status_code}",
+                details={"status_code": response.status_code},
+            )
+        return [tuple(item["embedding"]) for item in response.json()["data"]]
+
+    async def embed_query(self, text: str) -> tuple[float, ...]:
+        vectors = await self.embed_documents([text])
+        return vectors[0]

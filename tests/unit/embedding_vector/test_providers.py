@@ -2,7 +2,11 @@ import httpx
 import pytest
 
 from pff_fa_ai.common.exceptions import IntegrationError
-from pff_fa_ai.embedding_vector.providers import HuggingFaceEmbeddingProvider, MockEmbeddingProvider
+from pff_fa_ai.embedding_vector.providers import (
+    AzureAIFoundryEmbeddingProvider,
+    HuggingFaceEmbeddingProvider,
+    MockEmbeddingProvider,
+)
 
 
 async def test_mock_provider_should_be_deterministic() -> None:
@@ -68,5 +72,32 @@ async def test_huggingface_provider_should_raise_integration_error_on_failure() 
         transport=httpx.MockTransport(handler), base_url="https://hf.example"
     ) as client:
         provider = HuggingFaceEmbeddingProvider(client, model_id="test-model")
+        with pytest.raises(IntegrationError):
+            await provider.embed_query("hello")
+
+
+async def test_foundry_provider_should_embed_from_openai_compatible_response() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/embeddings"
+        assert request.url.params.get("api-version") == "2024-05-01-preview"
+        return httpx.Response(200, json={"data": [{"embedding": [0.1, 0.2, 0.3]}]})
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler), base_url="https://foundry.example"
+    ) as client:
+        provider = AzureAIFoundryEmbeddingProvider(client, model_id="text-embedding-3-small")
+        vectors = await provider.embed_documents(["hello"])
+
+    assert vectors == [(0.1, 0.2, 0.3)]
+
+
+async def test_foundry_provider_should_raise_integration_error_on_failure() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(503, json={"error": "unavailable"})
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler), base_url="https://foundry.example"
+    ) as client:
+        provider = AzureAIFoundryEmbeddingProvider(client, model_id="text-embedding-3-small")
         with pytest.raises(IntegrationError):
             await provider.embed_query("hello")

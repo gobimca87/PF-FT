@@ -76,7 +76,7 @@
 | [ADR-D3-10](../03-ai-architecture/ADR-D3-10-adam-persona-prompt-layer.md) | Adam persona prompt layer — versioned, reusable, workflow-independent | Accepted | AI Architecture Lead | [WS-15] | 2026-08-22 |
 | [ADR-D3-11](../03-ai-architecture/ADR-D3-11-prompt-storage-versioning-and-promotion.md) | Prompt storage, versioning and promotion | Accepted | AI Architecture Lead | [WS-15] | 2026-08-22 |
 | [ADR-D3-12](../03-ai-architecture/ADR-D3-12-prompt-injection-defence-in-prompt-layer.md) | Prompt injection defence inside the prompt layer | Accepted | Security Architect | [WS-15] | 2026-08-22 |
-| [ADR-D3-13](../03-ai-architecture/ADR-D3-13-slm-strategy-hosted-first-self-hosted-target.md) | SLM strategy — Hugging Face Inference API first, self-hosted SLM as target | Accepted | AI Architecture Lead | [WS-16] | 2026-08-22 |
+| [ADR-D3-13](../03-ai-architecture/ADR-D3-13-slm-strategy-hosted-first-self-hosted-target.md) | SLM strategy — Hugging Face Inference API first, self-hosted SLM as target | Superseded (by ADR-D3-29) | AI Architecture Lead | [WS-16] | 2026-08-22 |
 | [ADR-D3-14](../03-ai-architecture/ADR-D3-14-slm-provider-abstraction.md) | SLM provider abstraction and provider-neutral contract | Accepted | AI Architecture Lead | [WS-16] | 2026-08-22 |
 | [ADR-D3-15](../03-ai-architecture/ADR-D3-15-model-registry.md) | Model registry — capability, purpose and status model | Accepted | AI Architecture Lead | [WS-16] | 2026-08-22 |
 | [ADR-D3-16](../03-ai-architecture/ADR-D3-16-generation-parameters-and-temperature-strategy.md) | Generation parameter and temperature strategy per task class | Accepted | AI Architecture Lead | [WS-16] | 2026-08-22 |
@@ -92,6 +92,7 @@
 | [ADR-D3-26](../03-ai-architecture/ADR-D3-26-rag-retrieval-invocation-and-agentic-loop.md) | RAG retrieval invocation — tool contract, execution model, agentic loop bound | Accepted | AI Architecture Lead | [WS-17] | 2026-08-23 |
 | [ADR-D3-27](../03-ai-architecture/ADR-D3-27-document-ingestion-trigger-mechanism.md) | Document ingestion trigger mechanism — what starts a (re-)ingest | Accepted | AI Architecture Lead | [WS-17] | 2026-08-23 |
 | [ADR-D3-28](../03-ai-architecture/ADR-D3-28-quality-gated-refinement-loop-and-model-escalation.md) | Quality-gated runtime refinement loop, model-escalation ladder and strict mode | Proposed | AI Architecture Lead | [WS-16] | 2026-09-04 |
+| [ADR-D3-29](../03-ai-architecture/ADR-D3-29-model-serving-plane-azure-ai-foundry.md) | Model serving plane — Azure AI Foundry hosted-first, self-hosted vLLM as target (supersedes ADR-D3-13) | Proposed | AI Solution Architect | [WS-16] | 2026-09-10 |
 
 ## Domain 4 — Information Architecture
 

@@ -27,7 +27,8 @@ from the recommendation requires a superseding ADR.
 
 | Decision | Recommendation — build against this | ADR | Awaiting formal `Accepted` status |
 |---|---|---|---|
-| Embedding model | HF-hosted general-purpose 768-dim (`bge-base-en-v1.5` class); fallback 1024-dim | `ADR-D3-23` | Mandated PFF-FA retrieval evaluation (Recall@5 ≥ 0.90), then ARB sign-off |
+| Model serving plane (SLM + embeddings) | **Azure AI Foundry** hosted-first (in-tenancy Azure, Entra ID/MI, Private Link) → self-hosted vLLM on AKS GPU as target; HF Inference API eval-only; all behind the `ADR-D3-14` abstraction | `ADR-D3-29` (supersedes `ADR-D3-13`) | ARB sign-off (DPO on placement/masking, FinOps on cost) + Phase 6 model eval |
+| Embedding model | General-purpose 768-dim (`bge-base-en-v1.5` class or Azure OpenAI `text-embedding-3`); fallback 1024-dim; hosted on Azure AI Foundry (`ADR-D3-29`) | `ADR-D3-23` | Mandated PFF-FA retrieval evaluation (Recall@5 ≥ 0.90), then ARB sign-off |
 | Vector store | Azure AI Search (vector + hybrid); fallback pgvector on Azure Postgres | `ADR-D3-24` | ARB sign-off |
 | Memory / session / cache store | Azure Managed Redis | `ADR-D4-10` | **Accepted** — resolved, supersedes `docs/adr/0004-memory-cache-store-azure-managed-redis.md` |
 | Self-hosted SLM serving stack | vLLM on AKS GPU; fallbacks Azure ML / TGI / Triton | `ADR-D5-10` | Throughput/latency/quality benchmark, then ARB sign-off |

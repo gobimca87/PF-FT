@@ -12,7 +12,7 @@ reviewers: [Principal Architect, Architecture Review Board]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D3-13, ADR-D3-14, ADR-D3-17, ADR-D5-08, ADR-D5-11, ADR-D0-04]
+related_adrs: [ADR-D3-13, ADR-D3-29, ADR-D3-14, ADR-D3-17, ADR-D5-08, ADR-D5-11, ADR-D0-04]
 source_docs:
   - "MD files/4 AI/15.PFF-FA-AI-SLM.md §5, §20, §21, §46, §47, §70, §71, §73, §77, §78, §80, §81"
   - "MD files/6 Production/25.PFF-FA-AI-INFRASTRUCTURE-OPERATIONS.md §20, §21"
@@ -33,7 +33,10 @@ review_due: 2027-08-22
 
 ## 1. Summary
 
-For the self-hosted SLM phase (ADR-D3-13), PFF AI will serve the model on a
+For the self-hosted SLM phase (ADR-D3-13, superseded by
+[ADR-D3-29](../03-ai-architecture/ADR-D3-29-model-serving-plane-azure-ai-foundry.md) — the hosted-first
+plane is now Azure AI Foundry, and **Foundry managed compute is the managed on-ramp** to this self-host
+phase; this serving-stack decision is unchanged), PFF AI will serve the model on a
 GPU-accelerated inference server behind the provider abstraction (ADR-D3-14). The
 **recommendation is vLLM** for its PagedAttention throughput, continuous batching,
 OpenAI-compatible API and broad model/quantisation support, with **Hugging Face TGI**

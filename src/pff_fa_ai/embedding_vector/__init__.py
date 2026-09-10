@@ -7,6 +7,7 @@ from pff_fa_ai.embedding_vector.models import (
     VectorSearchResult,
 )
 from pff_fa_ai.embedding_vector.providers import (
+    AzureAIFoundryEmbeddingProvider,
     EmbeddingProvider,
     HuggingFaceEmbeddingProvider,
     MockEmbeddingProvider,
@@ -20,6 +21,7 @@ from pff_fa_ai.embedding_vector.vector_store import (
 )
 
 __all__ = [
+    "AzureAIFoundryEmbeddingProvider",
     "EmbeddingModelDescriptor",
     "EmbeddingModelRegistry",
     "EmbeddingModelStatus",

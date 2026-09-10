@@ -12,7 +12,7 @@ reviewers: [Principal Architect, Security Architect]
 approver: Architecture Review Board
 supersedes: []
 superseded_by: []
-related_adrs: [ADR-D3-20, ADR-D3-21, ADR-D3-22, ADR-D3-24, ADR-D3-13, ADR-D3-14, ADR-D4-08]
+related_adrs: [ADR-D3-20, ADR-D3-21, ADR-D3-22, ADR-D3-24, ADR-D3-13, ADR-D3-14, ADR-D3-29, ADR-D4-08]
 source_docs:
   - "MD files/4 AI/14.PFF-FA-AI-EMBEDDING-VECTOR.md §5, §7, §12, §13, §14, §15, §16, §17, §18, §19, §79, §80, §81, §99, §100, §103, §104, §105, §106, §107, §153"
   - "MD files/4 AI/13.PFF-FA-AI-RAG.md §5, §8"
@@ -33,7 +33,15 @@ versioned artefact bound to a specific vector index. For the initial build we
 **recommend a Hugging Face-hosted general-purpose 768-dimension English model
 (`bge-base-en-v1.5` class)**, accessed through the provider-neutral embedding
 abstraction of [ADR-D3-14](ADR-D3-14-slm-provider-abstraction.md), with a
-documented migration path to a self-hosted equivalent. Because the knowledge
+documented migration path to a self-hosted equivalent.
+
+> **Hosting-plane update ([ADR-D3-29](ADR-D3-29-model-serving-plane-azure-ai-foundry.md), 2026-09-10).**
+> The embedding **model** choice below (family, 768-dim) is unchanged. Its **hosting plane** moves from
+> the Hugging Face Inference API to **Azure AI Foundry** (in-tenancy Azure) — options include the
+> `bge-base`-class model on Foundry or an Azure OpenAI `text-embedding-3` model — selected by the same
+> retrieval evaluation. Hugging Face remains an optional evaluation provider only.
+
+Because the knowledge
 corpus changes only 5–20 documents per year, re-embedding cost is negligible and
 the decision is dominated by retrieval quality, dimension economy and the ability
 to change models later without corrupting the index. This ADR is `Proposed`

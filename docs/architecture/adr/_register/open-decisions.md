@@ -18,15 +18,17 @@ the working build default**. *(The IaC tool (**ADR-D5-12**) and K8s manifest too
 (**ADR-D5-13**) were closed on 2026-09-05: the platform team confirmed the house standard
 is to conform to the Enterprise Application delivery model — Azure DevOps CI/CD on the
 shared AKS platform — recorded as **ADR-D5-20** (Accepted); both are now `Accepted` and no
-longer open.)* **Group 2 — newly-proposed decisions awaiting first ratification (2):**
-ADR-D3-28 and ADR-D6-19 are new decisions (added 2026-09-04); their §7 *is* the decision,
-awaiting first ARB sign-off plus the validation named in each row.
+longer open.)* **Group 2 — newly-proposed decisions awaiting first ratification (3):**
+ADR-D3-28 and ADR-D6-19 are new decisions (added 2026-09-04), and **ADR-D3-29** (added
+2026-09-10) **supersedes the Accepted ADR-D3-13** to change the hosted-first inference plane
+from the Hugging Face Inference API to **Azure AI Foundry** (in-tenancy Azure). Each §7 *is*
+the decision, awaiting first ARB sign-off plus the validation named in each row.
 
 ### Group 1 — Deferred technology choices (build-default recommendations)
 
 | ADR | Decision | Recommendation | Awaiting | Gated at phase |
 |---|---|---|---|---|
-| [ADR-D3-23](../03-ai-architecture/ADR-D3-23-embedding-model-selection-and-re-embedding.md) | Embedding model selection | HF-hosted general-purpose **768-dim (`bge-base-en-v1.5` class)**; fallback 1024-dim | PFF-FA retrieval evaluation (Recall@5 ≥ 0.90) then ARB sign-off | 8 |
+| [ADR-D3-23](../03-ai-architecture/ADR-D3-23-embedding-model-selection-and-re-embedding.md) | Embedding model selection | General-purpose **768-dim (`bge-base-en-v1.5` class or Azure OpenAI `text-embedding-3`)**, **hosted on Azure AI Foundry** (per ADR-D3-29); fallback 1024-dim | PFF-FA retrieval evaluation (Recall@5 ≥ 0.90) then ARB sign-off | 8 |
 | [ADR-D3-24](../03-ai-architecture/ADR-D3-24-vector-store-selection.md) | Vector store selection | **Azure AI Search** (vector + hybrid); fallback pgvector on Azure Postgres | ARB sign-off | 8 |
 | [ADR-D5-10](../05-technology-architecture/ADR-D5-10-self-hosted-slm-serving-stack.md) | Self-hosted SLM serving stack | **vLLM** on AKS GPU; fallbacks Azure ML / TGI / Triton | Throughput/latency/quality benchmark on chosen model + SKU, then ARB | 20 |
 
@@ -36,6 +38,7 @@ awaiting first ARB sign-off plus the validation named in each row.
 |---|---|---|---|---|
 | [ADR-D3-28](../03-ai-architecture/ADR-D3-28-quality-gated-refinement-loop-and-model-escalation.md) | Runtime quality-gated refinement loop, model-escalation ladder, strict mode | Deterministic controller scores each output; below threshold it regenerates/escalates up a configured model ladder, bounded, with a strict mode for governance-critical classes | ARB sign-off (AI Governance Lead on the strict-class list) + Phase 20 latency/cost benchmark | 16, 20 |
 | [ADR-D6-19](../06-security-governance/ADR-D6-19-slm-input-masking-external-mandatory-self-hosted-optional.md) | SLM input masking regime — external mandatory, self-hosted optional | Mandatory fail-closed mask/tokenise-all for external SLM (no raw PII/enterprise egress); raw-or-masked for self-hosted; reversible token vault. Refines ADR-D6-07 | ARB sign-off (DPO owner, DPIA update) + Phase 20 vault sizing | 6, 20 |
+| [ADR-D3-29](../03-ai-architecture/ADR-D3-29-model-serving-plane-azure-ai-foundry.md) | Model serving plane — Azure AI Foundry hosted-first, self-hosted vLLM as target (**supersedes ADR-D3-13**) | Hosted-first inference (generation + embeddings) on **Azure AI Foundry** (in-tenancy Azure, Entra ID/MI, Private Link); self-hosted vLLM on AKS GPU as target (ADR-D5-10); all behind the ADR-D3-14 abstraction; Hugging Face demoted to eval-only. Foundry placement = MANAGED_IN_TENANCY (self-hosted masking regime, ADR-D6-19) | ARB sign-off (DPO on placement/masking refinement, FinOps on Foundry cost model) + Phase 6 model eval | 6, 20 |
 
 ## How an open decision is closed
 
