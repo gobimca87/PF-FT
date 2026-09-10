@@ -192,17 +192,6 @@ Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R
 
 <img width="1536" height="1024" alt="PFF – Affiliation Workflow (Sequence Diagram)" src="https://github.com/user-attachments/assets/5289d0b2-6bd9-43d4-b239-95c4b7132b7e" />
 
-<details>
-<summary>Mermaid source (superseded by the image above — kept for future edits)</summary>
-
-```mermaid
-<img width="1536" height="1024" alt="ChatGPT Image Sep 10, 2026, 03_48_32 PM" src="https://github.com/user-attachments/assets/5289d0b2-6bd9-43d4-b239-95c4b7132b7e" />
-
-
-```
-
-</details>
-
 ## 1.3 Constraints
 
 - **AI never holds business authority:** the platform must not authenticate/authorise, re-implement business
