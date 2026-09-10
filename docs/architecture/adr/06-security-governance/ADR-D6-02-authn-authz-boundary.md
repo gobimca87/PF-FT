@@ -185,7 +185,7 @@ introduced for complex deterministic gating. Options B and C are forbidden.
 | Precedence chain | Claims are authoritative input, above model output |
 | Four-state separation | Claims context is a distinct, protected input |
 | Versioned artefacts | Policy (if any) versioned |
-| Adam persona governs *how*, not *what* | Persona may explain access, never grant it |
+| PFF Chat AI persona governs *how*, not *what* | Persona may explain access, never grant it |
 
 ## 11. Risks and Mitigations
 

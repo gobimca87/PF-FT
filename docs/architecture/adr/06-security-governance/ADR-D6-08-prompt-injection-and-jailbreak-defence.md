@@ -178,7 +178,7 @@ approaches (B/C/D) are rejected as sole defences.
 | Precedence chain | Authoritative data outranks injected instructions (§58) |
 | Four-state separation | Untrusted channels isolated from authoritative state |
 | Versioned artefacts | Guardrail rules/classifier versioned |
-| Adam persona governs *how*, not *what* | Injection cannot change what is true |
+| PFF Chat AI persona governs *how*, not *what* | Injection cannot change what is true |
 
 ## 11. Risks and Mitigations
 

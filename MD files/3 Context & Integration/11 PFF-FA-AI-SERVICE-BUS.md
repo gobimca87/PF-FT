@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Event Integration & Workflow Continuity  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI / LangGraph  
 **Primary Scope:** Service Bus, Subscriptions, Event Contracts, Consumers, Event Routing, Workflow Resume, ERC Refresh, HIL Events, External Events, Idempotency, Retry, Dead-Letter Queue, Observability
 

@@ -4,7 +4,7 @@
 **Version:** 1.0.0
 **Status:** Development Baseline
 **Scope:** Full-stack C4 model — System Context (L1) → Containers (L2) → Components (L3) → Code (L4), plus Dynamic and Deployment views
-**Audience:** Architects, engineers, reviewers onboarding to the PFF AI ("Adam AI") platform
+**Audience:** Architects, engineers, reviewers onboarding to the PFF AI ("PFF Chat AI") platform
 
 > This document explains the platform **from scratch to advanced**. Read top to bottom the first time
 > (each level zooms one step deeper); use the Table of Contents as a reference thereafter. Every
@@ -100,7 +100,7 @@ type contracts read straight from `src/pff_fa_ai/`, so a developer can go from a
 
 **PFF** is The FA's county/club administration platform (affiliation, registration, insurance, discipline,
 officials/safeguarding, county cups, payments) integrated with **WGS** (the FA's national football
-database). **PFF AI / Adam AI** is a *conversational orchestration layer on top of PFF*. It interprets a
+database). **PFF AI / PFF Chat AI** is a *conversational orchestration layer on top of PFF*. It interprets a
 user's request, gathers **Enterprise Runtime Context (ERC)** from PFF's own APIs, reasons with a small
 language model (**SLM**), calls a controlled, allow-listed set of **tools** to invoke PFF's authoritative
 APIs, retrieves knowledge via **RAG**, enforces **guardrails**, and communicates results in a football-
@@ -116,13 +116,13 @@ If you only ever look at one section, look at **3.1**.
 
 ### 3.1 Bird's-eye: User → Chat UI → Response
 
-The whole platform, from ten thousand feet: **a person asks Adam something and gets an answer.** No
+The whole platform, from ten thousand feet: **a person asks PFF Chat AI something and gets an answer.** No
 infrastructure, no actors, no jargon — this is the promise of the product.
 
 ```mermaid
 flowchart LR
     U([User]) -->|asks a question| UI[Chat UI]
-    UI -->|request| AI[[Adam AI Platform]]
+    UI -->|request| AI[[PFF Chat AI Platform]]
     AI -->|answer| UI
     UI -->|shows response| U
     style AI fill:#1f6feb,color:#fff
@@ -134,16 +134,16 @@ promise safely.*
 
 ### 3.2 Conceptual: conversation → RAG + agentic + SLM → response
 
-Now open the blue box **one notch** — still conceptual, still no infrastructure. Adam is a *conversational
+Now open the blue box **one notch** — still conceptual, still no infrastructure. PFF Chat AI is a *conversational
 brain* that, to answer well, does three things: it **retrieves knowledge (RAG)**, it **runs an agentic
 workflow** (gather context, take controlled actions), and it uses a **small language model (SLM)** to
 reason and phrase the reply. The answer flows back to the user.
 
 ```mermaid
 flowchart LR
-    U([User]) <-->|conversation| CI[Conversational Interface<br/>Adam persona]
+    U([User]) <-->|conversation| CI[Conversational Interface<br/>PFF Chat AI persona]
 
-    subgraph BRAIN [Adam's reasoning core]
+    subgraph BRAIN [PFF Chat AI's reasoning core]
         direction TB
         AG[Agentic Flow<br/>gather context, take controlled actions]
         RAG[RAG<br/>knowledge: FAQ, policy, guidance]
@@ -165,25 +165,25 @@ Two ideas to carry down into the detail:
 
 - **The agentic flow is the driver.** RAG and the SLM are *services it uses* — the SLM never decides on its
   own; it phrases and reasons under the workflow's control.
-- **"Grounded" is the whole game.** Adam answers from retrieved knowledge and real context, not from what
+- **"Grounded" is the whole game.** PFF Chat AI answers from retrieved knowledge and real context, not from what
   the model imagines. That single principle is what every deeper level is protecting.
 
 ### 3.3 Full system context (actors & external systems)
 
-Only now do we add the real world: the other **people** (CFA/FA admins), and the **systems** Adam must talk
-to. This is the classic C4 System Context. Everything grey is enterprise-owned or third-party — Adam
+Only now do we add the real world: the other **people** (CFA/FA admins), and the **systems** PFF Chat AI must talk
+to. This is the classic C4 System Context. Everything grey is enterprise-owned or third-party — PFF Chat AI
 *consumes* it but never re-implements it. Note especially that **authentication/authorization is done by
-the enterprise (APIM)**; Adam only consumes validated claims.
+the enterprise (APIM)**; PFF Chat AI only consumes validated claims.
 
 ```mermaid
 C4Context
-    title System Context — PFF-FA Enterprise Agentic AI Platform (Adam AI)
+    title System Context — PFF-FA Enterprise Agentic AI Platform (PFF Chat AI)
 
     Person(club, "Club Admin", "Affiliates teams, buys insurance, pays fees via chat")
     Person(cfa, "CFA / County Admin", "Reviews & approves applications (HIL)")
     Person(fa, "FA Admin", "National oversight, refunds, escalations")
 
-    System(ai, "PFF AI Platform — Adam AI", "Conversational agentic layer: interprets, orchestrates, contextualizes, explains. Owns conversation, agents, ERC, RAG, SLM, guardrails.")
+    System(ai, "PFF AI Platform — PFF Chat AI", "Conversational agentic layer: interprets, orchestrates, contextualizes, explains. Owns conversation, agents, ERC, RAG, SLM, guardrails.")
 
     System_Ext(apim, "Azure APIM", "API gateway + AuthN/AuthZ boundary. Validates tokens/claims. Authoritative for authorization.")
     System_Ext(pff, "PFF Enterprise", "System of record: business rules, workflow engine, enterprise DB. Authoritative business truth.")
@@ -480,7 +480,7 @@ C4Component
         Component(erc, "erc.py", "ERC plan", "Which enterprise objects this workflow needs.")
         Component(steps, "steps.py", "Steps", "Workflow step definitions mapped to graph nodes.")
         Component(dep, "dependencies.py", "Deps", "Sequential/parallel dependency ordering of context calls.")
-        Component(persona, "persona.py", "Persona hook", "Adam persona binding for affiliation.")
+        Component(persona, "persona.py", "Persona hook", "PFF Chat AI persona binding for affiliation.")
         Component(portal, "portal.py", "Portal", "Resolves registered portal links (no invented URLs).")
         Component(resume, "resume_handler.py / resume_context.py", "Resume", "Rehydrate after HIL / external event.")
         Component(gr, "graph.py", "Graph def", "Wires nodes/edges/conditional routing for affiliation.")
@@ -734,7 +734,7 @@ deterministic code, never an authorization or business decision.**
 
 **Package:** `src/pff_fa_ai/prompt_engineering/` + `prompts/` (YAML artifacts)
 
-Prompts are **versioned software artifacts** composed in layers (`ADR-D3-09`). The Adam persona is its own
+Prompts are **versioned software artifacts** composed in layers (`ADR-D3-09`). The PFF Chat AI persona is its own
 reusable layer (`ADR-D3-10`) — never the whole workflow baked into one prompt.
 
 ```mermaid
@@ -1789,7 +1789,7 @@ sequenceDiagram
     LG->>G: output guardrails (grounding, ERC integrity, PII)
     G-->>LG: pass
     LG-->>API: response + state=IN_PROGRESS
-    API-->>U: SSE stream (Adam persona)
+    API-->>U: SSE stream (PFF Chat AI persona)
 ```
 
 ### 7.2 Event-driven durable resume — CFA approval arrives later (HIL)
@@ -1823,7 +1823,7 @@ sequenceDiagram
     SLM-->>LG: response
     LG->>WF: persist new state (INVOICED / COMPLETE)
     EC->>SB: complete message
-    Note over U: On next poll/notification, Adam reports confirmed enterprise state
+    Note over U: On next poll/notification, PFF Chat AI reports confirmed enterprise state
 ```
 
 ### 7.3 Affiliation E2E — business scenarios collapsed to states
@@ -1835,7 +1835,7 @@ The affiliation workflow the platform *narrates* (enterprise owns every decision
 stateDiagram-v2
     [*] --> PRE_CHECK: Club Admin: "Affiliate teams"
     PRE_CHECK --> BLOCKED: officials / safeguarding / debt fail
-    BLOCKED --> [*]: Adam explains fixes (factual)
+    BLOCKED --> [*]: PFF Chat AI explains fixes (factual)
     PRE_CHECK --> IN_PROGRESS: all checks pass (app created)
     IN_PROGRESS --> IN_PROGRESS: select teams, insurance (PL/PA), other products
     IN_PROGRESS --> SUBMITTED: Club Admin submits
@@ -1847,12 +1847,12 @@ stateDiagram-v2
     PENDING_CFA --> CANCELLED: CFA cancels
     INVOICED --> COMPLETE: payment confirmed [WAITING_FOR_EXTERNAL_EVENT]
     COMPLETE --> [*]: teams AFFILIATED, WGS integration, docs stored
-    REJECTED --> [*]: Adam relays reason, offers resubmit
-    CANCELLED --> [*]: Adam relays reason
+    REJECTED --> [*]: PFF Chat AI relays reason, offers resubmit
+    CANCELLED --> [*]: PFF Chat AI relays reason
     IN_PROGRESS --> CANCELLED: season-end timer (enterprise)
 ```
 
-**Persona rule visible here:** Adam **never celebrates** `COMPLETE` until the authoritative event confirms
+**Persona rule visible here:** PFF Chat AI **never celebrates** `COMPLETE` until the authoritative event confirms
 it — `INVOICED → COMPLETE` only on confirmed payment (`WAITING_FOR_EXTERNAL_EVENT`). "GOAL!" is earned only
 after enterprise confirmation.
 
@@ -1871,7 +1871,7 @@ flowchart TD
     I -->|No| G
     I -->|Yes| J[Pause / fail-safe - NO invented data]
     G --> K[ERC completeness = complete]
-    J --> L[Adam: factual - cannot confirm officials right now]
+    J --> L[PFF Chat AI: factual - cannot confirm officials right now]
     K --> M[Continue graph]
 ```
 

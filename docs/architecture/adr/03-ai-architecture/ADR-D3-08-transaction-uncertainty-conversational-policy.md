@@ -185,7 +185,7 @@ on output.
 - Templates cannot adapt to conversational context. A user who has been walked through a
   submission gets the same words as one who arrived asking about it cold.
 - Breaks the persona entirely at exactly the moment continuity matters — ADR-D1-09 AC-07 requires
-  a suppressed-register turn to still be recognisably Adam.
+  a suppressed-register turn to still be recognisably PFF Chat AI.
 - Template proliferation: seven affiliation scenarios × conversational contexts.
 - Brittle to new cases; an unanticipated uncertainty has no template.
 
@@ -302,7 +302,7 @@ Per ADR-D1-09 §7.5, the presence of an uncertainty record is a content-class si
 the football register for that turn — deterministically, at composition, before generation. The
 model is not asked to judge whether the register is appropriate; it is composed without it.
 
-The response remains Adam's: warm, direct, on the user's side. What it loses is the framing that
+The response remains PFF Chat AI's: warm, direct, on the user's side. What it loses is the framing that
 would make an unresolved payment sound like a match in progress.
 
 ### 7.5 Scenario 23, worked
@@ -411,7 +411,7 @@ Per DR-N-01, each uncertainty class has golden cases checking:
 | No likelihood estimate | Pattern check for hedging-toward-resolution language |
 | No suggestion to retry a non-idempotent operation | Pattern check against the operation's class |
 | Amounts and statuses match the record exactly | I-1 provenance check |
-| Response is recognisably Adam | Persona rubric (ADR-D1-09 AC-07) |
+| Response is recognisably PFF Chat AI | Persona rubric (ADR-D1-09 AC-07) |
 
 The last is what distinguishes this from Option C: a suppressed-register response must still pass
 the persona rubric.
@@ -454,7 +454,7 @@ the persona rubric.
 | Authoritative-truth precedence | `confirmed` items are authority-5 ERC facts stated exactly; `unknown` items are the absence of such facts. Nothing lower in the chain fills the gap. |
 | Four-state separation | The record is built from Enterprise Business State projections and Workflow State; it asserts nothing about either beyond what is held. |
 | Versioned artefacts, never mutated in place | Response requirements and golden cases are versioned. |
-| Adam persona governs how, never what | This ADR is the clearest case of the rule: the record determines what is said; the persona shapes how, minus the register that X-2 excludes. |
+| PFF Chat AI persona governs how, never what | This ADR is the clearest case of the rule: the record determines what is said; the persona shapes how, minus the register that X-2 excludes. |
 
 ## 11. Risks and Mitigations
 

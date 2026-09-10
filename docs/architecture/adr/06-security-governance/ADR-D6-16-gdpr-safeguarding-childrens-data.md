@@ -188,7 +188,7 @@ ADR is the governing requirement.
 | Precedence chain | Children's records are authoritative enterprise data, referenced not copied |
 | Four-state separation | Children's data confined to most-protected handling |
 | Versioned artefacts | Handling policy + DPIA versioned |
-| Adam persona governs *how*, not *what* | Persona never exposes/among children's data inappropriately |
+| PFF Chat AI persona governs *how*, not *what* | Persona never exposes/among children's data inappropriately |
 
 ## 11. Risks and Mitigations
 

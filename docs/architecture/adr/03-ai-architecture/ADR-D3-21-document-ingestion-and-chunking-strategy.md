@@ -529,7 +529,7 @@ load — still affordable, but the quality-per-pound argument weakens as §6.1 s
 | Authoritative-truth precedence | RAG content is authority 2 and `truth_class: knowledge` (ADR-D1-03 §7.2). Better chunking improves knowledge answers; it never promotes RAG toward operational truth. |
 | Four-state separation | Not applicable — the index is neither conversation, session, workflow nor enterprise state. |
 | Versioned artefacts, never mutated in place | Chunking configuration, the augmentation prompt and the embedding model are all versioned; a change is a re-ingest producing a new index version (ADR-D3-24). |
-| Adam persona governs how, never what | Retrieved content is data; the persona expresses it. §7.4 rule 2 keeps citations quoting the source rather than generated text. |
+| PFF Chat AI persona governs how, never what | Retrieved content is data; the persona expresses it. §7.4 rule 2 keeps citations quoting the source rather than generated text. |
 
 ## 11. Risks and Mitigations
 

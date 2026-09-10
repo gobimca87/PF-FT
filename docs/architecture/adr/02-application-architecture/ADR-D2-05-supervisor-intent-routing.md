@@ -427,7 +427,7 @@ because that is the production distribution.
 | Authoritative-truth precedence | The routing decision is SLM output, authority 1, and is used only to select a code path. It never enters ERC and never becomes a business fact. |
 | Four-state separation | The Supervisor reads Conversation State (associations, summary) and Session State (claims); it writes Workflow State selection. It touches no Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Thresholds live in versioned configuration; the classifier prompt is a versioned artefact per ADR-D3-11; a threshold change is a release. |
-| Adam persona governs how, never what | The Supervisor produces no user-facing language. Clarification and out-of-scope wording are generated downstream through the persona layer. |
+| PFF Chat AI persona governs how, never what | The Supervisor produces no user-facing language. Clarification and out-of-scope wording are generated downstream through the persona layer. |
 
 ## 11. Risks and Mitigations
 

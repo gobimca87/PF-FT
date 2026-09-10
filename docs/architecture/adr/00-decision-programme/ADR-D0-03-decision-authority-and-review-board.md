@@ -385,7 +385,7 @@ this record governs who may change the platform's architecture.
 | Authoritative-truth precedence | Not applicable — governs who ratifies decisions, not a runtime data path. Distinct from 3. PFF-FA-AI-RESPONSIBILITY-MATRIX.md §46's runtime authority matrix, as §8.3 notes. |
 | Four-state separation | Not applicable. |
 | Versioned artefacts, never mutated in place | Upheld: §7.4 requires a dissented provisional ratification to be resolved by a superseding ADR, never by rewriting the provisional record. |
-| Adam persona governs how, never what | Not applicable. |
+| PFF Chat AI persona governs how, never what | Not applicable. |
 
 ## 11. Risks and Mitigations
 

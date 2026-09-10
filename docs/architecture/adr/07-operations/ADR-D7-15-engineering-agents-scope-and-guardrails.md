@@ -174,7 +174,7 @@ rejected.
 | Precedence chain | N/A (dev-time) |
 | Four-state separation | Dev-time only; no runtime state |
 | Versioned artefacts | Agent configs versioned |
-| Adam persona governs *how*, not *what* | N/A (not the Adam runtime persona) |
+| PFF Chat AI persona governs *how*, not *what* | N/A (not the PFF Chat AI runtime persona) |
 
 ## 11. Risks and Mitigations
 

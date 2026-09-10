@@ -173,7 +173,7 @@ at rest and in-code keys are forbidden.
 | Precedence chain | N/A |
 | Four-state separation | Each store encrypted per classification |
 | Versioned artefacts | Crypto config in IaC |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

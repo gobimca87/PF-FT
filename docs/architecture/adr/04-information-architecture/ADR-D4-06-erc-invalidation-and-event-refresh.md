@@ -183,7 +183,7 @@ freshness refresh (ADR-D4-03). Consumption is idempotent (ADR-D2-18). Full-rebui
 | Precedence chain | Keeps ERC aligned with enterprise state |
 | Four-state separation | Refresh operates on the ERC plane only |
 | Versioned artefacts | Section versions bumped on refresh |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

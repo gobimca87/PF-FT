@@ -256,7 +256,7 @@ agent:
     - submit_affiliation
   prompts:
     system: affiliation.system@1.2.0
-    persona: adam.guiding@1.1.0
+    persona: pff-chat-ai.guiding@1.1.0
   limits:
     max_model_calls: 12
     max_tool_calls: 20
@@ -453,7 +453,7 @@ mechanical.
 | Authoritative-truth precedence | Declared context requirements resolve to ERC sections carrying provenance (ADR-D2-12). |
 | Four-state separation | The declaration is configuration; execution context carries references to the four state kinds without conflating them. |
 | Versioned artefacts, never mutated in place | §7.4: agent declaration, graph and prompts are versioned and released as an immutable bundle (ADR-D5-06). |
-| Adam persona governs how, never what | The persona layer is a declared prompt reference, applied after content is determined. |
+| PFF Chat AI persona governs how, never what | The persona layer is a declared prompt reference, applied after content is determined. |
 
 ## 11. Risks and Mitigations
 

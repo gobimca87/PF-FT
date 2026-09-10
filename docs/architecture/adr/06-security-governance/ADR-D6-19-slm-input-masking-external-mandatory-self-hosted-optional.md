@@ -303,7 +303,7 @@ flowchart LR
 | Authoritative-truth precedence | The external model is lowest authority; masking further limits what it even sees. Unmasking restores enterprise values inside the boundary before use. |
 | Four-state separation | Enterprise Business State values are tokenised before egress; the token vault is a controlled, tenancy-internal mapping, not a new state store conflated with the others. |
 | Versioned artefacts, never mutated in place | The data-handling matrix and masking policy are versioned config released in the bundle (ADR-D5-06, ADR-D6-15). |
-| Adam persona governs *how*, never *what* | Not applicable — masking is a data-protection transform, independent of persona. |
+| PFF Chat AI persona governs *how*, never *what* | Not applicable — masking is a data-protection transform, independent of persona. |
 
 ## 11. Risks and Mitigations
 

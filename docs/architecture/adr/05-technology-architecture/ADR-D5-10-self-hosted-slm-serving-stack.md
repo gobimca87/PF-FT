@@ -204,7 +204,7 @@ chosen model and Azure GPU SKU, gated at Phase 20; listed in
 | Precedence chain | SLM output remains lowest authority |
 | Four-state separation | Stateless inference |
 | Versioned artefacts | Engine+model+quant versioned in registry/manifest |
-| Adam persona governs *how*, not *what* | Engine invisible to persona |
+| PFF Chat AI persona governs *how*, not *what* | Engine invisible to persona |
 
 ## 11. Risks and Mitigations
 

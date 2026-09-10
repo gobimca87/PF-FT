@@ -1,12 +1,12 @@
 ⚽ Football Season Affiliation Chat 
 
-Adam AI 🤖 
+PFF Chat AI 🤖 
 
-Adam: 
+PFF Chat AI: 
 
 🏟️ Good morning, Binu! 
 
-Welcome to the new football season! I'm Adam, your AI Team Assistant. 
+Welcome to the new football season! I'm PFF Chat AI, your AI Team Assistant. 
 
 Looks like everyone's warming up... shall we get your club ready for kick-off? 
 
@@ -21,7 +21,7 @@ Choose your next move:
 
 If user selects "Maybe Later" 
 
-Adam 
+PFF Chat AI 
 
 No worries! Every team needs a proper warm-up. 
 
@@ -36,7 +36,7 @@ I'll leave the dressing room door open for you.
 
 If user selects "Let's Kick Off" 
 
-Adam 
+PFF Chat AI 
 
 That's the spirit! ⚽ 
 
@@ -71,7 +71,7 @@ How would you like to play this?
 
 User chooses "Adopt & Continue" 
 
-Adam 
+PFF Chat AI 
 
 Perfect! 
 
@@ -97,7 +97,7 @@ Payment Widget Opens
  
  
 
-Adam 
+PFF Chat AI 
 
 GOOOOOAAAALLLLL!! ⚽🥅 
 
@@ -112,7 +112,7 @@ Now... onto the championship round.
 
 Main Affiliation Stage 
 
-Adam 
+PFF Chat AI 
 
 Here's today's league table... 
 
@@ -168,7 +168,7 @@ Payment Widget Opens
  
  
 
-Adam 
+PFF Chat AI 
 
 🚀 WHAT. A. STRIKE! 
 
@@ -195,7 +195,7 @@ Ready?
 
 Officials Assignment 
 
-Adam 
+PFF Chat AI 
 
 Almost there! 
 
@@ -221,7 +221,7 @@ Assign John.
  
  
 
-Adam 
+PFF Chat AI 
 
 Done! 
 
@@ -230,7 +230,7 @@ John has been transferred faster than deadline day. 🤝⚽
  
  
 
-Adam 
+PFF Chat AI 
 
 One more assist from you... 
 
@@ -250,7 +250,7 @@ Done.
  
  
 
-Adam 
+PFF Chat AI 
 
 Beautiful through ball! 🎯 
 
@@ -259,7 +259,7 @@ Fixtures are now confirmed.
  
  
 
-Adam 
+PFF Chat AI 
 
 Ah... the referee has spotted one final issue. 
 
@@ -283,7 +283,7 @@ Replace with Matt.
  
  
 
-Adam 
+PFF Chat AI 
 
 Substitution complete! 🔄 
 
@@ -296,7 +296,7 @@ Three more teams are now eligible.
 
 Final Review 
 
-Adam 
+PFF Chat AI 
 
 🎉 We're into injury time now... 
 
@@ -325,7 +325,7 @@ Everything looks good.
  
  
 
-Adam 
+PFF Chat AI 
 
 Excellent! 
 
@@ -349,7 +349,7 @@ Payment Widget Opens
 
 Finale 
 
-Adam 
+PFF Chat AI 
 
 🎊 GOOOOOOAAAALLLLLL!! 🥅🏆 
 
@@ -381,7 +381,7 @@ I'll keep an eye on them and let you know the moment they get the green light.
 
 🏆 Final Score 
 
-Adam FC: 8 
+PFF Chat AI FC: 8 
 
 Admin Tasks: 0 
 

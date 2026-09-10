@@ -174,7 +174,7 @@ service-endpoints-only (D) are rejected.
 | Precedence chain | Protects authoritative data flows |
 | Four-state separation | Data-zone network isolation |
 | Versioned artefacts | Network policy in IaC |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

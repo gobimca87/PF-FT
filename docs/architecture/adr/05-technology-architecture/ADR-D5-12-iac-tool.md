@@ -209,7 +209,7 @@ PFF-AI-specific one.
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | IaC versioned in Git |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

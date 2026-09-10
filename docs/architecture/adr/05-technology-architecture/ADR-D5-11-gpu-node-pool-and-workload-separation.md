@@ -175,7 +175,7 @@ open in ADR-D5-10; the *topology* here is settled.)
 | Precedence chain | N/A |
 | Four-state separation | Workload separation, not data-state |
 | Versioned artefacts | Node-pool config in IaC |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

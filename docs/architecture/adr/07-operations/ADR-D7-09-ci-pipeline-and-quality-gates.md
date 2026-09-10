@@ -180,7 +180,7 @@ manual (D) are rejected.
 | Precedence chain | Eval gates protect authoritative-truth fidelity |
 | Four-state separation | Architecture checks enforce boundaries |
 | Versioned artefacts | CI as code |
-| Adam persona governs *how*, not *what* | Persona eval part of gates (ADR-D7-13) |
+| PFF Chat AI persona governs *how*, not *what* | Persona eval part of gates (ADR-D7-13) |
 
 ## 11. Risks and Mitigations
 

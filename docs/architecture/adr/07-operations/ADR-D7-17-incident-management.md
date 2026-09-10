@@ -179,7 +179,7 @@ rejected.
 | Precedence chain | RAG/ACL-leak + hallucination incidents protect authoritative truth |
 | Four-state separation | Incident evidence redacted per classification |
 | Versioned artefacts | Fixes ship as versioned artefacts (ADR-D7-12) |
-| Adam persona governs *how*, not *what* | Persona/RAI breach is an incident class |
+| PFF Chat AI persona governs *how*, not *what* | Persona/RAI breach is an incident class |
 
 ## 11. Risks and Mitigations
 

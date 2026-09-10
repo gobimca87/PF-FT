@@ -450,7 +450,7 @@ wait than tell the user something stale.
 | Authoritative-truth precedence | §7.2 step 3 is ADR-D1-03 §7.3 applied to resumption: the suspended ERC is stale and is invalidated, not restored. Rebuilding is the only way to honour the freshness policy across days. |
 | Four-state separation | Workflow State is persisted independently of Conversation State and Session State, and holds only references to Enterprise Business State. The independence is what lets a session expire without losing the workflow. |
 | Versioned artefacts, never mutated in place | Persisted state is a versioned model; graph version is recorded so a resumed workflow knows which graph it belongs to. |
-| Adam persona governs how, never what | The resumed outcome is enterprise fact; the persona conveys it on the user's next entry, under ADR-D1-09's exclusion zones where the outcome is a rejection (X-6). |
+| PFF Chat AI persona governs how, never what | The resumed outcome is enterprise fact; the persona conveys it on the user's next entry, under ADR-D1-09's exclusion zones where the outcome is a rejection (X-6). |
 
 ## 11. Risks and Mitigations
 

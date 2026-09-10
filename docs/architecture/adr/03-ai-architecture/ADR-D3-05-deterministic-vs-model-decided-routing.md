@@ -423,7 +423,7 @@ applies.
 | Authoritative-truth precedence | Which source wins is deterministic (§7.3), so the model never adjudicates between sources. |
 | Four-state separation | Not directly; the test classifies decisions. |
 | Versioned artefacts, never mutated in place | Deterministic rules — thresholds, policies, bounds — are versioned configuration. |
-| Adam persona governs how, never what | The persona operates entirely in the interpretive column, which is the same distinction stated for communication. |
+| PFF Chat AI persona governs how, never what | The persona operates entirely in the interpretive column, which is the same distinction stated for communication. |
 
 ## 11. Risks and Mitigations
 

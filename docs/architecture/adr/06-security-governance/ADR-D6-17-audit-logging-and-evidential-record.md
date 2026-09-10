@@ -183,7 +183,7 @@ enterprise-only audit (D) are rejected as the evidential record (they complement
 | Precedence chain | Audits which source authorised an action |
 | Four-state separation | Audit is a distinct evidential plane |
 | Versioned artefacts | Audit schema versioned |
-| Adam persona governs *how*, not *what* | Audit records facts, not persona wording |
+| PFF Chat AI persona governs *how*, not *what* | Audit records facts, not persona wording |
 
 ## 11. Risks and Mitigations
 

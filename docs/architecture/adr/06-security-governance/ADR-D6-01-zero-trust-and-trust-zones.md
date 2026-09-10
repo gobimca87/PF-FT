@@ -174,7 +174,7 @@ hardening. Perimeter (B) and segmentation-only (C) are rejected.
 | Precedence chain | Trust zones protect authoritative data flows |
 | Four-state separation | Data/state zone isolated |
 | Versioned artefacts | Zone/network policy in IaC |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

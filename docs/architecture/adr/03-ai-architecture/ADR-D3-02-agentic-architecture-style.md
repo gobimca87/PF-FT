@@ -412,7 +412,7 @@ must not.
 | Authoritative-truth precedence | Agents receive resolved context from the harness; they do not select among sources. |
 | Four-state separation | One agent per turn means one workflow state per execution; no cross-agent state sharing exists to conflate. |
 | Versioned artefacts, never mutated in place | Agent definitions and graphs are versioned (7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §21; ADR-D5-06). |
-| Adam persona governs how, never what | §7.2's table distinguishes reasoning about explanation from reasoning about correctness — the persona operates entirely in the former. |
+| PFF Chat AI persona governs how, never what | §7.2's table distinguishes reasoning about explanation from reasoning about correctness — the persona operates entirely in the former. |
 
 ## 11. Risks and Mitigations
 

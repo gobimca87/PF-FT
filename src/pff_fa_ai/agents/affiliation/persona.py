@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-# CLAUDE.md "Adam AI Persona & Conversational Style — Mandatory": workflow-first,
+# CLAUDE.md "PFF Chat AI Persona & Conversational Style — Mandatory": workflow-first,
 # football-commentary tone used *contextually* at meaningful moments, never forced,
 # never celebrating an unconfirmed transaction, and errors stay factual. These are
 # deterministic Python templates (no SLM call) — CLAUDE.md's rule 5 ("Enterprise truth

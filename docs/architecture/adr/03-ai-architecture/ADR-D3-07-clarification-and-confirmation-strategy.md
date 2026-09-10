@@ -42,7 +42,7 @@ act.
 gives the rule — the supervisor should not guess when the wrong workflow could trigger an incorrect
 enterprise operation — with a registration example. 4. PFF-FA-AI-RUNTIME.md §14 places the clarification path in the
 runtime. 10 PFF-FA-AI-ENTERPRISE-INTEGRATION.md §45 and §48 cover idempotency and unknown transaction state, which bear on what
-"incorrect enterprise operation" costs. `SampleWorkflowchat.md` shows Adam offering explicit
+"incorrect enterprise operation" costs. `SampleWorkflowchat.md` shows PFF Chat AI offering explicit
 choices at decision points.
 
 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §14's rule is sound and incomplete. It says *when* not to guess. It does not say:
@@ -257,7 +257,7 @@ submitting things that do.
 
 The first row is where Option A goes wrong: a genuinely ambiguous question with a recoverable
 wrong reading should be answered, not interrogated. `SampleWorkflowchat.md`'s register supports
-this — Adam offers a reading and moves, rather than stopping to ask.
+this — PFF Chat AI offers a reading and moves, rather than stopping to ask.
 
 Where the platform proceeds on a reading, it makes the reading **visible**: "Looking at your
 outstanding pre-checks —" so the user can redirect in one word. That is what makes proceeding safe
@@ -268,7 +268,7 @@ where the consequence is recoverable.
 Any tool call classified as a **write** (ADR-D2-13 §7.3) that changes enterprise state requires
 explicit confirmation in the immediately preceding turn. No confidence level exempts it.
 
-The confirmation shows, in Adam's voice but with ADR-D1-09's X-5 exclusion applying to the
+The confirmation shows, in PFF Chat AI's voice but with ADR-D1-09's X-5 exclusion applying to the
 specifics:
 
 - exactly what will happen — the operation in business terms;
@@ -379,7 +379,7 @@ is unambiguous — no clarification is warranted. Confirmation is still mandator
 > Shall I submit?
 
 The amounts, the total and the irreversibility statement are exact and unembellished — ADR-D1-09's
-X-5 exclusion. The framing around them is Adam's. No confidence level would have exempted this
+X-5 exclusion. The framing around them is PFF Chat AI's. No confidence level would have exempted this
 step, because §7.3 makes it unconditional.
 
 ### 8.3 A recoverable ambiguity, worked
@@ -438,7 +438,7 @@ offered and corrected.
 | Authoritative-truth precedence | Confirmation content — teams, fees, totals — comes from ERC at authority 5 and is stated exactly (ADR-D1-02 I-1, ADR-D1-09 X-5). |
 | Four-state separation | Clarification state is Conversation State; confirmation gates a Workflow State transition that triggers an Enterprise Business State change. |
 | Versioned artefacts, never mutated in place | Reversibility classifications live in versioned tool contracts. |
-| Adam persona governs how, never what | §8.2 shows the split: framing is Adam's, amounts and the irreversibility statement are exact. |
+| PFF Chat AI persona governs how, never what | §8.2 shows the split: framing is PFF Chat AI's, amounts and the irreversibility statement are exact. |
 
 ## 11. Risks and Mitigations
 

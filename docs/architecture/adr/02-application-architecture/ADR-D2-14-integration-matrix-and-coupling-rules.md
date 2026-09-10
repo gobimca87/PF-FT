@@ -419,7 +419,7 @@ which is what makes DR-N-02 achievable.
 | Authoritative-truth precedence | All matrix integrations are authority-5 enterprise sources; the matrix records nothing the platform derives itself. |
 | Four-state separation | The matrix documents access to Enterprise Business State; it holds none. |
 | Versioned artefacts, never mutated in place | Contract versions are tracked per service; the matrix itself is versioned with the repository. |
-| Adam persona governs how, never what | Not applicable. |
+| PFF Chat AI persona governs how, never what | Not applicable. |
 
 ## 11. Risks and Mitigations
 

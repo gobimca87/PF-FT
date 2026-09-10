@@ -182,7 +182,7 @@ never a prompt instruction (B); post-retrieval filtering (C) is rejected for lea
 | Precedence chain | ACL uses authoritative authz context |
 | Four-state separation | Security metadata separate from content |
 | Versioned artefacts | ACL/filter policy versioned |
-| Adam persona governs *how*, not *what* | Persona can't reveal unauthorized knowledge |
+| PFF Chat AI persona governs *how*, not *what* | Persona can't reveal unauthorized knowledge |
 
 ## 11. Risks and Mitigations
 

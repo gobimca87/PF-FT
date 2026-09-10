@@ -172,7 +172,7 @@ bespoke (D) and other tools (E) are rejected.
 | Precedence chain | N/A |
 | Four-state separation | Traces redacted; not a state store |
 | Versioned artefacts | Prompt/model versions traced |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -361,7 +361,7 @@ satisfied concretely rather than asserted.
 | Authoritative-truth precedence | Supported: §7.2's boundary artefacts are where authority-bearing data enters the platform, which is where provenance is stamped per ADR-D1-03. |
 | Four-state separation | Supported: Enterprise Business State sits wholly in the Enterprise-owned class; the AI-owned class holds the other three. |
 | Versioned artefacts, never mutated in place | Not directly; the capability map itself is versioned as an ADR. |
-| Adam persona governs how, never what | Reflected in §7.3: AI involvement is described as conversational reach, never decision rights. |
+| PFF Chat AI persona governs how, never what | Reflected in §7.3: AI involvement is described as conversational reach, never decision rights. |
 
 ## 11. Risks and Mitigations
 

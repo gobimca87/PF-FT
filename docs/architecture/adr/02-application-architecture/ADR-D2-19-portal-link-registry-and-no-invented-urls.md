@@ -427,7 +427,7 @@ explains that the county is reviewing, rather than offering a door that would re
 | Authoritative-truth precedence | Link parameters come from ERC or workflow state, never from model output, so a link cannot address a resource the model imagined. |
 | Four-state separation | The route catalogue is configuration; parameters come from workflow state and ERC projections. |
 | Versioned artefacts, never mutated in place | Portal catalogue and route catalogue are versioned, environment-scoped configuration (ADR-D5-06); 12 PFF-FA-AI-PORTAL-LINKS.md §13's portal version applies. |
-| Adam persona governs how, never what | The persona shapes how a handoff is offered; the link itself is constructed and unalterable by the persona layer. |
+| PFF Chat AI persona governs how, never what | The persona shapes how a handoff is offered; the link itself is constructed and unalterable by the persona layer. |
 
 ## 11. Risks and Mitigations
 

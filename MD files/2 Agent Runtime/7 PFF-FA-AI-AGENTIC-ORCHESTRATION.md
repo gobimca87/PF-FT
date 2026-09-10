@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Core Runtime & Interaction Management  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI  
 **Orchestration:** LangGraph  
 **Initial SLM:** Hugging Face API  
@@ -4119,7 +4119,7 @@ Detailed future documents should cover:
 
 # 183. Final Architecture Statement
 
-The PFF-FA Agentic Orchestration layer is the controlled execution brain of Adam AI.
+The PFF-FA Agentic Orchestration layer is the controlled execution brain of PFF Chat AI.
 
 It combines:
 

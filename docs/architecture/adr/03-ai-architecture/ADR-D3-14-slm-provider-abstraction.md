@@ -213,7 +213,7 @@ future.
 | Precedence chain | SLM output tier; abstraction never elevates it |
 | Four-state separation | Stateless; state lives elsewhere |
 | Versioned artefacts | Contract + adapters versioned |
-| Adam persona governs *how*, not *what* | Provider invisible to persona |
+| PFF Chat AI persona governs *how*, not *what* | Provider invisible to persona |
 
 ## 11. Risks and Mitigations
 

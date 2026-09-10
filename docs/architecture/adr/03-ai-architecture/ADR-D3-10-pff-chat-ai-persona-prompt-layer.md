@@ -1,6 +1,6 @@
 ---
 id: ADR-D3-10
-title: Adam persona prompt layer — versioned, reusable, workflow-independent
+title: PFF Chat AI persona prompt layer — versioned, reusable, workflow-independent
 domain: 3 AI
 ws_ref: [WS-15]
 status: Accepted
@@ -23,14 +23,14 @@ classification: Internal
 review_due: 2027-08-22
 ---
 
-# ADR-D3-10 — Adam persona prompt layer — versioned, reusable, workflow-independent
+# ADR-D3-10 — PFF Chat AI persona prompt layer — versioned, reusable, workflow-independent
 
 ## 1. Summary
 
-PFF AI will implement the Adam persona as a **dedicated, versioned prompt layer**
+PFF AI will implement the PFF Chat AI persona as a **dedicated, versioned prompt layer**
 that sits between the system prompt and the task/workflow prompts in the layered
 composition of [ADR-D3-09](ADR-D3-09-layered-prompt-composition.md), and is
-**reused unchanged across all workflows**. The persona layer governs *how* Adam
+**reused unchanged across all workflows**. The persona layer governs *how* PFF Chat AI
 communicates (football-commentary tone, workflow-first posture); it never encodes
 workflow logic, authorization, or business rules. This keeps persona a single,
 independently-testable artefact instead of tone duplicated into every task prompt.
@@ -38,12 +38,12 @@ independently-testable artefact instead of tone duplicated into every task promp
 ## 2. Context and Problem Statement
 
 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11 defines a distinct "Persona Prompt" and §12 states the persona "does not
-define authorization"; `CLAUDE.md` §Adam rule 12 requires the persona to be "a
+define authorization"; `CLAUDE.md` §PFF Chat AI rule 12 requires the persona to be "a
 dedicated, versioned prompt layer … reusable across workflows … do not embed the
 entire business workflow into the persona prompt." Without an explicit decision,
 the natural failure is that each workflow author copies tone instructions into their
-task prompt — producing drift (affiliation Adam sounds different from discipline
-Adam), un-testable persona behaviour, and tone edits that must be made in N places.
+task prompt — producing drift (affiliation PFF Chat AI sounds different from discipline
+PFF Chat AI), un-testable persona behaviour, and tone edits that must be made in N places.
 The `SampleWorkflowchat.md` reference sets a single consistent voice that only a
 shared layer can guarantee.
 
@@ -53,9 +53,9 @@ shared layer can guarantee.
 
 | ID | Driver | Source |
 |---|---|---|
-| DR-F-01 | One consistent Adam voice across affiliation, discipline, officials, etc. | CLAUDE.md §Adam 12; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11 |
-| DR-F-02 | Persona reusable without re-authoring per workflow | CLAUDE.md §Adam 12 |
-| DR-F-03 | Persona must not carry authorization or business rules | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §12; CLAUDE.md §Adam 5, 9 |
+| DR-F-01 | One consistent PFF Chat AI voice across affiliation, discipline, officials, etc. | CLAUDE.md §PFF Chat AI 12; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11 |
+| DR-F-02 | Persona reusable without re-authoring per workflow | CLAUDE.md §PFF Chat AI 12 |
+| DR-F-03 | Persona must not carry authorization or business rules | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §12; CLAUDE.md §PFF Chat AI 5, 9 |
 
 ### 3.2 Non-functional drivers
 
@@ -69,7 +69,7 @@ shared layer can guarantee.
 | ID | Constraint | Type | Source |
 |---|---|---|---|
 | DR-C-01 | Prompt layering order is fixed by ADR-D3-09 | Architecture | ADR-D3-09; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §5, §20 |
-| DR-C-02 | Enterprise truth overrides persona | Regulatory/Arch | CLAUDE.md §Adam 5; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §138 |
+| DR-C-02 | Enterprise truth overrides persona | Regulatory/Arch | CLAUDE.md §PFF Chat AI 5; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §138 |
 | DR-C-03 | Persona is a versioned artefact, immutable in prod | Organisational | 16.PFF-FA-AI-PROMPT-ENGINEERING.md §35, §39 |
 
 ### 3.4 Assumptions
@@ -95,7 +95,7 @@ Scoring scale: **1** unacceptable · **2** poor · **3** adequate · **4** good 
 
 ### 5.1 Option A — Dedicated shared persona layer, composed by the prompt composer
 
-**Description.** A single `prompts/persona/adam.vN.md` artefact inserted at the
+**Description.** A single `prompts/persona/pff-chat-ai.vN.md` artefact inserted at the
 persona position of the composition pipeline for every workflow.
 
 **Strengths.** One voice; edit-once; testable alone; reusable; clean separation.
@@ -113,7 +113,7 @@ tone and business logic entangled (violates 16.PFF-FA-AI-PROMPT-ENGINEERING.md �
 
 ### 5.3 Option C — Persona folded into the system prompt
 
-**Description.** Put Adam tone in the single system prompt.
+**Description.** Put PFF Chat AI tone in the single system prompt.
 **Strengths.** Always present; one place.
 **Weaknesses.** 16.PFF-FA-AI-PROMPT-ENGINEERING.md §9 forbids frequently-changing data in the system prompt;
 conflates stable platform rules with iterating tone; system-prompt changes are the
@@ -130,17 +130,17 @@ a model version; every tone iteration is a re-train + eval; can't A/B tone cheap
 
 ### 5.5 Option E — Post-generation tone rewriter (second model pass)
 
-**Description.** Generate neutral text, then restyle it into Adam's voice.
+**Description.** Generate neutral text, then restyle it into PFF Chat AI's voice.
 **Strengths.** Decouples content from tone; reusable.
 **Weaknesses.** Doubles latency and cost; a second pass can re-introduce claims or
-soften errors (violates CLAUDE.md §Adam 7); harder to guarantee factual fidelity.
+soften errors (violates CLAUDE.md §PFF Chat AI 7); harder to guarantee factual fidelity.
 **Cost / effort.** High run cost; risky for enterprise fidelity.
 
 ### 5.6 Options considered and eliminated before scoring
 
 | Option | Eliminated by |
 |---|---|
-| No persona (neutral assistant) | DR-F-01 / product intent — Adam persona is a required product decision (ADR-D1-09) |
+| No persona (neutral assistant) | DR-F-01 / product intent — PFF Chat AI persona is a required product decision (ADR-D1-09) |
 | Per-user persona personalization | Out of scope for first release; adds state and eval surface |
 
 ## 6. Evaluation Method and Decision Matrix
@@ -165,8 +165,8 @@ factual-fidelity risk (EC-02).
 
 ## 7. Decision
 
-**PFF AI will implement Adam as a dedicated, versioned persona prompt layer**
-(`prompts/persona/adam.vN.md`), composed at the persona slot of the ADR-D3-09
+**PFF AI will implement PFF Chat AI as a dedicated, versioned persona prompt layer**
+(`prompts/persona/pff-chat-ai.vN.md`), composed at the persona slot of the ADR-D3-09
 pipeline and reused unchanged across all workflows. The layer contains tone,
 communication pattern (Context → football-flavoured explanation → clear business
 state → action → confirmation → next step, per CLAUDE.md) and the persona exclusion
@@ -174,12 +174,12 @@ zones; it contains no workflow steps, no business rules, and no authorization
 logic. Options B/C are rejected for entangling tone with platform/workflow layers;
 D and E for cost, coupling and fidelity risk.
 
-**Status rationale.** `Accepted` — mandated by CLAUDE.md §Adam 12 and 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11–§12;
+**Status rationale.** `Accepted` — mandated by CLAUDE.md §PFF Chat AI 12 and 16.PFF-FA-AI-PROMPT-ENGINEERING.md §11–§12;
 this ADR records the reasoning behind a settled requirement.
 
 ## 8. Architecture Detail
 
-- **Artefact.** `prompts/persona/adam.vMAJOR.MINOR.PATCH.md` with metadata (16.PFF-FA-AI-PROMPT-ENGINEERING.md
+- **Artefact.** `prompts/persona/pff-chat-ai.vMAJOR.MINOR.PATCH.md` with metadata (16.PFF-FA-AI-PROMPT-ENGINEERING.md
   §33): `id`, `status` (16.PFF-FA-AI-PROMPT-ENGINEERING.md §34), `version`, `owner`, `risk_class` (16.PFF-FA-AI-PROMPT-ENGINEERING.md §41 —
   persona is high-risk since it shapes all output), `model_compatibility` (§82).
 - **Composition.** The prompt composer (ADR-D3-09; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §21) inserts the persona
@@ -187,7 +187,7 @@ this ADR records the reasoning behind a settled requirement.
   (16.PFF-FA-AI-PROMPT-ENGINEERING.md §22).
 - **Trust tier.** Persona is platform-authored trusted content (T0/T1 per ADR-D3-09);
   it is never assembled from user or retrieved text.
-- **Exclusion zones** (from ADR-D1-09 X-1…X-6): the layer explicitly instructs Adam
+- **Exclusion zones** (from ADR-D1-09 X-1…X-6): the layer explicitly instructs PFF Chat AI
   not to state transaction success before confirmation, not to invent rules/URLs,
   not to soften errors — but enforcement of these lives in guardrails (ADR-D6-09),
   not in the persona text alone.
@@ -219,14 +219,14 @@ this ADR records the reasoning behind a settled requirement.
 | Precedence chain | Persona is at SLM-output tier; it never overrides ERC/enterprise truth (16.PFF-FA-AI-PROMPT-ENGINEERING.md §138) |
 | Four-state separation | Persona is a prompt artefact; carries no state |
 | Versioned artefacts | Persona is versioned, immutable in prod (16.PFF-FA-AI-PROMPT-ENGINEERING.md §35, §39) |
-| Adam persona governs *how*, not *what* | This ADR is the structural guarantee of exactly that |
+| PFF Chat AI persona governs *how*, not *what* | This ADR is the structural guarantee of exactly that |
 
 ## 11. Risks and Mitigations
 
 | ID | Risk | Likelihood | Impact | Exposure | Mitigation | Owner | Residual |
 |---|---|---|---|---|---|---|---|
 | RSK-01 | Workflow logic leaks into persona | Med | High | H | Lint + review gate (16.PFF-FA-AI-PROMPT-ENGINEERING.md §113, §157) | Prompt Eng | Low |
-| RSK-02 | Football tone reduces clarity of critical info | Med | Med | M | Persona eval for clarity; CLAUDE.md §Adam 3 | Conversation Designer | Low |
+| RSK-02 | Football tone reduces clarity of critical info | Med | Med | M | Persona eval for clarity; CLAUDE.md §PFF Chat AI 3 | Conversation Designer | Low |
 | RSK-03 | Persona celebrates unconfirmed transaction | Low | High | M | Guardrail (ADR-D6-09) + persona rule X-? | Security Architect | Low |
 
 ## 12. Quantitative Targets and Measures

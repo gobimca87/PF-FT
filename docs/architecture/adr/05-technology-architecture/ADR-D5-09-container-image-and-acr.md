@@ -172,7 +172,7 @@ auth to ACR (ADR-D5-08). Mutable tags (B/E), external registries (C) and buildpa
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Images immutable, digest-pinned in manifest |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

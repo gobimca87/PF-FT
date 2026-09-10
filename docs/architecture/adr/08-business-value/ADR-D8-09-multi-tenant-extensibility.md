@@ -180,7 +180,7 @@ are rejected.
 | Precedence chain | Tenant-scoped ERC/RAG respect precedence |
 | Four-state separation | Tenant scoping applied within each state class |
 | Versioned artefacts | Per-tenant overlays versioned |
-| Adam persona governs *how*, not *what* | Shared persona; tenant affects data, not persona |
+| PFF Chat AI persona governs *how*, not *what* | Shared persona; tenant affects data, not persona |
 
 ## 11. Risks and Mitigations
 

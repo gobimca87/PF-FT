@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Enterprise Integration & Tooling  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI / LangGraph  
 **Primary Scope:** Enterprise APIs, API Catalog, API Contracts, Tool Abstraction, Tool Executor, MCP, Authorization Boundary, Request/Response Transformation, Idempotency, Retry, Sequential/Parallel Execution
 

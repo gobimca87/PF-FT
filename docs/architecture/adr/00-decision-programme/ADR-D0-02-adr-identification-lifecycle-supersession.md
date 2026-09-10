@@ -378,7 +378,7 @@ without collision: no ID in one scheme can be mistaken for an ID in the other.
 | Authoritative-truth precedence | Not applicable — no runtime data path. |
 | Four-state separation | Not applicable — no runtime state. |
 | Versioned artefacts, never mutated in place in production | This ADR *is* that rule applied to decision records. §7.3 mirrors 20.PFF-FA-AI-GOVERNANCE.md §73 and 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §43 exactly: immutable versions, changes released as new versions, prior versions retained. |
-| Adam persona governs how, never what | Not applicable. |
+| PFF Chat AI persona governs how, never what | Not applicable. |
 
 ## 11. Risks and Mitigations
 

@@ -173,7 +173,7 @@ complements in-cluster only.
 | Precedence chain | Fallbacks stay below authoritative sources (ADR-D3-18) |
 | Four-state separation | Resilience preserves state (suspend on critical) |
 | Versioned artefacts | Resilience config versioned |
-| Adam persona governs *how*, not *what* | Failures communicated honestly |
+| PFF Chat AI persona governs *how*, not *what* | Failures communicated honestly |
 
 ## 11. Risks and Mitigations
 

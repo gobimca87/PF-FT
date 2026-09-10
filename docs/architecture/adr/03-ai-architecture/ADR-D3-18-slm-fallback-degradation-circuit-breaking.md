@@ -30,7 +30,7 @@ PFF AI will make SLM resilience explicit and **never silent**: ordered fallback
 across compatible models/providers, per-provider circuit breakers, layered timeouts,
 bounded retries with backoff, and a defined degraded mode when no model is available
 (15.PFF-FA-AI-SLM.md §61–§69, §163, §168). A fallback or degradation is always logged and, where
-it affects the user, communicated honestly by Adam — the platform never pretends a
+it affects the user, communicated honestly by PFF Chat AI — the platform never pretends a
 degraded answer is a normal one.
 
 ## 2. Context and Problem Statement
@@ -47,11 +47,11 @@ resilience behaviour of the SLM path.
 | ID | Driver | Source |
 |---|---|---|
 | DR-F-01 | Fallback across compatible models/providers | 15.PFF-FA-AI-SLM.md §62–§63 |
-| DR-F-02 | Fallback/degradation never silent | 15.PFF-FA-AI-SLM.md §64; CLAUDE.md §Adam 7 |
+| DR-F-02 | Fallback/degradation never silent | 15.PFF-FA-AI-SLM.md §64; CLAUDE.md §PFF Chat AI 7 |
 | DR-F-03 | Circuit-break failing providers | 15.PFF-FA-AI-SLM.md §67 |
 | DR-N-01 | Bounded latency via layered timeouts | 15.PFF-FA-AI-SLM.md §68 |
 | DR-N-02 | Retries must not amplify incidents | 15.PFF-FA-AI-SLM.md §65–§66; ADR-D2-11 |
-| DR-C-01 | Degraded answers communicated honestly | CLAUDE.md §Adam 7 |
+| DR-C-01 | Degraded answers communicated honestly | CLAUDE.md §PFF Chat AI 7 |
 
 ### 3.4 Assumptions
 
@@ -117,7 +117,7 @@ must be flagged. A complement, not a whole strategy.
 
 | Option | Eliminated by |
 |---|---|
-| Silent fallback to a weaker model | DR-F-02 / CLAUDE.md §Adam 7 |
+| Silent fallback to a weaker model | DR-F-02 / CLAUDE.md §PFF Chat AI 7 |
 | Unbounded retries | ADR-D2-11 — incident amplification |
 
 ## 6. Evaluation Method and Decision Matrix
@@ -149,7 +149,7 @@ circuit breakers, bounded retries with jittered backoff, layered timeouts and
 cancellation, terminating in an honest degraded mode when no model is available.
 Cache/last-known-good fallback (E) is used only for cacheable, non-personalised
 outputs and is flagged as such. Every fallback and degradation is logged and, when
-user-affecting, communicated plainly by Adam (never celebrated, never disguised).
+user-affecting, communicated plainly by PFF Chat AI (never celebrated, never disguised).
 B/C/D rejected as standalone strategies.
 
 **Status rationale.** `Accepted` — 15.PFF-FA-AI-SLM.md §61–§69 mandate this behaviour.
@@ -188,7 +188,7 @@ B/C/D rejected as standalone strategies.
 | Precedence chain | Fallback/cached output still ranks below authoritative sources |
 | Four-state separation | Resilience is compute behaviour; state preserved (suspend on critical) |
 | Versioned artefacts | Fallback config versioned |
-| Adam persona governs *how*, not *what* | Degraded state told honestly; no "GOAL!" on failure |
+| PFF Chat AI persona governs *how*, not *what* | Degraded state told honestly; no "GOAL!" on failure |
 
 ## 11. Risks and Mitigations
 

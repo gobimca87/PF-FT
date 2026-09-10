@@ -463,7 +463,7 @@ payment unreconciled), where the truth becomes knowable later than the moment of
 | Authoritative-truth precedence | The verification read is an authority-5 enterprise response and settles the question. The platform's own record of what it attempted never overrides it. |
 | Four-state separation | Retry and idempotency state is Workflow/Agent State; the transaction outcome is Enterprise Business State, read not inferred. |
 | Versioned artefacts, never mutated in place | Retry declarations live in the versioned API catalogue (ADR-D5-06). |
-| Adam persona governs how, never what | §7.4's uncertainty is communicated under ADR-D1-09's X-2 exclusion — no football framing, no celebration, and ADR-D1-02's I-4 blocks success language structurally. |
+| PFF Chat AI persona governs how, never what | §7.4's uncertainty is communicated under ADR-D1-09's X-2 exclusion — no football framing, no celebration, and ADR-D1-02's I-4 blocks success language structurally. |
 
 ## 11. Risks and Mitigations
 

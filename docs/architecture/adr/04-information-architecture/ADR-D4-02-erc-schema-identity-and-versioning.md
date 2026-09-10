@@ -188,7 +188,7 @@ over-engineered.
 | Precedence chain | ERC authority levels feed precedence (ADR-D4-03) |
 | Four-state separation | ERC is the enterprise-reference view, distinct from memory/cache (§5–§6) |
 | Versioned artefacts | ERC + section + schema versions |
-| Adam persona governs *how*, not *what* | ERC carries the *what*; persona narrates it |
+| PFF Chat AI persona governs *how*, not *what* | ERC carries the *what*; persona narrates it |
 
 ## 11. Risks and Mitigations
 

@@ -12,7 +12,7 @@
 
 ## 1. Purpose
 
-This document defines the target technical architecture for the PFF-FA Enterprise Agentic AI Platform and Adam AI.
+This document defines the target technical architecture for the PFF-FA Enterprise Agentic AI Platform and PFF Chat AI.
 
 The platform provides a conversational experience across existing PFF-FA enterprise portals, APIs, microservices, workflow engines and deterministic rule/compliance engines.
 

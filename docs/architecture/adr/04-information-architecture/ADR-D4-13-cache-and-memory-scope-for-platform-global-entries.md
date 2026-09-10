@@ -368,7 +368,7 @@ to hold tenant-invariant content must go through §7.4's review before being dec
 | Authoritative-truth precedence | Cache — of either scope — remains ranked below ERC/enterprise per ADR-D1-03; scope affects keying, not authority. |
 | Four-state separation | Not applicable — this ADR governs a keying dimension within the existing cache/memory state classes (ADR-D4-01), not a new state class. |
 | Versioned artefacts, never mutated in place | Scope declarations are catalogue content, versioned with the resource they apply to. |
-| Adam persona governs how, never what | Not applicable — no user-facing communication in this ADR's scope. |
+| PFF Chat AI persona governs how, never what | Not applicable — no user-facing communication in this ADR's scope. |
 
 ## 11. Risks and Mitigations
 

@@ -6,7 +6,7 @@ owner: ai-platform
 description: >
   Platform-wide system instructions — identity, authority precedence, and behavioral
   boundaries applied before any persona/task instructions. Deliberately football-neutral:
-  the Adam AI football-commentator voice lives in the persona layer, not here, so this
+  the PFF Chat AI football-commentator voice lives in the persona layer, not here, so this
   prompt stays reusable across every future agent persona.
 risk: CRITICAL
 compatibility:

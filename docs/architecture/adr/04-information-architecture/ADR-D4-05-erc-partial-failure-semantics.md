@@ -187,7 +187,7 @@ are deferred.
 | Precedence chain | Never substitutes lower-authority/fabricated data for missing enterprise data |
 | Four-state separation | Completeness tracked on the ERC (enterprise-reference) plane |
 | Versioned artefacts | Classification config versioned |
-| Adam persona governs *how*, not *what* | Persona reports gaps honestly (no fabrication) |
+| PFF Chat AI persona governs *how*, not *what* | Persona reports gaps honestly (no fabrication) |
 
 ## 11. Risks and Mitigations
 

@@ -426,7 +426,7 @@ evaluate them.
 | Authoritative-truth precedence | Upheld by construction: business answers originate from an enterprise API or event. The precedence chain that resolves conflicts between sources is recorded in ADR-D1-03. |
 | Four-state separation | Established here at scope level — Enterprise Business State is out of scope per §7.2 and owned entirely by PFF. The remaining three states are AI-owned. ADR-D4-01 carries the detail. |
 | Versioned artefacts, never mutated in place | Not directly — this is a scope decision. All AI-owned artefacts in §7.1 are versioned per ADR-D5-06. |
-| Adam persona governs how, never what | Directly supported: the persona operates entirely within §7.1's communication responsibility and can never reach §7.2's decision authority. ADR-D1-09. |
+| PFF Chat AI persona governs how, never what | Directly supported: the persona operates entirely within §7.1's communication responsibility and can never reach §7.2's decision authority. ADR-D1-09. |
 
 ## 11. Risks and Mitigations
 

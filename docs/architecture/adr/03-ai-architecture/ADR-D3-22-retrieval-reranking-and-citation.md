@@ -191,7 +191,7 @@ forbidden.
 | Precedence chain | Retrieved content ranks below ERC/enterprise |
 | Four-state separation | Knowledge plane only |
 | Versioned artefacts | Retrieval config + reranker version pinned |
-| Adam persona governs *how*, not *what* | Persona narrates cited facts; never uncited claims |
+| PFF Chat AI persona governs *how*, not *what* | Persona narrates cited facts; never uncited claims |
 
 ## 11. Risks and Mitigations
 

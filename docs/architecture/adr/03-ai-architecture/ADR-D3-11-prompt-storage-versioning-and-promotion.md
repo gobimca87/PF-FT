@@ -220,7 +220,7 @@ immutability; this ADR records the alternatives and rationale.
 | Precedence chain | Not applicable — storage layer |
 | Four-state separation | Prompts are artefacts, not state |
 | Versioned artefacts, never mutated in place | This ADR *is* the enforcement mechanism |
-| Adam persona governs *how*, not *what* | Persona artefact stored under the same rules |
+| PFF Chat AI persona governs *how*, not *what* | Persona artefact stored under the same rules |
 
 ## 11. Risks and Mitigations
 

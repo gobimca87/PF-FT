@@ -176,7 +176,7 @@ enterprise/safeguarding risk; six+ (E) is unnecessary now.
 | Precedence chain | N/A |
 | Four-state separation | Env isolation complements state separation |
 | Versioned artefacts | Same manifest/digest promoted across envs |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

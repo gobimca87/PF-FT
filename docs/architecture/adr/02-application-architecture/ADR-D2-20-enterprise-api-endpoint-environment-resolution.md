@@ -355,7 +355,7 @@ operational move.
 | Authoritative-truth precedence | Not applicable — this ADR governs endpoint location, not fact ranking. |
 | Four-state separation | Not applicable — configuration and catalogue metadata, not conversation/session/workflow/enterprise state. |
 | Versioned artefacts, never mutated in place | The catalogue is release-manifest pinned (ADR-D5-06); the environment endpoint map is a separate, environment-scoped overlay, both versioned. |
-| Adam persona governs how, never what | Not applicable — no user-facing communication in this ADR's scope. |
+| PFF Chat AI persona governs how, never what | Not applicable — no user-facing communication in this ADR's scope. |
 
 ## 11. Risks and Mitigations
 

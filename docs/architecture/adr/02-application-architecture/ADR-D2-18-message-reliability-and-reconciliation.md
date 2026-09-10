@@ -439,7 +439,7 @@ of the truth.
 | Authoritative-truth precedence | The refresh is authority 5 and settles every case, including where it contradicts the event that triggered it. |
 | Four-state separation | Idempotency and position state are Workflow State; the refreshed values are ERC projections of Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Idempotency entries are immutable state transitions, not overwrites. |
-| Adam persona governs how, never what | §8.3's outcome — cancelled, not approved — reaches the user through the persona under ADR-D1-09's X-6 exclusion for adverse outcomes. |
+| PFF Chat AI persona governs how, never what | §8.3's outcome — cancelled, not approved — reaches the user through the persona under ADR-D1-09's X-6 exclusion for adverse outcomes. |
 
 ## 11. Risks and Mitigations
 

@@ -196,7 +196,7 @@ constraints, or state plainly that it does not touch them.>
 | Authoritative-truth precedence: Enterprise API/Event > ERC > Cache > RAG > SLM output | <how, or "not applicable — <reason>"> |
 | Four-state separation: Conversation / Session / Workflow-Agent / Enterprise Business State | <how, or "not applicable — <reason>"> |
 | Versioned artefacts, never mutated in place in production | <how, or "not applicable — <reason>"> |
-| Adam persona governs *how* things are communicated, never *what* is true | <how, or "not applicable — <reason>"> |
+| PFF Chat AI persona governs *how* things are communicated, never *what* is true | <how, or "not applicable — <reason>"> |
 
 ## 11. Risks and Mitigations
 

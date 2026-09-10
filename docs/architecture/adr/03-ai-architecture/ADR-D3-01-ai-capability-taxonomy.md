@@ -419,7 +419,7 @@ collectively guarantee: that no capability is C4.
 | Authoritative-truth precedence | C3's output validation includes I-1's provenance check, so generated content cannot assert an unranked fact. |
 | Four-state separation | Not directly; the taxonomy classifies capabilities, not state. |
 | Versioned artefacts, never mutated in place | Capability classifications are recorded here and change by amendment. |
-| Adam persona governs how, never what | The persona is part of C3's prompt composition and is subject to C3's output validation, so it can shape expression and not content. |
+| PFF Chat AI persona governs how, never what | The persona is part of C3's prompt composition and is subject to C3's output validation, so it can shape expression and not content. |
 
 ## 11. Risks and Mitigations
 

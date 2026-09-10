@@ -182,7 +182,7 @@ the Golden Rule and ERC. Build-everything (C) and low-code (D) are rejected.
 | Precedence chain | Custom ERC/guardrails enforce precedence |
 | Four-state separation | Built-in, not vendor-imposed |
 | Versioned artefacts | Owned artefacts, versioned |
-| Adam persona governs *how*, not *what* | Persona owned, not vendor-canned |
+| PFF Chat AI persona governs *how*, not *what* | Persona owned, not vendor-canned |
 
 ## 11. Risks and Mitigations
 

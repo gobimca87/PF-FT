@@ -448,7 +448,7 @@ improve on.
 | Authoritative-truth precedence | Aggregation preserves per-fact provenance (ADR-D1-03); a partially-failed collection is recorded as incomplete rather than silently gapped, so downstream reasoning knows what it does not have. |
 | Four-state separation | Execution plans are Workflow/Agent State; results become ERC projections of Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Dependency declarations and bounds live in versioned configuration (ADR-D5-06). |
-| Adam persona governs how, never what | Blocker lists are enterprise check results; the persona conveys them under ADR-D1-09's X-1 exclusion where they concern a named individual. |
+| PFF Chat AI persona governs how, never what | Blocker lists are enterprise check results; the persona conveys them under ADR-D1-09's X-1 exclusion where they concern a named individual. |
 
 ## 11. Risks and Mitigations
 

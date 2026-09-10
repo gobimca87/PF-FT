@@ -177,7 +177,7 @@ Reduced placements (B/C/D) are rejected.
 | Precedence chain | Enforces authoritative-data priority at boundaries |
 | Four-state separation | Guards data crossing between state/trust zones |
 | Versioned artefacts | Pipeline versioned |
-| Adam persona governs *how*, not *what* | Output guardrail ensures persona doesn't alter truth |
+| PFF Chat AI persona governs *how*, not *what* | Output guardrail ensures persona doesn't alter truth |
 
 ## 11. Risks and Mitigations
 

@@ -381,7 +381,7 @@ check.
 | Authoritative-truth precedence | Supported: provenance is stamped at the infrastructure boundary where data enters, and the layering guarantees there is no other entry point. |
 | Four-state separation | Supported: domain packages for conversation, session and workflow state are separate modules with no cross-imports; Enterprise Business State has no domain module at all, correctly. |
 | Versioned artefacts, never mutated in place | Not directly. |
-| Adam persona governs how, never what | Supported: `prompt_engineering/` sits above domain and cannot influence domain logic. |
+| PFF Chat AI persona governs how, never what | Supported: `prompt_engineering/` sits above domain and cannot influence domain logic. |
 
 ## 11. Risks and Mitigations
 

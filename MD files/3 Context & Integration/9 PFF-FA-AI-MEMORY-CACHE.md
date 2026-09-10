@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Context, State & Continuity  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI / LangGraph  
 **Primary Scope:** Conversation Memory, Workflow Memory, User Memory, ERC Memory, Session State, Cache, Cache Invalidation, TTL, Recovery, Security, Observability and Evaluation
 

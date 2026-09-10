@@ -367,7 +367,7 @@ concrete form, and is why these six become the first golden-dataset cases in ADR
 | Authoritative-truth precedence | Upheld: terminal state is read from the enterprise application record, authority 5, never inferred from conversation. |
 | Four-state separation | Supported: measurement reads Enterprise Business State for outcomes and Conversation State for attribution, and does not conflate them. |
 | Versioned artefacts, never mutated in place | Measure definitions are versioned with this ADR; a redefinition is a supersession, which is what prevents silent goal drift. |
-| Adam persona governs how, never what | Reinforced: persona adherence is explicitly a quality gate and not a success measure (§7.3), so the persona cannot be optimised at the expense of outcomes. |
+| PFF Chat AI persona governs how, never what | Reinforced: persona adherence is explicitly a quality gate and not a success measure (§7.3), so the persona cannot be optimised at the expense of outcomes. |
 
 ## 11. Risks and Mitigations
 

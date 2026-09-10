@@ -179,7 +179,7 @@ are rejected.
 | Precedence chain | Redaction never alters authoritative enterprise data at source |
 | Four-state separation | Classification enforced per state/sink |
 | Versioned artefacts | Policy/detectors versioned |
-| Adam persona governs *how*, not *what* | Persona never reveals redacted PII |
+| PFF Chat AI persona governs *how*, not *what* | Persona never reveals redacted PII |
 
 ## 11. Risks and Mitigations
 

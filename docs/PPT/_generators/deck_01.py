@@ -28,7 +28,7 @@ def affiliation_flow(d, s):
     d.box(s, "Affiliation confirmed — only after the enterprise event confirms success",
           CX0, 4.95, CW, 0.55, style="accent", size=13)
     d.text(s, "27 scenarios covered (auto-approve, CFA approve/reject/cancel, £0, refund, fold, "
-              "payment-fail reconciliation). Adam narrates state; PFF decides & executes.",
+              "payment-fail reconciliation). PFF Chat AI narrates state; PFF decides & executes.",
            CX0, 5.7, CW, 0.6, size=12, color=GREY)
 
 
@@ -38,7 +38,7 @@ def build():
                   "Governance · scope · persona · workflows · value  —  ADR domains D0 / D1 / D8",
                   kicker="Deck 01 · The FA · PFF",
                   notes="Why the platform exists, how decisions are governed, the business scope and "
-                        "boundary, the Adam persona, the workflow catalogue, and the value case. "
+                        "boundary, the PFF Chat AI persona, the workflow catalogue, and the value case. "
                         "26 ADRs: D0 (4), D1 (12), D8 (10).")
 
     d.agenda_slide("What this deck covers", [
@@ -46,7 +46,7 @@ def build():
         "The Golden Rule & authoritative-truth precedence",
         "Platform scope, boundary & success definition (D1)",
         "Business capability map & ownership",
-        "Adam persona model, access archetypes & charter",
+        "PFF Chat AI persona model, access archetypes & charter",
         "Conversational journey & human-in-the-loop touchpoints",
         "Workflow catalogue, phasing & affiliation-first",
         "Club Affiliation — the first end-to-end workflow",
@@ -112,7 +112,7 @@ def build():
     d.set_notes(s, "Ownership stays with PFF/WGS. The AI-role column is verbs on the "
                    "interpret/communicate side — never decide/execute.")
 
-    s = d.content_slide("Adam persona — model & charter", kicker="D1-07 / D1-09",
+    s = d.content_slide("PFF Chat AI persona — model & charter", kicker="D1-07 / D1-09",
                         subtitle="Workflow-first, with a natural football-commentary tone")
     d.two_col(s, "Persona rules", [
         "Workflow-first: personality supports completion, never distracts.",
@@ -126,8 +126,8 @@ def build():
         "County & league roles — scoped visibility.",
         "Persona is a versioned prompt layer, reusable across workflows.",
     ])
-    d.set_notes(s, "Adam is a workflow-first enterprise assistant with a natural commentary tone. "
-                   "Persona controls how Adam communicates, never what the result is.")
+    d.set_notes(s, "PFF Chat AI is a workflow-first enterprise assistant with a natural commentary tone. "
+                   "Persona controls how PFF Chat AI communicates, never what the result is.")
 
     s = d.content_slide("Conversational journey & HIL", kicker="D1-08",
                         subtitle="Where humans stay in the loop")
@@ -137,7 +137,7 @@ def build():
                y=2.7, h=1.05)
     d.bullets(s, [
         "HIL touchpoints: user confirmation before submission; CFA review/approval; payment authorisation; external portal actions.",
-        "Adam clearly states who/what the workflow is waiting for during pending states.",
+        "PFF Chat AI clearly states who/what the workflow is waiting for during pending states.",
     ], CX0, 4.3, CW, 1.8, size=14, gap=12)
     d.set_notes(s, "Human-in-the-loop is explicit and designed — confirmations, CFA review, payment "
                    "authorisation and external portal steps.")
@@ -156,12 +156,12 @@ def build():
     d.set_notes(s, "We build one agent (AffiliationAgent) fully rather than many shallowly.")
 
     s = d.content_slide("Club Affiliation — the first E2E workflow", kicker="D1-05",
-                        subtitle="Adam narrates; PFF decides & executes")
+                        subtitle="PFF Chat AI narrates; PFF decides & executes")
     affiliation_flow(d, s)
     d.set_notes(s, "The canonical flow: club checks → select teams & fees → insurance → other "
                    "products → summary & submit → routing (auto-approve or CFA review HIL) → "
                    "invoice/payment → COMPLETE → WGS sync. 27 scenarios incl. payment-fail "
-                   "reconciliation. Adam only confirms success when the enterprise confirms it.")
+                   "reconciliation. PFF Chat AI only confirms success when the enterprise confirms it.")
 
     s = d.content_slide("Requirements & traceability", kicker="D1-12")
     d.bullets(s, [

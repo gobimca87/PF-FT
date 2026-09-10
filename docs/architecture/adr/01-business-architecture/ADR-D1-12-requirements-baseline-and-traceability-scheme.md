@@ -418,7 +418,7 @@ enterprise business logic to leak in under the guise of completeness.
 | Authoritative-truth precedence | `FR-GR-*` requirements derive from the precedence chain; ADR-D1-03 satisfies them. |
 | Four-state separation | Traced through requirements derived from 5. PFF-FA-AI-STATE-MODEL.md and satisfied by ADR-D4-01. |
 | Versioned artefacts, never mutated in place | §7.4's never-reassign rule applies ADR-D0-02's identity principle to requirement IDs. |
-| Adam persona governs how, never what | Persona requirements are quality expectations traced to ADR-D1-09 and ADR-D8-05, not functional requirements. |
+| PFF Chat AI persona governs how, never what | Persona requirements are quality expectations traced to ADR-D1-09 and ADR-D8-05, not functional requirements. |
 
 ## 11. Risks and Mitigations
 

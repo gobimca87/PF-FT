@@ -192,7 +192,7 @@ enforcement design.
 | Precedence chain | Separation prevents low-authority state posing as enterprise truth |
 | Four-state separation | This ADR *is* that principle, made enforceable |
 | Versioned artefacts | State schemas versioned (5. PFF-FA-AI-STATE-MODEL.md §51–§52) |
-| Adam persona governs *how*, not *what* | Persona holds no state |
+| PFF Chat AI persona governs *how*, not *what* | Persona holds no state |
 
 ## 11. Risks and Mitigations
 

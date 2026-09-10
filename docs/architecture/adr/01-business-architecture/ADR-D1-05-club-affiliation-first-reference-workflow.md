@@ -346,7 +346,7 @@ sorted?" is asking a question with no clean answer.
 
 The platform must convey: yes, affiliation completed and teams are affiliated; the payment was
 recorded as an offline payment; reconciliation is outstanding on the finance side; here is
-what that means and who resolves it. In Adam's voice, with the football register `CLAUDE.md`
+what that means and who resolves it. In PFF Chat AI's voice, with the football register `CLAUDE.md`
 requires, without softening the reconciliation gap into a metaphor, and without a goal
 celebration for a transaction that is not confirmed.
 
@@ -394,7 +394,7 @@ resolve cleanly.
 | Authoritative-truth precedence | Application status is read from the enterprise at authority 5 and refreshed on freshness policy; never inferred from conversation. |
 | Four-state separation | The workflow exposes all four distinctly: conversation across turns, session across the portal handoff, workflow state across suspension, and enterprise application state as the system of record. It is the clearest available demonstration of the separation. |
 | Versioned artefacts, never mutated in place | The agent, its prompts and its tool bindings are versioned per ADR-D5-06. |
-| Adam persona governs how, never what | Scenario 23 (§8.3) is the acceptance case: the persona shapes how an uncertain outcome is delivered and cannot make it certain. |
+| PFF Chat AI persona governs how, never what | Scenario 23 (§8.3) is the acceptance case: the persona shapes how an uncertain outcome is delivered and cannot make it certain. |
 
 ## 11. Risks and Mitigations
 

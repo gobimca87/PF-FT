@@ -195,7 +195,7 @@ executes business rules (15.PFF-FA-AI-SLM.md §40).
 | Precedence chain | Validated output still ranks below ERC/enterprise truth |
 | Four-state separation | Output validated at boundary into typed state (ADR-D2-07) |
 | Versioned artefacts | Schemas versioned with prompts/models |
-| Adam persona governs *how*, not *what* | Structured data path is separate from persona narration |
+| PFF Chat AI persona governs *how*, not *what* | Structured data path is separate from persona narration |
 
 ## 11. Risks and Mitigations
 

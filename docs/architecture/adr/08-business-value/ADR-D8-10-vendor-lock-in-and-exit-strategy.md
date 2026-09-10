@@ -174,7 +174,7 @@ cloud-agnostic (B), accept-all-lock-in (C) and active multi-cloud (D) are reject
 | Precedence chain | N/A |
 | Four-state separation | Abstractions preserve boundaries |
 | Versioned artefacts | Exit plans versioned |
-| Adam persona governs *how*, not *what* | Persona is owned, portable content |
+| PFF Chat AI persona governs *how*, not *what* | Persona is owned, portable content |
 
 ## 11. Risks and Mitigations
 

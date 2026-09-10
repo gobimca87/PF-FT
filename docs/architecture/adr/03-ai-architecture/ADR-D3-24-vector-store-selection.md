@@ -392,7 +392,7 @@ flowchart LR
 | Precedence: Enterprise API/Event > ERC > Cache > RAG > SLM | The store sits at the RAG tier — below ERC/Cache; retrieved content never overrides authoritative state. |
 | Four-state separation | Knowledge index is distinct from Conversation/Session/Enterprise state; explicitly *not* co-located with the cache/memory store (DR-C-05). |
 | Versioned artefacts, never mutated in place | Index changes ship via blue/green alias swap (§77–§78, §84), never in-place edits. |
-| Adam persona governs *how*, never *what* | Not applicable — retrieval is upstream of persona-layer generation. |
+| PFF Chat AI persona governs *how*, never *what* | Not applicable — retrieval is upstream of persona-layer generation. |
 
 ## 11. Risks and Mitigations
 

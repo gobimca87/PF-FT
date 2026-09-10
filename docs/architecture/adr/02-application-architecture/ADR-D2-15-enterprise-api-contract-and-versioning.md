@@ -408,7 +408,7 @@ on a contract mismatch, giving detection in hours rather than at the next user c
 | Authoritative-truth precedence | Central. A defaulted field would enter ERC at authority 5 while being the platform's invention. Failing instead is what keeps authority 5 meaning "the enterprise said so". |
 | Four-state separation | The platform contract and ERC shapes are the platform's projection; the enterprise shape is the enterprise's. |
 | Versioned artefacts, never mutated in place | API versions pinned; contracts versioned with the catalogue (ADR-D5-06); adoption is a release, per 20.PFF-FA-AI-GOVERNANCE.md §74. |
-| Adam persona governs how, never what | A validation failure produces an honest inability statement (ADR-D3-08), not a persona-smoothed guess. |
+| PFF Chat AI persona governs how, never what | A validation failure produces an honest inability statement (ADR-D3-08), not a persona-smoothed guess. |
 
 ## 11. Risks and Mitigations
 

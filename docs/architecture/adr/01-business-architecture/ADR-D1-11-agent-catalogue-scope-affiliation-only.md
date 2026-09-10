@@ -390,7 +390,7 @@ that is a separate decision requiring its own ADR and the specific operational j
 | Authoritative-truth precedence | Agents receive resolved context from the harness; they do not select among sources. ADR-D1-03 resolves precedence before the agent runs. |
 | Four-state separation | Agent state is Workflow/Agent State, distinct from conversation, session and enterprise state. Per-agent scoping keeps it separated even as agents multiply. |
 | Versioned artefacts, never mutated in place | Agent definitions, prompts and tool bindings are versioned per ADR-D5-06. |
-| Adam persona governs how, never what | Persona is a prompt layer above the agent, not agent logic. An agent determines what to do; the persona layer determines how it is said. |
+| PFF Chat AI persona governs how, never what | Persona is a prompt layer above the agent, not agent logic. An agent determines what to do; the persona layer determines how it is said. |
 
 ## 11. Risks and Mitigations
 

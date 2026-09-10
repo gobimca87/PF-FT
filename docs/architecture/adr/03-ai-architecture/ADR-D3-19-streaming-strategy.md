@@ -42,8 +42,8 @@ validated first; only the final narration streams.
 structured output; 16.PFF-FA-AI-PROMPT-ENGINEERING.md §141 covers citation handling in output. Streaming
 improves perceived latency but conflicts with three hard requirements: structured
 output must be validated whole before use (ADR-D3-17); guardrails must vet output
-before the user sees it (ADR-D6-09); and Adam must never state an unconfirmed
-transaction outcome (CLAUDE.md §Adam 6). Without a decision, a naive
+before the user sees it (ADR-D6-09); and PFF Chat AI must never state an unconfirmed
+transaction outcome (CLAUDE.md §PFF Chat AI 6). Without a decision, a naive
 "stream-everything" implementation would surface unvalidated JSON, partial tool
 intentions, or a premature "GOAL!" before enterprise confirmation.
 
@@ -54,7 +54,7 @@ intentions, or a premature "GOAL!" before enterprise confirmation.
 | DR-F-01 | Stream persona narration for responsiveness | 15.PFF-FA-AI-SLM.md §47 |
 | DR-F-02 | Never stream unvalidated structured output | 15.PFF-FA-AI-SLM.md §48; ADR-D3-17 |
 | DR-C-01 | Guardrails vet output before user sees it | ADR-D6-09 |
-| DR-C-02 | No unconfirmed transaction stated | CLAUDE.md §Adam 6 |
+| DR-C-02 | No unconfirmed transaction stated | CLAUDE.md §PFF Chat AI 6 |
 | DR-N-01 | Perceived latency improvement | UX target |
 
 ### 3.4 Assumptions
@@ -123,7 +123,7 @@ enterprise/safeguarding correctness; can't un-show a premature "GOAL!".
 | Option | Eliminated by |
 |---|---|
 | Stream tool-call arguments to user | DR-F-02; meaningless + unsafe |
-| Stream before enterprise confirmation on transactions | DR-C-02 (CLAUDE.md §Adam 6) |
+| Stream before enterprise confirmation on transactions | DR-C-02 (CLAUDE.md §PFF Chat AI 6) |
 
 ## 6. Evaluation Method and Decision Matrix
 
@@ -153,7 +153,7 @@ A now. B and E are unsafe.
 (Option A).** All decision, routing, tool-argument and structured-output steps run to
 completion and are validated (ADR-D3-17) and guardrail-vetted (ADR-D6-09) before any
 user-visible text is emitted; transaction outcomes are stated only after enterprise
-confirmation (CLAUDE.md §Adam 6). During non-streamed phases the Conversation
+confirmation (CLAUDE.md §PFF Chat AI 6). During non-streamed phases the Conversation
 Manager (ADR-D2-04) may show workflow status ("VAR check in progress"). Chunk-level
 vetted streaming (D) is a documented future option; B and E are rejected as unsafe.
 
@@ -195,7 +195,7 @@ rules make this the only safe posture; ADR records the rationale.
 | Precedence chain | Streaming is presentation of already-decided content |
 | Four-state separation | Decision committed to workflow state before narration streams |
 | Versioned artefacts | Streaming policy is config/versioned |
-| Adam persona governs *how*, not *what* | Streaming affects delivery of wording only; never states unconfirmed truth |
+| PFF Chat AI persona governs *how*, not *what* | Streaming affects delivery of wording only; never states unconfirmed truth |
 
 ## 11. Risks and Mitigations
 

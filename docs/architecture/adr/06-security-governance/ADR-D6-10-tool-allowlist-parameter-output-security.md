@@ -178,7 +178,7 @@ rejected.
 | Precedence chain | Tool output validated, ranked below authoritative sources |
 | Four-state separation | Tool results validated before touching state |
 | Versioned artefacts | Allowlist/registry versioned |
-| Adam persona governs *how*, not *what* | Persona can't invoke out-of-scope tools |
+| PFF Chat AI persona governs *how*, not *what* | Persona can't invoke out-of-scope tools |
 
 ## 11. Risks and Mitigations
 

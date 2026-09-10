@@ -393,7 +393,7 @@ Option C's separation would have provided, at none of its cost.
 | Authoritative-truth precedence | Shared in-process context means one provenance model, not one per service — a real benefit over Option C, where provenance would have to survive serialisation between agents. |
 | Four-state separation | Preserved within the runtime by ADR-D2-01's layering; a shared process does not imply shared state, and the four state concepts remain separate modules. |
 | Versioned artefacts, never mutated in place | One image, one version, immutable per ADR-D5-09. Agents are versioned within it per 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §21. |
-| Adam persona governs how, never what | Not affected by topology. |
+| PFF Chat AI persona governs how, never what | Not affected by topology. |
 
 ## 11. Risks and Mitigations
 

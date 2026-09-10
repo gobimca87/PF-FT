@@ -4,7 +4,7 @@
 **Phase:** Phase 2 — Context & Enterprise Data Orchestration  
 **Version:** 1.0.0  
 **Status:** Development Baseline  
-**Platform:** PFF-FA Enterprise Agentic AI Platform / Adam AI  
+**Platform:** PFF-FA Enterprise Agentic AI Platform / PFF Chat AI  
 **Runtime:** Python / FastAPI / LangGraph  
 **Primary Scope:** ERC, ERC Construction, ERC Batching, Context Budget Management, Context Projection  
 

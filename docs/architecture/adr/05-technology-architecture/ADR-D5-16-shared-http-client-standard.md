@@ -181,7 +181,7 @@ per-call (B), sync requests (D) and mesh-only (E) are rejected.
 | Precedence chain | Faithfully carries enterprise responses |
 | Four-state separation | Infra concern; no state conflation |
 | Versioned artefacts | Client config versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

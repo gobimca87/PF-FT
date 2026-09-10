@@ -416,7 +416,7 @@ concrete expression of ADR-D8-10's portability concern.
 | Authoritative-truth precedence | Graph state holds *references* to ERC rather than copies (7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §27), so precedence and provenance stay with the ERC service and cannot be lost in a state transition. |
 | Four-state separation | Graph state is Workflow/Agent State. It references conversation and session by identifier and holds no enterprise business state. ADR-D2-07 enforces this at the type level. |
 | Versioned artefacts, never mutated in place | Graph definitions are declarative and versioned per ADR-D5-06; agents are versioned per 7 PFF-FA-AI-AGENTIC-ORCHESTRATION.md §21. |
-| Adam persona governs how, never what | `generate_response` is an AI node whose output passes the persona layer and then the output guardrail; the graph does not shape language. |
+| PFF Chat AI persona governs how, never what | `generate_response` is an AI node whose output passes the persona layer and then the output guardrail; the graph does not shape language. |
 
 ## 11. Risks and Mitigations
 

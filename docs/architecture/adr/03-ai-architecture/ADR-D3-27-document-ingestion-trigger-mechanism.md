@@ -229,7 +229,7 @@ refinement.
 | Precedence chain | Ingestion never asserts a document is current beyond what its provenance (content hash/timestamp) shows |
 | Four-state separation | Ingestion writes only to the knowledge/RAG plane, never conversation/session/enterprise state |
 | Versioned artefacts | Repo-authored content promoted via the same versioned/immutable pipeline as prompts and config |
-| Adam persona governs *how*, not *what* | Not applicable — ingestion is upstream of persona-layer generation |
+| PFF Chat AI persona governs *how*, not *what* | Not applicable — ingestion is upstream of persona-layer generation |
 
 ## 11. Risks and Mitigations
 

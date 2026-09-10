@@ -760,7 +760,7 @@ than in isolation.
   only ever completing or failing.
 - Real guardrail check and real portal-link resolution on every response (never a
   fabricated URL — an un-allowlisted domain is simply omitted, per doc 12 §55/§104).
-- Adam persona responses (`persona.py`) as deterministic Python templates, not
+- PFF Chat AI persona responses (`persona.py`) as deterministic Python templates, not
   SLM-generated (Phase 9/10's SLM only has a mock provider, which would produce
   unconvincing echo-output) — football-commentary tone applied only at real milestones,
   never celebrating an unconfirmed transaction.

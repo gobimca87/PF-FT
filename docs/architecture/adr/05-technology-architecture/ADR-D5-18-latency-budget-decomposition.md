@@ -177,7 +177,7 @@ rejected.
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Budget config versioned |
-| Adam persona governs *how*, not *what* | Latency never traded for false speed on unconfirmed data |
+| PFF Chat AI persona governs *how*, not *what* | Latency never traded for false speed on unconfirmed data |
 
 ## 11. Risks and Mitigations
 

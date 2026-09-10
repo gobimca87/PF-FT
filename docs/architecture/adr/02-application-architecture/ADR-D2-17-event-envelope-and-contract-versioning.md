@@ -425,7 +425,7 @@ exactly what Option C could not see and a human review can.
 | Authoritative-truth precedence | §7.6: typed payloads give identifiers, not facts. Authoritative values come from the refresh, so no event field enters ERC at authority 5. |
 | Four-state separation | Envelope identifiers link to Workflow State and Conversation State; payload identifiers address Enterprise Business State for refresh. None is conflated. |
 | Versioned artefacts, never mutated in place | §7.1: schema files are immutable once merged; a change is a new version. This is 20.PFF-FA-AI-GOVERNANCE.md §73 applied to event contracts. |
-| Adam persona governs how, never what | Events produce no user-facing language directly. |
+| PFF Chat AI persona governs how, never what | Events produce no user-facing language directly. |
 
 ## 11. Risks and Mitigations
 

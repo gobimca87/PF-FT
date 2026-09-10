@@ -190,7 +190,7 @@ reads.
 | Precedence chain | Cache below ERC/enterprise; TTL/events enforce freshness |
 | Four-state separation | Cache namespace distinct from memory (D4-10) |
 | Versioned artefacts | Cache policy versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

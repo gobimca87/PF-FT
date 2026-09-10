@@ -181,7 +181,7 @@ standby (D) is the intermediate escalation; backup-only (C) is rejected for slow
 | Precedence chain | Rebuilt index/state stays below authoritative enterprise truth |
 | Four-state separation | DR strategy differs per state class |
 | Versioned artefacts | Redeploy from immutable manifest |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

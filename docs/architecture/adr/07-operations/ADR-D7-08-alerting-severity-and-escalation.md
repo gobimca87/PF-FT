@@ -169,7 +169,7 @@ manual-only (D) are rejected.
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Alert rules as code |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

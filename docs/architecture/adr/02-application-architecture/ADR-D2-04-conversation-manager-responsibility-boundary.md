@@ -399,7 +399,7 @@ inside the Supervisor — which is a Supervisor optimisation, not a relocation o
 | Authoritative-truth precedence | Conversation history is Conversation State, not operational truth. 6 PFF-FA-AI-CONVERSATION-SESSION.md §54 and ADR-D1-03 keep conversation content out of the operational precedence chain; a fact stated three turns ago is not a source. |
 | Four-state separation | This ADR is where the separation is operationalised. §8.2 assigns every state kind an owner; the Conversation Manager owns two, associates one, and never touches Enterprise Business State. |
 | Versioned artefacts, never mutated in place | Conversation summaries are versioned per 6 PFF-FA-AI-CONVERSATION-SESSION.md §31. |
-| Adam persona governs how, never what | Not applicable — the Conversation Manager produces no user-facing language. |
+| PFF Chat AI persona governs how, never what | Not applicable — the Conversation Manager produces no user-facing language. |
 
 ## 11. Risks and Mitigations
 

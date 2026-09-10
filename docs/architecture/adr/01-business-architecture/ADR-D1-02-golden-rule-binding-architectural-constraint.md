@@ -81,7 +81,7 @@ None is prevented by stating the rule more often.
 | DR-F-02 | No model output may function as an authorization decision | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §48 (SLM-controlled authorization) |
 | DR-F-03 | Critical controls must be deterministic, with the SLM never the sole enforcement | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.3 |
 | DR-F-04 | Tool access must be governed, never open | 2. PFF-FA-AI-ARCHITECTURE-DETAILED.md §3.4 |
-| DR-F-05 | An unconfirmed transaction must never be communicated as confirmed | `CLAUDE.md` §Adam persona rule 6; affiliation flow Scenarios 21–27 |
+| DR-F-05 | An unconfirmed transaction must never be communicated as confirmed | `CLAUDE.md` §PFF Chat AI persona rule 6; affiliation flow Scenarios 21–27 |
 
 ### 3.2 Non-functional drivers
 
@@ -335,7 +335,7 @@ With enforcement:
   recorded as offline, reconciliation is outstanding — and states what happens next.
 - **I-5** ensures any link to the payments page comes from the registry.
 
-The persona still carries this in Adam's voice. What it cannot do is convert uncertainty into
+The persona still carries this in PFF Chat AI's voice. What it cannot do is convert uncertainty into
 a goal celebration, which `CLAUDE.md` persona rule 6 also prohibits and which I-4 makes
 structurally impossible rather than merely discouraged.
 
@@ -389,7 +389,7 @@ precedence chain establishes which source to believe. Neither substitutes for th
 | Authoritative-truth precedence | I-1 requires every business assertion to name a source, which is the precondition for applying the precedence chain. ADR-D1-03 carries the ordering. |
 | Four-state separation | Supported: I-1 prevents Workflow/Agent State from being presented as Enterprise Business State, which is the most likely conflation in practice. |
 | Versioned artefacts, never mutated in place | Guardrail configuration and prompt layers are versioned per ADR-D5-06; an enforcement change is a release, not an edit. |
-| Adam persona governs how, never what | Enforced structurally. The persona operates on content that has already passed I-1 and I-4, so it can change the wording of a confirmed outcome but cannot manufacture one. |
+| PFF Chat AI persona governs how, never what | Enforced structurally. The persona operates on content that has already passed I-1 and I-4, so it can change the wording of a confirmed outcome but cannot manufacture one. |
 
 ## 11. Risks and Mitigations
 

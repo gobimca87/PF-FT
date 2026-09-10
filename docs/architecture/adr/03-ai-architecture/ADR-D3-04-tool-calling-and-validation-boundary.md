@@ -434,7 +434,7 @@ distinct check with a distinct data dependency.
 | Authoritative-truth precedence | Gate 6 prevents a malformed response entering ERC; gate 3's scope check uses ERC as the reference, so the platform's own assembled context is the arbiter of scope. |
 | Four-state separation | Claims are Session State, read-only; entity scope comes from ERC projections; the proposal is model output at authority 1 and decides nothing but which call to attempt. |
 | Versioned artefacts, never mutated in place | Tool contracts and allowlists are versioned configuration (ADR-D2-13, ADR-D3-03). |
-| Adam persona governs how, never what | A rejected call produces a typed outcome the agent explains; the persona shapes the explanation and cannot alter the rejection. |
+| PFF Chat AI persona governs how, never what | A rejected call produces a typed outcome the agent explains; the persona shapes the explanation and cannot alter the rejection. |
 
 ## 11. Risks and Mitigations
 

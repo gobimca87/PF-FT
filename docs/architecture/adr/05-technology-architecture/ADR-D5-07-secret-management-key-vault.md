@@ -181,7 +181,7 @@ rejected. No secret is ever committed, baked, or logged.
 | Precedence chain | N/A |
 | Four-state separation | Secrets not part of runtime state stores |
 | Versioned artefacts | Secret *references* versioned; values in KV |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

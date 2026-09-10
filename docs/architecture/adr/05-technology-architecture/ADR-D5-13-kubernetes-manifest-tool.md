@@ -211,7 +211,7 @@ change to the manifest tool is an enterprise-platform decision that PFF AI follo
 | Precedence chain | N/A |
 | Four-state separation | N/A |
 | Versioned artefacts | Manifests versioned in Git; images by digest |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

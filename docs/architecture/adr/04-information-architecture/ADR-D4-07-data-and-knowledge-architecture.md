@@ -195,7 +195,7 @@ Binary (B), by-store (C) and unenforced (E) options are rejected; an external ca
 | Precedence chain | Domains map to authority (enterprise > ERC > cache > RAG) |
 | Four-state separation | Domains align with the four state classes (ADR-D4-01) |
 | Versioned artefacts | Classification policy versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -418,7 +418,7 @@ The user-visible consequence: the platform picks up where the *workflow* is, not
 | Authoritative-truth precedence | §8.3: resumption refreshes rather than restores, so a suspended authority-4 view is never presented as current. |
 | Four-state separation | The journey exposes all four: conversation across turns, session across handoffs, workflow across suspension, enterprise state as the thing being waited on. |
 | Versioned artefacts, never mutated in place | Journey definitions live in versioned workflow configuration per ADR-D5-06. |
-| Adam persona governs how, never what | §7.3 draws the line precisely: the football register applies to the waiting, never to the outcome. |
+| PFF Chat AI persona governs how, never what | §7.3 draws the line precisely: the football register applies to the waiting, never to the outcome. |
 
 ## 11. Risks and Mitigations
 

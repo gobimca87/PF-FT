@@ -93,7 +93,7 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D1-06 | Business capability map and capability ownership model | WS-03 |
 | D1-07 | Persona model and access archetypes | WS-04 |
 | D1-08 | Conversational journey design principles and HIL touchpoints | WS-04 |
-| D1-09 | Adam AI persona charter — football-commentary tone as a governed decision | WS-04 |
+| D1-09 | PFF Chat AI persona charter — football-commentary tone as a governed decision | WS-04 |
 | D1-10 | Enterprise workflow catalogue, prioritisation and phasing | WS-05 |
 | D1-11 | Agent catalogue scope — `AffiliationAgent` only in the first pass | WS-05 |
 | D1-12 | FR/NFR baseline and requirement-ID traceability scheme | WS-06 |
@@ -137,7 +137,7 @@ and [ADR-D1-03](01-business-architecture/ADR-D1-03-authoritative-truth-precedenc
 | D3-07 | Clarification, disambiguation and confirmation strategy | WS-14 |
 | D3-08 | Transaction-uncertainty and ambiguous-outcome conversational policy | WS-14 |
 | D3-09 | Layered prompt composition architecture | WS-15 |
-| D3-10 | Adam persona prompt layer — versioned, reusable, separate from workflow logic | WS-15 |
+| D3-10 | PFF Chat AI persona prompt layer — versioned, reusable, separate from workflow logic | WS-15 |
 | D3-11 | Prompt storage, versioning and promotion | WS-15 |
 | D3-12 | Prompt injection defence inside the prompt layer | WS-15 |
 | D3-13 | SLM strategy — hosted inference first, self-hosted as target | WS-16 |

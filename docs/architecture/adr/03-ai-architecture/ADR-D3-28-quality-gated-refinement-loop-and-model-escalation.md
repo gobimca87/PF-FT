@@ -354,7 +354,7 @@ flowchart LR
 | Authoritative-truth precedence: Enterprise API/Event > ERC > Cache > RAG > SLM output | Upheld — a refined output is still lowest authority; groundedness scoring checks it *against* ERC, and enterprise truth overrides it (ADR-D1-03). |
 | Four-state separation | The loop reads Workflow/Agent State to score and refine a candidate; it does not write Enterprise Business State — that remains the Harness/enterprise path (DR-C-02). |
 | Versioned artefacts, never mutated in place | `refinement.yaml` and the escalation ladders are versioned config released in the bundle (ADR-D5-06, ADR-D6-15). |
-| Adam persona governs *how*, never *what* | Persona is one scored dimension governing expression; the loop never lets persona change an authoritative value, and never celebrates an unconfirmed transaction (ADR-D1-09, ADR-D3-08). |
+| PFF Chat AI persona governs *how*, never *what* | Persona is one scored dimension governing expression; the loop never lets persona change an authoritative value, and never celebrates an unconfirmed transaction (ADR-D1-09, ADR-D3-08). |
 
 ## 11. Risks and Mitigations
 

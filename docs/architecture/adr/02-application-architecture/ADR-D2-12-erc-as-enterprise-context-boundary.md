@@ -421,7 +421,7 @@ state; knowing that application's status is enterprise operational truth.
 | Authoritative-truth precedence | This decision is what makes the chain enforceable. Exclusivity guarantees every operational fact is stamped with authority at collection, so no unrankable fact can exist. |
 | Four-state separation | ERC is the platform's projection of Enterprise Business State, explicitly distinct from conversation, session and workflow state — which is what 8 PFF-FA-AI-ERC-CONTEXT.md §5's negative definition protects. |
 | Versioned artefacts, never mutated in place | ERC sections are versioned (8 PFF-FA-AI-ERC-CONTEXT.md §59) and updated by patch (8 PFF-FA-AI-ERC-CONTEXT.md §61), not overwritten in place. |
-| Adam persona governs how, never what | The persona shapes how an ERC fact is expressed; it cannot introduce a fact, because facts come only from ERC. |
+| PFF Chat AI persona governs how, never what | The persona shapes how an ERC fact is expressed; it cannot introduce a fact, because facts come only from ERC. |
 
 ## 11. Risks and Mitigations
 

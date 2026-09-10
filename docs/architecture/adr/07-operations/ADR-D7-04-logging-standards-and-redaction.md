@@ -168,7 +168,7 @@ Denylist redaction (B), plaintext (C) and always-verbose (D) are rejected.
 | Precedence chain | N/A |
 | Four-state separation | Logs redacted per classification |
 | Versioned artefacts | Log config versioned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -350,7 +350,7 @@ flowchart LR
 | Precedence: Enterprise API/Event > ERC > Cache > RAG > SLM | RAG (and thus embeddings) sit below ERC/enterprise; retrieved knowledge never overrides authoritative state (ADR-D3-20). |
 | Four-state separation | Embedding artefacts belong to the knowledge/RAG plane; no conversation/session/enterprise state is embedded. |
 | Versioned artefacts, never mutated in place | Model is registry-versioned; changes ship as a new index via blue/green (14.PFF-FA-AI-EMBEDDING-VECTOR.md §77, §80). |
-| Adam persona governs *how*, never *what* | Not applicable — embedding selection is upstream of language generation. |
+| PFF Chat AI persona governs *how*, never *what* | Not applicable — embedding selection is upstream of language generation. |
 
 ## 11. Risks and Mitigations
 

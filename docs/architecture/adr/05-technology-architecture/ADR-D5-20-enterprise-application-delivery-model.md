@@ -279,7 +279,7 @@ flowchart LR
 | Authoritative-truth precedence | Unaffected — a delivery decision, not a runtime data path. |
 | Four-state separation | Unaffected. |
 | Versioned artefacts, never mutated in place | Pipelines, manifests and images are versioned in Git/ACR; releases are immutable (ADR-D5-09, ADR-D6-15). |
-| Adam persona governs *how*, never *what* | N/A. |
+| PFF Chat AI persona governs *how*, never *what* | N/A. |
 
 ## 11. Risks and Mitigations
 

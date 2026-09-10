@@ -177,7 +177,7 @@ disallowed. This confirms and supersedes `docs/adr/0002`.
 | Precedence chain | N/A |
 | Four-state separation | Types enforce state-model boundaries |
 | Versioned artefacts | Version range + tool config pinned |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

@@ -174,7 +174,7 @@ async fit; non-Python options (C/D/E) fracture the AI stack.
 | Precedence chain | Not applicable |
 | Four-state separation | Framework supports typed state boundaries |
 | Versioned artefacts | API versioning in path |
-| Adam persona governs *how*, not *what* | N/A |
+| PFF Chat AI persona governs *how*, not *what* | N/A |
 
 ## 11. Risks and Mitigations
 

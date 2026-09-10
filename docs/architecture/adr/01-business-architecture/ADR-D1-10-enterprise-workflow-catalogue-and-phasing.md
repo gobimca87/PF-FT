@@ -396,7 +396,7 @@ of the open reconciliation without pre-empting the catalogue decision.
 | Authoritative-truth precedence | Not applicable — no runtime data path. |
 | Four-state separation | Supported by §7.5's guidance that workflow state be parameterised by workflow rather than global. |
 | Versioned artefacts, never mutated in place | The catalogue is versioned as an ADR; adding a candidate is an amendment with a change-log row. |
-| Adam persona governs how, never what | §7.5 notes that guardrail and retention policy should be per-workflow, which extends to persona exclusion zones per ADR-D1-09 §7.2. |
+| PFF Chat AI persona governs how, never what | §7.5 notes that guardrail and retention policy should be per-workflow, which extends to persona exclusion zones per ADR-D1-09 §7.2. |
 
 ## 11. Risks and Mitigations
 

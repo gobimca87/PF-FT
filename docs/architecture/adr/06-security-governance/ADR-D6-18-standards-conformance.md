@@ -177,7 +177,7 @@ Certify-first (B), guidance-only (C) and single-framework (D) are rejected.
 | Precedence chain | Reliability/accuracy standards uphold authoritative truth |
 | Four-state separation | Privacy/infosec standards respect state boundaries |
 | Versioned artefacts | Mapping + evidence versioned |
-| Adam persona governs *how*, not *what* | Transparency standards: persona never misrepresents |
+| PFF Chat AI persona governs *how*, not *what* | Transparency standards: persona never misrepresents |
 
 ## 11. Risks and Mitigations
 
