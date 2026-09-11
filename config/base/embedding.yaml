@@ -6,7 +6,8 @@
 # Azure AI Foundry (in-tenancy Azure), NOT the Hugging Face Inference API. The embedding
 # MODEL choice (family, dimensionality) remains the ADR-D3-23 selection — this changes only
 # where it is hosted. The Foundry endpoint + credential resolve from Key Vault via
-# *_secret_ref (ADR-D5-07). Hugging Face remains an optional eval provider only.
+# *_secret_ref (ADR-D5-07). Evaluation also runs in-tenancy on Azure AI Foundry — there is no
+# active external embedding path; Hugging Face is only a dormant abstraction adapter.
 #
 # Example hosted config (kept commented until model evaluation + ARB sign-off):
 #   provider: azure_ai_foundry

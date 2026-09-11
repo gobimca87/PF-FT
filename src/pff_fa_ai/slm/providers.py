@@ -59,7 +59,13 @@ class MockSLMProvider:
 
 
 class HuggingFaceSLMProvider:
-    """Doc 15: initial provider is the Hugging Face Inference API."""
+    """Dormant abstraction adapter — NOT a declared provider (ADR-D3-29 supersedes ADR-D3-13).
+
+    The hosted-first plane is Azure AI Foundry (in-tenancy) and all evaluation/experimentation
+    runs in-tenancy on Foundry too, so the design has no active external SLM path. This adapter
+    is kept behind the ADR-D3-14 abstraction only so an external provider could be reintroduced
+    in future without a rewrite; if ever activated it is `EXTERNAL` placement and MUST be wrapped
+    by the mandatory masking boundary (ADR-D6-19)."""
 
     def __init__(self, client: httpx.AsyncClient, *, model_version: str) -> None:
         self._client = client
@@ -121,6 +127,9 @@ class AzureAIFoundrySLMProvider:
     """ADR-D3-29: the hosted-first inference plane is Azure AI Foundry (in-tenancy Azure),
     superseding the Hugging Face Inference API as the production/hosted path (ADR-D3-13 is
     superseded).
+
+    This is the hosted-first plane for both production and evaluation/experimentation — the
+    design has no active external SLM path (the Hugging Face adapter is dormant).
 
     Calls the OpenAI-compatible Azure AI Model Inference chat-completions API. The shared
     httpx client carries the Foundry endpoint (base_url) and the Entra ID / managed-identity

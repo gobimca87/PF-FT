@@ -46,9 +46,11 @@ values so masked model outputs can be re-identified inside the boundary before u
 > **in-tenancy** in an Azure region under the enterprise EA/DPA (`SlmPlacement.MANAGED_IN_TENANCY`).
 > Because its inference does not cross the tenancy trust boundary, Foundry takes the **self-hosted
 > (optional, per-task-class) masking regime**, **not** the mandatory external-egress regime. The
-> mandatory mask-before-egress rule continues to apply to any genuinely external endpoint (e.g. the
-> Hugging Face Inference API, retained only for evaluation). Special-category/children's data and secrets
-> remain hard-blocked regardless of placement (ADR-D6-16).
+> mandatory mask-before-egress rule remains defined for any genuinely external endpoint, but the design
+> has **no active external SLM path**: production and evaluation both run in-tenancy (Foundry, then
+> self-host), so the mandatory-external regime is a dormant guardrail that would only engage if the
+> dormant Hugging Face adapter were ever deliberately reintroduced. Special-category/children's data and
+> secrets remain hard-blocked regardless of placement (ADR-D6-16).
 
 ## 2. Context and Problem Statement
 

@@ -39,7 +39,8 @@ documented migration path to a self-hosted equivalent.
 > The embedding **model** choice below (family, 768-dim) is unchanged. Its **hosting plane** moves from
 > the Hugging Face Inference API to **Azure AI Foundry** (in-tenancy Azure) — options include the
 > `bge-base`-class model on Foundry or an Azure OpenAI `text-embedding-3` model — selected by the same
-> retrieval evaluation. Hugging Face remains an optional evaluation provider only.
+> retrieval evaluation, which itself runs in-tenancy on Azure AI Foundry. There is no active external
+> embedding path; Hugging Face is only a dormant abstraction adapter (per ADR-D3-29).
 
 Because the knowledge
 corpus changes only 5–20 documents per year, re-embedding cost is negligible and

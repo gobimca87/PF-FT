@@ -4,7 +4,8 @@
 # ADR-D3-29 (supersedes ADR-D3-13): the hosted-first inference plane is Azure AI Foundry
 # (in-tenancy Azure), NOT the Hugging Face Inference API. Path is:
 #   mock (test) -> azure_ai_foundry (hosted, in-tenancy) -> self_hosted (vLLM on AKS GPU,
-#   ADR-D5-10, target). Hugging Face remains an optional eval/experimentation provider only.
+#   ADR-D5-10, target). Evaluation/experimentation also runs in-tenancy on Azure AI Foundry —
+#   there is no active external SLM path; Hugging Face is only a dormant abstraction adapter.
 # The Foundry endpoint + credential are resolved from Key Vault via *_secret_ref (ADR-D5-07)
 # using the enterprise SPN / managed identity; placement is MANAGED_IN_TENANCY so the
 # mandatory external-masking boundary (ADR-D6-19) does not apply (masking per task class).

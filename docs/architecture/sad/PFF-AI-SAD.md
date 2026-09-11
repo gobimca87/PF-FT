@@ -219,8 +219,9 @@ Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R
   AKS GPU (`ADR-D5-10`) are built against pending formal ratification; deviation requires a superseding ADR.
 - **Hosted-first model sourcing:** the SLM and embeddings run on **Azure AI Foundry** (in-tenancy Azure) and
   transition to an internal self-hosted SLM (vLLM on AKS GPU). Foundry is in-tenancy
-  (`SlmPlacement.MANAGED_IN_TENANCY`), so masking is per task class, not the mandatory external boundary;
-  Hugging Face is retained as an eval-only provider and would trigger mask/fail-closed if ever used.
+  (`SlmPlacement.MANAGED_IN_TENANCY`), so masking is per task class, not the mandatory external boundary.
+  Evaluation/experimentation also runs in-tenancy on Azure AI Foundry, so there is **no active external SLM
+  path**; Hugging Face is retained only as a dormant abstraction adapter (`ADR-D3-29`).
 
 ## 1.5 Dependencies
 
@@ -427,7 +428,7 @@ Key performance requirements for Phase 1 (targets to be confirmed against PFF NF
 ## 3.5 Availability
 
 **Availability approach.** Availability aligns with the existing PFF standard defined in "PFF Platform
-Architecture" [R1]. External dependencies (e.g., the optional Hugging Face eval provider) are treated as degradable — the
+Architecture" [R1]. Inference runs in-tenancy on Azure AI Foundry (managed) with a self-hosted vLLM target; it is treated as degradable — the
 runtime fails closed on guardrails and degrades gracefully where an authoritative source is unavailable rather
 than guessing an outcome.
 
@@ -519,7 +520,8 @@ flowchart TB
 
 - **Hosted-first:** SLM and embeddings via **Azure AI Foundry** (in-tenancy Azure; Entra ID / managed
   identity; Private Link). Placement `MANAGED_IN_TENANCY` → masking per task class, not the mandatory external
-  boundary. Hugging Face Inference API is retained as an eval-only provider (external → mask/fail-closed).
+  boundary. Evaluation/experimentation also runs in-tenancy on Azure AI Foundry — no active external SLM
+  path; Hugging Face Inference API is only a dormant abstraction adapter.
 - **Target:** internal self-hosted SLM (vLLM on AKS GPU, `ADR-D5-10`) able to use raw or masked in-tenancy
   data; embeddings `bge-base-en-v1.5`-class 768-dim or Azure OpenAI `text-embedding-3` (`ADR-D3-23`).
 
@@ -588,7 +590,7 @@ model (`ADR-D5-20`). No new DevOps tooling, pipelines, or release processes are 
 | `ADR-D4-10` | Memory/session/cache store — **Azure Managed Redis** (Accepted; supersedes `docs/adr/0004`). |
 | `ADR-D5-20` | Delivery — conform to Enterprise Application delivery model; no separate infra/CI/CD (Accepted; ratifies `ADR-D5-12` IaC and `ADR-D5-13` Kubernetes). |
 | `ADR-D5-07` | Key Vault access via enterprise MI-SPN only. |
-| `ADR-D3-29` | Model serving plane — Azure AI Foundry hosted-first (in-tenancy), self-hosted vLLM target; supersedes `ADR-D3-13`; HF eval-only (Proposed; working default). |
+| `ADR-D3-29` | Model serving plane — Azure AI Foundry hosted-first (in-tenancy), self-hosted vLLM target; supersedes `ADR-D3-13`; eval also in-tenancy on Foundry (no external SLM path; HF dormant adapter) (Proposed; working default). |
 | `ADR-D3-23` | Embedding model — `bge-base-en-v1.5`-class 768-dim (or Azure OpenAI `text-embedding-3`), hosted on Azure AI Foundry (Proposed; working default). |
 | `ADR-D3-24` | Vector store — Azure AI Search (Proposed; working default). |
 | `ADR-D5-10` | Self-hosted SLM serving — vLLM on AKS GPU (Proposed; working default). |
@@ -626,7 +628,7 @@ development technologies. Solution-specific components are introduced only where
 
 - Python + **FastAPI** (API framework)
 - **LangGraph** (agent orchestration)
-- SLM: Azure AI Foundry (hosted-first, in-tenancy) → self-hosted vLLM on AKS GPU (target); HF eval-only (`ADR-D3-29`)
+- SLM: Azure AI Foundry (hosted-first, in-tenancy) → self-hosted vLLM on AKS GPU (target); eval also in-tenancy on Foundry, no external SLM path (`ADR-D3-29`)
 - Embeddings: Azure AI Foundry-hosted (`bge-base-en-v1.5`-class 768-dim or Azure OpenAI `text-embedding-3`)
 - **Pydantic** (all boundary models) + **TypedDict** (LangGraph internal state)
 - **Ruff** (lint/format); mypy or pyright (one project primary)

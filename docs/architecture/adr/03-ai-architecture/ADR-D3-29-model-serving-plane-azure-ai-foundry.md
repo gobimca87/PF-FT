@@ -34,7 +34,9 @@ review_due: 2027-09-10
 > hosted-first provider with **Azure AI Foundry** (in-tenancy Azure), keeping the same phased strategy,
 > the same provider-neutral abstraction (ADR-D3-14), and the same self-hosted vLLM-on-AKS target
 > (ADR-D5-10). The *strategy* (hosted-first → self-hosted, behind an abstraction) is unchanged; only the
-> *hosted provider* changes. Hugging Face is retained as an optional evaluation/experimentation provider.
+> *hosted provider* changes. Evaluation/experimentation also runs in-tenancy on Azure AI Foundry, so the
+> design has **no active external SLM path**; Hugging Face is retained only as a dormant abstraction adapter
+> (not a declared provider) for possible future reintroduction.
 
 ## 1. Summary
 
@@ -219,9 +221,12 @@ behind the provider-neutral abstraction (ADR-D3-14). This **supersedes ADR-D3-13
 Hugging Face Inference API as the hosted-first provider**; the phased strategy, the abstraction, and the
 self-host target are otherwise unchanged.
 
-- **Hugging Face** is retained as an **optional evaluation/experimentation provider only** (offline model
-  eval, benchmarking) — never a production/hosted path. If ever invoked at runtime it is `EXTERNAL`
-  placement and subject to the mandatory masking boundary (ADR-D6-19).
+- **Evaluation/experimentation runs in-tenancy on Azure AI Foundry** (its model catalogue and managed
+  compute), the same plane as production. The design therefore has **no active external SLM path**.
+- **Hugging Face** is retained only as a **dormant abstraction adapter** (not a declared provider), kept
+  behind the ADR-D3-14 abstraction solely so an external provider could be reintroduced in future without a
+  rewrite. It is never used in production or evaluation; if ever deliberately activated it is `EXTERNAL`
+  placement and MUST be wrapped by the mandatory masking boundary (ADR-D6-19).
 - **Placement.** Foundry is `SlmPlacement.MANAGED_IN_TENANCY`: a managed Azure service running
   in-tenancy under the EA/DPA, so it takes the **self-hosted masking posture** (raw-or-masked per task
   class), **not** the mandatory external-egress boundary. This refines ADR-D6-19 (see §13).
@@ -304,13 +309,13 @@ this direction meanwhile, per the `CLAUDE.md` "Proposed = working default" rule.
 | QM-01 | SLM eval score on PFF-FA tasks | ≥ gate | < gate | Eval (§97, §99) | Every model release |
 | QM-02 | p95 generation latency | within budget (ADR-D5-18) | breach | Langfuse | Continuous |
 | QM-03 | £ per 1k workflows | tracked vs model | > projection | FinOps (§106) | Monthly |
-| QM-04 | % inference in-tenancy (Foundry + self-host) | 100% for production flows | < 100% | Config audit | Quarterly |
+| QM-04 | % inference in-tenancy (Foundry + self-host) | 100% for all flows (production + eval) | < 100% | Config audit | Quarterly |
 
 ## 13. Security, Privacy and Compliance Impact
 
 | Dimension | Impact |
 |---|---|
-| Attack surface change | Removes external SaaS inference dependency for production; Entra ID replaces long-lived token; Private Link removes public egress |
+| Attack surface change | Removes external SaaS inference dependency entirely (production **and** evaluation); no active external SLM path; Entra ID replaces long-lived token; Private Link removes public egress |
 | Data classification touched | Up to Confidential/Personal — stays in-tenancy under EA/DPA |
 | Personal data / PII | No external egress for hosted inference; masking per task class (refines ADR-D6-19) |
 | Children's data and safeguarding | Safeguarding flows served in-tenancy from day one |
@@ -326,7 +331,7 @@ this direction meanwhile, per the `CLAUDE.md` "Proposed = working default" rule.
 | Repository paths | `src/pff_fa_ai/slm/`, `src/pff_fa_ai/embedding_vector/`, `config/base/slm.yaml`, `config/base/embedding.yaml` |
 | Configuration | Provider `azure_ai_foundry`; endpoint `*_secret_ref`; pinned model version |
 | Contracts / schemas | Unchanged SLM/embedding contracts (ADR-D3-14) |
-| Migration | Add Foundry adapters; HF demoted to eval; per-workflow shadow→canary→cutover to self-host |
+| Migration | Add Foundry adapters; HF demoted to a dormant adapter (eval moves in-tenancy to Foundry); per-workflow shadow→canary→cutover to self-host |
 | Dependencies on other ADRs | ADR-D3-14, ADR-D5-10, ADR-D5-07, ADR-D6-04, ADR-D6-19 |
 | Effort estimate | S–M now, L for self-host |
 
@@ -358,7 +363,7 @@ this direction meanwhile, per the `CLAUDE.md` "Proposed = working default" rule.
 | Azure AI Foundry (hosted) | setup | usage / provisioned throughput | §104; Azure pricing |
 | Self-hosted GPU (later) | platform build | GPU node hours | §105; ADR-D5-11 |
 | Foundry adapters + eval harness | S | low | Shared tooling |
-| Removed: HF Inference API subscription | — | eliminated for production | Supersedes ADR-D3-13 |
+| Removed: HF Inference API subscription | — | eliminated entirely (production + eval) | Supersedes ADR-D3-13 |
 
 ## 18. Revisit Triggers and Causal Analysis Hooks
 
@@ -366,7 +371,7 @@ this direction meanwhile, per the `CLAUDE.md` "Proposed = working default" rule.
 |---|---|---|---|
 | RT-01 | Foundry cost exceeds self-host break-even | QM-03 | Accelerate self-host cutover (ADR-D5-10) |
 | RT-02 | Foundry quality gate failing on available models | QM-01 | Switch to Azure OpenAI model behind abstraction, or bring self-host forward |
-| RT-03 | A required model exists only outside Foundry | Architecture review | Evaluate via HF eval provider; consider self-host of that model |
+| RT-03 | A required model exists only outside Foundry | Architecture review | Deploy it to Foundry managed compute for in-tenancy evaluation, or self-host it (ADR-D5-10); reintroduce the dormant external adapter only as a last resort under the ADR-D6-19 masking boundary |
 | RT-04 | Multiple services/languages need the SLM | Architecture review | Introduce LLM gateway behind the same contract (ADR-D3-14 RT-01) |
 
 **Scheduled review:** `review_due`.

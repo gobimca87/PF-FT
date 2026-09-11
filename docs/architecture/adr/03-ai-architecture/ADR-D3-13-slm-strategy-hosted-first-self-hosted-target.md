@@ -27,8 +27,9 @@ review_due: 2027-08-22
 > **SUPERSEDED by [ADR-D3-29](ADR-D3-29-model-serving-plane-azure-ai-foundry.md) (2026-09-10).** The
 > phased strategy (hosted-first → self-hosted, behind the ADR-D3-14 abstraction) and the self-hosted
 > vLLM-on-AKS target (ADR-D5-10) are **retained**; only the **hosted-first provider changes from the
-> Hugging Face Inference API to Azure AI Foundry** (in-tenancy Azure). Hugging Face is retained as an
-> optional evaluation/experimentation provider only. This file is kept for history; for the current
+> Hugging Face Inference API to Azure AI Foundry** (in-tenancy Azure). Evaluation/experimentation also runs
+> in-tenancy on Foundry, so there is no active external SLM path; Hugging Face is kept only as a dormant
+> abstraction adapter, not a declared provider. This file is kept for history; for the current
 > decision see ADR-D3-29. The change was driven by the all-Azure enterprise posture (ADR-D5-20) and the
 > data-boundary/masking regime (ADR-D6-07, ADR-D6-19) — see ADR-D3-29 §2.
 

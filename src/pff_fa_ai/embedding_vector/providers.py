@@ -37,7 +37,11 @@ class MockEmbeddingProvider:
 
 
 class HuggingFaceEmbeddingProvider:
-    """Doc 14 §11: initial provider is the Hugging Face Inference API."""
+    """Dormant abstraction adapter — NOT a declared provider (ADR-D3-29 supersedes ADR-D3-13).
+
+    Embeddings are hosted in-tenancy on Azure AI Foundry for both production and evaluation;
+    the design has no active external embedding path. Kept behind the ADR-D3-14 abstraction
+    only so an external provider could be reintroduced in future without a rewrite."""
 
     def __init__(self, client: httpx.AsyncClient, *, model_id: str) -> None:
         self._client = client
