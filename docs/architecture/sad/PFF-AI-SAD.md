@@ -188,9 +188,37 @@ Detailed conversational behaviour is defined by the PFF Chat AI persona rules [R
   enterprise events where required; consume events, refresh ERC, resume, and respond with resolved portal
   links.
 
-**Figure 1 — PFF Affiliation Workflow (Sequence Diagram).** Conversational request → Agent orchestration → ERC → Enterprise systems → Event-driven continuation → Final response.
+**Figure 1 — PFF Affiliation Workflow (Sequence Diagram).** Conversational request → Agent orchestration → ERC → Enterprise systems → Event-driven continuation → Final response. _Enterprise systems decide and execute; AI interprets, orchestrates and communicates._
 
-<img width="1536" height="1024" alt="PFF – Affiliation Workflow (Sequence Diagram)" src="https://github.com/user-attachments/assets/5289d0b2-6bd9-43d4-b239-95c4b7132b7e" />
+```mermaid
+sequenceDiagram
+    actor User as County / Club Admin (User)
+    participant Chat as PFF Chat AI (FastAPI /chat)
+    participant Agent as AffiliationAgent (LangGraph)
+    participant Harness as Agent Harness (Controlled Boundary)
+    participant ERC as ERC Pipeline (Context + Memory)
+    participant PFF as PFF Enterprise APIs (via APIM)
+    participant SB as Azure Service Bus (Events)
+    participant AIF as Azure AI Foundry API (AIF API)
+
+    User->>Chat: 1. Affiliation request (natural language)
+    Chat->>Agent: 2. Route to AffiliationAgent
+    Agent->>Harness: 3. Run inside controlled boundary
+    Harness->>ERC: 4. Build context (identify club, load application)
+    ERC->>PFF: 5. Fetch teams / officials / products / insurance (20-record batches)
+    PFF-->>ERC: 6. Validated claims + records
+    ERC-->>Harness: 7. ERC (versioned)
+    Harness->>AIF: 8. Prompt (persona + ERC); in-tenancy, masked per task class
+    AIF-->>Harness: 9. Draft language (not authority)
+    Harness->>PFF: 10. Authorised operation via controlled tool
+    PFF-->>Harness: 11. Authoritative result
+    opt If HIL / pending, wait for enterprise event
+        SB->>Agent: 12. Enterprise event (e.g. payment confirmed)
+        Agent->>ERC: 13. Partial ERC refresh (new version)
+    end
+    Agent-->>Chat: 14. Explain status + resolved portal link
+    Chat-->>User: 15. Response (celebrate only after confirmed success)
+```
 
 ## 1.3 Constraints
 
