@@ -307,11 +307,10 @@ Architecture [R1]. PFF AI adds the following AI-specific data-protection control
 
 All authoritative sources are PFF enterprise APIs/events; PFF AI subscribes/consumes but does not master them.
 
-- **PFF Club/Affiliation service** — club and affiliation application records and status.
-- **PFF Teams service** — team registration records.
-- **PFF Officials/Safeguarding service** — official and safeguarding/vetting records.
-- **PFF Products & Insurance service** — affiliation products and insurance details.
-- **PFF Payments service** — payment status and references.
+- **Organisation Service** — club and affiliation application records and status; team registration records;
+  official and safeguarding/vetting records.
+- **Product Service** — affiliation products and insurance details.
+- **Payment Service** — payment status and references.
 - **RAG knowledge sources** — approved policy/eligibility documents indexed for retrieval (non-authoritative;
   used for *questions*, never for business decisions).
 
